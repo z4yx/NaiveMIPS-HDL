@@ -40,6 +40,9 @@
 `define OP_JALR 8'd34
 `define OP_MOVN 8'd35
 `define OP_MOVZ 8'd36
+`define OP_MUL  8'd37
+`define OP_MTHI 8'd38
+`define OP_MTLO 8'd39
 
 `define OP_INVAILD 8'hff
 

@@ -45,7 +45,9 @@ always @(*) begin
         6'h0a: op <= `OP_MOVZ;
         6'h0b: op <= `OP_MOVN;
         6'h10: op <= `OP_MFHI;
+        6'h11: op <= `OP_MTHI;
         6'h12: op <= `OP_MFLO;
+        6'h13: op <= `OP_MTLO;
         6'h18,6'h19: op <= `OP_MULT;
         6'h1a,6'h1b: op <= `OP_DIV;
         6'h20,6'h21: op <= `OP_ADD;
@@ -61,6 +63,7 @@ always @(*) begin
         op <= `OP_MFC0;
     end else if(inst[31:26]==6'h1c) begin //SPECIAL2
         case(inst[5:0])
+        6'h02: op <= `OP_MUL;
         6'h20: op <= `OP_CLZ;
         6'h21: op <= `OP_CLO;
         default: op <= `OP_INVAILD;

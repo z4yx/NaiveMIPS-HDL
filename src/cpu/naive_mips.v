@@ -40,6 +40,10 @@ wire [1:0]ex_mem_access_sz;
 wire [31:0]ex_data_o;
 wire [31:0]ex_mem_addr;
 wire [4:0]ex_reg_addr;
+wire [63:0]ex_reg_hilo_o;
+wire [63:0]ex_reg_hilo_value;
+wire ex_overflow;
+wire ex_we_hilo;
 
 wire mm_mem_wr;
 wire [31:0]mm_mem_data_o;
@@ -52,6 +56,8 @@ reg [1:0]mm_mem_access_op;
 reg [31:0]mm_data_i;
 wire [31:0]mm_data_o;
 reg [31:0]mm_addr_i;
+reg [63:0]mm_hilo_wdata;
+reg mm_we_hilo;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -170,7 +176,17 @@ ex stage_ex(/*autoinst*/
             .reg_s_value(ex_reg_s_value),
             .reg_t_value(ex_reg_t_value),
             .immediate(ex_immediate),
-            .flag_unsigned(ex_flag_unsigned));
+            .flag_unsigned(ex_flag_unsigned),
+            .overflow(ex_overflow),
+            .reg_hilo_o(ex_reg_hilo_o),
+            .we_hilo(ex_we_hilo),
+            .reg_hilo_value(ex_reg_hilo_value));
+
+hilo_reg hilo(/*autoinst*/
+          .rdata(ex_reg_hilo_value),
+          .rst_n(rst_n),
+          .we(mm_we_hilo),
+          .wdata(mm_hilo_wdata));
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
@@ -179,6 +195,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_data_i <= 32'b0;
         mm_reg_addr_i <= 5'b0;
         mm_addr_i <= 32'b0;
+        mm_hilo_wdata <= 64'b0;
+        mm_we_hilo <= 1'b0;
     end
     else begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -186,6 +204,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_data_i <= ex_data_o;
         mm_reg_addr_i <= ex_reg_addr;
         mm_addr_i <= ex_mem_addr;
+        mm_hilo_wdata <= ex_reg_hilo_o;
+        mm_we_hilo <= ex_we_hilo;
     end
 end
 
