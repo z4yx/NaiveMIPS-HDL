@@ -22,6 +22,7 @@ wire id_flag_unsigned;
 wire [25:0]id_address;
 wire [4:0]id_reg_t;
 
+wire [31:0] id_reg_s_value_from_regs, id_reg_t_value_from_regs;
 wire [31:0] id_reg_s_value, id_reg_t_value;
 
 reg [15:0]ex_immediate;
@@ -59,8 +60,8 @@ reg [1:0]wb_mem_access_sz;
 reg [4:0]wb_reg_addr_i;
 
 regs main_regs(/*autoinst*/
-         .rdata1(id_reg_s_value),
-         .rdata2(id_reg_t_value),
+         .rdata1(id_reg_s_value_from_regs),
+         .rdata2(id_reg_t_value_from_regs),
          .rst_n(rst_n),
          .we(wb_reg_we),
          .waddr(wb_reg_addr_i),
@@ -104,6 +105,28 @@ id stage_id(/*autoinst*/
             .immediate(id_immediate),
             .flag_unsigned(id_flag_unsigned),
             .inst(id_inst));
+
+reg_val_mux reg_val_mux_s(/*autoinst*/
+          .value_o(id_reg_s_value),
+          .reg_addr(id_reg_s),
+          .value_from_regs(id_reg_s_value_from_regs),
+          .addr_from_ex(ex_reg_addr),
+          .value_from_ex(ex_data_o),
+          .access_op_from_ex(ex_mem_access_op),
+          .addr_from_mm(mm_reg_addr_i),
+          .value_from_mm(mm_data_o),
+          .access_op_from_mm(mm_mem_access_op));
+
+reg_val_mux reg_val_mux_t(/*autoinst*/
+          .value_o(id_reg_t_value),
+          .reg_addr(id_reg_t),
+          .value_from_regs(id_reg_t_value_from_regs),
+          .addr_from_ex(ex_reg_addr),
+          .value_from_ex(ex_data_o),
+          .access_op_from_ex(ex_mem_access_op),
+          .addr_from_mm(mm_reg_addr_i),
+          .value_from_mm(mm_data_o),
+          .access_op_from_mm(mm_mem_access_op));
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
