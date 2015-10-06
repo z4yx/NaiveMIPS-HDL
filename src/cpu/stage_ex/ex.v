@@ -1,4 +1,4 @@
-//TODO: unsigned, neg compare, jump, clz/clo, mul/div, linked/sc, c0/hi/lo
+//TODO: jump, clz/clo, mul/div, linked/sc, c0/hi/lo
 `include "../defs.v"
 module ex(/*autoport*/
 //output
@@ -7,6 +7,7 @@ module ex(/*autoport*/
           data_o,
           mem_addr,
           reg_addr,
+          overflow,
 //input
           op,
           op_type,
@@ -36,7 +37,9 @@ output reg[1:0] mem_access_sz;
 output reg[31:0] data_o;
 output reg[31:0] mem_addr;
 output reg[4:0] reg_addr;
+output reg overflow;
 
+wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
 wire [31:0] signExtImm;
 wire [31:0] zeroExtImm;
 
@@ -47,11 +50,23 @@ assign signExtImm = { imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_
                         immediate};
 assign zeroExtImm = { 16'b0, immediate};
 
+assign tmp_sign_operand = (op_type==`OPTYPE_R ? reg_t_value : signExtImm);
+assign tmp_add = reg_s_value + tmp_sign_operand;
+assign tmp_sub = reg_s_value - tmp_sign_operand; //used by SLT/SLTI and SUB
+
 always @(*) begin
+    overflow <= 1'b0;
     case (op)
     `OP_ADD: begin
-        data_o <= (op_type==`OPTYPE_R) ? reg_s_value+reg_t_value : reg_s_value+signExtImm;
-        reg_addr <= (op_type==`OPTYPE_R) ? reg_d : reg_t;
+        if(!flag_unsigned && reg_s_value[31]==tmp_sign_operand[31] && (reg_s_value[31]^tmp_add[31])) begin
+            overflow <= 1'b1;
+            data_o <= 32'b0;
+            reg_addr <= 5'b0;
+        end else begin
+            overflow <= 1'b0;
+            data_o <= tmp_add;
+            reg_addr <= (op_type==`OPTYPE_R) ? reg_d : reg_t;
+        end
     end
     `OP_AND: begin
         data_o <= (op_type==`OPTYPE_R) ? reg_s_value&reg_t_value : reg_s_value&zeroExtImm;
@@ -102,7 +117,13 @@ always @(*) begin
         reg_addr <= (op_type==`OPTYPE_R) ? reg_d : reg_t;
     end
     `OP_SLT: begin
-        data_o <= (op_type==`OPTYPE_R) ? (reg_s_value<reg_t_value ? 32'b1 : 32'b0) : (reg_s_value<signExtImm ? 32'b1 : 32'b0);
+        if(flag_unsigned) begin
+            data_o <= (reg_s_value < tmp_sign_operand) ? 32'b1 : 32'b0;
+        end else if(reg_s_value[31] != tmp_sign_operand[31]) begin
+            data_o <= reg_s_value[31] ? 32'b1 : 32'b0;
+        end else begin
+            data_o <= tmp_sub[31] ? 32'b1 : 32'b0;
+        end
         reg_addr <= (op_type==`OPTYPE_R) ? reg_d : reg_t;
     end
     `OP_SLL: begin
@@ -118,8 +139,15 @@ always @(*) begin
         reg_addr <= reg_t;
     end
     `OP_SUB: begin
-        data_o <= reg_s_value - reg_t_value;
-        reg_addr <= reg_d;
+        if(!flag_unsigned && reg_s_value[31] == ~tmp_sign_operand[31] && (reg_s_value[31]^tmp_sub[31])) begin
+            overflow <= 1'b1;
+            data_o <= 32'b0;
+            reg_addr <= 5'b0;
+        end else begin
+            overflow <= 1'b0;
+            data_o <= tmp_sub;
+            reg_addr <= reg_d;
+        end
     end
     `OP_DIV: begin
         data_o <= 32'h0;
@@ -198,7 +226,7 @@ always @(*) begin
     `OP_LW: begin
         mem_addr <= reg_s_value+signExtImm;
         mem_access_op <= `ACCESS_OP_M2R;
-	 end
+     end
     `OP_SB,
     `OP_SH,
     `OP_SC,
