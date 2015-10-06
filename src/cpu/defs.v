@@ -38,6 +38,8 @@
 `define OP_CLO  8'd32
 `define OP_CLZ  8'd33
 `define OP_JALR 8'd34
+`define OP_MOVN 8'd35
+`define OP_MOVZ 8'd36
 
 `define OP_INVAILD 8'hff
 

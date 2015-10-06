@@ -16,7 +16,7 @@ initial begin
     // rom[3] <= 32'h34041234;
     // rom[4] <= 32'h20450123; // addi $5, $2, 0x123
     // rom[5] <= 32'h00000000;
-    // $readmemh("test_rom.txt",rom);
+    $readmemh("test_rom.txt",rom);
 end
 
 // assign data = {rom[address+32'd3],

@@ -165,6 +165,24 @@ always @(*) begin
         data_o <= reg_s_value;
         reg_addr <= reg_d;
     end
+    `OP_MOVN: begin
+        if(reg_t_value == 32'b0) begin //change nothing
+            data_o <= 32'b0;
+            reg_addr <= 5'b0;
+        end else begin
+            data_o <= reg_s_value;
+            reg_addr <= reg_d;
+        end
+    end
+    `OP_MOVZ: begin
+        if(reg_t_value == 32'b0) begin
+            data_o <= reg_s_value;
+            reg_addr <= reg_d;
+        end else begin //change nothing
+            data_o <= 32'b0;
+            reg_addr <= 5'b0;
+        end
+    end
     default: begin
         data_o <= 32'h0;
         reg_addr <= 5'h0;
