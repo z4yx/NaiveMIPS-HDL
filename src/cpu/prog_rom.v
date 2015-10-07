@@ -7,7 +7,7 @@ module prog_rom(/*autoport*/
 input wire [31:0] address;
 output wire [31:0] data;
 
-reg[31:0] rom[0:127];
+reg[31:0] rom[0:511];
 
 initial begin
     // rom[0] <= 32'h3401aa00;
@@ -24,7 +24,7 @@ end
 //                 rom[address+32'd1],
 //                 rom[address]};
 
-assign data = rom[address[7:2]];
+assign data = rom[address[31:2]];
 
 
 endmodule

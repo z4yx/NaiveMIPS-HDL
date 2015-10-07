@@ -29,8 +29,19 @@ end
 
 always @(*) begin
     case(inst[31:26])
+    6'h01: begin //REGIMM
+        case(reg_t)
+        5'h00: op <= `OP_BLTZ;
+        5'h01: op <= `OP_BGEZ;
+        5'h10: op <= `OP_BLTZAL;
+        5'h11: op <= `OP_BGEZAL;
+        default: op <= `OP_INVAILD;
+        endcase
+    end
     6'h04: op <= `OP_BEQ;
     6'h05: op <= `OP_BNE;
+    6'h06: op <= `OP_BLEZ;
+    6'h07: op <= `OP_BGTZ;
     6'h08,6'h09: op <= `OP_ADD;
     6'h0a,6'h0b: op <= `OP_SLT;
     6'h0c: op <= `OP_AND;

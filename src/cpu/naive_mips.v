@@ -19,8 +19,11 @@ reg [31:0]id_inst;
 wire [4:0]id_reg_s;
 wire [4:0]id_reg_d;
 wire id_flag_unsigned;
-wire [25:0]id_address;
+wire [31:0]id_address;
 wire [4:0]id_reg_t;
+wire [31:0]id_branch_address;
+wire id_is_branch;
+reg [31:0]id_pc_value;
 
 wire [31:0] id_reg_s_value_from_regs, id_reg_t_value_from_regs;
 wire [31:0] id_reg_s_value, id_reg_t_value;
@@ -31,7 +34,7 @@ reg [7:0]ex_op;
 reg [4:0]ex_reg_s;
 reg [4:0]ex_reg_d;
 reg ex_flag_unsigned;
-reg [25:0]ex_address;
+reg [31:0]ex_address;
 reg [4:0]ex_reg_t;
 reg [31:0]ex_reg_s_value;
 reg [31:0]ex_reg_t_value;
@@ -90,27 +93,31 @@ mem main_mem(/*autoinst*/
 pc pc_instance(/*autoinst*/
          .pc_reg(if_pc),
          .rst_n(rst_n),
-         .clk(clk));
+         .clk(clk),
+         .is_branch(id_is_branch),
+         .branch_address(id_branch_address));
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         id_inst <= 32'b0; //NOP
+        id_pc_value <= 31'b0;
     end
     else begin
         id_inst <= if_inst;
+        id_pc_value <= if_pc;
     end
 end
 
 id stage_id(/*autoinst*/
             .op(id_op),
             .op_type(id_op_type),
-            .address(id_address),
             .reg_s(id_reg_s),
             .reg_t(id_reg_t),
             .reg_d(id_reg_d),
             .immediate(id_immediate),
             .flag_unsigned(id_flag_unsigned),
-            .inst(id_inst));
+            .inst(id_inst),
+            .pc_value(id_pc_value));
 
 reg_val_mux reg_val_mux_s(/*autoinst*/
           .value_o(id_reg_s_value),
@@ -133,6 +140,15 @@ reg_val_mux reg_val_mux_t(/*autoinst*/
           .addr_from_mm(mm_reg_addr_i),
           .value_from_mm(mm_data_o),
           .access_op_from_mm(mm_mem_access_op));
+
+branch branch_detect(/*autoinst*/
+         .is_branch(id_is_branch),
+         .branch_address(id_branch_address),
+         .return_address(id_address),
+         .inst(id_inst),
+         .pc_value(id_pc_value),
+         .reg_s_value(id_reg_s_value),
+         .reg_t_value(id_reg_t_value));
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin

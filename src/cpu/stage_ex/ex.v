@@ -1,4 +1,4 @@
-//TODO: jump, clz/clo, div, linked/sc, c0
+//TODO: clz/clo, div, linked/sc, c0
 `include "../defs.v"
 module ex(/*autoport*/
 //output
@@ -26,7 +26,7 @@ module ex(/*autoport*/
 
 input wire[7:0] op;
 input wire[1:0] op_type;
-input wire[25:0] address;
+input wire[31:0] address;
 input wire[4:0] reg_s;
 input wire[4:0] reg_t;
 input wire[4:0] reg_d;
@@ -87,29 +87,15 @@ always @(*) begin
         data_o <= (op_type==`OPTYPE_R) ? reg_s_value&reg_t_value : reg_s_value&zeroExtImm;
         reg_addr <= (op_type==`OPTYPE_R) ? reg_d : reg_t;
     end
-    `OP_BEQ: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
-    end
-    `OP_BNE: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
-    end
-    `OP_J: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
-    end
+    `OP_BGEZAL,
+    `OP_BLTZAL,
     `OP_JAL: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
+        data_o <= address;
+        reg_addr <= 5'd31;
     end
     `OP_JALR: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
-    end
-    `OP_JR: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
+        data_o <= address;
+        reg_addr <= reg_d;
     end
     `OP_LB,`OP_LH,`OP_LL,`OP_LW: begin
         data_o <= 32'h0;

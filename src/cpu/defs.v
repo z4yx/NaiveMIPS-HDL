@@ -43,6 +43,12 @@
 `define OP_MUL  8'd37
 `define OP_MTHI 8'd38
 `define OP_MTLO 8'd39
+`define OP_BLTZ 8'd40
+`define OP_BLEZ 8'd41
+`define OP_BGEZ 8'd42
+`define OP_BGTZ 8'd43
+`define OP_BLTZAL 8'd44
+`define OP_BGEZAL 8'd45
 
 `define OP_INVAILD 8'hff
 

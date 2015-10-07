@@ -3,20 +3,21 @@ module id(/*autoport*/
 //output
           op,
           op_type,
-          address,
           reg_s,
           reg_t,
           reg_d,
           immediate,
           flag_unsigned,
 //input
-          inst);
+          inst,
+          pc_value);
 
 
 input wire[31:0] inst;
+input wire[31:0] pc_value;
+
 output reg[7:0] op;
 output reg[1:0] op_type;
-output wire[25:0] address;
 output reg[4:0] reg_s;
 output reg[4:0] reg_t;
 output wire[4:0] reg_d;
@@ -106,7 +107,6 @@ always @(*) begin
     endcase
 end
 
-assign address = id_j_address;
 assign reg_d = id_r_reg_d;
 
 endmodule
