@@ -1,4 +1,4 @@
-//TODO: clz/clo, div, linked/sc, c0
+//TODO: div, linked/sc, c0
 `include "../defs.v"
 module ex(/*autoport*/
 //output
@@ -45,6 +45,7 @@ output reg overflow;
 output reg[63:0] reg_hilo_o;
 output reg we_hilo;
 
+wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
 wire [63:0] mul_result;
 wire [31:0] signExtImm;
@@ -66,6 +67,15 @@ mul mul_instance(/*autoinst*/
            .flag_unsigned(flag_unsigned),
            .operand1(reg_s_value),
            .operand2(reg_t_value));
+
+count_bit_word clo(/*autoinst*/
+         .cnt(tmp_clo),
+         .data(reg_s_value),
+         .bit(1'b1));
+count_bit_word clz(/*autoinst*/
+         .cnt(tmp_clz),
+         .data(reg_s_value),
+         .bit(1'b0));
 
 always @(*) begin
     overflow <= 1'b0;
@@ -205,11 +215,11 @@ always @(*) begin
         reg_addr <= reg_d;
     end
     `OP_CLO: begin
-        data_o <= reg_s_value;
+        data_o <= tmp_clo;
         reg_addr <= reg_d;
     end
     `OP_CLZ: begin
-        data_o <= reg_s_value;
+        data_o <= tmp_clz;
         reg_addr <= reg_d;
     end
     `OP_MOVN: begin
