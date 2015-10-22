@@ -84,6 +84,13 @@ CPU需在系统时钟的驱动下，在一个至多个周期内获取并执行�
 
 #####CP0
 
+CP0用于管理硬件，其中包含多个特殊功能寄存器，来配置各项功能。需要实现特殊功能寄存器包括如下几个方面：
+
+- 异常处理：实现一些寄存器，用于保存发生异常时的一些信息，以供异常处理程序使用
+- 内存管理：实现用于配置TLB功能的寄存器，与TLB配合完成内存管理
+- 功能设置：包括系统定时器、中断使能等功能配置
+
+本项目根据软件需求，只实现MIPS32规范中部分的CP0寄存器和字段。要实现的寄存器和字段在附录中列出。
 
 
 #####TLB
@@ -149,8 +156,33 @@ TLBWI 	|	Write a TLB entry indexed by the Index register
 
 ###CP0寄存器
 
-##参考文献
+**0 Index**  TLB表入口索引
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------Reserved| 31..4|           |      |
+Index   | 3..0|TLB index. Software writes this field to provide the index to the TLB entry referenced by the TLBR and TLBWI instructions. |R/W|Undefined
+**2 EntryLo0**  偶数虚拟页入口的低位地址**3 EntryLo1**  奇数虚拟页入口的低位地址
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------Reserved|	31..30 		PFN 	|29..6 |	Page Frame Number. Corresponds to bits[PABITS-1..12] of the physical address, where PABITS is the width of the physical address in bits. |	R/W 	|UndefinedReserved|	5..3 		D |	2|	“Dirty” bit, indicating that the page is writable. If this bit is a one, stores to the page are permitted. If this bit is a zero, stores to the page cause a TLB Modified exception. |	R/W |	UndefinedV |	1|	Valid bit, indicating that the TLB entry, and thus the virtual page mapping are valid. If this bit is a one, accesses to the page are permitted. If this bit is a zero, accesses to the page cause a TLB Invalid exception. |	R/W |	Undefined Reserved	|0		
+	**8 BadVAddr**  记录异常的虚拟地址
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------BadVAddr |	31..0 |	Bad virtual address |	R |	Undefined 				**9 Count**  系统定时器计数值
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------Count|31..0|Interval counter|R/W|Undefined**10 EntryHi**  TLB入口高位地址
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------
+VPN2 |	31..13 |	VA[31..13] of the virtual address (virtual page number / 2). This field is written by hardware on a TLB exception or on a TLB read, and is written by software before a TLB write. |	R/W 	|Undefined Reserved	|12..0 							**11 Compare** 系统定时器比较匹配值
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------
+Compare|31..0|Interval count compare value|R/W|Undefined**12 Status** 中断控制、系统状态、工作模式等配置
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------Reserved|31..5|	
+UM 	|4	|If Supervisor Mode is not implemented, this bit denotes the base operating mode of the processor. The encoding of this bit is: 0 Base mode is Kernel Mode; 1 Base mode is User Mode.|	R/W |	Undefined R0 	|3|	If Supervisor Mode is not implemented, this bit is reserved. This bit must be ignored on write and read as zero. 		|R| 	0					Reserved	|2				EXL 	|1|	Exception Level; Set by the processor when any exception other than Reset, Soft Reset, NMI or Cache Error exception are taken. 		|R/W| 	UndefinedIE| 	0|	Interrupt Enable: Acts as the master enable for software and hardware interrupts| 		R/W |	Undefined **13 Cause** 记录异常原因
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------
+Reserved|	31..16					IP[7:2] |	15..10 |	Indicates an external interrupt is pending: 15 (Hardware interrupt 5, timer or performance counter interrupt), 14  (Hardware interrupt 4), 13  (Hardware interrupt 3), 12  (Hardware interrupt 2), 11  (Hardware interrupt 1), 10  (Hardware interrupt 0)	|	R| 	Undefined				IP[1:0] |	9..8| 	Controls the request for software interrupts: 9   (Request software interrupt 1), 8   (Request software interrupt 0)|R/W|Undefined ExcCode |	6..2| 	Exception code 		|R| 	Undefined Reserved|	1..0					**14 EPC** 异常恢复后执行代码所在的地址
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------EPC|31..0|Exception Program Counter|R/W|Undefined
+**15 EBase** 异常处理程序入口
+Fieleds | Bits | Description | R/W | Reset State--------|------|-------------|-----|------------
+1|31|This bit is ignored on write and returns one on read.|R|10|30|This bit is ignored on write and returns zero on read.|R|0Exception Base|29..12|In conjunction with bits 31..30, this field specifies the base address of the exception vectors.|R/W|0
+Reserved|11..0
+
+##参考文档
 
 1. MIPS32<sup>TM</sup> Architecture For Programmers Volume I: Introduction to the MIPS32<sup>TM</sup> Architecture
 2. MIPS32<sup>TM</sup> Architecture For Programmers Volume II: The MIPS32<sup>TM</sup> Instruction Set
 3. MIPS32<sup>TM</sup> Architecture For Programmers Volume III: The MIPS32<sup>TM</sup> Privileged Resource Architecture
+4. 计算机系统实验准备
+5. 计算机系统综合设计与实现——CP0 中断 MMU
+6. 基于简化版MIPS32指令集CPU的ucore教学操作系统移植
