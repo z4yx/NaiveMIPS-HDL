@@ -80,7 +80,11 @@ CPU需在系统时钟的驱动下，在一个至多个周期内获取并执行�
 
 在流水线设计中，要求支持精确异常处理。即处理器会准确记录发生异常的指令位置（包括位于延迟槽中的指令），并确保异常发生之前的指令均完整执行，之后的指令取消。
 
+中断处理流程参照MIPS32规范。
+
 #####CP0
+
+
 
 #####TLB
 
@@ -137,6 +141,11 @@ USB-OTG控制器 |1    |ISP1362
 ##附录 
 
 ###指令集
+
+处理器支持的全部77条指令如下：
+
+Mnemonic	|	Instruction--------	|	-----------LB 	|	Load Byte LBU 	|	Load Byte Unsigned LH 	|	Load Halfword LHU 	|	Load Halfword Unsigned LW 	|	Load Word SB 	|	Store Byte SH 	|	Store Halfword SW 	|	Store Word ADDI 	|	Add Immediate Word ADDIU	|	Add Immediate Unsigned Word ANDI 	|	And Immediate LUI 	|	Load Upper Immediate ORI 	|	Or Immediate SLTI 	|	Set on Less Than Immediate SLTIU 	|	Set on Less Than Immediate Unsigned XORI 	|	Exclusive Or Immediate ADD 	|	Add Word ADDU	|	Add Unsigned Word AND 	|	And NOR 	|	Nor SLT 	|	Set on Less Than SLTU 	|	Set on Less Than Unsigned SUB 	|	Subtract Word SUBU	|	Subtract Unsigned Word XOR 	|	Exclusive Or CLO 	|	Count Leading Ones in Word CLZ 	|	Count Leading Zeros in Word NOR 	|	Nor OR 	|	Or XOR 	|	Exclusive Or SLL 	|	Shift Word Left Logical SLLV 	|	Shift Word Left Logical Variable SRA 	|	Shift Word Right Arithmetic SRAV 	|	Shift Word Right Arithmetic Variable SRL 	|	Shift Word Right Logical SRLV 	|	Shift Word Right Logical Variable DIV 	|	Divide Word DIVU 	|	Divide Unsigned Word MADD 	|	Multiply and Add Word MADDU 	|	Multiply and Add Word Unsigned MFHI 	|	Move From HI MFLO 	|	Move From LO MSUB 	|	Multiply and Subtract Word MSUBU 	|	Multiply and Subtract Word Unsigned MTHI 	|	Move To HI MTLO 	|	Move To LO MUL 	|	Multiply Word to Register MULT 	|	Multiply Word MULTU 	|	Multiply Unsigned Word J 	|	Jump JAL 	|	Jump and Link JALR 	|	Jump and Link Register JR 	|	Jump Register BEQ 	|	Branch on Equal BNE 	|	Branch on Not Equal BGEZ 	|	Branch on Greater Than or Equal to Zero BGEZAL 	|	Branch on Greater Than or Equal to Zero and Link BGTZ 	|	Branch on Greater Than Zero BLEZ 	|	Branch on Less Than or Equal to Zero BLTZ 	|	Branch on Less Than Zero BLTZAL 	|	Branch on Less Than Zero and Link BEQL 	|	Branch on Equal Likely BGEZALL 	|	Branch on Greater Than or Equal to Zero and Link Likely BGEZL 	|	Branch on Greater Than or Equal to Zero Likely BGTZL 	|	Branch on Greater Than Zero Likely BLEZL 	|	Branch on Less Than or Equal to Zero Likely BLTZALL 	|	Branch on Less Than Zero and Link Likely BLTZL 	|	Branch on Less Than Zero Likely BNEL 	|	Branch on Not Equal Likely MOVF 	|	Move Conditional on Floating Point False MOVN 	|	Move Conditional on Not Zero MOVT 	|	Move Conditional on Floating Point True MOVZ 	|	Move Conditional on Zero SYSCALL 	|	System Call ERET	|	Return from Exception MTC0	|	Move To Coprocessor 0MFC0	|	Move From Coprocessor 0CACHE	|	Perform the cache operation 
+TLBWI 	|	Write a TLB entry indexed by the Index register
 
 ###CP0寄存器
 
