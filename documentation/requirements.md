@@ -1,7 +1,7 @@
 MIPS32处理器需求文档
 =====
 
-##概述
+##一、概述
 
 ###项目背景
 
@@ -31,7 +31,7 @@ BIOS  | 基本输入输出系统
 Flash | 快闪存储器
 CP  | 协处理器
 
-##需求描述
+##二、需求描述
 
 ###CPU
 
@@ -109,6 +109,14 @@ CP0用于管理硬件，其中包含多个特殊功能寄存器，来配置各�
 
 ###Flash控制器
 
+
+Flash控制器作为总线上的外设，接受来自CPU的读写请求，并相应地操作Flash芯片。该控制器将Flash空间映射到总线上的一段地址控制，读flash操作可以直接通过总线上读操作完成。flash的擦除与编程操作较复杂，需要软件驱动程序支持，为此设计4个特殊功能寄存器，其功能描述如下：
+
+- 状态寄存器：包含但不限于写操作忙标志
+- 写命令寄存器：向flash芯片写入命令字，包括擦除、编程等
+- 编程地址寄存器：编程flash时发送的地址
+- 编程数据寄存器：编程flash时待写入的数据
+
 ###键盘控制器
 
 键盘控制器作为总线上的外设，用于实现PS/2键盘主机端接口。该控制器包含一个总线从接口，一路中断信号输出。控制器包括3个特殊功能寄存器，其功能描述如下：
@@ -117,15 +125,15 @@ CP0用于管理硬件，其中包含多个特殊功能寄存器，来配置各�
 - 发送数据寄存器：用于存储当前要发送给键盘的控制数据
 - 接收数据寄存器：用于存储最新收到的键盘按键
 
-##软件环境
+##三、软件环境
 
-本系统设计的目标软件是ucore操作系统。启动操作系统之前，需要首先运行Bootloader，准备必要的系统启动条件。Bootloader固化在FPGA内部ROM中，负责将操作系统代码从Flash拷贝到RAM中，之后跳转到RAM中操作系统入口所在地址，将执行权交给操作系统。Flash控制器在本阶段被使用。
+本系统设计的目标软件是ucore操作系统。启动操作系统之前，需要首先运行Bootloader，准备必要的系统启动条件。Bootloader固化在FPGA内部ROM中，负责将操作系统代码从Flash拷贝到RAM中，之后跳转到RAM中操作系统入口所在地址，将执行权交给操作系统。Flash控制器在本阶段被使用，但只用到了读取功能。
 
 操作系统初始化过程中，与CPU相关的主要步骤依次为CP0配置、TLB初始化、中断控制器初始化、串口初始化、定时器中断初始化。CPU需要正确地支持这些初始化操作。
 
 之后，在操作系统运行过程中，时钟中断、外设中断和TLB等异常会时常发生，异常处理程序入口有预先放置的代码用于处理异常。
 
-##硬件平台
+##四、硬件平台
 
 本系统将在真实硬件平台上运行验证，该平台由计算机原理课程实验室提供，技术参数如下：
 
@@ -145,7 +153,7 @@ PS/2接口  | 1     |
 VGA接口    | 1     | 3bits DAC / Channel
 USB-OTG控制器 |1    |ISP1362
 
-##附录 
+##五、附录 
 
 ###指令集
 
@@ -178,7 +186,7 @@ Reserved|	31..16					IP[7:2] |	15..10 |	Indicates an external interrupt is pend
 1|31|This bit is ignored on write and returns one on read.|R|10|30|This bit is ignored on write and returns zero on read.|R|0Exception Base|29..12|In conjunction with bits 31..30, this field specifies the base address of the exception vectors.|R/W|0
 Reserved|11..0
 
-##参考文档
+##六、参考文档
 
 1. MIPS32<sup>TM</sup> Architecture For Programmers Volume I: Introduction to the MIPS32<sup>TM</sup> Architecture
 2. MIPS32<sup>TM</sup> Architecture For Programmers Volume II: The MIPS32<sup>TM</sup> Instruction Set
