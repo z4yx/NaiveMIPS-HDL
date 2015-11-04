@@ -8,6 +8,7 @@ module naive_mips(/*autoport*/
 input wire rst_n;
 input wire clk;
 
+reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 
 wire [31:0]if_pc;
 wire [31:0]if_inst;
@@ -90,21 +91,31 @@ mem main_mem(/*autoinst*/
            .wr(mm_mem_wr),
            .access_sz(mm_mem_access_sz));
 
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
+    end
+end
+
 pc pc_instance(/*autoinst*/
          .pc_reg(if_pc),
          .rst_n(rst_n),
          .clk(clk),
+         .enable(en_pc),
          .is_branch(id_is_branch),
          .branch_address(id_branch_address));
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         id_inst <= 32'b0; //NOP
-        id_pc_value <= 31'b0;
+        id_pc_value <= 32'b0;
     end
-    else begin
+    else if(en_ifid) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
+    end else begin
+        id_inst <= 32'b0; //NOP;
+        id_pc_value <= 32'b0;
     end
 end
 
@@ -163,7 +174,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_immediate <= 16'b0;
         ex_address <= 32'b0;
     end
-    else begin
+    else if(en_idex) begin
         ex_immediate <= id_immediate;
         ex_op_type <= id_op_type;
         ex_op <= id_op;
@@ -174,6 +185,17 @@ always @(posedge clk or negedge rst_n) begin
         ex_address <= id_address;
         ex_reg_s_value <= id_reg_s_value;
         ex_reg_t_value <= id_reg_t_value;
+    end else begin
+        ex_op <= `OP_SLL;
+        ex_op_type <= `OPTYPE_R;
+        ex_reg_s <= 5'b0;
+        ex_reg_t <= 5'b0;
+        ex_reg_d <= 5'b0;
+        ex_flag_unsigned <= 1'b0;
+        ex_reg_s_value <= 32'b0;
+        ex_reg_t_value <= 32'b0;
+        ex_immediate <= 16'b0;
+        ex_address <= 32'b0;
     end
 end
 
@@ -214,7 +236,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_hilo_wdata <= 64'b0;
         mm_we_hilo <= 1'b0;
     end
-    else begin
+    else if(en_exmm) begin
         mm_mem_access_op <= ex_mem_access_op;
         mm_mem_access_sz <= ex_mem_access_sz;
         mm_data_i <= ex_data_o;
@@ -222,6 +244,14 @@ always @(posedge clk or negedge rst_n) begin
         mm_addr_i <= ex_mem_addr;
         mm_hilo_wdata <= ex_reg_hilo_o;
         mm_we_hilo <= ex_we_hilo;
+    end else begin
+        mm_mem_access_op <= `ACCESS_OP_D2R;
+        mm_mem_access_sz <= `ACCESS_SZ_WORD;
+        mm_data_i <= 32'b0;
+        mm_reg_addr_i <= 5'b0;
+        mm_addr_i <= 32'b0;
+        mm_hilo_wdata <= 64'b0;
+        mm_we_hilo <= 1'b0;
     end
 end
 
@@ -244,11 +274,16 @@ always @(posedge clk or negedge rst_n) begin
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
     end
-    else begin
+    else if(en_mmwb) begin
         wb_mem_access_op <= mm_mem_access_op;
         wb_mem_access_sz <= mm_mem_access_sz;
         wb_data_i <= mm_data_o;
         wb_reg_addr_i <= mm_reg_addr_i;
+    end else begin
+        wb_mem_access_op <= `ACCESS_OP_D2R;
+        wb_mem_access_sz <= `ACCESS_SZ_WORD;
+        wb_data_i <= 32'b0;
+        wb_reg_addr_i <= 5'b0;
     end
 end
 
