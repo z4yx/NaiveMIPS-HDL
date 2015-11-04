@@ -1,3 +1,6 @@
 altera/simulation/modelsim
 altera/output_files
 *.dpf
+PLLJ_PLLSPE_INFO.txt
+*.qws
+altera/greybox_tmp

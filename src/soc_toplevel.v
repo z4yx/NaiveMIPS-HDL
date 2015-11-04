@@ -12,14 +12,18 @@ module soc_toplevel(/*autoport*/
 input wire rst_in_n;
 input wire clk_in;
 
-wire clk2x,clk,rst_n;
+wire clk2x,clk,locked,rst_n;
 
 sys_pll pll1(
     1'b0,
     clk_in,
     clk,
     clk2x,
-    rst_n);
+    locked);
+clk_ctrl clk_ctrl1(/*autoinst*/
+         .rst_out_n(rst_n),
+         .clk(clk),
+         .rst_in_n(locked));
 
 output wire[31:0] ram_address;
 inout wire[31:0] ram_data;
@@ -39,6 +43,11 @@ wire [31:0]ibus_rddata;
 wire [31:0]dbus_address;
 wire [31:0]ibus_address;
 
+wire [31:0]rom_data;
+prog_rom rom(/*autoinst*/
+           .data(rom_data),
+           .address(ibus_address));
+
 naive_mips cpu(/*autoinst*/
          .ibus_address(ibus_address[31:0]),
          .ibus_byteenable(ibus_byteenable[3:0]),
@@ -52,7 +61,7 @@ naive_mips cpu(/*autoinst*/
          .dbus_wrdata(dbus_wrdata[31:0]),
          .rst_n(rst_n),
          .clk(clk),
-         .ibus_rddata(ibus_rddata[31:0]),
+         .ibus_rddata(rom_data/*ibus_rddata[31:0]*/),
          .dbus_rddata(dbus_rddata[31:0]));
 
 two_port mainram(/*autoinst*/
