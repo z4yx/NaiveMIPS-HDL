@@ -82,6 +82,7 @@ reg [1:0]mm_mem_access_sz;
 reg [4:0]mm_reg_addr_i;
 wire [31:0]mm_mem_data_i;
 wire [31:0]mm_mem_address;
+wire [3:0]mm_mem_byte_en;
 wire mm_mem_rd;
 reg [1:0]mm_mem_access_op;
 reg [31:0]mm_data_i;
@@ -115,11 +116,7 @@ assign ibus_wrdata = 32'b0;
 assign if_inst = ibus_rddata;
 
 assign dbus_address = mm_mem_address;
-assign dbus_byteenable = 
-    (mm_mem_access_sz==`ACCESS_SZ_BYTE)?4'b0001:(
-        (mm_mem_access_sz==`ACCESS_SZ_HALF)?4'b0011:
-            4'b1111
-    );
+assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd;
 assign dbus_write = mm_mem_wr;
 assign dbus_wrdata= mm_mem_data_o;
@@ -298,6 +295,7 @@ mm stage_mm(/*autoinst*/
             .mem_data_o(mm_mem_data_o),
             .mem_rd(mm_mem_rd),
             .mem_wr(mm_mem_wr),
+            .mem_byte_en(mm_mem_byte_en),
             .mem_access_op(mm_mem_access_op),
             .mem_access_sz(mm_mem_access_sz),
             .data_i(mm_data_i),
