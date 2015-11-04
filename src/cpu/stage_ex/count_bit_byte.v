@@ -6,7 +6,7 @@ module count_bit_byte(/*autoport*/
            bit);
 input wire[7:0] data;
 input wire bit;
-output reg[4:0] cnt;
+output reg[3:0] cnt;
 always @(*) begin
     if(bit) begin
         casez(data)                                
