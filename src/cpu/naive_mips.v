@@ -1,12 +1,39 @@
 `include "defs.v"
 
 module naive_mips(/*autoport*/
+//output
+          ibus_address,
+          ibus_byteenable,
+          ibus_read,
+          ibus_write,
+          ibus_wrdata,
+          dbus_address,
+          dbus_byteenable,
+          dbus_read,
+          dbus_write,
+          dbus_wrdata,
 //input
           rst_n,
-          clk);
+          clk,
+          ibus_rddata,
+          dbus_rddata);
 
 input wire rst_n;
 input wire clk;
+
+output wire[31:0] ibus_address;
+output wire[3:0] ibus_byteenable;
+output wire ibus_read;
+output wire ibus_write;
+output wire[31:0] ibus_wrdata;
+input wire[31:0] ibus_rddata;
+
+output wire[31:0] dbus_address;
+output wire[3:0] dbus_byteenable;
+output wire dbus_read;
+output wire dbus_write;
+output wire[31:0] dbus_wrdata;
+input wire[31:0] dbus_rddata;
 
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 
@@ -79,17 +106,23 @@ regs main_regs(/*autoinst*/
          .raddr1(id_reg_s),
          .raddr2(id_reg_t));
 
-prog_rom rom(/*autoinst*/
-           .data(if_inst),
-           .address(if_pc));
+assign ibus_address = if_pc;
+assign ibus_byteenable = 4'b1111;
+assign ibus_read = 1'b1;
+assign ibus_write = 1'b0;
+assign ibus_wrdata = 32'b0;
+assign if_inst = ibus_rddata;
 
-mem main_mem(/*autoinst*/
-           .data_o(mm_mem_data_i),
-           .address(mm_mem_address),
-           .data_i(mm_mem_data_o),
-           .rd(mm_mem_rd),
-           .wr(mm_mem_wr),
-           .access_sz(mm_mem_access_sz));
+assign dbus_address = mm_mem_address;
+assign dbus_byteenable = 
+    (mm_mem_access_sz==`ACCESS_SZ_BYTE)?4'b0001:(
+        (mm_mem_access_sz==`ACCESS_SZ_HALF)?4'b0011:
+            4'b1111
+    );
+assign dbus_read = mm_mem_rd;
+assign dbus_write = mm_mem_wr;
+assign dbus_wrdata= mm_mem_data_o;
+assign mm_mem_data_i = dbus_rddata;
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
