@@ -122,8 +122,13 @@ assign dbus_write = mm_mem_wr;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
 
-always @(posedge clk or negedge rst_n) begin
+always @(*) begin
     if (!rst_n) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
+    end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
+      (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
+    end else begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
     end
 end
@@ -144,7 +149,7 @@ always @(posedge clk or negedge rst_n) begin
     else if(en_ifid) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
-    end else begin
+    end else if(en_idex) begin
         id_inst <= 32'b0; //NOP;
         id_pc_value <= 32'b0;
     end
@@ -216,7 +221,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_address <= id_address;
         ex_reg_s_value <= id_reg_s_value;
         ex_reg_t_value <= id_reg_t_value;
-    end else begin
+    end else if(en_exmm) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
         ex_reg_s <= 5'b0;
@@ -277,7 +282,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_hilo_wdata <= ex_reg_hilo_o;
         mm_we_hilo <= ex_we_hilo;
         mm_flag_unsigned <= ex_flag_unsigned;
-    end else begin
+    end else if(en_mmwb) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
         mm_data_i <= 32'b0;

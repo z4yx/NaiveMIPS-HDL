@@ -32,7 +32,7 @@ output reg[31:0] value_o;
 always @(*) begin
     if(reg_addr == addr_from_ex && access_op_from_ex == `ACCESS_OP_D2R)
         value_o <= value_from_ex;
-    else if(reg_addr == addr_from_mm && access_op_from_mm == `ACCESS_OP_D2R)
+    else if(reg_addr == addr_from_mm && (access_op_from_mm == `ACCESS_OP_D2R || access_op_from_mm == `ACCESS_OP_M2R))
         value_o <= value_from_mm;
     // else if(reg_addr == addr_from_wb)
     //     value_o <= value_from_wb;
