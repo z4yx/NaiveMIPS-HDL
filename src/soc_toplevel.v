@@ -14,12 +14,14 @@ input wire rst_in_n;
 input wire clk_in;
 
 wire clk2x,clk,locked,rst_n;
+wire clk_uart;
 
 sys_pll pll1(
     1'b0,
     clk_in,
     clk,
     clk2x,
+    clk_uart,
     locked);
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
