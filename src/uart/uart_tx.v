@@ -94,7 +94,7 @@ always @(posedge clk_uart or negedge rst_n) begin
                 state <= 4'h1;
                 remain_bit <= remain_bit-1'b1;
             end else begin
-                baud_cnt = baud_cnt - 1'b1;
+                baud_cnt <= baud_cnt - 1'b1;
             end
         end
         endcase

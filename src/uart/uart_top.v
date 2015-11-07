@@ -14,6 +14,7 @@ module uart_top(/*autoport*/
 
 `define REG_UART_SEND 32'h0
 `define REG_UART_STATUS 32'h1
+`define REG_UART_RECV 32'h2
 
 input wire clk_bus;
 input wire clk_uart;
@@ -31,13 +32,21 @@ output wire txd;
 wire tx_idle;
 wire tx_request;
 
+wire[7:0] rx_data;
+wire rx_data_available;
+wire rx_clear;
+
 assign tx_request = bus_write && bus_address==`REG_UART_SEND;
+assign rx_clear = bus_write && bus_address==`REG_UART_STATUS && bus_data_i[1];
 
 always @(*) begin
     if(bus_read) begin
         case(bus_address)
         `REG_UART_STATUS: begin
-            bus_data_o <= {31'b0, tx_idle};
+            bus_data_o <= {30'b0, rx_data_available, tx_idle};
+        end
+        `REG_UART_RECV: begin
+            bus_data_o <= {24'b0, rx_data};
         end
         default: begin
             bus_data_o <= 32'h0;
@@ -56,5 +65,14 @@ uart_tx tx1(/*autoinst*/
             .rst_n(rst_n),
             .tx_request(tx_request),
             .data(bus_data_i[7:0]));
+
+uart_rx rx1(/*autoinst*/
+            .data(rx_data),
+            .data_available(rx_data_available),
+            .clk_bus(clk_bus),
+            .clk_uart(clk_uart),
+            .rst_n(rst_n),
+            .clear(rx_clear),
+            .rxd(rxd));
 
 endmodule
