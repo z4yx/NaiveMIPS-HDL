@@ -53,27 +53,6 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
 set_location_assignment PIN_L15 -to clk
-set_global_assignment -name VERILOG_FILE ../src/sram/two_port.v
-set_global_assignment -name VERILOG_FILE ../src/soc_toplevel.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/branch.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_word.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_byte.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/mul.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/hilo_reg.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/regs.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/naive_mips.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_wb/wb.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_mm/mm.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_if/pc.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/ex.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/reg_val_mux.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_r.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_j.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_i.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/defs.v
-set_global_assignment -name QIP_FILE bootrom.qip
-set_global_assignment -name SDC_FILE NaiveMIPS.sdc
 set_location_assignment PIN_C17 -to ram_address[31]
 set_location_assignment PIN_C18 -to ram_address[30]
 set_location_assignment PIN_C19 -to ram_address[29]
@@ -142,5 +121,28 @@ set_location_assignment PIN_J26 -to ram_rd_n
 set_location_assignment PIN_G24 -to ram_wr_n
 set_location_assignment PIN_K15 -to rst_n
 set_location_assignment PIN_V12 -to clk2x
+set_global_assignment -name VERILOG_FILE ../src/clk_ctrl.v
+set_global_assignment -name VERILOG_FILE ../src/sram/two_port.v
+set_global_assignment -name VERILOG_FILE ../src/soc_toplevel.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/branch.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_word.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_byte.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/mul.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/hilo_reg.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/regs.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/naive_mips.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_wb/wb.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_mm/mm.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_if/pc.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/ex.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/reg_val_mux.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_r.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_j.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_i.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/defs.v
+set_global_assignment -name QIP_FILE bootrom.qip
+set_global_assignment -name SDC_FILE NaiveMIPS.sdc
 set_global_assignment -name QIP_FILE sys_pll.qip
+set_global_assignment -name MIF_FILE bootrom.mif
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

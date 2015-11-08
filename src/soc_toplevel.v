@@ -51,9 +51,10 @@ wire [31:0]dbus_address;
 wire [31:0]ibus_address;
 
 wire [31:0]rom_data;
-prog_rom rom(/*autoinst*/
-           .data(rom_data),
-           .address(ibus_address));
+bootrom rom(
+        .address(ibus_address[31:2]),
+        .clock(~clk),
+        .q(rom_data));
 
 naive_mips cpu(/*autoinst*/
          .ibus_address(ibus_address[31:0]),
