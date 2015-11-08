@@ -36,7 +36,7 @@ reg[7:0] data_i_byte;
 reg[15:0] data_i_half;
 wire[7:0] sign_byte,sign_half;
 
-assign mem_address = {addr_i[31:2],2'b00};
+assign mem_address = addr_i;
 assign sign_half = {data_i_half[15],data_i_half[15],data_i_half[15],data_i_half[15],
     data_i_half[15],data_i_half[15],data_i_half[15],data_i_half[15]};
 assign sign_byte = {data_i_byte[7],data_i_byte[7],data_i_byte[7],data_i_byte[7],
