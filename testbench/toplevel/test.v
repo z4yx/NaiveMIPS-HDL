@@ -14,6 +14,8 @@ wire CE_n;
 
 assign CE_n = 1'b0;
 
+wire uart_line;
+
 soc_toplevel soc(/*autoinst*/
            .ram_data(ram_data),
            .ram_address(ram_address),
@@ -21,7 +23,9 @@ soc_toplevel soc(/*autoinst*/
            .ram_rd_n(ram_rd_n),
            .ram_dataenable(ram_dataenable),
            .rst_in_n(rst_in_n),
-           .clk_in(clk_in));
+           .clk_in(clk_in),
+           .txd(uart_line),
+           .rxd(uart_line));
 AS7C34098A ram1(/*autoinst*/
             .DataIO(ram_data[15:0]),
             .Address(ram_address[17:0]),

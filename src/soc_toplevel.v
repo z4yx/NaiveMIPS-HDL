@@ -6,9 +6,11 @@ module soc_toplevel(/*autoport*/
             ram_wr_n,
             ram_rd_n,
             ram_dataenable,
+            txd,
 //input
             rst_in_n,
-            clk_in);
+            clk_in,
+            rxd);
 
 input wire rst_in_n;
 input wire clk_in;
@@ -34,6 +36,9 @@ output wire ram_wr_n;
 output wire ram_rd_n;
 output wire[3:0] ram_dataenable;
 
+output wire txd;
+input wire rxd;
+
 wire dbus_write;
 wire [31:0]dbus_rddata;
 wire ibus_read;
@@ -56,6 +61,26 @@ wire [31:0]ibus_ram_wrdata;
 wire [3:0]ibus_ram_byteenable;
 wire ibus_ram_read;
 wire ibus_ram_write;
+
+wire [23:0]dbus_ram_address;
+wire [31:0]dbus_ram_rddata;
+wire [31:0]dbus_ram_wrdata;
+wire [3:0]dbus_ram_byteenable;
+wire dbus_ram_read;
+wire dbus_ram_write;
+
+wire [31:0]uart_data_o;
+wire [31:0]uart_data_i;
+wire [2:0]uart_address;
+wire uart_read;
+wire uart_write;
+
+wire [31:0]flash_data_o;
+wire [31:0]flash_data_i;
+wire [23:0]flash_address;
+wire [3:0]flash_data_enable;
+wire flash_read;
+wire flash_write;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -97,7 +122,7 @@ naive_mips cpu(/*autoinst*/
 two_port mainram(/*autoinst*/
            .ram_data(ram_data[31:0]),
            .rddata1(ibus_ram_rddata),
-           .rddata2(dbus_rddata),
+           .rddata2(dbus_ram_rddata),
            .ram_address(ram_address),
            .ram_wr_n(ram_wr_n),
            .ram_rd_n(ram_rd_n),
@@ -109,10 +134,56 @@ two_port mainram(/*autoinst*/
            .rd1(ibus_ram_read),
            .wr1(ibus_ram_write),
            .dataenable1(ibus_ram_byteenable),
-           .address2(dbus_address),
-           .wrdata2(dbus_wrdata),
-           .rd2(dbus_read),
-           .wr2(dbus_write),
-           .dataenable2(dbus_byteenable));
+           .address2({10'b0,dbus_ram_address[23:2]}),
+           .wrdata2(dbus_ram_wrdata),
+           .rd2(dbus_ram_read),
+           .wr2(dbus_ram_write),
+           .dataenable2(dbus_ram_byteenable));
+
+dbus dbus0(/*autoinst*/
+         .master_rddata(dbus_rddata[31:0]),
+         .uart_address(uart_address[2:0]),
+         .uart_data_i(uart_data_i[31:0]),
+         .uart_rd(uart_read),
+         .uart_wr(uart_write),
+         .ram_address(dbus_ram_address[23:0]),
+         .ram_data_i(dbus_ram_wrdata[31:0]),
+         .ram_data_enable(dbus_ram_byteenable[3:0]),
+         .ram_rd(dbus_ram_read),
+         .ram_wr(dbus_ram_write),
+         .flash_address(flash_address[23:0]),
+         .flash_data_i(flash_data_i[31:0]),
+         .flash_data_enable(flash_data_enable[3:0]),
+         .flash_rd(flash_read),
+         .flash_wr(flash_write),
+         .master_address(dbus_address[31:0]),
+         .master_byteenable(dbus_byteenable[3:0]),
+         .master_read(dbus_read),
+         .master_write(dbus_write),
+         .master_wrdata(dbus_wrdata[31:0]),
+         .uart_data_o(uart_data_o[31:0]),
+         .ram_data_o(dbus_ram_rddata[31:0]),
+         .flash_data_o(flash_data_o[31:0]));
+
+uart_top uart0(/*autoinst*/
+         .bus_data_o(uart_data_o[31:0]),
+         .txd(txd),
+         .clk_bus(clk),
+         .clk_uart(clk_uart),
+         .rst_n(rst_n),
+         .bus_address({1'b0,uart_address}),
+         .bus_data_i(uart_data_i[31:0]),
+         .bus_read(uart_read),
+         .bus_write(uart_write),
+         .rxd(rxd));
+
+flash_top flash0(/*autoinst*/
+         .bus_data_o(flash_data_o[31:0]),
+         .clk_bus(clk),
+         .rst_n(rst_n),
+         .bus_address(flash_address),
+         .bus_data_i(flash_data_i[31:0]),
+         .bus_read(flash_read),
+         .bus_write(flash_write));
 
 endmodule
