@@ -44,14 +44,14 @@ assign sign_byte = {data_i_byte[7],data_i_byte[7],data_i_byte[7],data_i_byte[7],
 
 always @(*) begin
     if(mem_access_sz == `ACCESS_SZ_HALF) begin
-        mem_byte_en <= {~addr_i[1],~addr_i[1],addr_i[1],addr_i[1]};
-        data_i_half <= addr_i[1] ? mem_data_i[15:0] : mem_data_i[31:16];
+        mem_byte_en <= {addr_i[1],addr_i[1],~addr_i[1],~addr_i[1]};
+        data_i_half <= addr_i[1] ? mem_data_i[31:16] : mem_data_i[15:0];
     end else if(mem_access_sz == `ACCESS_SZ_BYTE) begin
         case(addr_i[1:0])
-        2'b00: begin mem_byte_en <= 4'b1000; data_i_byte <= mem_data_i[31:24]; end
-        2'b01: begin mem_byte_en <= 4'b0100; data_i_byte <= mem_data_i[23:16]; end
-        2'b10: begin mem_byte_en <= 4'b0010; data_i_byte <= mem_data_i[15:8]; end
-        2'b11: begin mem_byte_en <= 4'b0001; data_i_byte <= mem_data_i[7:0]; end
+        2'b11: begin mem_byte_en <= 4'b1000; data_i_byte <= mem_data_i[31:24]; end
+        2'b10: begin mem_byte_en <= 4'b0100; data_i_byte <= mem_data_i[23:16]; end
+        2'b01: begin mem_byte_en <= 4'b0010; data_i_byte <= mem_data_i[15:8]; end
+        2'b00: begin mem_byte_en <= 4'b0001; data_i_byte <= mem_data_i[7:0]; end
         endcase
     end else begin
         mem_byte_en <= 4'b1111;
