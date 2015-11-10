@@ -12,9 +12,9 @@ module uart_top(/*autoport*/
             bus_write,
             rxd);
 
-`define REG_UART_SEND 32'h0
-`define REG_UART_STATUS 32'h1
-`define REG_UART_RECV 32'h2
+`define REG_UART_SEND 4'h8
+`define REG_UART_STATUS 4'hc
+`define REG_UART_RECV 4'h4
 
 input wire clk_bus;
 input wire clk_uart;

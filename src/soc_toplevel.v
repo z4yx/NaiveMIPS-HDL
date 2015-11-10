@@ -71,7 +71,7 @@ wire dbus_ram_write;
 
 wire [31:0]uart_data_o;
 wire [31:0]uart_data_i;
-wire [2:0]uart_address;
+wire [3:0]uart_address;
 wire uart_read;
 wire uart_write;
 
@@ -142,7 +142,7 @@ two_port mainram(/*autoinst*/
 
 dbus dbus0(/*autoinst*/
          .master_rddata(dbus_rddata[31:0]),
-         .uart_address(uart_address[2:0]),
+         .uart_address(uart_address),
          .uart_data_i(uart_data_i[31:0]),
          .uart_rd(uart_read),
          .uart_wr(uart_write),

@@ -32,7 +32,7 @@ input wire master_write;
 input wire[31:0] master_wrdata;
 output reg[31:0] master_rddata;
 
-output wire[2:0] uart_address;
+output wire[3:0] uart_address;
 output wire[31:0] uart_data_i;
 input wire[31:0] uart_data_o;
 output reg uart_rd;
@@ -61,7 +61,7 @@ assign flash_data_i = master_wrdata;
 assign flash_address = master_address[23:0];
 
 assign uart_data_i = master_wrdata;
-assign uart_address = master_address[2:0];
+assign uart_address = master_address[3:0];
 
 always @(*) begin
     ram_rd <= 1'b0;
