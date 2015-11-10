@@ -1,12 +1,20 @@
 module soc_toplevel(/*autoport*/
 //inout
             ram_data,
+            flash_data,
 //output
             ram_address,
             ram_wr_n,
             ram_rd_n,
             ram_dataenable,
             txd,
+            flash_address,
+            flash_rp_n,
+            flash_vpen,
+            flash_oe_n,
+            flash_ce,
+            flash_byte_n,
+            flash_we_n,
 //input
             rst_in_n,
             clk_in,
@@ -38,6 +46,15 @@ output wire[3:0] ram_dataenable;
 
 output wire txd;
 input wire rxd;
+
+output wire [23:0]flash_address;
+output wire flash_rp_n;
+output wire flash_vpen;
+output wire flash_oe_n;
+inout wire [15:0]flash_data;
+output wire [2:0]flash_ce;
+output wire flash_byte_n;
+output wire flash_we_n;
 
 wire dbus_write;
 wire [31:0]dbus_rddata;
@@ -75,12 +92,12 @@ wire [3:0]uart_address;
 wire uart_read;
 wire uart_write;
 
-wire [31:0]flash_data_o;
-wire [31:0]flash_data_i;
-wire [23:0]flash_address;
-wire [3:0]flash_data_enable;
-wire flash_read;
-wire flash_write;
+wire [31:0]flash_dbus_data_o;
+wire [31:0]flash_dbus_data_i;
+wire [23:0]flash_dbus_address;
+wire [3:0]flash_dbus_data_enable;
+wire flash_dbus_read;
+wire flash_dbus_write;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -151,11 +168,11 @@ dbus dbus0(/*autoinst*/
          .ram_data_enable(dbus_ram_byteenable[3:0]),
          .ram_rd(dbus_ram_read),
          .ram_wr(dbus_ram_write),
-         .flash_address(flash_address[23:0]),
-         .flash_data_i(flash_data_i[31:0]),
-         .flash_data_enable(flash_data_enable[3:0]),
-         .flash_rd(flash_read),
-         .flash_wr(flash_write),
+         .flash_address(flash_dbus_address[23:0]),
+         .flash_data_i(flash_dbus_data_i[31:0]),
+         .flash_data_enable(flash_dbus_data_enable[3:0]),
+         .flash_rd(flash_dbus_read),
+         .flash_wr(flash_dbus_write),
          .master_address(dbus_address[31:0]),
          .master_byteenable(dbus_byteenable[3:0]),
          .master_read(dbus_read),
@@ -163,7 +180,7 @@ dbus dbus0(/*autoinst*/
          .master_wrdata(dbus_wrdata[31:0]),
          .uart_data_o(uart_data_o[31:0]),
          .ram_data_o(dbus_ram_rddata[31:0]),
-         .flash_data_o(flash_data_o[31:0]));
+         .flash_data_o(flash_dbus_data_o[31:0]));
 
 uart_top uart0(/*autoinst*/
          .bus_data_o(uart_data_o[31:0]),
@@ -171,19 +188,27 @@ uart_top uart0(/*autoinst*/
          .clk_bus(clk),
          .clk_uart(clk_uart),
          .rst_n(rst_n),
-         .bus_address({1'b0,uart_address}),
+         .bus_address(uart_address),
          .bus_data_i(uart_data_i[31:0]),
          .bus_read(uart_read),
          .bus_write(uart_write),
          .rxd(rxd));
 
 flash_top flash0(/*autoinst*/
-         .bus_data_o(flash_data_o[31:0]),
+         .flash_data(flash_data[15:0]),
+         .flash_address(flash_address[23:0]),
+         .flash_we_n(flash_we_n),
+         .flash_byte_n(flash_byte_n),
+         .flash_oe_n(flash_oe_n),
+         .flash_rp_n(flash_rp_n),
+         .flash_ce(flash_ce[2:0]),
+         .flash_vpen(flash_vpen),
+         .bus_data_o(flash_dbus_data_o[31:0]),
          .clk_bus(clk),
          .rst_n(rst_n),
-         .bus_address(flash_address),
-         .bus_data_i(flash_data_i[31:0]),
-         .bus_read(flash_read),
-         .bus_write(flash_write));
+         .bus_address(flash_dbus_address),
+         .bus_data_i(flash_dbus_data_i[31:0]),
+         .bus_read(flash_dbus_read),
+         .bus_write(flash_dbus_write));
 
 endmodule
