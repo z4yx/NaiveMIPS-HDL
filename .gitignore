@@ -4,3 +4,6 @@ altera/output_files
 PLLJ_PLLSPE_INFO.txt
 *.qws
 altera/greybox_tmp
+xilinx/NaiveMIPS/ipcore_dir/blk_mem_gen_v7_3/simulation/
+xilinx/NaiveMIPS/ipcore_dir/clk_wiz_v3_6/doc/
+xilinx/NaiveMIPS/ipcore_dir/clk_wiz_v3_6/simulation/

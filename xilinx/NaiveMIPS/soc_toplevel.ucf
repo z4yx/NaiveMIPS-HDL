@@ -1,0 +1,7 @@
+
+# PlanAhead Generated physical constraints 
+
+NET "clk_in" LOC = U26;
+NET "rst_in_n" LOC = T1;
+NET "txd" LOC = P26;
+NET "rxd" LOC = N23;
