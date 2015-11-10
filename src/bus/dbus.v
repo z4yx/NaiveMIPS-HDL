@@ -75,7 +75,7 @@ always @(*) begin
         ram_rd <= master_read;
         ram_wr <= master_write;
         master_rddata <= ram_data_o;
-    end else if(master_address[31:24] == 8'h1e) begin
+    end else if(master_address[31:24] == 8'hbe) begin
         flash_rd <= master_read;
         flash_wr <= master_write;
         master_rddata <= flash_data_o;

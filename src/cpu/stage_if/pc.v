@@ -8,7 +8,7 @@ module pc(/*autoport*/
       branch_address,
       is_branch);
 
-parameter PC_INITIAL = 32'h1fc00000;
+parameter PC_INITIAL = 32'hbfc00000;
 
 input wire rst_n;
 input wire clk;
