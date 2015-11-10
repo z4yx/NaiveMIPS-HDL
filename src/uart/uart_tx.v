@@ -68,7 +68,7 @@ always @(posedge clk_uart or negedge rst_n) begin
     else begin
         tx_request_gated <= (tx_request_reg[6:2] != 5'b0);
         data_gated <= data_reg;
-        tx_done = tx_done << 1;
+        tx_done <= tx_done << 1;
         case(state)
         4'h0: begin
             if(tx_request_gated) begin

@@ -74,7 +74,7 @@ always @(posedge clk_uart or negedge rst_n) begin
     end
     else begin
         clear_request_gated <= (clear_request_reg != 4'b0);
-        rx_available = rx_available << 1;
+        rx_available <= rx_available << 1;
         case(state)
         4'h0: begin
             next_state <= 4'h3;
