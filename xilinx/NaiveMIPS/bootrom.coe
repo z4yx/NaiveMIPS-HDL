@@ -1,0 +1,16 @@
+; http://srecord.sourceforge.net/
+;
+; Generated automatically by srec_cat -o --coe 32
+;
+; depth = 125; 0x007D
+; width = 32; 0x20
+memory_initialization_radix = 16;
+memory_initialization_vector =
+00000000,
+D01F043C,
+F0038434,
+0C008580,
+0100A530,
+FDFFA010,
+00000000,
+AA000534

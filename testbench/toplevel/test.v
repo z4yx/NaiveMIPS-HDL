@@ -1,16 +1,20 @@
 `timescale 1ns/100ps
 module test();
 
-/*autodef*/
 reg rst_in_n;
 reg clk_in;
 
 wire[31:0] ram_data;
-wire[29:0] ram_address;
-wire ram_wr_n;
-wire ram_rd_n;
-wire[3:0] ram_dataenable;
-wire CE_n;
+
+wire[19:0] base_ram_address;
+wire base_ram_we_n;
+wire base_ram_oe_n;
+wire base_ram_ce_n;
+
+wire[19:0] ext_ram_address;
+wire ext_ram_we_n;
+wire ext_ram_oe_n;
+wire ext_ram_ce_n;
 
 wire[15:0] flash_data;
 wire[23:0] flash_address;
@@ -21,16 +25,18 @@ wire[2:0] flash_ce;
 wire flash_byte_n;
 wire flash_we_n;
 
-assign CE_n = 1'b0;
-
 wire uart_line;
 
 soc_toplevel soc(/*autoinst*/
            .ram_data(ram_data),
-           .ram_address(ram_address),
-           .ram_wr_n(ram_wr_n),
-           .ram_rd_n(ram_rd_n),
-           .ram_dataenable(ram_dataenable),
+           .base_ram_addr(base_ram_address),
+           .base_ram_ce_n(base_ram_ce_n),
+           .base_ram_oe_n(base_ram_oe_n),
+           .base_ram_we_n(base_ram_we_n),
+           .ext_ram_addr(ext_ram_address),
+           .ext_ram_ce_n(ext_ram_ce_n),
+           .ext_ram_oe_n(ext_ram_oe_n),
+           .ext_ram_we_n(ext_ram_we_n),
            .rst_in_n(rst_in_n),
            .clk_in(clk_in),
            .flash_data(flash_data),
@@ -43,22 +49,38 @@ soc_toplevel soc(/*autoinst*/
            .flash_we_n(flash_we_n),
            .txd(uart_line),
            .rxd(uart_line));
-AS7C34098A ram1(/*autoinst*/
-            .DataIO(ram_data[15:0]),
-            .Address(ram_address[17:0]),
-            .OE_n(ram_rd_n),
-            .CE_n(CE_n),
-            .WE_n(ram_wr_n),
-            .LB_n(~ram_dataenable[0]),
-            .UB_n(~ram_dataenable[1]));
-AS7C34098A ram2(/*autoinst*/
-            .DataIO(ram_data[31:16]),
-            .Address(ram_address[17:0]),
-            .OE_n(ram_rd_n),
-            .CE_n(CE_n),
-            .WE_n(ram_wr_n),
-            .LB_n(~ram_dataenable[2]),
-            .UB_n(~ram_dataenable[3]));
+AS7C34098A base1(/*autoinst*/
+            .DataIO(ram_data[7:0]),
+            .Address(base_ram_address[17:0]),
+            .OE_n(base_ram_oe_n),
+            .CE_n(base_ram_ce_n),
+            .WE_n(base_ram_we_n),
+            .LB_n(1'b0),
+            .UB_n(1'b0));
+AS7C34098A base2(/*autoinst*/
+            .DataIO(),
+            .Address(base_ram_address[17:0]),
+            .OE_n(base_ram_oe_n),
+            .CE_n(base_ram_ce_n),
+            .WE_n(base_ram_we_n),
+            .LB_n(1'b0),
+            .UB_n(1'b0));
+AS7C34098A ext1(/*autoinst*/
+            .DataIO(ram_data[23:8]),
+            .Address(ext_ram_address[17:0]),
+            .OE_n(ext_ram_oe_n),
+            .CE_n(ext_ram_ce_n),
+            .WE_n(ext_ram_we_n),
+            .LB_n(1'b0),
+            .UB_n(1'b0));
+AS7C34098A ext2(/*autoinst*/
+            .DataIO(ram_data[31:24]),
+            .Address(ext_ram_address[17:0]),
+            .OE_n(ext_ram_oe_n),
+            .CE_n(ext_ram_ce_n),
+            .WE_n(ext_ram_we_n),
+            .LB_n(1'b0),
+            .UB_n(1'b0));
 s29gl064n01 flash(
     .A21      (flash_address[21]),
     .A20      (flash_address[20]),

@@ -3,10 +3,14 @@ module soc_toplevel(/*autoport*/
             ram_data,
             flash_data,
 //output
-            ram_address,
-            ram_wr_n,
-            ram_rd_n,
-            ram_dataenable,
+            base_ram_addr,
+            base_ram_ce_n,
+            base_ram_oe_n,
+            base_ram_we_n,
+            ext_ram_addr,
+            ext_ram_ce_n,
+            ext_ram_oe_n,
+            ext_ram_we_n,
             txd,
             flash_address,
             flash_rp_n,
@@ -38,11 +42,36 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .clk(clk),
          .rst_in_n(locked));
 
-output wire[29:0] ram_address;
 inout wire[31:0] ram_data;
-output wire ram_wr_n;
-output wire ram_rd_n;
-output wire[3:0] ram_dataenable;
+
+// inout wire[31:0] base_ram_data;
+output wire[19:0] base_ram_addr;
+output wire base_ram_ce_n;
+output wire base_ram_oe_n;
+output wire base_ram_we_n;
+
+// inout wire[31:0] ext_ram_data;
+output wire[19:0] ext_ram_addr;
+output wire ext_ram_ce_n;
+output wire ext_ram_oe_n;
+output wire ext_ram_we_n;
+
+assign base_ram_ce_n = 1'b1;
+assign base_ram_oe_n = ram_rd_n || !ram_dataenable[0];
+assign base_ram_we_n = ram_wr_n || !ram_dataenable[0];
+assign base_ram_addr = ram_address[19:0];
+
+wire using_ext;
+assign using_ext = ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
+assign ext_ram_ce_n = 1'b1;
+assign ext_ram_oe_n = ram_rd_n || !using_ext;
+assign ext_ram_we_n = ram_wr_n || !using_ext;
+assign ext_ram_addr = ram_address[19:0];
+
+wire[29:0] ram_address;
+wire ram_wr_n;
+wire ram_rd_n;
+wire[3:0] ram_dataenable;
 
 output wire txd;
 input wire rxd;
