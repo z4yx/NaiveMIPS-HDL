@@ -1,4 +1,4 @@
-//TODO: div, linked/sc, c0, hilo except
+//TODO: div, c0
 `include "../defs.v"
 module ex(/*autoport*/
 //output

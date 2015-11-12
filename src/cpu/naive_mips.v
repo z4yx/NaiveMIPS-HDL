@@ -55,6 +55,7 @@ reg [31:0]id_pc_value;
 
 wire [31:0] id_reg_s_value_from_regs, id_reg_t_value_from_regs;
 wire [31:0] id_reg_s_value, id_reg_t_value;
+wire [63:0] hilo_value_from_reg;
 
 reg [15:0]ex_immediate;
 reg [1:0]ex_op_type;
@@ -88,8 +89,8 @@ reg [1:0]mm_mem_access_op;
 reg [31:0]mm_data_i;
 wire [31:0]mm_data_o;
 reg [31:0]mm_addr_i;
-reg [63:0]mm_hilo_wdata;
 reg mm_we_hilo;
+reg [63:0]mm_reg_hilo;
 reg mm_flag_unsigned;
 
 wire wb_reg_we;
@@ -97,6 +98,8 @@ reg [31:0]wb_data_i;
 reg [1:0]wb_mem_access_op;
 reg [1:0]wb_mem_access_sz;
 reg [4:0]wb_reg_addr_i;
+reg [63:0]wb_reg_hilo;
+reg wb_we_hilo;
 
 regs main_regs(/*autoinst*/
          .rdata1(id_reg_s_value_from_regs),
@@ -122,6 +125,9 @@ assign dbus_read = mm_mem_rd;
 assign dbus_write = mm_mem_wr;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
+
+assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
+  (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
 
 always @(*) begin
     if (!rst_n) begin
@@ -264,10 +270,11 @@ ex stage_ex(/*autoinst*/
             .reg_hilo_value(ex_reg_hilo_value));
 
 hilo_reg hilo(/*autoinst*/
-          .rdata(ex_reg_hilo_value),
-          .rst_n(rst_n),
-          .we(mm_we_hilo),
-          .wdata(mm_hilo_wdata));
+      .rdata(hilo_value_from_reg),
+      .clk(clk),
+      .rst_n(rst_n),
+      .we(wb_we_hilo),
+      .wdata(wb_reg_hilo));
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
@@ -276,7 +283,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_data_i <= 32'b0;
         mm_reg_addr_i <= 5'b0;
         mm_addr_i <= 32'b0;
-        mm_hilo_wdata <= 64'b0;
+        mm_reg_hilo <= 64'b0;
         mm_we_hilo <= 1'b0;
         mm_flag_unsigned <= 1'b0;
     end
@@ -286,7 +293,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_data_i <= ex_data_o;
         mm_reg_addr_i <= ex_reg_addr;
         mm_addr_i <= ex_mem_addr;
-        mm_hilo_wdata <= ex_reg_hilo_o;
+        mm_reg_hilo <= ex_reg_hilo_o;
         mm_we_hilo <= ex_we_hilo;
         mm_flag_unsigned <= ex_flag_unsigned;
     end else if(en_mmwb) begin
@@ -295,7 +302,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_data_i <= 32'b0;
         mm_reg_addr_i <= 5'b0;
         mm_addr_i <= 32'b0;
-        mm_hilo_wdata <= 64'b0;
+        mm_reg_hilo <= 64'b0;
         mm_we_hilo <= 1'b0;
         mm_flag_unsigned <= 1'b0;
     end
@@ -322,17 +329,23 @@ always @(posedge clk or negedge rst_n) begin
         wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
+        wb_reg_hilo <= 64'b0;
+        wb_we_hilo <= 1'b0;
     end
     else if(en_mmwb) begin
         wb_mem_access_op <= mm_mem_access_op;
         wb_mem_access_sz <= mm_mem_access_sz;
         wb_data_i <= mm_data_o;
         wb_reg_addr_i <= mm_reg_addr_i;
+        wb_reg_hilo <= mm_reg_hilo;
+        wb_we_hilo <= mm_we_hilo;
     end else begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
         wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
+        wb_reg_hilo <= 64'b0;
+        wb_we_hilo <= 1'b0;
     end
 end
 

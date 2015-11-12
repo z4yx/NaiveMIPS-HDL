@@ -2,24 +2,29 @@ module hilo_reg(/*autoport*/
 //output
             rdata,
 //input
+            clk,
             rst_n,
             we,
             wdata);
 
+input wire clk;
 input wire rst_n;
 
 input wire we;
 input wire[63:0] wdata;
+output wire[63:0] rdata;
 
-output reg[63:0] rdata;
+reg[63:0] hilo;
 
-always @(*) begin
+always @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin
-        rdata <= 64'b0;
+        hilo <= 64'b0;
     end
     else if(we) begin
-        rdata <= wdata;
+        hilo <= wdata;
     end
 end
+
+assign rdata = we ? wdata : hilo;
 
 endmodule
