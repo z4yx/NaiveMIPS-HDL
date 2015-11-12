@@ -43,6 +43,8 @@ assign sign_byte = {data_i_byte[7],data_i_byte[7],data_i_byte[7],data_i_byte[7],
     data_i_byte[7],data_i_byte[7],data_i_byte[7],data_i_byte[7]};
 
 always @(*) begin
+    data_i_half <= 16'b0;
+    data_i_byte <= 8'b0;
     if(mem_access_sz == `ACCESS_SZ_HALF) begin
         mem_byte_en <= {addr_i[1],addr_i[1],~addr_i[1],~addr_i[1]};
         data_i_half <= addr_i[1] ? mem_data_i[31:16] : mem_data_i[15:0];

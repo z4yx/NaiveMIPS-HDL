@@ -101,6 +101,7 @@ reg [4:0]wb_reg_addr_i;
 regs main_regs(/*autoinst*/
          .rdata1(id_reg_s_value_from_regs),
          .rdata2(id_reg_t_value_from_regs),
+         .clk(clk),
          .rst_n(rst_n),
          .we(wb_reg_we),
          .waddr(wb_reg_addr_i),
@@ -175,7 +176,10 @@ reg_val_mux reg_val_mux_s(/*autoinst*/
           .access_op_from_ex(ex_mem_access_op),
           .addr_from_mm(mm_reg_addr_i),
           .value_from_mm(mm_data_o),
-          .access_op_from_mm(mm_mem_access_op));
+          .access_op_from_mm(mm_mem_access_op),
+          .addr_from_wb(wb_reg_addr_i),
+          .value_from_wb(wb_data_i),
+          .write_enable_from_wb(wb_reg_we));
 
 reg_val_mux reg_val_mux_t(/*autoinst*/
           .value_o(id_reg_t_value),
@@ -186,7 +190,10 @@ reg_val_mux reg_val_mux_t(/*autoinst*/
           .access_op_from_ex(ex_mem_access_op),
           .addr_from_mm(mm_reg_addr_i),
           .value_from_mm(mm_data_o),
-          .access_op_from_mm(mm_mem_access_op));
+          .access_op_from_mm(mm_mem_access_op),
+          .addr_from_wb(wb_reg_addr_i),
+          .value_from_wb(wb_data_i),
+          .write_enable_from_wb(wb_reg_we));
 
 branch branch_detect(/*autoinst*/
          .is_branch(id_is_branch),
