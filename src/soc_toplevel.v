@@ -19,6 +19,7 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
+				leds,
 //input
             rst_in_n,
             clk_in,
@@ -29,6 +30,8 @@ input wire clk_in;
 
 wire clk2x,clk,locked,rst_n;
 wire clk_uart;
+
+output wire[15:0] leds;
 
 sys_pll pll1(
     .areset(1'b0),
@@ -41,6 +44,8 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
          .clk(clk),
          .rst_in_n(locked));
+
+assign leds = {1'b1,locked,txd,rst_in_n};
 
 inout wire[31:0] ram_data;
 
