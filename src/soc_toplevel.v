@@ -1,3 +1,4 @@
+`default_nettype none
 module soc_toplevel(/*autoport*/
 //inout
             ram_data,
@@ -45,8 +46,6 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .clk(clk),
          .rst_in_n(locked));
 
-assign leds = {1'b1,locked,txd,rst_in_n};
-
 inout wire[31:0] ram_data;
 
 // inout wire[31:0] base_ram_data;
@@ -60,18 +59,6 @@ output wire[19:0] ext_ram_addr;
 output wire ext_ram_ce_n;
 output wire ext_ram_oe_n;
 output wire ext_ram_we_n;
-
-assign base_ram_ce_n = 1'b1;
-assign base_ram_oe_n = ram_rd_n || !ram_dataenable[0];
-assign base_ram_we_n = ram_wr_n || !ram_dataenable[0];
-assign base_ram_addr = ram_address[19:0];
-
-wire using_ext;
-assign using_ext = ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
-assign ext_ram_ce_n = 1'b1;
-assign ext_ram_oe_n = ram_rd_n || !using_ext;
-assign ext_ram_we_n = ram_wr_n || !using_ext;
-assign ext_ram_addr = ram_address[19:0];
 
 wire[29:0] ram_address;
 wire ram_wr_n;
@@ -132,6 +119,20 @@ wire [23:0]flash_dbus_address;
 wire [3:0]flash_dbus_data_enable;
 wire flash_dbus_read;
 wire flash_dbus_write;
+
+assign leds = {1'b1,locked,txd,rst_in_n};
+
+assign base_ram_ce_n = 1'b1;
+assign base_ram_oe_n = ram_rd_n || !ram_dataenable[0];
+assign base_ram_we_n = ram_wr_n || !ram_dataenable[0];
+assign base_ram_addr = ram_address[19:0];
+
+wire using_ext;
+assign using_ext = ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
+assign ext_ram_ce_n = 1'b1;
+assign ext_ram_oe_n = ram_rd_n || !using_ext;
+assign ext_ram_we_n = ram_wr_n || !using_ext;
+assign ext_ram_addr = ram_address[19:0];
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),

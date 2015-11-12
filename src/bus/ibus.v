@@ -1,3 +1,4 @@
+`default_nettype none
 module ibus(/*autoport*/
 //output
             master_rddata,

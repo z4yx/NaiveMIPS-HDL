@@ -1,5 +1,6 @@
 //TODO: div, c0
 `include "../defs.v"
+`default_nettype none
 module ex(/*autoport*/
 //output
           mem_access_op,

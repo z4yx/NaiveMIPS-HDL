@@ -121,6 +121,12 @@ set_location_assignment PIN_J26 -to ram_rd_n
 set_location_assignment PIN_G24 -to ram_wr_n
 set_location_assignment PIN_K15 -to rst_n
 set_location_assignment PIN_V12 -to clk2x
+set_global_assignment -name VERILOG_FILE ../src/flash/flash_top.v
+set_global_assignment -name VERILOG_FILE ../src/bus/ibus.v
+set_global_assignment -name VERILOG_FILE ../src/bus/dbus.v
+set_global_assignment -name VERILOG_FILE ../src/uart/uart_top.v
+set_global_assignment -name VERILOG_FILE ../src/uart/uart_tx.v
+set_global_assignment -name VERILOG_FILE ../src/uart/uart_rx.v
 set_global_assignment -name VERILOG_FILE ../src/clk_ctrl.v
 set_global_assignment -name VERILOG_FILE ../src/sram/two_port.v
 set_global_assignment -name VERILOG_FILE ../src/soc_toplevel.v

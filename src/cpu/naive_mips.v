@@ -1,4 +1,5 @@
 `include "defs.v"
+`default_nettype none
 
 module naive_mips(/*autoport*/
 //output

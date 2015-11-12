@@ -1,3 +1,4 @@
+`default_nettype none
 module dbus(/*autoport*/
 //output
             master_rddata,

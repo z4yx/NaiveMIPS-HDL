@@ -1,4 +1,5 @@
 `include "../defs.v"
+`default_nettype none
 module id(/*autoport*/
 //output
           op,

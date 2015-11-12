@@ -1,3 +1,4 @@
+`default_nettype none
 module two_port(/*autoport*/
 //inout
             ram_data,
