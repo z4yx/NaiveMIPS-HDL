@@ -28,7 +28,9 @@ always @(*) begin
         (inst[5:0]==6'h2b) || //sltu
         (inst[5:0]==6'h23) || //subu
         (inst[5:0]==6'h1b) || //divu
-        (inst[5:0]==6'h19); //multu
+        (inst[5:0]==6'h19) || //multu
+        (inst[5:0]==6'h01) || //maddu
+        (inst[5:0]==6'h05); //msubu
 end
 
 always @(*) begin
@@ -63,7 +65,9 @@ always @(*) begin
         op <= `OP_MFC0;
     end else if(inst[31:26]==6'h1c) begin //SPECIAL2
         case(inst[5:0])
+        6'h01,6'h00: op <= `OP_MADD;
         6'h02: op <= `OP_MUL;
+        6'h04,6'h05: op <= `OP_MSUB;
         6'h20: op <= `OP_CLZ;
         6'h21: op <= `OP_CLO;
         default: op <= `OP_INVAILD;

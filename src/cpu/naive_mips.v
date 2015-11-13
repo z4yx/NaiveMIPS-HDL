@@ -77,6 +77,7 @@ wire [63:0]ex_reg_hilo_o;
 wire [63:0]ex_reg_hilo_value;
 wire ex_overflow;
 wire ex_we_hilo;
+wire ex_stall;
 
 wire mm_mem_wr;
 wire [31:0]mm_mem_data_o;
@@ -133,6 +134,8 @@ assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
 always @(*) begin
     if (!rst_n) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
+    end else if(ex_stall) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
       (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
@@ -268,7 +271,10 @@ ex stage_ex(/*autoinst*/
             .overflow(ex_overflow),
             .reg_hilo_o(ex_reg_hilo_o),
             .we_hilo(ex_we_hilo),
-            .reg_hilo_value(ex_reg_hilo_value));
+            .reg_hilo_value(ex_reg_hilo_value),
+            .clk(clk),
+            .rst_n(rst_n),
+            .stall(ex_stall));
 
 hilo_reg hilo(/*autoinst*/
       .rdata(hilo_value_from_reg),

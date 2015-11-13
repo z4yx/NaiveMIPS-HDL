@@ -1,4 +1,4 @@
-//TODO: div, c0
+//TODO: c0
 `include "../defs.v"
 `default_nettype none
 module ex(/*autoport*/
@@ -11,7 +11,10 @@ module ex(/*autoport*/
           overflow,
           reg_hilo_o,
           we_hilo,
+          stall,
 //input
+          clk,
+          rst_n,
           op,
           op_type,
           address,
@@ -24,6 +27,8 @@ module ex(/*autoport*/
           flag_unsigned,
           reg_hilo_value);
 
+input wire clk;
+input wire rst_n;
 
 input wire[7:0] op;
 input wire[1:0] op_type;
@@ -45,6 +50,7 @@ output reg[4:0] reg_addr;
 output reg overflow;
 output reg[63:0] reg_hilo_o;
 output reg we_hilo;
+output wire stall;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -53,6 +59,10 @@ wire [31:0] signExtImm;
 wire [31:0] zeroExtImm;
 
 wire imm_s;
+
+wire mul_done;
+
+assign stall = !mul_done;
 
 assign imm_s = immediate[15];
 assign signExtImm = { imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s,imm_s, 
@@ -63,11 +73,16 @@ assign tmp_sign_operand = (op_type==`OPTYPE_R ? reg_t_value : signExtImm);
 assign tmp_add = reg_s_value + tmp_sign_operand;
 assign tmp_sub = reg_s_value - tmp_sign_operand; //used by SLT/SLTI and SUB
 
-mul mul_instance(/*autoinst*/
+multi_cycle mul_instance(/*autoinst*/
            .result(mul_result),
            .flag_unsigned(flag_unsigned),
            .operand1(reg_s_value),
-           .operand2(reg_t_value));
+           .operand2(reg_t_value),
+           .hilo_i(reg_hilo_value),
+           .clk(clk),
+           .rst_n(rst_n),
+           .op(op),
+           .done(mul_done));
 
 count_bit_word clo(/*autoinst*/
          .cnt(tmp_clo),
@@ -161,10 +176,6 @@ always @(*) begin
             reg_addr <= reg_d;
         end
     end
-    `OP_DIV: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
-    end
     `OP_MFHI: begin
         data_o <= reg_hilo_value[63:32];
         reg_addr <= reg_d;
@@ -189,15 +200,18 @@ always @(*) begin
         data_o <= 32'h0;
         reg_addr <= 5'h0;
     end
-    `OP_MULT: begin
+    `OP_MULT,
+    `OP_MSUB,
+    `OP_MADD,
+    `OP_DIV: begin
         reg_hilo_o <= mul_result;
-        we_hilo <= 1'b1;
+        we_hilo <= mul_done;
         data_o <= 32'h0;
         reg_addr <= 5'h0;
     end
     `OP_MUL: begin
         data_o <= mul_result[31:0];
-        reg_addr <= reg_d;
+        reg_addr <= mul_done ? reg_d : 5'h0;
     end
     `OP_SRA: begin
         data_o <= (reg_t_value>>immediate)|(reg_t_value[31] ? ~({32{1'b1}}>>immediate) : 32'h0);
