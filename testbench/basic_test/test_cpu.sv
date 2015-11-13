@@ -38,6 +38,8 @@ naive_mips mips(/*autoinst*/
             .ibus_rddata(ibus_rddata[31:0]),
             .dbus_rddata(dbus_rddata[31:0]));
 
+defparam mips.pc_instance.PC_INITIAL = 0;
+
 wire[31:0] registers[0:31];
 wire[63:0] hilo;
 assign registers = mips.main_regs.registers;
@@ -127,10 +129,12 @@ always begin
 end
 
 initial begin
+    unit_test("../testcase/inst_div");
     unit_test("../testcase/inst_alu");
     unit_test("../testcase/inst_move");
     unit_test("../testcase/inst_jump");
     unit_test("../testcase/inst_branch");
+    $display("Unit test succeeded!");
     $stop;
 end
 
