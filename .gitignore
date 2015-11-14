@@ -7,3 +7,7 @@ altera/greybox_tmp
 xilinx/NaiveMIPS/ipcore_dir/blk_mem_gen_v7_3/simulation/
 xilinx/NaiveMIPS/ipcore_dir/clk_wiz_v3_6/doc/
 xilinx/NaiveMIPS/ipcore_dir/clk_wiz_v3_6/simulation/
+xilinx/NaiveMIPS/isim/test_isim_beh.exe.sim/
+xilinx/NaiveMIPS/isim/work/
+*.debug
+*.veo

@@ -12,6 +12,8 @@ module multi_cycle(/*autoport*/
          operand1,
          operand2,
          hilo_i);
+			
+parameter DIV_CYCLES = 34;
 
 input wire clk;
 input wire rst_n;
@@ -28,7 +30,7 @@ wire [63:0] tmp_result, mresult;
 wire [31:0] tmp_quotient, tmp_remain;
 
 wire [31:0] dquotient, dremain;
-reg [17:0] div_stage;
+reg [DIV_CYCLES:0] div_stage;
 wire div_done;
 
 divider divider_instance(/*autoinst*/
@@ -74,12 +76,12 @@ end
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-        div_stage <= 18'b0;
+        div_stage <= 'b0;
     end
-    else if(div_stage) begin
+    else if(div_stage != 'b0) begin
         div_stage <= div_stage >> 1; 
     end else if(op == `OP_DIV) begin
-        div_stage <= {1'b1, 15'b0};
+        div_stage <= 'b1 << (DIV_CYCLES-1);
     end
 end
 
