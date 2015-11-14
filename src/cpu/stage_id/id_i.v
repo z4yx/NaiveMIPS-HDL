@@ -48,6 +48,7 @@ always @(*) begin
     6'h0d: op <= `OP_OR;
     6'h0e: op <= `OP_XOR;
     6'h0f: op <= `OP_LU;
+    6'h10: op <= (reg_s == 5'h0) ? `OP_MFC0 : `OP_MTC0;
     6'h20,6'h24: op <= `OP_LB;
     6'h21,6'h25: op <= `OP_LH;
     6'h23: op <= `OP_LW;

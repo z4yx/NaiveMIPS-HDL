@@ -1,4 +1,3 @@
-//TODO: c0
 `include "../defs.v"
 `default_nettype none
 module ex(/*autoport*/
@@ -12,6 +11,9 @@ module ex(/*autoport*/
           reg_hilo_o,
           we_hilo,
           stall,
+          we_cp0,
+          cp0_wr_addr,
+          cp0_rd_addr,
 //input
           clk,
           rst_n,
@@ -25,7 +27,8 @@ module ex(/*autoport*/
           reg_t_value,
           immediate,
           flag_unsigned,
-          reg_hilo_value);
+          reg_hilo_value,
+          reg_cp0_value);
 
 input wire clk;
 input wire rst_n;
@@ -41,6 +44,7 @@ input wire[31:0] reg_t_value;
 input wire[15:0] immediate;
 input wire flag_unsigned;
 input wire[63:0] reg_hilo_value;
+input wire[31:0] reg_cp0_value;
 
 output reg[1:0] mem_access_op;
 output reg[1:0] mem_access_sz;
@@ -51,6 +55,9 @@ output reg overflow;
 output reg[63:0] reg_hilo_o;
 output reg we_hilo;
 output wire stall;
+output reg we_cp0;
+output reg[4:0] cp0_wr_addr;
+output reg[4:0] cp0_rd_addr;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -97,6 +104,9 @@ always @(*) begin
     overflow <= 1'b0;
     we_hilo <= 1'b0;
     reg_hilo_o <= 64'b0;
+    we_cp0 <= 1'b0;
+    cp0_rd_addr <= 5'b0;
+    cp0_wr_addr <= 5'b0;
     case (op)
     `OP_ADD: begin
         if(!flag_unsigned && reg_s_value[31]==tmp_sign_operand[31] && (reg_s_value[31]^tmp_add[31])) begin
@@ -197,8 +207,15 @@ always @(*) begin
         reg_addr <= 5'h0;
     end
     `OP_MFC0: begin
-        data_o <= 32'h0;
-        reg_addr <= 5'h0;
+        cp0_rd_addr <= reg_d;
+        data_o <= reg_cp0_value;
+        reg_addr <= reg_t;
+    end
+    `OP_MTC0: begin
+        data_o <= reg_t_value;
+        cp0_wr_addr <= reg_d;
+        we_cp0 <= 1'b1;
+        reg_addr <= 5'b0;
     end
     `OP_MULT,
     `OP_MSUB,
