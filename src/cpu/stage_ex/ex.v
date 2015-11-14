@@ -87,11 +87,11 @@ multi_cycle mul_instance(/*autoinst*/
 count_bit_word clo(/*autoinst*/
          .cnt(tmp_clo),
          .data(reg_s_value),
-         .bit(1'b1));
+         .bit_i(1'b1));
 count_bit_word clz(/*autoinst*/
          .cnt(tmp_clz),
          .data(reg_s_value),
-         .bit(1'b0));
+         .bit_i(1'b0));
 
 always @(*) begin
     overflow <= 1'b0;

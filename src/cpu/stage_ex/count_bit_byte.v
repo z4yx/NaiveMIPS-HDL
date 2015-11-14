@@ -3,12 +3,12 @@ module count_bit_byte(/*autoport*/
            cnt,
 //input
            data,
-           bit);
+           bit_i);
 input wire[7:0] data;
-input wire bit;
+input wire bit_i;
 output reg[3:0] cnt;
 always @(*) begin
-    if(bit) begin
+    if(bit_i) begin
         casez(data)                                
             8'b0???????: cnt<=4'd0;             
             8'b10??????: cnt<=4'd1;  
