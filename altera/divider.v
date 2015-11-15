@@ -70,7 +70,7 @@ module divider (
 		LPM_DIVIDE_component.lpm_drepresentation = "UNSIGNED",
 		LPM_DIVIDE_component.lpm_hint = "LPM_REMAINDERPOSITIVE=TRUE",
 		LPM_DIVIDE_component.lpm_nrepresentation = "UNSIGNED",
-		LPM_DIVIDE_component.lpm_pipeline = 16,
+		LPM_DIVIDE_component.lpm_pipeline = 34,
 		LPM_DIVIDE_component.lpm_type = "LPM_DIVIDE",
 		LPM_DIVIDE_component.lpm_widthd = 32,
 		LPM_DIVIDE_component.lpm_widthn = 32;
@@ -92,7 +92,7 @@ endmodule
 // Retrieval info: CONSTANT: LPM_DREPRESENTATION STRING "UNSIGNED"
 // Retrieval info: CONSTANT: LPM_HINT STRING "LPM_REMAINDERPOSITIVE=TRUE"
 // Retrieval info: CONSTANT: LPM_NREPRESENTATION STRING "UNSIGNED"
-// Retrieval info: CONSTANT: LPM_PIPELINE NUMERIC "16"
+// Retrieval info: CONSTANT: LPM_PIPELINE NUMERIC "34"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "LPM_DIVIDE"
 // Retrieval info: CONSTANT: LPM_WIDTHD NUMERIC "32"
 // Retrieval info: CONSTANT: LPM_WIDTHN NUMERIC "32"
