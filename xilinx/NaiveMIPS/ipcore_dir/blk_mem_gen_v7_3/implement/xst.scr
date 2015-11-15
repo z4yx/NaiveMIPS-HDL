@@ -1,0 +1,13 @@
+run
+-ifmt VHDL
+-ent blk_mem_gen_v7_3_exdes
+-p xc6slx100-fgg676-2
+-ifn xst.prj
+-write_timing_constraints No
+-iobuf YES
+-max_fanout 100
+-ofn blk_mem_gen_v7_3_exdes 
+-ofmt NGC
+-bus_delimiter ()
+-hierarchy_separator /
+-case Maintain
