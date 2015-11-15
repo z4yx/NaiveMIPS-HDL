@@ -46,6 +46,7 @@ always @(*) begin
         6'h09: op <= `OP_JALR;
         6'h0a: op <= `OP_MOVZ;
         6'h0b: op <= `OP_MOVN;
+        6'h0c: op <= `OP_SYSCALL;
         6'h10: op <= `OP_MFHI;
         6'h11: op <= `OP_MTHI;
         6'h12: op <= `OP_MFLO;
