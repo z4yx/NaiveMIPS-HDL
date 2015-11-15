@@ -3,8 +3,8 @@
 
 NET "clk_in" LOC = U26;
 NET "rst_in_n" LOC = T1;
-NET "txd" LOC = P26;
-NET "rxd" LOC = N23;
+NET "txd" LOC = N23;
+NET "rxd" LOC = P26;
 
 NET "leds[0]" LOC = N26;
 NET "leds[1]" LOC = M26;
