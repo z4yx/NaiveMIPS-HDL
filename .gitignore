@@ -11,3 +11,4 @@ xilinx/NaiveMIPS/isim/test_isim_beh.exe.sim/
 xilinx/NaiveMIPS/isim/work/
 *.debug
 *.veo
+xilinx/CPLD/top_html/

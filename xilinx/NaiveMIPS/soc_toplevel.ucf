@@ -6,22 +6,75 @@ NET "rst_in_n" LOC = T1;
 NET "txd" LOC = N23;
 NET "rxd" LOC = P26;
 
-NET "leds[0]" LOC = N26;
-NET "leds[1]" LOC = M26;
-NET "leds[2]" LOC = L25;
-NET "leds[3]" LOC = L26;
-NET "leds[4]" LOC = K26;
-NET "leds[5]" LOC = M23;
-NET "leds[6]" LOC = K24;
-NET "leds[7]" LOC = L24;
-NET "leds[8]" LOC = J24;
-NET "leds[9]" LOC = G23;
-NET "leds[10]" LOC = J25;
-NET "leds[11]" LOC = J26;
-NET "leds[12]" LOC = H26;
-NET "leds[13]" LOC = G25;
-NET "leds[14]" LOC = G26;
-NET "leds[15]" LOC = F26;
+#LEDS
+NET "gpio0[0]" LOC = N26;
+NET "gpio0[1]" LOC = M26;
+NET "gpio0[2]" LOC = L25;
+NET "gpio0[3]" LOC = L26;
+NET "gpio0[4]" LOC = K26;
+NET "gpio0[5]" LOC = M23;
+NET "gpio0[6]" LOC = K24;
+NET "gpio0[7]" LOC = L24;
+NET "gpio0[8]" LOC = J24;
+NET "gpio0[9]" LOC = G23;
+NET "gpio0[10]" LOC = J25;
+NET "gpio0[11]" LOC = J26;
+NET "gpio0[12]" LOC = H26;
+NET "gpio0[13]" LOC = G25;
+NET "gpio0[14]" LOC = G26;
+NET "gpio0[15]" LOC = F26;
+
+#DPY0
+NET "gpio0[16]" LOC = B26;
+NET "gpio0[17]" LOC = C25;
+NET "gpio0[18]" LOC = D24;
+NET "gpio0[19]" LOC = A25;
+NET "gpio0[20]" LOC = B24;
+NET "gpio0[21]" LOC = C26;
+NET "gpio0[22]" LOC = D26;
+
+#DPY2
+NET "gpio0[23]" LOC = C24;
+NET "gpio0[24]" LOC = D22;
+NET "gpio0[25]" LOC = E23;
+NET "gpio0[26]" LOC = B23;
+NET "gpio0[27]" LOC = A23;
+NET "gpio0[28]" LOC = D23;
+NET "gpio0[29]" LOC = B25;
+
+#DIP_SW
+NET "gpio1[0]" LOC = Y5;
+NET "gpio1[1]" LOC = W1;
+NET "gpio1[2]" LOC = W2;
+NET "gpio1[3]" LOC = V1;
+NET "gpio1[4]" LOC = U1;
+NET "gpio1[5]" LOC = U2;
+NET "gpio1[6]" LOC = R1;
+NET "gpio1[7]" LOC = R2;
+NET "gpio1[8]" LOC = P1;
+NET "gpio1[9]" LOC = N1;
+NET "gpio1[10]" LOC = N2;
+NET "gpio1[11]" LOC = M1;
+NET "gpio1[12]" LOC = L1;
+NET "gpio1[13]" LOC = L2;
+NET "gpio1[14]" LOC = W5;
+NET "gpio1[15]" LOC = W3;
+NET "gpio1[16]" LOC = V4;
+NET "gpio1[17]" LOC = V3;
+NET "gpio1[18]" LOC = U4;
+NET "gpio1[19]" LOC = U3;
+NET "gpio1[20]" LOC = T4;
+NET "gpio1[21]" LOC = R4;
+NET "gpio1[22]" LOC = R3;
+NET "gpio1[23]" LOC = P5;
+NET "gpio1[24]" LOC = P3;
+NET "gpio1[25]" LOC = N4;
+NET "gpio1[26]" LOC = N3;
+NET "gpio1[27]" LOC = N5;
+NET "gpio1[28]" LOC = M4;
+NET "gpio1[29]" LOC = M3;
+NET "gpio1[30]" LOC = L4;
+NET "gpio1[31]" LOC = L3;
 
 NET "flash_address[0]" LOC = G3;
 NET "flash_address[1]" LOC = C8;

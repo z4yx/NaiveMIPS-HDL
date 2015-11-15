@@ -34,7 +34,7 @@ wire clk2x,clk,locked,rst_n;
 wire clk_uart;
 
 sys_pll pll1(
-    .areset(1'b0),
+    .areset(!rst_in_n),
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
