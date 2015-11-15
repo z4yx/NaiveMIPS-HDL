@@ -52,6 +52,10 @@
 `define OP_MSUB 8'd46
 `define OP_MADD 8'd47
 `define OP_MTC0 8'd48
+`define OP_ERET 8'd49
+`define OP_TLBWI 8'd50
+`define OP_SYSCALL 8'd51
+`define OP_CACHE 8'd52
 
 `define OP_INVAILD 8'hff
 

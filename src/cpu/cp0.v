@@ -53,7 +53,7 @@ always @(*) begin
             data_o <= cp0_regs[`CP0_EPC];
         end
         `CP0_Cause: begin
-            data_o <= {16'b0, cp0_regs[`CP0_Cause][15:8], 1'b0, cp0_regs[`CP0_Cause][6:2], 2'b00};
+            data_o <= {cp0_regs[`CP0_Cause][31],15'b0, cp0_regs[`CP0_Cause][15:8], 1'b0, cp0_regs[`CP0_Cause][6:2], 2'b00};
         end
         `CP0_Status: begin
             data_o <= {27'b0, cp0_regs[`CP0_Status][4:3], 1'b0, cp0_regs[`CP0_Status][1:0]};
@@ -76,7 +76,7 @@ always @(*) begin
 end
 
 always @(posedge clk or negedge rst_n) begin
-    if (rst_n) begin
+    if (!rst_n) begin
         cp0_regs[`CP0_Count] <= 32'b0;
         cp0_regs[`CP0_Compare] <= 32'b0;
         cp0_regs[`CP0_Status] <= 32'h10000000;
