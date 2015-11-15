@@ -25,7 +25,8 @@ wire[2:0] flash_ce;
 wire flash_byte_n;
 wire flash_we_n;
 
-wire uart_line;
+reg rxd;
+wire txd;
 
 soc_toplevel soc(/*autoinst*/
            .ram_data(ram_data),
@@ -47,8 +48,8 @@ soc_toplevel soc(/*autoinst*/
            .flash_ce(flash_ce),
            .flash_byte_n(flash_byte_n),
            .flash_we_n(flash_we_n),
-           .txd(uart_line),
-           .rxd(uart_line));
+           .txd(txd),
+           .rxd(rxd));
 AS7C34098A base1(/*autoinst*/
             .DataIO(ram_data[7:0]),
             .Address(base_ram_address[17:0]),
@@ -137,7 +138,21 @@ defparam flash.mem_file_name = "flash_preload.mem";
 initial begin
     rst_in_n=1'b0;
     clk_in=1'b0;
+	 rxd = 1'b1;
     #41 rst_in_n=1'b1;
+end
+
+initial begin
+    wait(soc.rst_n == 1'b1);
+	 #100;
+	 rxd = 1'b0;
+	 #8680;
+	 repeat(8) begin
+		rxd = ~rxd;
+		#8680;
+	 end
+	 rxd = 1'b1;
+	 #8680;
 end
 
 always begin

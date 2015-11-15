@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="E:/Projects/NaiveMIPS-HDL/xilinx/NaiveMIPS/test_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="test" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="12" />
+   <wvobject fp_name="/test/txd" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">txd</obj_property>
+      <obj_property name="ObjectShortName">txd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/rxd" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rxd</obj_property>
+      <obj_property name="ObjectShortName">rxd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/rst_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst_n</obj_property>
+      <obj_property name="ObjectShortName">rst_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/rx_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rx_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/rx_data_available" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_data_available</obj_property>
+      <obj_property name="ObjectShortName">rx_data_available</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/bus_data_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bus_data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bus_data_i[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/bus_data_o" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bus_data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bus_data_o[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/bus_address" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">bus_address[3:0]</obj_property>
+      <obj_property name="ObjectShortName">bus_address[3:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/bus_read" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">bus_read</obj_property>
+      <obj_property name="ObjectShortName">bus_read</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/bus_write" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">bus_write</obj_property>
+      <obj_property name="ObjectShortName">bus_write</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/tx_request" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">tx_request</obj_property>
+      <obj_property name="ObjectShortName">tx_request</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/uart0/tx1/data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">data[7:0]</obj_property>
+   </wvobject>
+</wave_config>
