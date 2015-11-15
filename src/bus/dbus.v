@@ -6,6 +6,10 @@ module dbus(/*autoport*/
             uart_data_i,
             uart_rd,
             uart_wr,
+            gpio_address,
+            gpio_data_i,
+            gpio_rd,
+            gpio_wr,
             ram_address,
             ram_data_i,
             ram_data_enable,
@@ -23,6 +27,7 @@ module dbus(/*autoport*/
             master_write,
             master_wrdata,
             uart_data_o,
+            gpio_data_o,
             ram_data_o,
             flash_data_o);
 
@@ -38,6 +43,12 @@ output wire[31:0] uart_data_i;
 input wire[31:0] uart_data_o;
 output reg uart_rd;
 output reg uart_wr;
+
+output wire[7:0] gpio_address;
+output wire[31:0] gpio_data_i;
+input wire[31:0] gpio_data_o;
+output reg gpio_rd;
+output reg gpio_wr;
 
 output wire[23:0] ram_address;
 output wire[31:0] ram_data_i;
@@ -64,6 +75,9 @@ assign flash_address = master_address[23:0];
 assign uart_data_i = master_wrdata;
 assign uart_address = master_address[3:0];
 
+assign gpio_data_i = master_wrdata;
+assign gpio_address = master_address[7:0];
+
 always @(*) begin
     ram_rd <= 1'b0;
     ram_wr <= 1'b0;
@@ -71,6 +85,8 @@ always @(*) begin
     flash_wr <= 1'b0;
     uart_rd <= 1'b0;
     uart_wr <= 1'b0;
+    gpio_rd <= 1'b0;
+    gpio_wr <= 1'b0;
     master_rddata <= 32'h0;
     if(master_address[31:24] == 8'h00) begin
         ram_rd <= master_read;
@@ -84,6 +100,10 @@ always @(*) begin
         uart_rd <= master_read;
         uart_wr <= master_write;
         master_rddata <= uart_data_o;
+    end else if(master_address[31:8] == 28'h1fd004) begin
+        gpio_rd <= master_read;
+        gpio_wr <= master_write;
+        master_rddata <= gpio_data_o;
     end
 end
 
