@@ -28,6 +28,9 @@ wire flash_we_n;
 reg rxd;
 wire txd;
 
+tri[31:0] gpio0;
+tri[31:0] gpio1;
+
 soc_toplevel soc(/*autoinst*/
            .ram_data(ram_data),
            .base_ram_addr(base_ram_address),
@@ -49,7 +52,9 @@ soc_toplevel soc(/*autoinst*/
            .flash_byte_n(flash_byte_n),
            .flash_we_n(flash_we_n),
            .txd(txd),
-           .rxd(rxd));
+           .rxd(rxd),
+           .gpio0(gpio0),
+           .gpio1(gpio1));
 AS7C34098A base1(/*autoinst*/
             .DataIO(ram_data[7:0]),
             .Address(base_ram_address[17:0]),
@@ -135,24 +140,63 @@ s29gl064n01 flash(
 defparam flash.UserPreload = 1'b1;
 defparam flash.mem_file_name = "flash_preload.mem";
 
+defparam soc.uart0.rx1.COUNTER_PERIOD=3;
+defparam soc.uart0.tx1.COUNTER_PERIOD=3;
+
+task uart_send_byte;
+input [7:0] data;
+begin
+    soc.uart0.rx1.rx_avai_for_sim = 1'b1;
+    soc.uart0.rx1.rx_data_for_sim = data;
+    #45;
+    soc.uart0.rx1.rx_avai_for_sim = 1'b0;
+    #700;
+    // rxd = 1'b0;
+    // #361;
+    // repeat(8) begin
+    //     rxd = data[0];
+    //     #361;
+    //     data = data>>1;
+    // end
+    // rxd = 1'b1;
+    // #361;
+end
+endtask
+
+task uart_send_word;
+input [31:0] data;
+begin
+    uart_send_byte(data[7:0]);
+    uart_send_byte(data[15:8]);
+    uart_send_byte(data[23:16]);
+    uart_send_byte(data[31:24]);
+end
+endtask
+
+// assign gpio0 = 32'h0;
+assign gpio1 = 32'h0;
+
 initial begin
     rst_in_n=1'b0;
     clk_in=1'b0;
-	 rxd = 1'b1;
+    rxd = 1'b1;
     #41 rst_in_n=1'b1;
 end
 
 initial begin
     wait(soc.rst_n == 1'b1);
-	 #100;
-	 rxd = 1'b0;
-	 #8680;
-	 repeat(8) begin
-		rxd = ~rxd;
-		#8680;
-	 end
-	 rxd = 1'b1;
-	 #8680;
+    #1000;
+    uart_send_byte(8'h30);
+    #200;
+    uart_send_word(32'h00005566);
+    uart_send_word(32'h00000001);
+    // uart_send_word(32'haabbccdd);
+    uart_send_word(32'h3403eeff);
+    #600;
+
+    uart_send_byte(8'h34);
+    #200;
+    uart_send_word(32'h00005566);
 end
 
 always begin

@@ -12,9 +12,9 @@ module uart_rx(/*autoport*/
 parameter BAUD = 115200;
 parameter UART_CLK = 11059200;
 parameter COUNTER_PERIOD = UART_CLK/BAUD-1;
-parameter SAMPLE_1 = UART_CLK/BAUD/4-1;
-parameter SAMPLE_2 = UART_CLK/BAUD/2-1;
-parameter SAMPLE_3 = UART_CLK/BAUD/4*3-1;
+parameter SAMPLE_1 = (COUNTER_PERIOD+1)/4-1;
+parameter SAMPLE_2 = (COUNTER_PERIOD+1)/2-1;
+parameter SAMPLE_3 = (COUNTER_PERIOD+1)/4*3-1;
 
 input wire clk_bus;
 input wire clk_uart;
@@ -24,6 +24,8 @@ input wire clear;
 output reg[7:0] data;
 output reg data_available;
 
+reg rx_avai_for_sim;
+reg[7:0] rx_data_for_sim;
 reg[3:0] clear_request_reg;
 reg rx_available_gated,rx_available_gated_last;
 reg[7:0] rx_data_gated;
@@ -49,9 +51,11 @@ always @(posedge clk_bus or negedge rst_n) begin
         rx_available_gated <= 1'b0;
         rx_available_gated_last <= 1'b0;
         data_available <= 1'b0;
+        rx_avai_for_sim <= 1'b0;
+        rx_data_for_sim <= 8'b0;
     end
     else begin
-        rx_data_gated <= rx_data;
+        rx_data_gated <= rx_data[7:0];
         rx_available_gated <= (rx_available[6:2] != 5'b0);
         rx_available_gated_last <= rx_available_gated;
         clear_request_reg <= clear_request_reg<<1;
@@ -61,6 +65,9 @@ always @(posedge clk_bus or negedge rst_n) begin
         end else if(rx_available_gated_last && !rx_available_gated) begin
             data_available <= 1'b1;
             data <= rx_data_gated;
+        end else if(rx_avai_for_sim) begin
+            data_available <= 1'b1;
+            data <= rx_data_for_sim;
         end
     end
 end
