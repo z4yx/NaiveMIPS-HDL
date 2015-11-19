@@ -34,7 +34,33 @@ __start:
    sw   $3,0x8($0)
    lw   $1,0x8($0)       # $1 = 0x44556677
 
-    
+   ori $1,$0,0x1234    # $1 = 0x00001234
+   sw  $1,0x0($0)      # [0x0] = 0x00001234
+
+   ori $2,$0,0x1234    # $2 = 0x00001234
+   ori $1,$0,0x0       # $1 = 0x0
+   lw  $1,0x0($0)      # $1 = 0x00001234
+   beq $1,$2,Label     # branch after load
+   nop
+
+   ori $1,$0,0x4567    
+   b _loop
+   nop
+
+Label:
+   ori $2,$0,0         # $2 = 0x00000000
+   ori $1,$0,0x1235    # $1 = 0x00001235
+   lw  $2,0x0($0)      # $2 = 0x00001234
+   addi $2,$2,1        # ALU execution after load
+   beq $1,$2,Label2
+   nop 
+   ori $1,$0,0x5555
+   b _loop
+   nop
+
+Label2:
+   ori $1,$0,0x6666
+
 _loop:
    j _loop
    nop
