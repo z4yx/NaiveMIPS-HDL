@@ -18,9 +18,38 @@ wire [3:0]dbus_byteenable;
 reg rst_n;
 reg clk;
 
+// tri [31:0]ram_data_io;
+// assign ram_data_io = (dbus_write ? dbus_wrdata : {32{1'bz}});
+// assign dbus_rddata = ram_data_io;
+
 prog_rom fake_rom(/*autoinst*/
           .data(ibus_rddata),
           .address({19'b0, ibus_address[12:0]}));
+
+mem fake_ram(/*autoinst*/
+           .data_o(dbus_rddata),
+           .address(dbus_address[31:2]),
+           .data_i(dbus_wrdata),
+           .rd(dbus_read),
+           .wr(dbus_write),
+           .byte_enable(dbus_byteenable));
+
+// AS7C34098A base1(/*autoinst*/
+//             .DataIO(ram_data_io[15:0]),
+//             .Address(dbus_address[19:2]),
+//             .OE_n(~dbus_read),
+//             .CE_n(1'b0),
+//             .WE_n(~dbus_write),
+//             .LB_n(~dbus_byteenable[0]),
+//             .UB_n(~dbus_byteenable[1]));
+// AS7C34098A base2(/*autoinst*/
+//             .DataIO(ram_data_io[31:16]),
+//             .Address(dbus_address[19:2]),
+//             .OE_n(~dbus_read),
+//             .CE_n(1'b0),
+//             .WE_n(~dbus_write),
+//             .LB_n(~dbus_byteenable[2]),
+//             .UB_n(~dbus_byteenable[3]));
 
 naive_mips mips(/*autoinst*/
             .ibus_address(ibus_address[31:0]),
@@ -129,6 +158,8 @@ always begin
 end
 
 initial begin
+    unit_test("../testcase/inst_mem");
+    unit_test("../testcase/mem_endian");
     unit_test("../testcase/inst_div");
     unit_test("../testcase/inst_alu");
     unit_test("../testcase/inst_move");
