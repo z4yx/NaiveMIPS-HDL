@@ -134,7 +134,8 @@ assign base_ram_we_n = ram_wr_n || !ram_dataenable[0];
 assign base_ram_addr = ram_address[19:0];
 
 wire using_ext;
-assign using_ext = ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
+//assign using_ext = ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
+assign using_ext = 1'b0;
 assign ext_ram_ce_n = 1'b0;
 assign ext_ram_oe_n = ram_rd_n || !using_ext;
 assign ext_ram_we_n = ram_wr_n || !using_ext;
