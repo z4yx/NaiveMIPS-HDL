@@ -25,20 +25,24 @@ module soc_toplevel(/*autoport*/
 //input
             rst_in_n,
             clk_in,
+				clk_uart_in,
             rxd);
 
 input wire rst_in_n;
 input wire clk_in;
+input wire clk_uart_in;
 
 wire clk2x,clk,locked,rst_n;
 wire clk_uart;
+
+assign clk_uart = clk_uart_in;
 
 sys_pll pll1(
     .areset(!rst_in_n),
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
-    .c2(clk_uart),
+    //.c2(clk_uart),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
