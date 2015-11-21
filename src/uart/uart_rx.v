@@ -26,13 +26,11 @@ output reg data_available;
 
 reg rx_avai_for_sim;
 reg[7:0] rx_data_for_sim;
-reg[3:0] clear_request_reg;
 reg rx_available_gated,rx_available_gated_last;
 reg[7:0] rx_data_gated;
 
 input wire rxd;
 
-reg clear_request_gated;
 reg[6:0] rx_available;
 reg[8:0] rx_data;
 reg[3:0] state, next_state;
@@ -47,7 +45,6 @@ assign sample_value = (samples[0] && samples[1] ||
 
 always @(posedge clk_bus or negedge rst_n) begin
     if (!rst_n) begin
-        clear_request_reg <= 4'b0;
         rx_available_gated <= 1'b0;
         rx_available_gated_last <= 1'b0;
         data_available <= 1'b0;
@@ -58,10 +55,9 @@ always @(posedge clk_bus or negedge rst_n) begin
         rx_data_gated <= rx_data[7:0];
         rx_available_gated <= (rx_available[6:2] != 5'b0);
         rx_available_gated_last <= rx_available_gated;
-        clear_request_reg <= clear_request_reg<<1;
-        if (clear && data_available) begin
-            clear_request_reg <= 1'b1;
-            data_available <= 1'b0;
+        if (data_available) begin
+            if(clear)
+                data_available <= 1'b0;
         end else if(rx_available_gated_last && !rx_available_gated) begin
             data_available <= 1'b1;
             data <= rx_data_gated;
@@ -77,10 +73,8 @@ always @(posedge clk_uart or negedge rst_n) begin
         state <= 4'h0;
         next_state <= 4'h0;
         rx_available <= 7'b0;
-        clear_request_gated <= 1'b0;
     end
     else begin
-        clear_request_gated <= (clear_request_reg != 4'b0);
         rx_available <= rx_available << 1;
         case(state)
         4'h0: begin
@@ -132,8 +126,7 @@ always @(posedge clk_uart or negedge rst_n) begin
             end
         end
         4'h5: begin
-            if(clear_request_gated)
-                state <= 4'h0;
+            state <= 4'h0;
         end
         endcase
     end
