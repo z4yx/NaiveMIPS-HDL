@@ -32,6 +32,18 @@ inout tri[31:0] gpio1;
 reg[31:0] mode[0:1];
 reg[31:0] value[0:1];
 
+reg[31:0] gpio0_gated;
+reg[31:0] gpio0_value;
+reg[31:0] gpio1_gated;
+reg[31:0] gpio1_value;
+
+always @(posedge clk_bus) begin
+    gpio1_value <= gpio1_gated;
+    gpio1_gated <= gpio1;
+    gpio0_value <= gpio0_gated;
+    gpio0_gated <= gpio0;
+end
+
 always @(posedge clk_bus or negedge rst_n) begin
     if (!rst_n) begin
         // reset
@@ -69,10 +81,10 @@ always @(*) begin
     if(bus_read) begin
         case(bus_address)
         `REG_GPIO_IO0: begin
-            bus_data_o <= gpio0;
+            bus_data_o <= gpio0_value;
         end
         `REG_GPIO_IO1: begin
-            bus_data_o <= gpio1;
+            bus_data_o <= gpio1_value;
         end
         default: begin
             bus_data_o <= 32'h0;
