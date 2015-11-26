@@ -3,6 +3,7 @@ module test();
 
 reg rst_in_n;
 reg clk_in;
+reg clk_uart_in;
 
 wire[31:0] ram_data;
 
@@ -43,6 +44,7 @@ soc_toplevel soc(/*autoinst*/
            .ext_ram_we_n(ext_ram_we_n),
            .rst_in_n(rst_in_n),
            .clk_in(clk_in),
+           .clk_uart_in(clk_uart_in),
            .flash_data(flash_data),
            .flash_address(flash_address),
            .flash_rp_n(flash_rp_n),
@@ -139,6 +141,7 @@ s29gl064n01 flash(
 
 defparam flash.UserPreload = 1'b1;
 defparam flash.mem_file_name = "flash_preload.mem";
+defparam flash.TimingModel = "S29GL064N11TFIV2";
 
 defparam soc.uart0.rx1.COUNTER_PERIOD=3;
 defparam soc.uart0.tx1.COUNTER_PERIOD=3;
@@ -174,11 +177,12 @@ end
 endtask
 
 // assign gpio0 = 32'h0;
-assign gpio1 = 32'h0;
+assign gpio1 = 32'h1;
 
 initial begin
     rst_in_n=1'b0;
     clk_in=1'b0;
+    clk_uart_in=1'b0;
     rxd = 1'b1;
     #41 rst_in_n=1'b1;
 end
@@ -193,6 +197,11 @@ initial begin
     // uart_send_word(32'haabbccdd);
     uart_send_word(32'h3403eeff);
     #600;
+    uart_send_byte(8'h31);
+    #200;
+    uart_send_word(32'h00005566);
+    uart_send_word(32'h00000001);
+    #600;
 
     uart_send_byte(8'h34);
     #200;
@@ -203,5 +212,6 @@ always begin
     #10 clk_in = ~clk_in; //50MHz clock in
 end
 
+always #45 clk_uart_in = ~clk_uart_in; //11.0592Mhz
 
 endmodule
