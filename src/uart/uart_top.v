@@ -37,7 +37,7 @@ wire rx_data_available;
 wire rx_clear;
 
 assign tx_request = bus_write && bus_address==`REG_UART_SEND;
-assign rx_clear = bus_write && bus_address==`REG_UART_STATUS && bus_data_i[1];
+assign rx_clear = bus_read && bus_address==`REG_UART_RECV;
 
 always @(*) begin
     if(bus_read) begin

@@ -116,12 +116,12 @@ initial begin
         @(posedge clk_bus);
         $display("received: %x", bus_data_o);
 
-        @(negedge clk_bus);
-        bus_address = 32'hc; //REG_UART_STATUS
-        bus_read = 1'b0;
-        bus_write = 1'b1;
-        bus_data_i = 32'b10;
-        @(posedge clk_bus);
+        // @(negedge clk_bus);
+        // bus_address = 32'hc; //REG_UART_STATUS
+        // bus_read = 1'b0;
+        // bus_write = 1'b1;
+        // bus_data_i = 32'b10;
+        // @(posedge clk_bus);
 
     end while(1);
 
