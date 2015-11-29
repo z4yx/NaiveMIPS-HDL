@@ -45,6 +45,7 @@ reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 
 wire [31:0]if_pc;
 wire [31:0]if_inst;
+wire if_iaddr_exp;
 
 wire [15:0]id_immediate;
 wire [1:0]id_op_type;
@@ -116,6 +117,7 @@ reg mm_flag_unsigned;
 reg mm_we_cp0;
 reg [4:0]mm_cp0_wraddr;
 reg [31:0]mm_pc_value;
+wire mm_daddr_exp;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -137,6 +139,7 @@ wire[31:0] cp0_exp_badv;
 wire[31:0] cp0_exp_epc;
 wire[19:0] cp0_ebase;
 wire[31:0] cp0_epc;
+wire cp0_user_mode;
 wire timer_int;
 wire[5:0] hardware_int;
 
@@ -151,14 +154,25 @@ regs main_regs(/*autoinst*/
          .raddr1(id_reg_s),
          .raddr2(id_reg_t));
 
-assign ibus_address = if_pc;
+mmu_top mmu(/*autoinst*/
+      .data_address_o(dbus_address),
+      .inst_address_o(ibus_address),
+      .data_exp(mm_daddr_exp),
+      .inst_exp(if_iaddr_exp),
+      .rst_n(rst_n),
+      .clk(clk),
+      .data_address_i(mm_mem_address),
+      .inst_address_i(if_pc),
+      .data_en(mm_mem_rd || mm_mem_wr),
+      .inst_en(1'b1),
+      .user_mode(cp0_user_mode));
+
 assign ibus_byteenable = 4'b1111;
 assign ibus_read = 1'b1;
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
 assign if_inst = ibus_rddata;
 
-assign dbus_address = mm_mem_address;
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd;
 assign dbus_write = mm_mem_wr;
@@ -202,6 +216,7 @@ cp0 cp0_instance(/*autoinst*/
      .we(wb_we_cp0),
      .wr_addr(wb_cp0_wraddr),
      .data_i(wb_data_i),
+     .user_mode(cp0_user_mode),
      .ebase(cp0_ebase),
      .epc(cp0_epc),
      .tlb_config(),

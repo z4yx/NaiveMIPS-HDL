@@ -46,7 +46,7 @@ always @(*) begin
         ram_rd <= master_read;
         ram_wr <= master_write;
         master_rddata <= ram_data_o;
-    end else if(master_address[31:20] == 12'hbfc) begin
+    end else if(master_address[31:20] == 12'h1fc) begin
         master_rddata <= bootrom_data_o;
     end
 end

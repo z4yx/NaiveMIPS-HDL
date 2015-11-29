@@ -3,6 +3,7 @@ module cp0(/*autoport*/
 //output
          data_o,
          timer_int,
+         user_mode,
          ebase,
          epc,
          tlb_config,
@@ -46,6 +47,7 @@ input wire[31:0] data_i;
 input wire[5:0] hardware_int;
 output reg timer_int;
 
+output wire user_mode;
 output wire[19:0] ebase;
 output wire[31:0] epc;
 output wire[74:0] tlb_config;
@@ -61,6 +63,7 @@ input wire[31:0] exp_bad_vaddr;
 
 reg[31:0] cp0_regs[0:31];
 
+assign user_mode = cp0_regs[`CP0_Status][4];
 assign ebase = {2'b10, cp0_regs[`CP0_EBase][29:12]};
 assign epc = cp0_regs[`CP0_EPC];
 assign tlb_config = {
