@@ -3,21 +3,22 @@
 
 module naive_mips(/*autoport*/
 //output
-          ibus_address,
-          ibus_byteenable,
-          ibus_read,
-          ibus_write,
-          ibus_wrdata,
-          dbus_address,
-          dbus_byteenable,
-          dbus_read,
-          dbus_write,
-          dbus_wrdata,
+      ibus_address,
+      ibus_byteenable,
+      ibus_read,
+      ibus_write,
+      ibus_wrdata,
+      dbus_address,
+      dbus_byteenable,
+      dbus_read,
+      dbus_write,
+      dbus_wrdata,
 //input
-          rst_n,
-          clk,
-          ibus_rddata,
-          dbus_rddata);
+      rst_n,
+      clk,
+      ibus_rddata,
+      dbus_rddata,
+      hardware_int_in);
 
 input wire rst_n;
 input wire clk;
@@ -36,6 +37,10 @@ output wire dbus_write;
 output wire[31:0] dbus_wrdata;
 input wire[31:0] dbus_rddata;
 
+input wire[4:0] hardware_int_in;
+
+wire exception_flush;
+wire[31:0] exception_new_pc;
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 
 wire [31:0]if_pc;
@@ -52,6 +57,7 @@ wire [31:0]id_address;
 wire [4:0]id_reg_t;
 wire [31:0]id_branch_address;
 wire id_is_branch;
+reg id_in_delayslot;
 reg [31:0]id_pc_value;
 
 wire [31:0] id_reg_s_value_from_regs, id_reg_t_value_from_regs;
@@ -76,14 +82,23 @@ wire [4:0]ex_reg_addr;
 wire [63:0]ex_reg_hilo_o;
 wire [63:0]ex_reg_hilo_value;
 wire ex_overflow;
+wire ex_syscall;
+wire ex_eret;
 wire ex_we_hilo;
 wire ex_stall;
 wire ex_we_cp0;
 wire [4:0]ex_cp0_wraddr;
 wire [4:0]ex_cp0_rdaddr;
 wire [31:0]ex_cp0_value;
+reg ex_in_delayslot;
+reg [31:0]ex_pc_value;
 
 wire mm_mem_wr;
+reg mm_in_delayslot;
+reg mm_overflow;
+reg mm_syscall;
+reg mm_eret;
+reg mm_invalid_inst;
 wire [31:0]mm_mem_data_o;
 reg [1:0]mm_mem_access_sz;
 reg [4:0]mm_reg_addr_i;
@@ -100,6 +115,7 @@ reg [63:0]mm_reg_hilo;
 reg mm_flag_unsigned;
 reg mm_we_cp0;
 reg [4:0]mm_cp0_wraddr;
+reg [31:0]mm_pc_value;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -110,6 +126,19 @@ reg [63:0]wb_reg_hilo;
 reg wb_we_hilo;
 reg wb_we_cp0;
 reg [4:0]wb_cp0_wraddr;
+
+wire cp0_allow_int;
+wire[1:0] cp0_software_int;
+wire cp0_clean_exl;
+wire cp0_exp_en;
+wire cp0_exp_bd;
+wire[4:0] cp0_exp_code;
+wire[31:0] cp0_exp_badv;
+wire[31:0] cp0_exp_epc;
+wire[19:0] cp0_ebase;
+wire[31:0] cp0_epc;
+wire timer_int;
+wire[5:0] hardware_int;
 
 regs main_regs(/*autoinst*/
          .rdata1(id_reg_s_value_from_regs),
@@ -139,6 +168,9 @@ assign mm_mem_data_i = dbus_rddata;
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
 
+assign hardware_int[5] = timer_int;
+assign hardware_int[4:0] = hardware_int_in;
+
 always @(*) begin
     if (!rst_n) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
@@ -157,6 +189,8 @@ pc pc_instance(/*autoinst*/
          .rst_n(rst_n),
          .clk(clk),
          .enable(en_pc),
+         .is_exception(exception_flush),
+         .exception_new_pc(exception_new_pc),
          .is_branch(id_is_branch),
          .branch_address(id_branch_address));
 
@@ -168,19 +202,35 @@ cp0 cp0_instance(/*autoinst*/
      .we(wb_we_cp0),
      .wr_addr(wb_cp0_wraddr),
      .data_i(wb_data_i),
-     .timer_int());
+     .ebase(cp0_ebase),
+     .epc(cp0_epc),
+     .tlb_config(),
+     .timer_int(timer_int),
+     .hardware_int(hardware_int),
+     .software_int_o(cp0_software_int),
+     .allow_int(cp0_allow_int),
+     .en_exp_i(cp0_exp_en),
+     .clean_exl(cp0_clean_exl),
+     .exp_bd(cp0_exp_bd),
+     .exp_epc(cp0_exp_epc),
+     .exp_code(cp0_exp_code),
+     .exp_bad_vaddr(cp0_exp_badv)
+);
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+    if (!rst_n || exception_flush) begin
         id_inst <= 32'b0; //NOP
         id_pc_value <= 32'b0;
+        id_in_delayslot <= 1'b0;
     end
     else if(en_ifid) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
+        id_in_delayslot <= id_is_branch;
     end else if(en_idex) begin
         id_inst <= 32'b0; //NOP;
         id_pc_value <= 32'b0;
+        id_in_delayslot <= 1'b0;
     end
 end
 
@@ -233,7 +283,7 @@ branch branch_detect(/*autoinst*/
          .reg_t_value(id_reg_t_value));
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+    if (!rst_n || exception_flush) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
         ex_reg_s <= 5'b0;
@@ -244,6 +294,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_reg_t_value <= 32'b0;
         ex_immediate <= 16'b0;
         ex_address <= 32'b0;
+        ex_in_delayslot <= 1'b0;
+        ex_pc_value <= 32'b0;
     end
     else if(en_idex) begin
         ex_immediate <= id_immediate;
@@ -256,6 +308,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_address <= id_address;
         ex_reg_s_value <= id_reg_s_value;
         ex_reg_t_value <= id_reg_t_value;
+        ex_in_delayslot <= id_in_delayslot;
+        ex_pc_value <= id_pc_value;
     end else if(en_exmm) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
@@ -267,6 +321,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_reg_t_value <= 32'b0;
         ex_immediate <= 16'b0;
         ex_address <= 32'b0;
+        ex_in_delayslot <= 1'b0;
+        ex_pc_value <= 32'b0;
     end
 end
 
@@ -287,11 +343,14 @@ ex stage_ex(/*autoinst*/
             .immediate(ex_immediate),
             .flag_unsigned(ex_flag_unsigned),
             .overflow(ex_overflow),
+            .syscall(ex_syscall),
+            .eret(ex_eret),
             .reg_hilo_o(ex_reg_hilo_o),
             .we_hilo(ex_we_hilo),
             .reg_hilo_value(ex_reg_hilo_value),
             .clk(clk),
             .rst_n(rst_n),
+            .exception_flush(exception_flush),
             .stall(ex_stall),
             .we_cp0(ex_we_cp0),
             .cp0_wr_addr(ex_cp0_wraddr),
@@ -306,7 +365,7 @@ hilo_reg hilo(/*autoinst*/
       .wdata(wb_reg_hilo));
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+    if (!rst_n || exception_flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
         mm_data_i <= 32'b0;
@@ -317,6 +376,12 @@ always @(posedge clk or negedge rst_n) begin
         mm_flag_unsigned <= 1'b0;
         mm_we_cp0 <= 1'b0;
         mm_cp0_wraddr <= 5'b0;
+        mm_overflow <= 1'b0;
+        mm_in_delayslot <= 1'b0;
+        mm_pc_value <= 32'b0;
+        mm_eret <= 1'b0;
+        mm_syscall <= 1'b0;
+        mm_invalid_inst <= 1'b0;
     end
     else if(en_exmm) begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -329,6 +394,12 @@ always @(posedge clk or negedge rst_n) begin
         mm_flag_unsigned <= ex_flag_unsigned;
         mm_we_cp0 <= ex_we_cp0;
         mm_cp0_wraddr <= ex_cp0_wraddr;
+        mm_overflow <= ex_overflow;
+        mm_in_delayslot <= ex_in_delayslot;
+        mm_pc_value <= ex_pc_value;
+        mm_eret <= ex_eret;
+        mm_syscall <= ex_syscall;
+        mm_invalid_inst <= ex_op == `OP_INVAILD;
     end else if(en_mmwb) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -340,6 +411,12 @@ always @(posedge clk or negedge rst_n) begin
         mm_flag_unsigned <= 1'b0;
         mm_we_cp0 <= 1'b0;
         mm_cp0_wraddr <= 5'b0;
+        mm_overflow <= 1'b0;
+        mm_in_delayslot <= 1'b0;
+        mm_pc_value <= 32'b0;
+        mm_eret <= 1'b0;
+        mm_syscall <= 1'b0;
+        mm_invalid_inst <= 1'b0;
     end
 end
 
@@ -356,10 +433,32 @@ mm stage_mm(/*autoinst*/
             .reg_addr_i(mm_reg_addr_i),
             .addr_i(mm_addr_i),
             .mem_data_i(mm_mem_data_i),
+            .exception_flush(exception_flush),
             .flag_unsigned(mm_flag_unsigned));
 
+exception exception_detect(/*autoinst*/
+     .flush(exception_flush),
+     .exception_new_pc(exception_new_pc),
+     .ebase_in(cp0_ebase),
+     .epc_in(cp0_epc),
+     .cp0_wr_exp(cp0_exp_en),
+     .cp0_clean_exl(cp0_clean_exl),
+     .allow_int(cp0_allow_int),
+     .exp_epc(cp0_exp_epc),
+     .exp_code(cp0_exp_code),
+     .exp_bad_vaddr(cp0_exp_badv),
+     .invalid_inst(mm_invalid_inst),
+     .syscall(mm_syscall),
+     .eret(mm_eret),
+     .pc_value(mm_pc_value),
+     .in_delayslot(mm_in_delayslot),
+     .overflow(mm_overflow),
+     .hardware_int(hardware_int),
+     .software_int(cp0_software_int));
+assign cp0_exp_bd = mm_in_delayslot;
+
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+    if (!rst_n || exception_flush) begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
         wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;

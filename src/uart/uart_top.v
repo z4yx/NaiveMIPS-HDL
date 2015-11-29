@@ -1,6 +1,7 @@
 module uart_top(/*autoport*/
 //output
             bus_data_o,
+            uart_irq,
             txd,
 //input
             clk_bus,
@@ -26,6 +27,8 @@ output reg[31:0] bus_data_o;
 input wire bus_read;
 input wire bus_write;
 
+output wire uart_irq;
+
 input wire rxd;
 output wire txd;
 
@@ -38,6 +41,7 @@ wire rx_clear;
 
 assign tx_request = bus_write && bus_address==`REG_UART_SEND;
 assign rx_clear = bus_read && bus_address==`REG_UART_RECV;
+assign uart_irq = rx_data_available;
 
 always @(*) begin
     if(bus_read) begin

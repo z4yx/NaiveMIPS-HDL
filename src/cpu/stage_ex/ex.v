@@ -14,9 +14,12 @@ module ex(/*autoport*/
           we_cp0,
           cp0_wr_addr,
           cp0_rd_addr,
+          syscall,
+          eret,
 //input
           clk,
           rst_n,
+          exception_flush,
           op,
           op_type,
           address,
@@ -32,6 +35,7 @@ module ex(/*autoport*/
 
 input wire clk;
 input wire rst_n;
+input wire exception_flush;
 
 input wire[7:0] op;
 input wire[1:0] op_type;
@@ -58,6 +62,8 @@ output wire stall;
 output reg we_cp0;
 output reg[4:0] cp0_wr_addr;
 output reg[4:0] cp0_rd_addr;
+output wire syscall;
+output wire eret;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -80,6 +86,9 @@ assign tmp_sign_operand = (op_type==`OPTYPE_R ? reg_t_value : signExtImm);
 assign tmp_add = reg_s_value + tmp_sign_operand;
 assign tmp_sub = reg_s_value - tmp_sign_operand; //used by SLT/SLTI and SUB
 
+assign syscall = op == `OP_SYSCALL;
+assign eret = op == `OP_ERET;
+
 multi_cycle mul_instance(/*autoinst*/
            .result(mul_result),
            .flag_unsigned(flag_unsigned),
@@ -88,6 +97,7 @@ multi_cycle mul_instance(/*autoinst*/
            .hilo_i(reg_hilo_value),
            .clk(clk),
            .rst_n(rst_n),
+           .exception_flush(exception_flush),
            .op(op),
            .done(mul_done));
 

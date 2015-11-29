@@ -6,7 +6,9 @@ module pc(/*autoport*/
       clk,
       enable,
       branch_address,
-      is_branch);
+      is_branch,
+      is_exception,
+      exception_new_pc);
 
 parameter PC_INITIAL = 32'hbfc00000;
 
@@ -16,12 +18,17 @@ input wire enable;
 
 input wire[31:0] branch_address;
 input wire is_branch;
+input wire is_exception;
+input wire[31:0] exception_new_pc;
 
 output reg[31:0] pc_reg;
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         pc_reg <= PC_INITIAL;
+    end
+    else if(is_exception) begin
+        pc_reg <= exception_new_pc;
     end
     else if(enable) begin
         if(is_branch) begin

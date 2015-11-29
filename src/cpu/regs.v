@@ -61,7 +61,7 @@ always @(posedge clk or negedge rst_n) begin
         registers[30] <= 32'b0;
         registers[31] <= 32'b0;
     end
-    else if(we) begin
+    else if(we && waddr!=5'h0) begin
         registers[waddr] <= wdata;
     end
 end

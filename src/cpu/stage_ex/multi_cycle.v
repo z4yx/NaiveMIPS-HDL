@@ -7,6 +7,7 @@ module multi_cycle(/*autoport*/
 //input
          clk,
          rst_n,
+         exception_flush,
          op,
          flag_unsigned,
          operand1,
@@ -17,6 +18,7 @@ parameter DIV_CYCLES = 34;
 
 input wire clk;
 input wire rst_n;
+input wire exception_flush;
 input wire[7:0] op;
 input wire flag_unsigned;
 input wire [31:0] operand1;
@@ -75,7 +77,7 @@ always @(*) begin
 end
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+    if (!rst_n || exception_flush) begin
         div_stage <= 'b0;
     end
     else if(div_stage != 'b0) begin

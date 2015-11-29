@@ -83,6 +83,9 @@ output wire flash_we_n;
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
 
+wire[4:0] irq_line;
+wire uart_irq;
+
 wire dbus_write;
 wire [31:0]dbus_rddata;
 wire ibus_read;
@@ -243,6 +246,7 @@ uart_top uart0(/*autoinst*/
          .bus_data_i(uart_data_i[31:0]),
          .bus_read(uart_read),
          .bus_write(uart_write),
+         .uart_irq(uart_irq),
          .rxd(rxd));
 
 flash_top flash0(/*autoinst*/
@@ -272,5 +276,7 @@ gpio_top gpio_inst(/*autoinst*/
          .bus_data_i(gpio_dbus_data_i[31:0]),
          .bus_read(gpio_dbus_read),
          .bus_write(gpio_dbus_write));
+
+assign irq_line = {2'b0,uart_irq,2'b0};
 
 endmodule

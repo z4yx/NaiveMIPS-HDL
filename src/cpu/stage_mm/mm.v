@@ -2,20 +2,21 @@
 `default_nettype none
 module mm(/*autoport*/
 //output
-          data_o,
-          mem_address,
-          mem_data_o,
-          mem_rd,
-          mem_wr,
-          mem_byte_en,
+      data_o,
+      mem_address,
+      mem_data_o,
+      mem_rd,
+      mem_wr,
+      mem_byte_en,
 //input
-          mem_access_op,
-          mem_access_sz,
-          data_i,
-          reg_addr_i,
-          addr_i,
-          flag_unsigned,
-          mem_data_i);
+      mem_access_op,
+      mem_access_sz,
+      data_i,
+      reg_addr_i,
+      addr_i,
+      flag_unsigned,
+      exception_flush,
+      mem_data_i);
 
 input wire[1:0] mem_access_op;
 input wire[1:0] mem_access_sz;
@@ -23,6 +24,7 @@ input wire[31:0] data_i;
 input wire[4:0] reg_addr_i;
 input wire[31:0] addr_i;
 input wire flag_unsigned;
+input wire exception_flush;
 
 output reg[31:0] data_o;
 
@@ -76,7 +78,7 @@ always @(*) begin
     end
     `ACCESS_OP_R2M: begin
         mem_rd <= 1'b0;
-        mem_wr <= 1'b1;
+        mem_wr <= 1'b1 && !exception_flush;
         if(mem_access_sz==`ACCESS_SZ_WORD)
             mem_data_o <= data_i;
         else if(mem_access_sz==`ACCESS_SZ_HALF)
