@@ -18,7 +18,7 @@ wire ext_ram_oe_n;
 wire ext_ram_ce_n;
 
 wire[15:0] flash_data;
-wire[23:0] flash_address;
+wire[21:0] flash_address;
 wire flash_rp_n;
 wire flash_vpen;
 wire flash_oe_n;

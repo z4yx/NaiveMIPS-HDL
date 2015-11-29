@@ -42,7 +42,7 @@ sys_pll pll1(
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
-    //.c2(clk_uart),
+    .c2(/*clk_uart*/),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
@@ -71,7 +71,7 @@ wire[3:0] ram_dataenable;
 output wire txd;
 input wire rxd;
 
-output wire [23:0]flash_address;
+output wire [21:0]flash_address;
 output wire flash_rp_n;
 output wire flash_vpen;
 output wire flash_oe_n;
@@ -138,7 +138,7 @@ wire gpio_dbus_write;
 assign base_ram_ce_n = 1'b0;
 assign base_ram_oe_n = ram_rd_n || !ram_dataenable[0];
 assign base_ram_we_n = ram_wr_n || !ram_dataenable[0];
-assign base_ram_addr = ram_address[19:0];
+assign base_ram_addr = ram_address[21:2];
 
 wire using_ext;
 //assign using_ext = ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
@@ -146,7 +146,7 @@ assign using_ext = 1'b0;
 assign ext_ram_ce_n = 1'b0;
 assign ext_ram_oe_n = ram_rd_n || !using_ext;
 assign ext_ram_we_n = ram_wr_n || !using_ext;
-assign ext_ram_addr = ram_address[19:0];
+assign ext_ram_addr = ram_address[21:2];
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -183,7 +183,8 @@ naive_mips cpu(/*autoinst*/
          .rst_n(rst_n),
          .clk(clk),
          .ibus_rddata(ibus_rddata[31:0]),
-         .dbus_rddata(dbus_rddata[31:0]));
+         .dbus_rddata(dbus_rddata[31:0]),
+         .hardware_int_in(irq_line));
 
 two_port mainram(/*autoinst*/
            .ram_data(ram_data[31:0]),
@@ -195,12 +196,12 @@ two_port mainram(/*autoinst*/
            .dataenable(ram_dataenable),
            .rst_n(rst_n),
            .clk2x(clk2x),
-           .address1({10'b0,ibus_ram_address[23:2]}),
+           .address1(ibus_ram_address),
            .wrdata1(ibus_ram_wrdata),
            .rd1(ibus_ram_read),
            .wr1(ibus_ram_write),
            .dataenable1(ibus_ram_byteenable),
-           .address2({10'b0,dbus_ram_address[23:2]}),
+           .address2(dbus_ram_address),
            .wrdata2(dbus_ram_wrdata),
            .rd2(dbus_ram_read),
            .wr2(dbus_ram_write),
@@ -251,7 +252,7 @@ uart_top uart0(/*autoinst*/
 
 flash_top flash0(/*autoinst*/
          .flash_data(flash_data[15:0]),
-         .flash_address(flash_address[23:0]),
+         .flash_address(flash_address),
          .flash_we_n(flash_we_n),
          .flash_byte_n(flash_byte_n),
          .flash_oe_n(flash_oe_n),
@@ -261,7 +262,7 @@ flash_top flash0(/*autoinst*/
          .bus_data_o(flash_dbus_data_o[31:0]),
          .clk_bus(clk),
          .rst_n(rst_n),
-         .bus_address(flash_dbus_address),
+         .bus_address(flash_dbus_address[23:0]),
          .bus_data_i(flash_dbus_data_i[31:0]),
          .bus_read(flash_dbus_read),
          .bus_write(flash_dbus_write));
