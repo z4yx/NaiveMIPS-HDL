@@ -47,7 +47,7 @@ always @(*) begin
     flush <= 1'b1;
     exp_epc <= in_delayslot ? (pc_value-32'd4) : pc_value;
     exp_bad_vaddr <= 32'b0;
-    exception_new_pc <= {ebase_in, 12'b0};
+    exception_new_pc <= {ebase_in, 12'b0} + 32'h180;
     if(allow_int && {hardware_int,software_int}!=8'h0) begin
         exp_code <= 5'h00;
         $display("Exception: Interrupt=%x",{hardware_int,software_int});
