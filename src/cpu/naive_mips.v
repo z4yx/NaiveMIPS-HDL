@@ -218,16 +218,16 @@ cp0 cp0_instance(/*autoinst*/
 );
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n || exception_flush) begin
+    if (!rst_n) begin
         id_inst <= 32'b0; //NOP
         id_pc_value <= 32'b0;
         id_in_delayslot <= 1'b0;
     end
-    else if(en_ifid) begin
+    else if(en_ifid && !exception_flush) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
         id_in_delayslot <= id_is_branch;
-    end else if(en_idex) begin
+    end else if(en_idex || exception_flush) begin
         id_inst <= 32'b0; //NOP;
         id_pc_value <= 32'b0;
         id_in_delayslot <= 1'b0;
@@ -283,7 +283,7 @@ branch branch_detect(/*autoinst*/
          .reg_t_value(id_reg_t_value));
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n || exception_flush) begin
+    if (!rst_n) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
         ex_reg_s <= 5'b0;
@@ -297,7 +297,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_in_delayslot <= 1'b0;
         ex_pc_value <= 32'b0;
     end
-    else if(en_idex) begin
+    else if(en_idex && !exception_flush) begin
         ex_immediate <= id_immediate;
         ex_op_type <= id_op_type;
         ex_op <= id_op;
@@ -310,7 +310,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_reg_t_value <= id_reg_t_value;
         ex_in_delayslot <= id_in_delayslot;
         ex_pc_value <= id_pc_value;
-    end else if(en_exmm) begin
+    end else if(en_exmm || exception_flush) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
         ex_reg_s <= 5'b0;
@@ -365,7 +365,7 @@ hilo_reg hilo(/*autoinst*/
       .wdata(wb_reg_hilo));
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n || exception_flush) begin
+    if (!rst_n) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
         mm_data_i <= 32'b0;
@@ -383,7 +383,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_syscall <= 1'b0;
         mm_invalid_inst <= 1'b0;
     end
-    else if(en_exmm) begin
+    else if(en_exmm && !exception_flush) begin
         mm_mem_access_op <= ex_mem_access_op;
         mm_mem_access_sz <= ex_mem_access_sz;
         mm_data_i <= ex_data_o;
@@ -400,7 +400,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_eret <= ex_eret;
         mm_syscall <= ex_syscall;
         mm_invalid_inst <= ex_op == `OP_INVAILD;
-    end else if(en_mmwb) begin
+    end else if(en_mmwb || exception_flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
         mm_data_i <= 32'b0;
@@ -458,7 +458,7 @@ exception exception_detect(/*autoinst*/
 assign cp0_exp_bd = mm_in_delayslot;
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n || exception_flush) begin
+    if (!rst_n) begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
         wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;
@@ -468,7 +468,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_cp0 <= 1'b0;
         wb_cp0_wraddr <= 5'b0;
     end
-    else if(en_mmwb) begin
+    else if(en_mmwb && !exception_flush) begin
         wb_mem_access_op <= mm_mem_access_op;
         wb_mem_access_sz <= mm_mem_access_sz;
         wb_data_i <= mm_data_o;

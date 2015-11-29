@@ -77,7 +77,10 @@ always @(*) begin
 end
 
 always @(posedge clk or negedge rst_n) begin
-    if (!rst_n || exception_flush) begin
+    if (!rst_n) begin
+        div_stage <= 'b0;
+    end
+    else if(exception_flush) begin
         div_stage <= 'b0;
     end
     else if(div_stage != 'b0) begin

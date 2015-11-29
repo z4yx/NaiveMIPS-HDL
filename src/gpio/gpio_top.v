@@ -71,11 +71,12 @@ always @(posedge clk_bus or negedge rst_n) begin
 end
 
 genvar i;
-
-for(i=0; i<32; i=i+1) begin
+generate
+for(i=0; i<32; i=i+1) begin:label
     assign gpio0[i] = mode[0][i] ? value[0][i] : 1'bz;
     assign gpio1[i] = mode[1][i] ? value[1][i] : 1'bz;
 end
+endgenerate
 
 always @(*) begin
     if(bus_read) begin
