@@ -7,7 +7,7 @@ module prog_rom(/*autoport*/
 input wire [31:0] address;
 output wire [31:0] data;
 
-reg[31:0] rom[0:511];
+reg[31:0] rom[0:2047];
 
 initial begin
     // rom[0] <= 32'h3401aa00;

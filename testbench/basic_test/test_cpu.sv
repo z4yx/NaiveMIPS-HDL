@@ -15,6 +15,7 @@ wire [31:0]dbus_wrdata;
 wire [31:0]dbus_rddata;
 wire [31:0]ibus_address;
 wire [3:0]dbus_byteenable;
+reg[4:0] hardware_int;
 reg rst_n;
 reg clk;
 
@@ -65,7 +66,8 @@ naive_mips mips(/*autoinst*/
             .rst_n(rst_n),
             .clk(clk),
             .ibus_rddata(ibus_rddata[31:0]),
-            .dbus_rddata(dbus_rddata[31:0]));
+            .dbus_rddata(dbus_rddata[31:0]),
+            .hardware_int_in(hardware_int));
 
 defparam mips.pc_instance.PC_INITIAL = 0;
 
@@ -85,6 +87,7 @@ string next_event;
 reg[63:0] next_value;
 begin
     rst_n=1'b0;
+    hardware_int = 4'b0;
     #41 rst_n=1'b1;
 
     $readmemh({test_name,".mem"},fake_rom.rom);
@@ -165,6 +168,9 @@ initial begin
     unit_test("../testcase/inst_move");
     unit_test("../testcase/inst_jump");
     unit_test("../testcase/inst_branch");
+    unit_test("../testcase/overflow_int");
+    unit_test("../testcase/inst_syscall");
+    unit_test("../testcase/timer_int");
     $display("Unit test succeeded!");
     $stop;
 end
