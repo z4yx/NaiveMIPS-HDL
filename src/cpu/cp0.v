@@ -95,6 +95,9 @@ always @(*) begin
         `CP0_EPC: begin
             data_o <= cp0_regs[`CP0_EPC];
         end
+        `CP0_BadVAddr: begin
+            data_o <= cp0_regs[`CP0_BadVAddr];
+        end
         `CP0_Cause: begin
             data_o <= {cp0_regs[`CP0_Cause][31],15'b0, hardware_int, cp0_regs[`CP0_Cause][9:8], 1'b0, cp0_regs[`CP0_Cause][6:2], 2'b00};
         end
