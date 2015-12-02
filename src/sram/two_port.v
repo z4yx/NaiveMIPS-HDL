@@ -35,39 +35,55 @@ input wire wr1;
 
 input wire[31:0] address2;
 input wire[31:0] wrdata2;
-output wire[31:0] rddata2;
+output reg[31:0] rddata2;
 input wire[3:0] dataenable2;
 input wire rd2;
 input wire wr2;
 
-output wire[31:0] ram_address;
+output reg[31:0] ram_address;
 inout wire[31:0] ram_data;
-output wire ram_wr_n;
-output wire ram_rd_n;
-output wire[3:0] dataenable;
+output reg ram_wr_n;
+output reg ram_rd_n;
+output reg[3:0] dataenable;
 
-reg state;
+reg[3:0] state;
+reg[31:0] wrbuf;
 
-assign ram_address = state ? address2 : address1;
-assign ram_data = (state && wr2) ? wrdata2 : (
-        (!state && wr1) ? wrdata1 : {32{1'bz}}
-    );
-assign ram_wr_n = !(state ? wr2 : wr1);
-assign ram_rd_n = !(state ? rd2 : rd1);
-assign dataenable = (state ? dataenable2 : dataenable1);
-assign rddata2 = ram_data;
+assign ram_data = !ram_wr_n ? wrbuf : {32{1'bz}};
+// assign rddata2 = ram_data;
 
 always @(posedge clk2x or negedge rst_n) begin
     if (!rst_n) begin
         // reset
-        state <= 1'b0;
+        state <= 4'b1;
         rddata1 <= 32'b0;
+        ram_wr_n <= 1'b1;
+        ram_rd_n <= 1'b1;
     end
-    else if (state == 1'b0) begin
-        state <= 1'b1;
-        rddata1 <= ram_data;
-    end else begin
-        state <= 1'b0;
+    else begin
+        state <= {state[2:0], state[3]};
+        if (state[0]) begin
+            ram_address <= address1;
+            wrbuf <= wrdata1;
+            ram_wr_n <= ~wr1;
+            ram_rd_n <= ~rd1;
+            dataenable <= dataenable1;
+        end
+        else if (state[1]) begin
+            ram_address <= address2;
+            wrbuf <= wrdata2;
+            rddata1 <= ram_data;
+            ram_wr_n <= ~wr2;
+            ram_rd_n <= ~rd2;
+            dataenable <= dataenable2;
+        end
+        else begin
+            ram_wr_n <= 1'b1;
+            ram_rd_n <= 1'b1;
+            if (state[2]) begin
+                rddata2 <= ram_data;
+            end
+        end
     end
 end
 
