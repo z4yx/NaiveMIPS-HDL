@@ -41,7 +41,7 @@ reg[7:0] data_i_byte;
 reg[15:0] data_i_half;
 wire[7:0] sign_byte,sign_half;
 
-assign alignment_err = (mem_access_op==`ACCESS_OP_M2R || `ACCESS_OP_R2M) &&
+assign alignment_err = (mem_access_op==`ACCESS_OP_M2R || mem_access_op==`ACCESS_OP_R2M) &&
                         ((mem_access_sz == `ACCESS_SZ_HALF && addr_i[0]!=1'b0) ||
                             (mem_access_sz == `ACCESS_SZ_WORD && addr_i[1:0]!=2'b0));
 
