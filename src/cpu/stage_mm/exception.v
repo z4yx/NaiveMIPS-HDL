@@ -9,10 +9,16 @@ module exception(/*autoport*/
            exp_bad_vaddr,
            exception_new_pc,
 //input
+           iaddr_exp_miss,
+           daddr_exp_miss,
+           iaddr_exp_illegal,
+           daddr_exp_illegal,
+           data_we,
            invalid_inst,
            syscall,
            eret,
            pc_value,
+           mem_access_vaddr,
            in_delayslot,
            overflow,
            hardware_int,
@@ -21,10 +27,16 @@ module exception(/*autoport*/
            ebase_in,
            epc_in);
 
+input wire iaddr_exp_miss;
+input wire daddr_exp_miss;
+input wire iaddr_exp_illegal;
+input wire daddr_exp_illegal;
+input wire data_we;
 input wire invalid_inst;
 input wire syscall;
 input wire eret;
 input wire [31:0]pc_value;
+input wire [31:0]mem_access_vaddr;
 input wire in_delayslot;
 input wire overflow;
 input wire [5:0]hardware_int;
@@ -52,6 +64,16 @@ always @(*) begin
         exp_code <= 5'h00;
         $display("Exception: Interrupt=%x",{hardware_int,software_int});
     end
+    else if(iaddr_exp_illegal) begin
+        exp_bad_vaddr <= pc_value;
+        exp_code <= 5'h04; //AdEL
+        $display("Exception: Instruction address illegal");
+    end
+    else if(iaddr_exp_miss) begin
+        exp_bad_vaddr <= pc_value;
+        exp_code <= 5'h02; //TLBL
+        $display("Exception: Instruction TLB miss");
+    end
     else if(syscall) begin
         exp_code <= 5'h08;
         $display("Exception: Syscall");
@@ -70,6 +92,16 @@ always @(*) begin
         cp0_clean_exl <= 1'b1;
         exception_new_pc <= epc_in;
         $display("Pseudo Exception: ERET");
+    end
+    else if(daddr_exp_illegal) begin
+        exp_bad_vaddr <= mem_access_vaddr;
+        exp_code <= data_we ? 5'h05 : 5'h04; //AdES : AdEL
+        $display("Exception: Data address illegal, WE=%d",data_we);
+    end
+    else if(daddr_exp_miss) begin
+        exp_bad_vaddr <= mem_access_vaddr;
+        exp_code <= data_we ? 5'h03 : 5'h02; //TLBS : TLBL
+        $display("Exception: Data TLB miss, WE=%d",data_we);
     end
     else begin
         cp0_wr_exp <= 1'b0;

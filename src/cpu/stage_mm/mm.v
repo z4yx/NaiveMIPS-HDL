@@ -2,21 +2,22 @@
 `default_nettype none
 module mm(/*autoport*/
 //output
-      data_o,
-      mem_address,
-      mem_data_o,
-      mem_rd,
-      mem_wr,
-      mem_byte_en,
+          data_o,
+          mem_address,
+          mem_data_o,
+          mem_rd,
+          mem_wr,
+          mem_byte_en,
+          alignment_err,
 //input
-      mem_access_op,
-      mem_access_sz,
-      data_i,
-      reg_addr_i,
-      addr_i,
-      flag_unsigned,
-      exception_flush,
-      mem_data_i);
+          mem_access_op,
+          mem_access_sz,
+          data_i,
+          reg_addr_i,
+          addr_i,
+          flag_unsigned,
+          exception_flush,
+          mem_data_i);
 
 input wire[1:0] mem_access_op;
 input wire[1:0] mem_access_sz;
@@ -34,10 +35,15 @@ output reg[31:0] mem_data_o;
 output reg mem_rd;
 output reg mem_wr;
 output reg[3:0] mem_byte_en;
+output wire alignment_err;
 
 reg[7:0] data_i_byte;
 reg[15:0] data_i_half;
 wire[7:0] sign_byte,sign_half;
+
+assign alignment_err = (mem_access_op==`ACCESS_OP_M2R || `ACCESS_OP_R2M) &&
+                        ((mem_access_sz == `ACCESS_SZ_HALF && addr_i[0]!=1'b0) ||
+                            (mem_access_sz == `ACCESS_SZ_WORD && addr_i[1:0]!=2'b0));
 
 assign mem_address = addr_i;
 assign sign_half = {data_i_half[15],data_i_half[15],data_i_half[15],data_i_half[15],

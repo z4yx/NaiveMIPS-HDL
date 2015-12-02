@@ -45,7 +45,8 @@ reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 
 wire [31:0]if_pc;
 wire [31:0]if_inst;
-wire if_iaddr_exp;
+wire if_iaddr_exp_miss;
+wire if_iaddr_exp_illegal;
 
 wire [15:0]id_immediate;
 wire [1:0]id_op_type;
@@ -60,6 +61,8 @@ wire [31:0]id_branch_address;
 wire id_is_branch;
 reg id_in_delayslot;
 reg [31:0]id_pc_value;
+reg id_iaddr_exp_miss;
+reg id_iaddr_exp_illegal;
 
 wire [31:0] id_reg_s_value_from_regs, id_reg_t_value_from_regs;
 wire [31:0] id_reg_s_value, id_reg_t_value;
@@ -93,6 +96,8 @@ wire [4:0]ex_cp0_rdaddr;
 wire [31:0]ex_cp0_value;
 reg ex_in_delayslot;
 reg [31:0]ex_pc_value;
+reg ex_iaddr_exp_miss;
+reg ex_iaddr_exp_illegal;
 
 wire mm_mem_wr;
 reg mm_in_delayslot;
@@ -117,7 +122,11 @@ reg mm_flag_unsigned;
 reg mm_we_cp0;
 reg [4:0]mm_cp0_wraddr;
 reg [31:0]mm_pc_value;
-wire mm_daddr_exp;
+wire mm_daddr_exp_miss;
+reg mm_iaddr_exp_miss;
+reg mm_iaddr_exp_illegal;
+wire mm_daddr_exp_illegal;
+wire mm_alignment_err;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -157,8 +166,10 @@ regs main_regs(/*autoinst*/
 mmu_top mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(ibus_address),
-      .data_exp(mm_daddr_exp),
-      .inst_exp(if_iaddr_exp),
+      .data_exp_miss(mm_daddr_exp_miss),
+      .inst_exp_miss(if_iaddr_exp_miss),
+      .data_exp_illegal(if_iaddr_exp_illegal),
+      .inst_exp_illegal(mm_daddr_exp_illegal),
       .rst_n(rst_n),
       .clk(clk),
       .data_address_i(mm_mem_address),
@@ -171,7 +182,7 @@ assign ibus_byteenable = 4'b1111;
 assign ibus_read = 1'b1;
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
-assign if_inst = ibus_rddata;
+assign if_inst = (if_iaddr_exp_miss||if_iaddr_exp_illegal) ? 32'b0 : ibus_rddata;
 
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd;
@@ -237,15 +248,21 @@ always @(posedge clk or negedge rst_n) begin
         id_inst <= 32'b0; //NOP
         id_pc_value <= 32'b0;
         id_in_delayslot <= 1'b0;
+        id_iaddr_exp_miss <= 1'b0;
+        id_iaddr_exp_illegal <= 1'b0;
     end
     else if(en_ifid && !exception_flush) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
         id_in_delayslot <= id_is_branch;
+        id_iaddr_exp_miss <= if_iaddr_exp_miss;
+        id_iaddr_exp_illegal <= if_iaddr_exp_illegal;
     end else if(en_idex || exception_flush) begin
         id_inst <= 32'b0; //NOP;
         id_pc_value <= 32'b0;
         id_in_delayslot <= 1'b0;
+        id_iaddr_exp_miss <= 1'b0;
+        id_iaddr_exp_illegal <= 1'b0;
     end
 end
 
@@ -311,6 +328,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_address <= 32'b0;
         ex_in_delayslot <= 1'b0;
         ex_pc_value <= 32'b0;
+        ex_iaddr_exp_miss <= 1'b0;
+        ex_iaddr_exp_illegal <= 1'b0;
     end
     else if(en_idex && !exception_flush) begin
         ex_immediate <= id_immediate;
@@ -325,6 +344,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_reg_t_value <= id_reg_t_value;
         ex_in_delayslot <= id_in_delayslot;
         ex_pc_value <= id_pc_value;
+        ex_iaddr_exp_miss <= id_iaddr_exp_miss;
+        ex_iaddr_exp_illegal <= id_iaddr_exp_illegal;
     end else if(en_exmm || exception_flush) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
@@ -338,6 +359,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_address <= 32'b0;
         ex_in_delayslot <= 1'b0;
         ex_pc_value <= 32'b0;
+        ex_iaddr_exp_miss <= 1'b0;
+        ex_iaddr_exp_illegal <= 1'b0;
     end
 end
 
@@ -397,6 +420,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_eret <= 1'b0;
         mm_syscall <= 1'b0;
         mm_invalid_inst <= 1'b0;
+        mm_iaddr_exp_miss <= 1'b0;
+        mm_iaddr_exp_illegal <= 1'b0;
     end
     else if(en_exmm && !exception_flush) begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -415,6 +440,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_eret <= ex_eret;
         mm_syscall <= ex_syscall;
         mm_invalid_inst <= ex_op == `OP_INVAILD;
+        mm_iaddr_exp_miss <= ex_iaddr_exp_miss;
+        mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
     end else if(en_mmwb || exception_flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -432,6 +459,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_eret <= 1'b0;
         mm_syscall <= 1'b0;
         mm_invalid_inst <= 1'b0;
+        mm_iaddr_exp_miss <= 1'b0;
+        mm_iaddr_exp_illegal <= 1'b0;
     end
 end
 
@@ -444,6 +473,7 @@ mm stage_mm(/*autoinst*/
             .mem_byte_en(mm_mem_byte_en),
             .mem_access_op(mm_mem_access_op),
             .mem_access_sz(mm_mem_access_sz),
+            .alignment_err(mm_alignment_err),
             .data_i(mm_data_i),
             .reg_addr_i(mm_reg_addr_i),
             .addr_i(mm_addr_i),
@@ -462,10 +492,16 @@ exception exception_detect(/*autoinst*/
      .exp_epc(cp0_exp_epc),
      .exp_code(cp0_exp_code),
      .exp_bad_vaddr(cp0_exp_badv),
+     .iaddr_exp_miss(mm_iaddr_exp_miss),
+     .daddr_exp_miss(mm_daddr_exp_miss),
+     .iaddr_exp_illegal(mm_iaddr_exp_illegal),
+     .daddr_exp_illegal(mm_daddr_exp_illegal || mm_alignment_err),
+     .data_we(mm_mem_wr),
      .invalid_inst(mm_invalid_inst),
      .syscall(mm_syscall),
      .eret(mm_eret),
      .pc_value(mm_pc_value),
+     .mem_access_vaddr(mm_mem_address),
      .in_delayslot(mm_in_delayslot),
      .overflow(mm_overflow),
      .hardware_int(hardware_int),
