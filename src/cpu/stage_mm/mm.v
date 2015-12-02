@@ -84,7 +84,7 @@ always @(*) begin
     end
     `ACCESS_OP_R2M: begin
         mem_rd <= 1'b0;
-        mem_wr <= 1'b1 && !exception_flush;
+        mem_wr <= 1'b1;
         if(mem_access_sz==`ACCESS_SZ_WORD)
             mem_data_o <= data_i;
         else if(mem_access_sz==`ACCESS_SZ_HALF)

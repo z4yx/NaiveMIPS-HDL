@@ -189,7 +189,7 @@ assign if_inst = (if_iaddr_exp_miss||if_iaddr_exp_illegal) ? 32'b0 : ibus_rddata
 
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd;
-assign dbus_write = mm_mem_wr;
+assign dbus_write = mm_mem_wr && !exception_flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
 
@@ -497,7 +497,7 @@ exception exception_detect(/*autoinst*/
      .exp_bad_vaddr(cp0_exp_badv),
      .iaddr_exp_miss(mm_iaddr_exp_miss),
      .daddr_exp_miss(mm_daddr_exp_miss),
-     .iaddr_exp_illegal(mm_iaddr_exp_illegal),
+     .iaddr_exp_illegal(mm_iaddr_exp_illegal || (mm_pc_value[1:0]!=2'b00)),
      .daddr_exp_illegal(mm_daddr_exp_illegal || mm_alignment_err),
      .data_we(mm_mem_wr),
      .invalid_inst(mm_invalid_inst),
