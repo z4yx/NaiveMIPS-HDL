@@ -69,7 +69,7 @@ naive_mips mips(/*autoinst*/
             .dbus_rddata(dbus_rddata[31:0]),
             .hardware_int_in(hardware_int));
 
-defparam mips.pc_instance.PC_INITIAL = 0;
+defparam mips.pc_instance.PC_INITIAL = 32'h80000000;
 
 wire[31:0] registers[0:31];
 wire[63:0] hilo;
@@ -161,6 +161,7 @@ always begin
 end
 
 initial begin
+    unit_test("../testcase/mem_exp");
     unit_test("../testcase/inst_mem");
     unit_test("../testcase/mem_endian");
     unit_test("../testcase/inst_div");
@@ -168,7 +169,7 @@ initial begin
     unit_test("../testcase/inst_move");
     unit_test("../testcase/inst_jump");
     unit_test("../testcase/inst_branch");
-    unit_test("../testcase/overflow_int");
+    unit_test("../testcase/overflow_exp");
     unit_test("../testcase/inst_syscall");
     unit_test("../testcase/timer_int");
     $display("Unit test succeeded!");

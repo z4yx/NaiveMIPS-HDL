@@ -13,8 +13,8 @@ _start:
    .org 0x20
    ori  $1,$0,0x0003   # $1 = 0x3               
    jal  0x40
-   div  $zero,$31,$1   # $31 = 0x2c, $1 = 0x3
-                       # HI = 0x2, LO = 0xe 
+   divu  $zero,$31,$1   # $31 = 0x8000002c, $1 = 0x3
+                       # HI = 0x1, LO = 0x2aaaaab9
    ori  $1,$0,0x0005   # r1 = 0x5
    ori  $1,$0,0x0006   # r1 = 0x6
    j    0x60
