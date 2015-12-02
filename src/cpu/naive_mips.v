@@ -148,6 +148,7 @@ wire[31:0] cp0_exp_badv;
 wire[31:0] cp0_exp_epc;
 wire[19:0] cp0_ebase;
 wire[31:0] cp0_epc;
+wire[74:0] cp0_tlb_config;
 wire cp0_user_mode;
 wire timer_int;
 wire[5:0] hardware_int;
@@ -176,6 +177,8 @@ mmu_top mmu(/*autoinst*/
       .inst_address_i(if_pc),
       .data_en(mm_mem_rd || mm_mem_wr),
       .inst_en(1'b1),
+      .tlb_config(cp0_tlb_config),
+      .tlbwi(),
       .user_mode(cp0_user_mode));
 
 assign ibus_byteenable = 4'b1111;
@@ -230,7 +233,7 @@ cp0 cp0_instance(/*autoinst*/
      .user_mode(cp0_user_mode),
      .ebase(cp0_ebase),
      .epc(cp0_epc),
-     .tlb_config(),
+     .tlb_config(cp0_tlb_config),
      .timer_int(timer_int),
      .hardware_int(hardware_int),
      .software_int_o(cp0_software_int),
