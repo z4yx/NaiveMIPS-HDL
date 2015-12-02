@@ -7,6 +7,8 @@ import struct
 import time
 import random
 import binascii
+import select
+from elftools.elf.elffile import ELFFile
 
 ser = serial.Serial('/dev/cu.usbserial', 115200, timeout=1)
 
@@ -20,7 +22,7 @@ def write_ram(start, content):
     x = ser.read(1)
     if not x:
         print "ack timed out"
-        raise ValueError
+        raise IOError
         return
     assert x=='~'
 
@@ -28,12 +30,10 @@ def write_ram(start, content):
     time.sleep(0.01)
     write_uart(struct.pack('<I',(len(content)+3)/4))
     # for b in struct.pack('<I',start):
-    #     ser.write(b)
-    #     ser.flush()
+    #     write_uart(b)
     #     time.sleep(0.01)
     # for b in struct.pack('<I',(len(content)+3)/4):
-    #     ser.write(b)
-    #     ser.flush()
+    #     write_uart(b)
     #     time.sleep(0.01)
 
     time.sleep(0.01)
@@ -57,27 +57,26 @@ def read_ram(start, length):
     x = ser.read(1)
     if not x:
         print "ack timed out"
-        raise ValueError
+        raise IOError
         return
     assert x=='~'
 
     length = (length+3)/4*4 #round up
 
     write_uart(struct.pack('<I',start))
+    time.sleep(0.01)
     write_uart(struct.pack('<I',length/4))
     # for b in struct.pack('<I',start):
-    #     ser.write(b)
-    #     ser.flush()
+    #     write_uart(b)
     #     time.sleep(0.01)
     # for b in struct.pack('<I',length/4):
-    #     ser.write(b)
-    #     ser.flush()
+    #     write_uart(b)
     #     time.sleep(0.01)
 
     buf = ser.read(length)
     if len(buf) < length:
         print "read data timed out"
-        raise ValueError
+        raise IOError
         return
     print "%d bytes read"%len(buf)
     return buf
@@ -88,7 +87,7 @@ def go_ram(start):
     x = ser.read(1)
     if not x:
         print "ack timed out"
-        raise ValueError
+        raise IOError
         return
     assert x=='~'
 
@@ -101,18 +100,21 @@ def uart_loopback_test():
     x = ser.read(1)
     if not x:
         print "ack timed out"
-        raise ValueError
+        raise IOError
         return
     assert x=='~'
 
     while True:
         t = random.randint(0,2**32-1)
         sent = struct.pack('<I',t)
+        # for b in sent:
+        #     write_uart(b)
+        #     time.sleep(0.1)
         write_uart(sent)
         recv = ser.read(4)
         if not recv:
             print "read data timed out"
-            raise ValueError
+            raise IOError
             return
         for i in xrange(4):
             assert recv[i] == sent[i]
@@ -120,8 +122,8 @@ def uart_loopback_test():
 def ram_test():
 
     while True:
-        size = 1024
-        offset = 1024*1024
+        size = 128*1024
+        offset = 0*1024
         # data = ''.join(chr(random.randint(0,255)) for _ in range(size))
         data = ''.join('\xaa' for _ in range(size))
 
@@ -131,7 +133,6 @@ def ram_test():
 
 
         if data != recv:
-            print "Error"
             print binascii.hexlify(data)
             print binascii.hexlify(recv)
             for x in xrange(size):
@@ -149,10 +150,39 @@ def load_and_run(f, addr, entry):
     go_ram(entry)
 
 
+def load_elf_and_run(f):
+    elffile = ELFFile(f)
+
+    for segment in elffile.iter_segments():
+        print "Program Header: Size: %d, Virtual Address: 0x%x" % (segment['p_filesz'], segment['p_vaddr'])
+        if segment['p_filesz']==0 or segment['p_vaddr']==0:
+            print "Skipped"
+            continue
+        write_ram(segment['p_vaddr'], segment.data())
+
+    print "Entry: 0x%x" % elffile['e_entry']
+    go_ram(elffile['e_entry'])
+
+def start_terminal():
+    slt_list = [sys.stdin, ser]
+    while True:
+        ready = select.select(slt_list, [], [])
+        if ser in ready:
+            recv = ser.read()
+            if not(recv is None):
+                sys.stdout.write(recv)
+        if sys.stdin in ready:
+            recv = sys.stdin.read()
+            if not(recv is None):
+                write_uart(recv)
+
 # uart_loopback_test()
 # ram_test()
 
-with open(sys.argv[1]) as f:
-    load_and_run(f, 0, 0)
+with open(sys.argv[1], 'rb') as f:
+    # ram_test()
+    # uart_loopback_test()
+    # load_and_run(f, 0, 0)
+    # load_elf_and_run(f)
 
-
+    start_terminal()
