@@ -12,7 +12,9 @@ module mmu_top(/*autoport*/
          inst_address_i,
          data_en,
          inst_en,
-         user_mode);
+         user_mode,
+         tlb_config,
+         tlbwi);
 
 input wire rst_n;
 input wire clk;
@@ -29,6 +31,9 @@ output wire[31:0] inst_address_o;
 output wire data_exp;
 output wire inst_exp;
 
+input wire[74:0] tlb_config;
+input wire tlbwi;
+
 wire data_invalid, inst_invalid;
 wire data_tlb_map, inst_tlb_map;
 wire data_miss, inst_miss;
@@ -38,6 +43,24 @@ wire[31:0] inst_address_direct;
 
 wire[31:0] data_address_tlb;
 wire[31:0] inst_address_tlb;
+
+wire[18:0] tlb_entry_vpn2;
+wire[23:0] tlb_entry_lo0_pnf;
+wire tlb_entry_lo0_d;
+wire tlb_entry_lo0_v;
+wire[23:0] tlb_entry_lo1_pnf;
+wire tlb_entry_lo1_d;
+wire tlb_entry_lo1_v;
+wire[3:0] tlb_entry_index;
+
+assign {
+    tlb_entry_vpn2,
+    tlb_entry_lo1_pnf,
+    tlb_entry_lo1_d, tlb_entry_lo1_v,
+    tlb_entry_lo0_pnf,
+    tlb_entry_lo0_d, tlb_entry_lo0_v,
+    tlb_entry_index
+} = tlb_config; //refer to cp0.v
 
 assign data_exp = data_invalid || (data_miss && data_tlb_map);
 assign inst_exp = inst_invalid || (inst_miss && inst_tlb_map);
