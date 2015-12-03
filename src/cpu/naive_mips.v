@@ -98,6 +98,7 @@ reg ex_in_delayslot;
 reg [31:0]ex_pc_value;
 reg ex_iaddr_exp_miss;
 reg ex_iaddr_exp_illegal;
+wire ex_we_tlb;
 
 wire mm_mem_wr;
 reg mm_in_delayslot;
@@ -127,6 +128,7 @@ reg mm_iaddr_exp_miss;
 reg mm_iaddr_exp_illegal;
 wire mm_daddr_exp_illegal;
 wire mm_alignment_err;
+reg mm_we_tlb;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -137,6 +139,7 @@ reg [63:0]wb_reg_hilo;
 reg wb_we_hilo;
 reg wb_we_cp0;
 reg [4:0]wb_cp0_wraddr;
+reg wb_we_tlb;
 
 wire cp0_allow_int;
 wire[1:0] cp0_software_int;
@@ -178,7 +181,7 @@ mmu_top mmu(/*autoinst*/
       .data_en(mm_mem_rd || mm_mem_wr),
       .inst_en(1'b1),
       .tlb_config(cp0_tlb_config),
-      .tlbwi(),
+      .tlbwi(wb_we_tlb),
       .user_mode(cp0_user_mode));
 
 assign ibus_byteenable = 4'b1111;
@@ -389,6 +392,7 @@ ex stage_ex(/*autoinst*/
             .reg_hilo_o(ex_reg_hilo_o),
             .we_hilo(ex_we_hilo),
             .reg_hilo_value(ex_reg_hilo_value),
+            .we_tlb(ex_we_tlb),
             .clk(clk),
             .rst_n(rst_n),
             .exception_flush(exception_flush),
@@ -425,6 +429,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_invalid_inst <= 1'b0;
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
+        mm_we_tlb <= 1'b0;
     end
     else if(en_exmm && !exception_flush) begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -445,6 +450,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_invalid_inst <= ex_op == `OP_INVAILD;
         mm_iaddr_exp_miss <= ex_iaddr_exp_miss;
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
+        mm_we_tlb <= ex_we_tlb;
     end else if(en_mmwb || exception_flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -464,6 +470,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_invalid_inst <= 1'b0;
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
+        mm_we_tlb <= 1'b0;
     end
 end
 
@@ -521,6 +528,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_hilo <= 1'b0;
         wb_we_cp0 <= 1'b0;
         wb_cp0_wraddr <= 5'b0;
+        wb_we_tlb <= 1'b0;
     end
     else if(en_mmwb && !exception_flush) begin
         wb_mem_access_op <= mm_mem_access_op;
@@ -531,6 +539,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_hilo <= mm_we_hilo;
         wb_we_cp0 <= mm_we_cp0;
         wb_cp0_wraddr <= mm_cp0_wraddr;
+        wb_we_tlb <= mm_we_tlb;
     end else begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
         wb_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -540,6 +549,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_hilo <= 1'b0;
         wb_we_cp0 <= 1'b0;
         wb_cp0_wraddr <= 5'b0;
+        wb_we_tlb <= 1'b0;
     end
 end
 
