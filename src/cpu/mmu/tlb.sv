@@ -1,17 +1,17 @@
+`default_nettype none
 module tlb(
   input wire[74:0] tlbConfig,
   input wire tlbwi,
-  
+
   input wire[31:0] dataAddrVirt,
   input wire[31:0] insAddrVirt,
-  
+
   output wire dataMiss,
   output wire insMiss,
-  
-  output wire dataAddrPhy,
-  output wire insAddrPhy,
-  
-  
+
+  output wire[31:0] dataAddrPhy,
+  output wire[31:0] insAddrPhy,
+
   input wire rst_n,
   input wire clk
 );
@@ -33,35 +33,36 @@ assign {
   tlbEntryPFN0,//[25:2]
   tlbEntryD0, tlbEntryV0, //1, 0
   tlbEntryIndex
-} = tlbConfig;
+} = tlbConfig;//refer to cp0.v
 
-reg[70:0] tlbEntries[16];
+reg[70:0] tlbEntries[0:15];
 
 tlbConverter(
 
-  tlbEntries = tlbEntries;
-  phyAddr = insAddrPhy;
-  virtAddr = insAddrVirt;
-  miss = insMiss;
+  .tlbEntries(tlbEntries),
+  .phyAddr(insAddrPhy),
+  .virtAddr(insAddrVirt),
+  .miss(insMiss)
 );
 
 tlbConverter(
 
-  tlbEntries = tlbEntries;
-  phyAddr = dataAddrPhy;
-  virtAddr = dataAddrVirt;
-  miss = dataMiss;
+  .tlbEntries(tlbEntries),
+  .phyAddr(dataAddrPhy),
+  .virtAddr(dataAddrVirt),
+  .miss(dataMiss)
 );
 
 always @(posedge clk or negedge rst_n) begin
 
-  if (rst == 0) begin
+  if (rst_n == 0) begin :label
+    integer i;
     for(i=0; i<16; i=i+1) begin
       tlbEntries[i] <= 71'd0;
     end
   end else begin
     if (tlbwi) begin
-      tlbEntries[tlbEntryIndex] [70:0] <= tlbConfig[74:4]
+      tlbEntries[tlbEntryIndex] [70:0] <= tlbConfig[74:4];
     end
   end
 end
