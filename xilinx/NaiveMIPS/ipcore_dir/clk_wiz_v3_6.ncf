@@ -51,7 +51,7 @@
 #  input clocks. You can use these to time your system
 #----------------------------------------------------------------
 NET "CLK_IN1" TNM_NET = "CLK_IN1";
-TIMESPEC "TS_CLK_IN1" = PERIOD "CLK_IN1" 20.0 ns HIGH 50% INPUT_JITTER 200.0ps;
+TIMESPEC "TS_CLK_IN1" = PERIOD "CLK_IN1" 20.000 ns HIGH 50% INPUT_JITTER 200.0ps;
 
 
 # FALSE PATH constraints 
