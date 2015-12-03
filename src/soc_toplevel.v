@@ -1,4 +1,5 @@
 `default_nettype none
+`define EXT_UART_CLOCK
 module soc_toplevel(/*autoport*/
 //inout
             ram_data,
@@ -25,24 +26,30 @@ module soc_toplevel(/*autoport*/
 //input
             rst_in_n,
             clk_in,
+`ifdef EXT_UART_CLOCK
 				clk_uart_in,
+`endif
             rxd);
 
 input wire rst_in_n;
 input wire clk_in;
-input wire clk_uart_in;
 
 wire clk2x,clk,locked,rst_n;
-wire clk_uart;
+wire clk_uart, clk_uart_pll;
 
+`ifdef EXT_UART_CLOCK
+input wire clk_uart_in;
 assign clk_uart = clk_uart_in;
+`else
+assign clk_uart = clk_uart_pll;
+`endif
 
 sys_pll pll1(
     .areset(!rst_in_n),
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
-    .c2(/*clk_uart*/),
+    .c2(clk_uart_pll),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),

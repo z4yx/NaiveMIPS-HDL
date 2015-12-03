@@ -7,11 +7,11 @@ module uart_rx(/*autoport*/
          clk_uart,
          rst_n,
          clear,
-         rxd);
+         rxd_in);
 
 parameter BAUD = 115200;
 parameter UART_CLK = 11059200;
-parameter COUNTER_PERIOD = UART_CLK/BAUD-1;
+parameter COUNTER_PERIOD = UART_CLK/BAUD-2-1;
 parameter SAMPLE_1 = (COUNTER_PERIOD+1)/4-1;
 parameter SAMPLE_2 = (COUNTER_PERIOD+1)/2-1;
 parameter SAMPLE_3 = (COUNTER_PERIOD+1)/4*3-1;
@@ -29,7 +29,7 @@ reg[7:0] rx_data_for_sim;
 wire rx_available_sync;
 reg[7:0] rx_data_sync[0:1];
 
-input wire rxd;
+input wire rxd_in;
 
 reg rx_available;
 reg[8:0] rx_data;
@@ -38,6 +38,7 @@ reg[3:0] remain_bit;
 reg[14:0] baud_cnt;
 reg[2:0] samples;
 wire sample_value;
+reg rxd_buf, rxd;
 
 flag_sync sync_rx_avai(/*autoinst*/
          .FlagOut_clkB(rx_available_sync),
@@ -135,4 +136,10 @@ always @(posedge clk_uart or negedge rst_n) begin
         endcase
     end
 end
+
+always @(posedge clk_uart) begin
+    rxd_buf <= rxd_in;
+    rxd <= rxd_buf;
+end
+
 endmodule
