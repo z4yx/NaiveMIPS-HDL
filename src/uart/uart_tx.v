@@ -26,33 +26,43 @@ output reg idle;
 
 output reg txd;
 
-reg[6:0] tx_request_reg;
+reg tx_request_reg;
 reg[7:0] data_reg;
-reg tx_done_gated, tx_done_gated_last;
+wire tx_done_sync;
 
-reg[3:0] tx_done;
-reg tx_request_gated;
-reg[7:0] data_gated;
+reg tx_done;
+wire tx_request_sync;
+reg[7:0] data_sync[0:1];
 reg[9:0] send_buf;
 reg[3:0] state;
 reg[3:0] remain_bit;
 reg[14:0] baud_cnt;
 
+flag_sync sync_tx_req(/*autoinst*/
+         .FlagOut_clkB(tx_request_sync),
+         .rst_n(rst_n),
+         .clkA(clk_bus),
+         .FlagIn_clkA(tx_request_reg),
+         .clkB(clk_uart));
+
+flag_sync sync_tx_done(/*autoinst*/
+         .FlagOut_clkB(tx_done_sync),
+         .rst_n(rst_n),
+         .clkA(clk_uart),
+         .FlagIn_clkA(tx_done),
+         .clkB(clk_bus));
+
 always @(posedge clk_bus or negedge rst_n) begin
     if (!rst_n) begin
         idle <= 1'b1;
-        tx_request_reg <= 7'b0;
-        tx_done_gated_last <= 1'b0;
-        tx_done_gated <= 1'b0;
+        tx_request_reg <= 1'b0;
     end else begin
-        tx_done_gated_last <= tx_done_gated;
-        tx_done_gated <= tx_done!=4'b0;
-        tx_request_reg <= tx_request_reg<<1;
+        tx_request_reg <= 1'b0;
         if(idle && tx_request) begin
-            tx_request_reg <= 7'b1;
+            tx_request_reg <= 1'b1;
             data_reg <= data;
             idle <= 1'b0;
-        end else if(tx_done_gated_last && !tx_done_gated) begin //negedge of tx_done
+        end else if(tx_done_sync) begin
             idle <= 1'b1;
         end
     end
@@ -62,19 +72,18 @@ always @(posedge clk_uart or negedge rst_n) begin
     if (!rst_n) begin
         state <= 4'h0;
         txd <= 1'b1;
-        tx_done <= 4'b0;
-        tx_request_gated <= 1'b0;
+        tx_done <= 1'b0;
     end
     else begin
-        tx_request_gated <= (tx_request_reg[6:2] != 5'b0);
-        data_gated <= data_reg;
-        tx_done <= tx_done << 1;
+        data_sync[0] <= data_reg;
+        data_sync[1] <= data_sync[0];
+        tx_done <= 1'b0;
         case(state)
         4'h0: begin
-            if(tx_request_gated) begin
+            if(tx_request_sync) begin
                 state <= 4'h1;
                 remain_bit <= 4'd10;
-                send_buf <= {`STOP_BIT,data_gated,`START_BIT};
+                send_buf <= {`STOP_BIT,data_sync[1],`START_BIT};
             end
         end
         4'h1: begin

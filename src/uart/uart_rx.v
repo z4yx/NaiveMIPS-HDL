@@ -26,12 +26,12 @@ output reg data_available;
 
 reg rx_avai_for_sim;
 reg[7:0] rx_data_for_sim;
-reg rx_available_gated,rx_available_gated_last;
-reg[7:0] rx_data_gated;
+wire rx_available_sync;
+reg[7:0] rx_data_sync[0:1];
 
 input wire rxd;
 
-reg[6:0] rx_available;
+reg rx_available;
 reg[8:0] rx_data;
 reg[3:0] state, next_state;
 reg[3:0] remain_bit;
@@ -39,28 +39,32 @@ reg[14:0] baud_cnt;
 reg[2:0] samples;
 wire sample_value;
 
+flag_sync sync_rx_avai(/*autoinst*/
+         .FlagOut_clkB(rx_available_sync),
+         .rst_n(rst_n),
+         .clkA(clk_uart),
+         .FlagIn_clkA(rx_available),
+         .clkB(clk_bus));
+
 assign sample_value = (samples[0] && samples[1] ||
     samples[2] && samples[1] ||
     samples[0] && samples[2] );
 
 always @(posedge clk_bus or negedge rst_n) begin
     if (!rst_n) begin
-        rx_available_gated <= 1'b0;
-        rx_available_gated_last <= 1'b0;
         data_available <= 1'b0;
         rx_avai_for_sim <= 1'b0;
         rx_data_for_sim <= 8'b0;
     end
     else begin
-        rx_data_gated <= rx_data[7:0];
-        rx_available_gated <= (rx_available[6:2] != 5'b0);
-        rx_available_gated_last <= rx_available_gated;
+        rx_data_sync[0] <= rx_data[7:0];
+        rx_data_sync[1] <= rx_data_sync[0];
         if (data_available) begin
             if(clear)
                 data_available <= 1'b0;
-        end else if(rx_available_gated_last && !rx_available_gated) begin
+        end else if(rx_available_sync) begin
             data_available <= 1'b1;
-            data <= rx_data_gated;
+            data <= rx_data_sync[1];
         end else if(rx_avai_for_sim) begin
             data_available <= 1'b1;
             data <= rx_data_for_sim;
@@ -72,10 +76,10 @@ always @(posedge clk_uart or negedge rst_n) begin
     if (!rst_n) begin
         state <= 4'h0;
         next_state <= 4'h0;
-        rx_available <= 7'b0;
+        rx_available <= 1'b0;
     end
     else begin
-        rx_available <= rx_available << 1;
+        rx_available <= 1'b0;
         case(state)
         4'h0: begin
             next_state <= 4'h3;
