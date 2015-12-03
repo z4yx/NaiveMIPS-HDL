@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="32" />
    <wvobject fp_name="/test/ram_data" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ram_data[31:0]</obj_property>
       <obj_property name="ObjectShortName">ram_data[31:0]</obj_property>
@@ -101,7 +101,39 @@
    <wvobject fp_name="/test/soc/cpu/id_op" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">id_op[7:0]</obj_property>
       <obj_property name="ObjectShortName">id_op[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/cpu/stage_ex/mul_instance/divider_instance/x_div/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/cpu/stage_ex/mul_instance/divider_instance/x_div/dividend" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dividend[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dividend[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/cpu/stage_ex/mul_instance/divider_instance/x_div/divisor" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">divisor[31:0]</obj_property>
+      <obj_property name="ObjectShortName">divisor[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/cpu/stage_ex/mul_instance/divider_instance/x_div/quotient" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">quotient[31:0]</obj_property>
+      <obj_property name="ObjectShortName">quotient[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/cpu/stage_ex/mul_instance/divider_instance/x_div/fractional" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">fractional[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fractional[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/cpu/stage_ex/mul_instance/div_stage" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">div_stage[33:0]</obj_property>
+      <obj_property name="ObjectShortName">div_stage[33:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test/soc/cpu/stage_ex/mul_instance/done" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">done</obj_property>
+      <obj_property name="ObjectShortName">done</obj_property>
    </wvobject>
    <wvobject fp_name="/test/soc/cpu/ex_data_o" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ex_data_o[31:0]</obj_property>
