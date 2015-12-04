@@ -1,7 +1,7 @@
 `default_nettype none
 module tlbConverter(
 
---  input wire[70:0] tlbEntries[0:15],
+//  input wire[70:0] tlbEntries[0:15],
   
   input wire[70:0] tlbEntry0,
   input wire[70:0] tlbEntry1,
@@ -31,6 +31,26 @@ reg[3:0] matchWhich;
 
 wire[23:0] PFN;
 
+
+assign tlbEntries[0]=tlbEntry0;
+assign tlbEntries[1]=tlbEntry1;
+assign tlbEntries[2]=tlbEntry2;
+assign tlbEntries[3]=tlbEntry3;
+assign tlbEntries[4]=tlbEntry4;
+assign tlbEntries[5]=tlbEntry5;
+assign tlbEntries[6]=tlbEntry6;
+assign tlbEntries[7]=tlbEntry7;
+assign tlbEntries[8]=tlbEntry8;
+assign tlbEntries[9]=tlbEntry9;
+assign tlbEntries[10]=tlbEntry10;
+assign tlbEntries[11]=tlbEntry11;
+assign tlbEntries[12]=tlbEntry12;
+assign tlbEntries[13]=tlbEntry13;
+assign tlbEntries[14]=tlbEntry14;
+assign tlbEntries[15]=tlbEntry15;
+
+
+
 assign PFN[23:0] = virtAddr[12] ? tlbEntries[matchWhich][51:28] : tlbEntries[matchWhich][25:2];
 
 assign miss = matched == 16'd0;
@@ -38,16 +58,16 @@ assign miss = matched == 16'd0;
 assign phyAddr[11:0] = virtAddr[11:0];
 assign phyAddr[31:12] = PFN[19:0];
 
---generate begin
---  genvar i;
---  for(i = 0; i < 16 ; i=i+1) begin
---    assign matched[i] = tlbEntries[i][70:52] == virtAddr[31:13] &&
---     (virtAddr[12] ? tlbEntries[i][26] : tlbEntries[i][0]);
---  end
---end
---endgenerate
+//generate begin
+//  genvar i;
+//  for(i = 0; i < 16 ; i=i+1) begin
+//    assign matched[i] = tlbEntries[i][70:52] == virtAddr[31:13] &&
+//     (virtAddr[12] ? tlbEntries[i][26] : tlbEntries[i][0]);
+//  end
+//end
+//endgenerate
 
---generated
+//generated
 
     assign matched[0] = tlbEntries[0][70:52] == virtAddr[31:13] &&
      (virtAddr[12] ? tlbEntries[0][26] : tlbEntries[0][0]);
@@ -82,7 +102,7 @@ assign phyAddr[31:12] = PFN[19:0];
     assign matched[15] = tlbEntries[15][70:52] == virtAddr[31:13] &&
      (virtAddr[12] ? tlbEntries[15][26] : tlbEntries[15][0]);
 
---endgenerated
+//endgenerated
 
 always @(*) begin
   if(matched[0]) begin

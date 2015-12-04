@@ -47,7 +47,7 @@ tlbConverter conv4inst(
 
 tlbConverter conv4data(
 
---  .tlbEntries(tlbEntries),
+//  .tlbEntries(tlbEntries),
 
   .tlbEntry0(tlbEntries[0]),
   .tlbEntry1(tlbEntries[1]),
