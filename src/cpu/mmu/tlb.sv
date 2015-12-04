@@ -37,7 +37,7 @@ assign {
 
 reg[70:0] tlbEntries[0:15];
 
-tlbConverter(
+tlbConverter conv4inst(
 
   .tlbEntries(tlbEntries),
   .phyAddr(insAddrPhy),
@@ -45,7 +45,7 @@ tlbConverter(
   .miss(insMiss)
 );
 
-tlbConverter(
+tlbConverter conv4data(
 
   .tlbEntries(tlbEntries),
   .phyAddr(dataAddrPhy),
