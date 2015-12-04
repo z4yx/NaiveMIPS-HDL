@@ -26,6 +26,7 @@ module tlbConverter(
 );
 
 wire[15:0] matched;
+wire[70:0] tlbEntries[0:15],
 reg[3:0] matchWhich;
 
 wire[23:0] PFN;
