@@ -47,7 +47,25 @@ tlbConverter conv4inst(
 
 tlbConverter conv4data(
 
-  .tlbEntries(tlbEntries),
+--  .tlbEntries(tlbEntries),
+
+  .tlbEntry0(tlbEntries[0]),
+  .tlbEntry1(tlbEntries[1]),
+  .tlbEntry2(tlbEntries[2]),
+  .tlbEntry3(tlbEntries[3]),
+  .tlbEntry4(tlbEntries[4]),
+  .tlbEntry5(tlbEntries[5]),
+  .tlbEntry6(tlbEntries[6]),
+  .tlbEntry7(tlbEntries[7]),
+  .tlbEntry8(tlbEntries[8]),
+  .tlbEntry9(tlbEntries[9]),
+  .tlbEntry10(tlbEntries[10]),
+  .tlbEntry11(tlbEntries[11]),
+  .tlbEntry12(tlbEntries[12]),
+  .tlbEntry13(tlbEntries[13]),
+  .tlbEntry14(tlbEntries[14]),
+  .tlbEntry15(tlbEntries[15]),
+
   .phyAddr(dataAddrPhy),
   .virtAddr(dataAddrVirt),
   .miss(dataMiss)
