@@ -67,6 +67,7 @@ naive_mips mips(/*autoinst*/
             .clk(clk),
             .ibus_rddata(ibus_rddata[31:0]),
             .dbus_rddata(dbus_rddata[31:0]),
+            .dbus_stall(1'b0),
             .hardware_int_in(hardware_int));
 
 defparam mips.pc_instance.PC_INITIAL = 32'h80000000;

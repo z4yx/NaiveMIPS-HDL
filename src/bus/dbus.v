@@ -2,6 +2,7 @@
 module dbus(/*autoport*/
 //output
             master_rddata,
+            master_stall,
             uart_address,
             uart_data_i,
             uart_rd,
@@ -29,6 +30,7 @@ module dbus(/*autoport*/
             uart_data_o,
             gpio_data_o,
             ram_data_o,
+            ram_stall,
             flash_data_o);
 
 input wire[31:0] master_address;
@@ -37,6 +39,7 @@ input wire master_read;
 input wire master_write;
 input wire[31:0] master_wrdata;
 output reg[31:0] master_rddata;
+output reg master_stall;
 
 output wire[3:0] uart_address;
 output wire[31:0] uart_data_i;
@@ -56,6 +59,7 @@ input wire[31:0] ram_data_o;
 output wire[3:0] ram_data_enable;
 output reg ram_rd;
 output reg ram_wr;
+input wire ram_stall;
 
 output wire[23:0] flash_address;
 output wire[31:0] flash_data_i;
@@ -88,10 +92,12 @@ always @(*) begin
     gpio_rd <= 1'b0;
     gpio_wr <= 1'b0;
     master_rddata <= 32'h0;
+    master_stall <= 1'b0;
     if(master_address[31:24] == 8'h00) begin
         ram_rd <= master_read;
         ram_wr <= master_write;
         master_rddata <= ram_data_o;
+        master_stall <= ram_stall;
     end else if(master_address[31:24] == 8'h1e) begin
         flash_rd <= master_read;
         flash_wr <= master_write;

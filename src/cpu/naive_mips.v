@@ -18,6 +18,7 @@ module naive_mips(/*autoport*/
       clk,
       ibus_rddata,
       dbus_rddata,
+      dbus_stall,
       hardware_int_in);
 
 input wire rst_n;
@@ -36,6 +37,7 @@ output wire dbus_read;
 output wire dbus_write;
 output wire[31:0] dbus_wrdata;
 input wire[31:0] dbus_rddata;
+input wire dbus_stall;
 
 input wire[4:0] hardware_int_in;
 
@@ -129,6 +131,7 @@ reg mm_iaddr_exp_illegal;
 wire mm_daddr_exp_illegal;
 wire mm_alignment_err;
 reg mm_we_tlb;
+wire mm_stall;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -195,6 +198,7 @@ assign dbus_read = mm_mem_rd;
 assign dbus_write = mm_mem_wr && !exception_flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
+assign mm_stall = dbus_stall;
 
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
@@ -205,6 +209,8 @@ assign hardware_int[4:0] = hardware_int_in;
 always @(*) begin
     if (!rst_n) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
+    end else if(mm_stall) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00000;
     end else if(ex_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
