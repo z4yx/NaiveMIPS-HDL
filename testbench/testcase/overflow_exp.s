@@ -5,6 +5,8 @@
    .global _start
 _start:
     la   $8,__exception_vector
+    lui  $t1,0x8000
+    or   $t0,$t0,$t1
     lui  $1,0x8000
     lui  $2,0x8000
     ori  $1,$1,0x0010           # $1 = 0x80000010
@@ -14,7 +16,7 @@ _start:
     nop
     add  $3,$2,$1               # overflow,$3 keep 0x00000000
                                 # exception return, $3 = 0x80000021
-    
+
     or   $1,$0,$0
     ori  $4,$0,0x0022           # $4 = 0x22
     b    loop

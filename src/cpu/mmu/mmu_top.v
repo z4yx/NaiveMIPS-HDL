@@ -47,24 +47,6 @@ wire[31:0] inst_address_direct;
 wire[31:0] data_address_tlb;
 wire[31:0] inst_address_tlb;
 
-wire[18:0] tlb_entry_vpn2;
-wire[23:0] tlb_entry_lo0_pnf;
-wire tlb_entry_lo0_d;
-wire tlb_entry_lo0_v;
-wire[23:0] tlb_entry_lo1_pnf;
-wire tlb_entry_lo1_d;
-wire tlb_entry_lo1_v;
-wire[3:0] tlb_entry_index;
-
-assign {
-    tlb_entry_vpn2,
-    tlb_entry_lo1_pnf,
-    tlb_entry_lo1_d, tlb_entry_lo1_v,
-    tlb_entry_lo0_pnf,
-    tlb_entry_lo0_d, tlb_entry_lo0_v,
-    tlb_entry_index
-} = tlb_config; //refer to cp0.v
-
 assign data_exp_miss = (data_miss && data_tlb_map);
 assign inst_exp_miss = (inst_miss && inst_tlb_map);
 assign data_address_o = data_tlb_map ? data_address_tlb : data_address_direct;
@@ -85,9 +67,21 @@ mem_map map_data(/*autoinst*/
            .en(data_en),
            .um(user_mode));
 
-assign data_miss = 1'b0;
-assign inst_miss = 1'b0;
-assign data_address_tlb = data_address_i;
-assign inst_address_tlb = inst_address_i;
+tlb tlb0(
+  .tlbConfig(tlb_config),
+  .tlbwi(tlbwi),
+
+  .dataAddrVirt(data_address_i),
+  .insAddrVirt(inst_address_i),
+
+  .dataMiss(data_miss),
+  .insMiss(inst_miss),
+
+  .dataAddrPhy(data_address_tlb),
+  .insAddrPhy(inst_address_tlb),
+
+  .rst_n(rst_n),
+  .clk(clk)
+);
 
 endmodule

@@ -70,6 +70,7 @@ always @(*) begin
         $display("Exception: Instruction address illegal");
     end
     else if(iaddr_exp_miss) begin
+        exception_new_pc <= {ebase_in, 12'b0} + 32'h0;
         exp_bad_vaddr <= pc_value;
         exp_code <= 5'h02; //TLBL
         $display("Exception: Instruction TLB miss");
@@ -99,6 +100,7 @@ always @(*) begin
         $display("Exception: Data address illegal, WE=%d",data_we);
     end
     else if(daddr_exp_miss) begin
+        exception_new_pc <= {ebase_in, 12'b0} + 32'h0;
         exp_bad_vaddr <= mem_access_vaddr;
         exp_code <= data_we ? 5'h03 : 5'h02; //TLBS : TLBL
         $display("Exception: Data TLB miss, WE=%d",data_we);

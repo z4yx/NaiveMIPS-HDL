@@ -16,6 +16,7 @@ module ex(/*autoport*/
           cp0_rd_addr,
           syscall,
           eret,
+          we_tlb,
 //input
           clk,
           rst_n,
@@ -64,6 +65,7 @@ output reg[4:0] cp0_wr_addr;
 output reg[4:0] cp0_rd_addr;
 output wire syscall;
 output wire eret;
+output wire we_tlb;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -88,6 +90,7 @@ assign tmp_sub = reg_s_value - tmp_sign_operand; //used by SLT/SLTI and SUB
 
 assign syscall = op == `OP_SYSCALL;
 assign eret = op == `OP_ERET;
+assign we_tlb = op == `OP_TLBWI;
 
 multi_cycle mul_instance(/*autoinst*/
            .result(mul_result),

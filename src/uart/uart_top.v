@@ -77,6 +77,6 @@ uart_rx rx1(/*autoinst*/
             .clk_uart(clk_uart),
             .rst_n(rst_n),
             .clear(rx_clear),
-            .rxd(rxd));
+            .rxd_in(rxd));
 
 endmodule

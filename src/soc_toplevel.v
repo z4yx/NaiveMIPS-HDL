@@ -1,4 +1,5 @@
 `default_nettype none
+`define EXT_UART_CLOCK
 module soc_toplevel(/*autoport*/
 //inout
             ram_data,
@@ -25,24 +26,30 @@ module soc_toplevel(/*autoport*/
 //input
             rst_in_n,
             clk_in,
+`ifdef EXT_UART_CLOCK
 				clk_uart_in,
+`endif
             rxd);
 
 input wire rst_in_n;
 input wire clk_in;
-input wire clk_uart_in;
 
 wire clk2x,clk,locked,rst_n;
-wire clk_uart;
+wire clk_uart, clk_uart_pll;
 
+`ifdef EXT_UART_CLOCK
+input wire clk_uart_in;
 assign clk_uart = clk_uart_in;
+`else
+assign clk_uart = clk_uart_pll;
+`endif
 
 sys_pll pll1(
     .areset(!rst_in_n),
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
-    .c2(/*clk_uart*/),
+    .c2(clk_uart_pll),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
@@ -98,6 +105,7 @@ wire dbus_read;
 wire [31:0]ibus_rddata;
 wire [31:0]dbus_address;
 wire [31:0]ibus_address;
+wire dbus_stall;
 
 wire [31:0]rom_data;
 wire [12:0]rom_address;
@@ -111,10 +119,14 @@ wire ibus_ram_write;
 
 wire [23:0]dbus_ram_address;
 wire [31:0]dbus_ram_rddata;
+wire [31:0]conv_ram_wrdata;
 wire [31:0]dbus_ram_wrdata;
 wire [3:0]dbus_ram_byteenable;
+wire conv_read;
+wire conv_write;
 wire dbus_ram_read;
 wire dbus_ram_write;
+wire dbus_ram_stall;
 
 wire [31:0]uart_data_o;
 wire [31:0]uart_data_i;
@@ -186,6 +198,7 @@ naive_mips cpu(/*autoinst*/
          .clk(clk),
          .ibus_rddata(ibus_rddata[31:0]),
          .dbus_rddata(dbus_rddata[31:0]),
+         .dbus_stall(dbus_stall),
          .hardware_int_in(irq_line));
 
 two_port mainram(/*autoinst*/
@@ -204,10 +217,24 @@ two_port mainram(/*autoinst*/
            .wr1(ibus_ram_write),
            .dataenable1(ibus_ram_byteenable),
            .address2(dbus_ram_address),
-           .wrdata2(dbus_ram_wrdata),
-           .rd2(dbus_ram_read),
-           .wr2(dbus_ram_write),
-           .dataenable2(dbus_ram_byteenable));
+           .wrdata2(conv_ram_wrdata),
+           .rd2(conv_read),
+           .wr2(conv_write),
+           .dataenable2(4'b1111));
+
+bytes_conv mem_conv(
+            .clk(clk),
+            .rst_n(rst_n),
+            .byteenable_i(dbus_ram_byteenable),
+            .address(dbus_ram_address),
+            .data_ram_rd(dbus_ram_rddata),
+            .data_ram_wr(conv_ram_wrdata),
+            .data_master_wr(dbus_ram_wrdata),
+            .stall_o(dbus_ram_stall),
+            .read_i(dbus_ram_read),
+            .write_i(dbus_ram_write),
+            .read_o(conv_read),
+            .write_o(conv_write));
 
 dbus dbus0(/*autoinst*/
          .master_rddata(dbus_rddata[31:0]),
@@ -234,9 +261,11 @@ dbus dbus0(/*autoinst*/
          .master_read(dbus_read),
          .master_write(dbus_write),
          .master_wrdata(dbus_wrdata[31:0]),
+         .master_stall(dbus_stall),
          .uart_data_o(uart_data_o[31:0]),
          .gpio_data_o(gpio_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
+         .ram_stall(dbus_ram_stall),
          .flash_data_o(flash_dbus_data_o[31:0]));
 
 uart_top uart0(/*autoinst*/
