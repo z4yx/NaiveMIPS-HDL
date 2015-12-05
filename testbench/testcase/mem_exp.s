@@ -33,8 +33,9 @@ entry:
 
    .org 0x400
    ori $16, $16, 0xbeef
-   sw  $16, 0x1000($0)
-   lw  $17, 0x3000($0)
+   sw  $16, 0x2a04($0)
+   j _loop
+   lw  $17, 0x4a04($0)
 _loop:
    j _loop
    nop
@@ -44,10 +45,15 @@ __exception_vector:
    addi  $4,$4,1
    mfc0  $26, $13, 0             # read cause
    mfc0  $26, $8,  0             # bad vaddr
-   mfc0 $27,$14,0x0
-   addi $27,$27,0x4
-   mtc0 $27,$14,0x0
+   mtc0  $26, $10, 0             # VPN2
+   mtc0  $0, $3,   0             # EntryLo1
+   ori   $27, $0,  2
+   mtc0  $27,$2,   0             # EntryLo0
+   mtc0  $4, $0,   0             # Index
+   tlbwi
    and   $27,$27,$0
+   nop
+   nop
    nop
    nop
    eret
