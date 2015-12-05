@@ -1,7 +1,6 @@
    .org 0x0
    .set noat
    .set noreorder
-   .set nomacro
    .global _start
    .global __start
 _start:
@@ -27,17 +26,25 @@ entry:
    sb  $2, 0x0003($1)
    lb  $2, 0x0001($1)
    sh  $2, 0x0003($1)  #AdES
+
+   ori $8, $0, 0x400
+   jr  $8              #TLBL miss
+   lui $16, 0xdead
+
+   .org 0x400
+   ori $16, $16, 0xbeef
+   sw  $16, 0x1000($0)
+   lw  $17, 0x3000($0)
 _loop:
    j _loop
    nop
-   
 
    .org 0x1000                  # must be 4K alignment
 __exception_vector:
    addi  $4,$4,1
    mfc0  $26, $13, 0             # read cause
    mfc0  $26, $8,  0             # bad vaddr
-   mfc0 $27,$14,0x0 
+   mfc0 $27,$14,0x0
    addi $27,$27,0x4
    mtc0 $27,$14,0x0
    and   $27,$27,$0
@@ -49,11 +56,10 @@ __exception_vector:
    addi  $5,$5,1
    mfc0  $26, $13, 0             # read cause
    mfc0  $26, $8,  0             # bad vaddr
-   mfc0 $27,$14,0x0 
+   mfc0 $27,$14,0x0
    addi $27,$27,0x4
    mtc0 $27,$14,0x0
    and   $27,$27,$0
    nop
    nop
    eret
-   
