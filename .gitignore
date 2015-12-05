@@ -18,3 +18,5 @@ xilinx/CPLD/top_html/
 *.ppr
 *.xsl
 *.elf
+*.sym
+*.blc
