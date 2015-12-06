@@ -13,8 +13,10 @@ from elftools.elf.elffile import ELFFile
 ser = serial.Serial('/dev/cu.usbserial', 115200, timeout=1)
 
 def write_uart(buf):
-    ser.write(buf)
-    ser.flush()
+    for b in buf:
+        ser.write(b)
+        ser.flush()
+        time.sleep(0.0001)
 
 def write_ram(start, content):
     time.sleep(0.01)
@@ -29,24 +31,16 @@ def write_ram(start, content):
     write_uart(struct.pack('<I',start))
     time.sleep(0.01)
     write_uart(struct.pack('<I',(len(content)+3)/4))
-    # for b in struct.pack('<I',start):
-    #     write_uart(b)
-    #     time.sleep(0.01)
-    # for b in struct.pack('<I',(len(content)+3)/4):
-    #     write_uart(b)
-    #     time.sleep(0.01)
 
     time.sleep(0.01)
 
     cnt=0
     for b in content:
         write_uart(b)
-        time.sleep(0.0001)
         cnt+=1
 
     while cnt%4!=0:
         write_uart('\x00')
-        time.sleep(0.01)
         cnt+=1
 
     print "%d bytes written"%cnt
@@ -66,12 +60,6 @@ def read_ram(start, length):
     write_uart(struct.pack('<I',start))
     time.sleep(0.01)
     write_uart(struct.pack('<I',length/4))
-    # for b in struct.pack('<I',start):
-    #     write_uart(b)
-    #     time.sleep(0.01)
-    # for b in struct.pack('<I',length/4):
-    #     write_uart(b)
-    #     time.sleep(0.01)
 
     buf = ser.read(length)
     if len(buf) < length:
@@ -107,9 +95,6 @@ def uart_loopback_test():
     while True:
         t = random.randint(0,2**32-1)
         sent = struct.pack('<I',t)
-        # for b in sent:
-        #     write_uart(b)
-        #     time.sleep(0.1)
         write_uart(sent)
         recv = ser.read(4)
         if not recv:
@@ -122,10 +107,9 @@ def uart_loopback_test():
 def ram_test():
 
     while True:
-        size = 128*1024
+        size = 32*1024
         offset = 0*1024
-        # data = ''.join(chr(random.randint(0,255)) for _ in range(size))
-        data = ''.join('\xaa' for _ in range(size))
+        data = ''.join(chr(random.randint(0,255)) for _ in range(size))
 
         write_ram(offset, data)
         # raw_input("Press Enter to continue...")
@@ -166,6 +150,11 @@ def load_elf_and_run(f):
 def start_terminal():
     slt_list = [sys.stdin, ser]
     while True:
+        recv = ser.read()
+        if not(recv is None):
+            sys.stdout.write(recv)
+        continue
+
         ready = select.select(slt_list, [], [])
         if ser in ready:
             recv = ser.read()
@@ -180,9 +169,7 @@ def start_terminal():
 # ram_test()
 
 with open(sys.argv[1], 'rb') as f:
-    # ram_test()
-    # uart_loopback_test()
     # load_and_run(f, 0, 0)
-    # load_elf_and_run(f)
+    load_elf_and_run(f)
 
     start_terminal()
