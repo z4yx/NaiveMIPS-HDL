@@ -9,6 +9,8 @@ module uart_tx(/*autoport*/
             tx_request,
             data);
 
+parameter ignore_for_sim = 1'b0;
+
 parameter BAUD = 115200;
 parameter UART_CLK = 11059200;
 parameter COUNTER_PERIOD = UART_CLK/BAUD-1;
@@ -58,7 +60,10 @@ always @(posedge clk_bus or negedge rst_n) begin
         tx_request_reg <= 1'b0;
     end else begin
         tx_request_reg <= 1'b0;
-        if(idle && tx_request) begin
+        if(idle && tx_request && ignore_for_sim) begin
+            $write("%c",data);
+        end
+        if(idle && tx_request && !ignore_for_sim) begin
             tx_request_reg <= 1'b1;
             data_reg <= data;
             idle <= 1'b0;

@@ -32,6 +32,8 @@ wire txd;
 tri[31:0] gpio0;
 tri[31:0] gpio1;
 
+tri[31:0] ext_data;
+
 soc_toplevel soc(/*autoinst*/
            .ram_data(ram_data),
            .base_ram_addr(base_ram_address),
@@ -58,7 +60,7 @@ soc_toplevel soc(/*autoinst*/
            .gpio0(gpio0),
            .gpio1(gpio1));
 AS7C34098A base1(/*autoinst*/
-            .DataIO(ram_data[7:0]),
+            .DataIO(ram_data[15:0]),
             .Address(base_ram_address[17:0]),
             .OE_n(base_ram_oe_n),
             .CE_n(base_ram_ce_n),
@@ -66,7 +68,7 @@ AS7C34098A base1(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A base2(/*autoinst*/
-            .DataIO(),
+            .DataIO(ram_data[31:16]),
             .Address(base_ram_address[17:0]),
             .OE_n(base_ram_oe_n),
             .CE_n(base_ram_ce_n),
@@ -74,7 +76,7 @@ AS7C34098A base2(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A ext1(/*autoinst*/
-            .DataIO(ram_data[23:8]),
+            .DataIO(ext_data[15:0]),
             .Address(ext_ram_address[17:0]),
             .OE_n(ext_ram_oe_n),
             .CE_n(ext_ram_ce_n),
@@ -82,7 +84,7 @@ AS7C34098A ext1(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A ext2(/*autoinst*/
-            .DataIO(ram_data[31:24]),
+            .DataIO(ext_data[31:16]),
             .Address(ext_ram_address[17:0]),
             .OE_n(ext_ram_oe_n),
             .CE_n(ext_ram_ce_n),
@@ -146,6 +148,9 @@ defparam flash.TimingModel = "S29GL064N11TFIV2";
 defparam soc.uart0.rx1.COUNTER_PERIOD=3;
 defparam soc.uart0.tx1.COUNTER_PERIOD=3;
 
+defparam soc.uart0.tx1.ignore_for_sim=1;
+defparam soc.cpu.pc_instance.PC_INITIAL = 32'h80000000;
+
 task uart_send_byte;
 input [7:0] data;
 begin
@@ -187,6 +192,7 @@ initial begin
     #41 rst_in_n=1'b1;
 end
 
+/*
 initial begin
     wait(soc.rst_n == 1'b1);
     #1000;
@@ -206,6 +212,14 @@ initial begin
     uart_send_byte(8'h34);
     #200;
     uart_send_word(32'h00005566);
+end
+*/
+
+initial begin
+    $readmemh("ucore-kernel-initrd.raw.0", base1.mem_array0);
+    $readmemh("ucore-kernel-initrd.raw.1", base1.mem_array1);
+    $readmemh("ucore-kernel-initrd.raw.2", base2.mem_array0);
+    $readmemh("ucore-kernel-initrd.raw.3", base2.mem_array1);
 end
 
 always begin
