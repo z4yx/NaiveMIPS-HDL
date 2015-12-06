@@ -20,8 +20,8 @@ module tlbConverter(
   input wire[70:0] tlbEntry14,
   input wire[70:0] tlbEntry15,
 
-  input wire[31:0] phyAddr,
-  output wire[31:0] virtAddr,
+  output wire[31:0] phyAddr,
+  input wire[31:0] virtAddr,
   output wire miss
 );
 

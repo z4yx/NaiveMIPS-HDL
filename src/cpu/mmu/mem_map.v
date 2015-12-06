@@ -23,14 +23,15 @@ always @(*) begin
         casez(addr_i[31:29])
         3'b110,         //kseg2
         3'b111,         //kseg3
-        3'b0??: begin   //useg
+		  3'b000,
+		  3'b001,
+		  3'b010,
+		  3'b011: begin   //useg
             using_tlb <= 1'b1;
         end
         3'b100,         //kseg0
         3'b101: begin   //kseg1
             addr_o <= {3'b0, addr_i[28:0]};
-        end
-        default: begin
         end
         endcase
     end
