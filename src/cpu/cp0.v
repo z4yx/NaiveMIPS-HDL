@@ -63,7 +63,7 @@ input wire[31:0] exp_bad_vaddr;
 
 reg[31:0] cp0_regs[0:31];
 
-assign user_mode = cp0_regs[`CP0_Status][4];
+assign user_mode = !cp0_regs[`CP0_Status][1] && cp0_regs[`CP0_Status][4];
 assign ebase = {2'b10, cp0_regs[`CP0_EBase][29:12]};
 assign epc = cp0_regs[`CP0_EPC];
 assign tlb_config = {
