@@ -101,6 +101,7 @@ reg [31:0]ex_pc_value;
 reg ex_iaddr_exp_miss;
 reg ex_iaddr_exp_illegal;
 wire ex_we_tlb;
+wire ex_is_priv_inst;
 
 wire mm_mem_wr;
 reg mm_in_delayslot;
@@ -132,6 +133,7 @@ wire mm_daddr_exp_illegal;
 wire mm_alignment_err;
 reg mm_we_tlb;
 wire mm_stall;
+reg mm_is_priv_inst;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -404,6 +406,7 @@ ex stage_ex(/*autoinst*/
             .exception_flush(exception_flush),
             .stall(ex_stall),
             .we_cp0(ex_we_cp0),
+            .is_priv_inst(ex_is_priv_inst),
             .cp0_wr_addr(ex_cp0_wraddr),
             .cp0_rd_addr(ex_cp0_rdaddr),
             .reg_cp0_value(ex_cp0_value));
@@ -436,6 +439,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
         mm_we_tlb <= 1'b0;
+        mm_is_priv_inst <= 1'b0;
     end
     else if(en_exmm && !exception_flush) begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -457,6 +461,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_miss <= ex_iaddr_exp_miss;
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
         mm_we_tlb <= ex_we_tlb;
+        mm_is_priv_inst <= ex_is_priv_inst;
     end else if(en_mmwb || exception_flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -477,6 +482,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
         mm_we_tlb <= 1'b0;
+        mm_is_priv_inst <= 1'b0;
     end
 end
 
@@ -516,6 +522,7 @@ exception exception_detect(/*autoinst*/
      .invalid_inst(mm_invalid_inst),
      .syscall(mm_syscall),
      .eret(mm_eret),
+     .restrict_priv_inst(mm_is_priv_inst && cp0_user_mode),
      .pc_value(mm_pc_value),
      .mem_access_vaddr(mm_mem_address),
      .in_delayslot(mm_in_delayslot),

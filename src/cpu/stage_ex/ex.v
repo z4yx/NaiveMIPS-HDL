@@ -17,6 +17,7 @@ module ex(/*autoport*/
           syscall,
           eret,
           we_tlb,
+          is_priv_inst,
 //input
           clk,
           rst_n,
@@ -66,6 +67,7 @@ output reg[4:0] cp0_rd_addr;
 output wire syscall;
 output wire eret;
 output wire we_tlb;
+output reg is_priv_inst;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -325,6 +327,19 @@ always @(*) begin
         mem_access_sz <= `ACCESS_SZ_HALF;
     default:
         mem_access_sz <= `ACCESS_SZ_WORD;
+    endcase
+end
+
+always @(*) begin
+    case (op)
+    `OP_MFC0,
+    `OP_MTC0,
+    `OP_CACHE,
+    `OP_ERET,
+    `OP_TLBWI:
+        is_priv_inst <= 1'b1;
+    default:
+        is_priv_inst <= 1'b0;
     endcase
 end
 

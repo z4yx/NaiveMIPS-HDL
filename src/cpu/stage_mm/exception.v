@@ -1,31 +1,32 @@
 `default_nettype none
 module exception(/*autoport*/
 //output
-           flush,
-           cp0_wr_exp,
-           cp0_clean_exl,
-           exp_epc,
-           exp_code,
-           exp_bad_vaddr,
-           exception_new_pc,
+     flush,
+     cp0_wr_exp,
+     cp0_clean_exl,
+     exp_epc,
+     exp_code,
+     exp_bad_vaddr,
+     exception_new_pc,
 //input
-           iaddr_exp_miss,
-           daddr_exp_miss,
-           iaddr_exp_illegal,
-           daddr_exp_illegal,
-           data_we,
-           invalid_inst,
-           syscall,
-           eret,
-           pc_value,
-           mem_access_vaddr,
-           in_delayslot,
-           overflow,
-           hardware_int,
-           software_int,
-           allow_int,
-           ebase_in,
-           epc_in);
+     iaddr_exp_miss,
+     daddr_exp_miss,
+     iaddr_exp_illegal,
+     daddr_exp_illegal,
+     data_we,
+     invalid_inst,
+     syscall,
+     eret,
+     pc_value,
+     mem_access_vaddr,
+     in_delayslot,
+     overflow,
+     hardware_int,
+     software_int,
+     allow_int,
+     ebase_in,
+     epc_in,
+     restrict_priv_inst);
 
 input wire iaddr_exp_miss;
 input wire daddr_exp_miss;
@@ -44,6 +45,7 @@ input wire [1:0]software_int;
 input wire allow_int;
 input wire[19:0] ebase_in;
 input wire[31:0] epc_in;
+input wire restrict_priv_inst;
 
 output reg flush;
 output reg cp0_wr_exp;
@@ -82,6 +84,10 @@ always @(*) begin
     else if(invalid_inst) begin
         exp_code <= 5'h0a;
         $display("Exception: RI");
+    end
+    else if(restrict_priv_inst) begin
+        exp_code <= 5'h0b;
+        $display("Exception: CpU");
     end
     else if(overflow) begin
         exp_code <= 5'h0c;
