@@ -34,21 +34,19 @@ output wire flash_byte_n;
 output reg flash_oe_n;
 output wire flash_rp_n;
 output wire[2:0] flash_ce;
-output reg flash_vpen;
+output wire flash_vpen;
 
 reg [15:0]flash_wrdata;
 
 
 always @(posedge clk_bus or negedge rst_n) begin
   if (!rst_n) begin
-    flash_vpen <= 1'b0;
     flash_address <= 22'b0;
     flash_wrdata <= 16'b0;
     flash_we_n <= 1'b1;
     flash_oe_n <= 1'b1;
   end
   else if (bus_read || bus_write) begin
-    flash_vpen <= bus_write;
     flash_address <= bus_address[23:2];
     flash_wrdata <= bus_data_i[15:0];
     flash_we_n <= ~bus_write;
@@ -59,6 +57,7 @@ end
 assign flash_rp_n = rst_n;
 assign flash_byte_n = 1'b1;
 assign flash_ce = 3'b111;
+assign flash_vpen = 1'b1;
 
 assign flash_data = (~flash_we_n) ? flash_wrdata[15:0] : {16{1'bz}};
 assign bus_data_o = {16'b0,flash_data};
