@@ -108,7 +108,7 @@ def ram_test():
 
     while True:
         size = 32*1024
-        offset = 0*1024
+        offset = 0x80000000 + 0*1024
         data = ''.join(chr(random.randint(0,255)) for _ in range(size))
 
         write_ram(offset, data)
