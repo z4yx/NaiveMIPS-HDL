@@ -15,7 +15,7 @@ input wire rd;
 input wire wr;
 input wire [3:0] byte_enable;
 
-reg[31:0] ram[0:1023];
+reg[31:0] ram[0:(1024*1024-1)];
 
 parameter MEM_ADDR_WIDTH = 10;
 
