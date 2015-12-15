@@ -124,6 +124,54 @@ def ram_test():
                     print "%x!=%x @ 0x%x" % (ord(data[x]),ord(recv[x]),x)
             break
 
+def flash_test():
+    FLASH_BASE = 0xbe000000
+    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    buf = read_ram(FLASH_BASE, 4)
+    buf = read_ram(FLASH_BASE, 4)
+    print "Manufacture code: %s" % binascii.hexlify(buf[0])
+
+    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    buf = read_ram(FLASH_BASE+4, 4)
+    buf = read_ram(FLASH_BASE+4, 4)
+    print "Device code: %s" % binascii.hexlify(buf[0])
+
+    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    buf = read_ram(FLASH_BASE+8, 4)
+    buf = read_ram(FLASH_BASE+8, 4)
+    print "Lock bits: %s" % binascii.hexlify(buf[0])
+
+    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    buf = read_ram(FLASH_BASE, 4)
+    buf = read_ram(FLASH_BASE+4, 16)
+    print "data: %s" % binascii.hexlify(buf)
+
+    # !!! clear lock bits !!!
+    # write_ram(FLASH_BASE, "\x60\x00\x00\x00")
+    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+
+    # !!! erase test !!!
+    # write_ram(FLASH_BASE, "\x20\x00\x00\x00")
+    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+
+    # !!! program test !!!
+    write_ram(FLASH_BASE, "\x40\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x55\x55\x00\x00")
+
+    while True:
+        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
+        buf = read_ram(FLASH_BASE, 4)
+        buf = read_ram(FLASH_BASE, 4)
+        print "Status: %s" % binascii.hexlify(buf[0])
+        if (ord(buf[0]) & 0x80)!=0:
+            break
+        print "Waiting..."
+
+    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    buf = read_ram(FLASH_BASE, 4)
+    buf = read_ram(FLASH_BASE+4, 16)
+    print "data: %s" % binascii.hexlify(buf)
+
 def load_and_run(f, addr, entry):
     size = os.fstat(f.fileno()).st_size
     print "File size: %d" % size
