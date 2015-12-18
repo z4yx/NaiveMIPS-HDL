@@ -132,7 +132,7 @@ s29gl064n01 flash(
     .DQ1      (flash_data[1]),
     .DQ0      (flash_data[0]),
 
-    .CENeg    (~flash_ce[0]),
+    .CENeg    (flash_ce[0]),
     .OENeg    (flash_oe_n),
     .WENeg    (flash_we_n),
     .RESETNeg (flash_rp_n),
@@ -215,12 +215,14 @@ initial begin
 end
 */
 
+
 initial begin
-    $readmemh("ucore-kernel-initrd.raw.0", base1.mem_array0);
-    $readmemh("ucore-kernel-initrd.raw.1", base1.mem_array1);
-    $readmemh("ucore-kernel-initrd.raw.2", base2.mem_array0);
-    $readmemh("ucore-kernel-initrd.raw.3", base2.mem_array1);
+    $readmemh("ram_preload.mem.0", base1.mem_array0);
+    $readmemh("ram_preload.mem.1", base1.mem_array1);
+    $readmemh("ram_preload.mem.2", base2.mem_array0);
+    $readmemh("ram_preload.mem.3", base2.mem_array1);
 end
+
 
 always begin
     #10 clk_in = ~clk_in; //50MHz clock in

@@ -16,6 +16,7 @@ add wave -noupdate /test/soc/cpu/dbus_read
 add wave -noupdate -radix hexadecimal /test/soc/dbus_address
 add wave -noupdate /test/soc/dbus_ram_byteenable
 add wave -noupdate -radix hexadecimal /test/soc/dbus_rddata
+add wave -noupdate /test/soc/cpu/dbus_stall
 add wave -noupdate -divider UART
 add wave -noupdate /test/soc/clk_uart
 add wave -noupdate /test/soc/uart0/tx_idle

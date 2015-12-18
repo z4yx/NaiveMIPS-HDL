@@ -140,6 +140,7 @@ wire [23:0]flash_dbus_address;
 wire [3:0]flash_dbus_data_enable;
 wire flash_dbus_read;
 wire flash_dbus_write;
+wire flash_dbus_stall;
 
 wire [31:0]gpio_dbus_data_o;
 wire [31:0]gpio_dbus_data_i;
@@ -266,6 +267,7 @@ dbus dbus0(/*autoinst*/
          .gpio_data_o(gpio_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
          .ram_stall(dbus_ram_stall),
+         .flash_stall (flash_dbus_stall),
          .flash_data_o(flash_dbus_data_o[31:0]));
 
 uart_top uart0(/*autoinst*/
@@ -293,6 +295,7 @@ flash_top flash0(/*autoinst*/
          .bus_data_o(flash_dbus_data_o[31:0]),
          .clk_bus(clk),
          .rst_n(rst_n),
+         .bus_stall(flash_dbus_stall),
          .bus_address(flash_dbus_address[23:0]),
          .bus_data_i(flash_dbus_data_i[31:0]),
          .bus_read(flash_dbus_read),

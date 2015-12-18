@@ -4,6 +4,7 @@ module flash_top(/*autoport*/
            flash_data,
 //output
            bus_data_o,
+           bus_stall,
            flash_address,
            flash_we_n,
            flash_byte_n,
@@ -27,6 +28,7 @@ input wire[31:0] bus_data_i;
 output reg[31:0] bus_data_o;
 input wire bus_read;
 input wire bus_write;
+output wire bus_stall;
 
 output reg[21:0] flash_address;
 inout wire[15:0] flash_data;
@@ -72,6 +74,6 @@ assign flash_ce = 3'b000;
 assign flash_vpen = 1'b1;
 
 assign flash_data = (~flash_we_n) ? flash_wrdata[15:0] : {16{1'bz}};
-
+assign bus_stall = (bus_read || bus_write) || (hold_cycle != 0);
 
 endmodule
