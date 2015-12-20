@@ -20,6 +20,8 @@ module flash_top(/*autoport*/
            bus_read,
            bus_write);
 
+parameter FLASH_BUS_CYCLE = 3;
+
 input wire clk_bus;
 input wire rst_n;
 
@@ -52,14 +54,14 @@ always @(posedge clk_bus or negedge rst_n) begin
     hold_cycle <= 4'b0;
     bus_data_o <= 32'h0;
   end else begin
-    hold_cycle <= hold_cycle ? hold_cycle-4'b1 : 4'b0;
-    if (bus_read || bus_write) begin
+    hold_cycle <= (hold_cycle && hold_cycle != FLASH_BUS_CYCLE) ?(hold_cycle+4'b1): 4'b0;
+    if ((bus_read || bus_write) && hold_cycle == 4'b0) begin
       flash_address <= bus_address[23:2];
       flash_wrdata <= bus_data_i[15:0];
       flash_we_n <= ~bus_write;
       flash_oe_n <= ~bus_read;
-      hold_cycle <= 4'b0;
-    end else if(!hold_cycle) begin
+      hold_cycle <= 4'b1;
+    end else if(hold_cycle == FLASH_BUS_CYCLE-1) begin
       flash_we_n <= 1'b1;
       flash_oe_n <= 1'b1;
     end
@@ -74,6 +76,6 @@ assign flash_ce = 3'b000;
 assign flash_vpen = 1'b1;
 
 assign flash_data = (~flash_we_n) ? flash_wrdata[15:0] : {16{1'bz}};
-assign bus_stall = (bus_read || bus_write) || (hold_cycle != 0);
+assign bus_stall = (bus_read || bus_write) && (hold_cycle < FLASH_BUS_CYCLE);
 
 endmodule
