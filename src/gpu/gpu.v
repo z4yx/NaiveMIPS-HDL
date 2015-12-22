@@ -14,11 +14,11 @@ module gpu_top(
   input wire            bus_write,
 
   //vga
-  output wire           odck,
+  output wire          odck,
   output reg           de,
   output reg           vsync,
   output reg           hsync,
-  output wire[11:0]     pxlData
+  output wire[11:0]    pxlData
 
 
 );
