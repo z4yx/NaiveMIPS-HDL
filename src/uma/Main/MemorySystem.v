@@ -1,6 +1,6 @@
 module MemorySystem(clk, reset, 
                     irreq, iaddr, irdata, imiss, 
-                    drreq, dwreq, daddr, drdata, dwdata, dmiss);
+                    drreq, dwreq, daddr, drdata, dwdata, dmiss, uncached);
     input  wire clk, reset;
     
     input  wire irreq;
@@ -13,6 +13,7 @@ module MemorySystem(clk, reset,
     input  wire [31:0] dwdata;
     output wire [31:0] drdata;
     output wire dmiss;
+    input wire uncached;
     
     /********************* Bus with connected memory devices *******************/
     wire [127:0] master_addr_all;
@@ -69,19 +70,31 @@ module MemorySystem(clk, reset,
     
     // Connect internal memory slave device (just for debugging)
     generate
-    for (i = 0; i < 8; i = i + 1) begin: memory_loop
+    for (i = 1; i < 8; i = i + 1) begin: memory_loop
         
-        InternalMemory #(i * 32'h8000) mem(.clk(clk), .reset(reset), 
-                                    .rreq(slave_rreq), 
-                                    .wreq(slave_wreq), 
-                                    .addr(slave_addr), 
-                                    .wdata(slave_wdata), 
-                                    .rdata(slave_rdata[i]), 
-                                    .busy(slave_busy[i]), 
-                                    .ack(slave_ack[i]));
-                             
+        assign slave_ack[i] = 1'b0;                    
     end
     endgenerate
+
+    reg[31:0] address_reg;
+    reg[31:0] wrdata_reg;
+    reg wr_reg;
+    reg rd_reg;
+    always @(posedge clk) begin
+      address_reg <= slave_addr;
+      wrdata_reg <= slave_wdata;
+      wr_reg <= slave_wreq;
+      rd_reg <= slave_rreq;
+    end
+    assign slave_ack[0] = slave_rreq|slave_wreq;
+    assign slave_busy[0] = 1'b0;
+    mem fake_ram(/*autoinst*/
+           .data_o(slave_rdata[0]),
+           .address(address_reg[31:2]),
+           .data_i(wrdata_reg),
+           .rd(rd_reg),
+           .wr(wr_reg),
+           .byte_enable(4'b1111));
           
     /************************ L2 Cache ************************/
     wire l2_rreq, l2_wreq;
@@ -119,8 +132,6 @@ module MemorySystem(clk, reset,
                  .l2_burst_size(l2_burst_size), .l2_wdata(l2_wdata), .l2_busy(l2_busy));
                  
     /******************** L1 Data Cache *************************/
-    // Decide if the address is uncached
-    wire uncached = 1'b0; //daddr[9];   // This is only assigned for debugging  
     
     // Connect DCache
     wire [31:0] dcache_rdata;
