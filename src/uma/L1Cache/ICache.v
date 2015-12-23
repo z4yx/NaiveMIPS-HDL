@@ -75,7 +75,7 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
     endgenerate
     
     assign peek_addr = addr;
-    assign miss = (peek_miss & ~unit_hit) | (state != `DCACHE_STATE_IDLE);
+    assign miss = ((peek_miss & ~unit_hit) | (state != `DCACHE_STATE_IDLE)) & (rreq);
     assign rdata = peek_miss ? unit_rdata : peek_rdata;
     
     reg  set_valid_req;

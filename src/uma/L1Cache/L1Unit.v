@@ -1,4 +1,4 @@
-module L1Unit(clk, reset, rreq, wreq, addr, hit, rdata, wdata, 
+module L1Unit(clk, reset, rreq, wreq, addr, hit, rdata, wdata, wmask,
               valid, my_tag_addr, my_set_addr, 
               peek_addr, peek_rdata, peek_hit);
     input  wire clk, reset;
@@ -6,6 +6,7 @@ module L1Unit(clk, reset, rreq, wreq, addr, hit, rdata, wdata,
     input  wire rreq, wreq;
     input  wire [31:0] addr;
     input  wire [31:0] wdata;
+    input  wire [3:0] wmask;
     output wire hit;
     output wire [31:0] rdata;
     
@@ -40,9 +41,15 @@ module L1Unit(clk, reset, rreq, wreq, addr, hit, rdata, wdata,
     assign peek_hit = valid & peek_match;
     assign peek_rdata = (valid & peek_match) ? mem[peek_word_addr] : 32'h0;
     
+    wire [31:0] wmask_expanded;
+    assign wmask_expanded[7:0] = wmask[0] ? 8'hFF : 8'h0;
+    assign wmask_expanded[15:8] = wmask[1] ? 8'hFF : 8'h0;
+    assign wmask_expanded[23:16] = wmask[2] ? 8'hFF : 8'h0;
+    assign wmask_expanded[31:24] = wmask[3] ? 8'hFF : 8'h0;
+    
     always @(posedge clk) begin
         if (wreq & address_match) begin
-            mem[word_addr] <= wdata;
+            mem[word_addr] <= (mem[word_addr] & (~wmask_expanded)) | (wdata & wmask_expanded);
         end
     end
     
