@@ -34,10 +34,10 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
     assign {invalid_tag, invalid_set} = invalid_line;
     
     reg  [2:0] state;
-    `define DCACHE_STATE_IDLE  3'h0
-    `define DCACHE_STATE_RWAIT 3'h1
-    `define DCACHE_STATE_RBUSY 3'h2
-    `define DCACHE_STATE_READ  3'h3
+    `define ICACHE_STATE_IDLE  3'h0
+    `define ICACHE_STATE_RWAIT 3'h1
+    `define ICACHE_STATE_RBUSY 3'h2
+    `define ICACHE_STATE_READ  3'h3
     
     // Internal or external control of the cache units
     reg  use_external;
@@ -61,6 +61,7 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
                     .wreq(wreq_internal), 
                     .addr(use_external ? addr : addr_internal), 
                     .wdata(wdata_internal), 
+                    .wmask(4'hF),
                     .hit(unit_hit_array[gen]), .rdata(unit_rdata_array[gen]), 
                     .valid(unit_valid[gen]), .my_tag_addr(unit_tag_addr[gen]), 
                     .my_set_addr(gen[3:0]));
@@ -75,7 +76,7 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
     endgenerate
     
     assign peek_addr = addr;
-    assign miss = ((peek_miss & ~unit_hit) | (state != `DCACHE_STATE_IDLE)) & (rreq);
+    assign miss = ((peek_miss & ~unit_hit) | (state != `ICACHE_STATE_IDLE)) & (rreq);
     assign rdata = peek_miss ? unit_rdata : peek_rdata;
     
     reg  set_valid_req;
@@ -98,16 +99,16 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
     reg [3:0] op_count;
     always @(posedge clk) begin
         if (reset) begin
-            state <= `DCACHE_STATE_IDLE;
+            state <= `ICACHE_STATE_IDLE;
             l2_rreq <= 1'b0;
             use_external <= 1'b1;
             wreq_internal <= 1'b0;
             set_valid_req <= 1'b0;
         end else begin
             case (state) 
-            `DCACHE_STATE_IDLE: begin
+            `ICACHE_STATE_IDLE: begin
                 if (rreq & peek_miss & ~unit_hit) begin
-                    state <= `DCACHE_STATE_RWAIT;
+                    state <= `ICACHE_STATE_RWAIT;
                     use_external <= 1'b0;
                     l2_rreq <= 1'b1;
                     l2_addr <= {tag_addr, set_addr, 5'h0};
@@ -115,24 +116,24 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
                     set_valid_addr <= set_addr;
                 end
             end 
-            `DCACHE_STATE_RWAIT: begin
+            `ICACHE_STATE_RWAIT: begin
                 l2_rreq <= 1'b0;
-                state <= `DCACHE_STATE_RBUSY;
+                state <= `ICACHE_STATE_RBUSY;
                 unit_tag_addr[set_addr] <= tag_addr;
             end
-            `DCACHE_STATE_RBUSY: begin
+            `ICACHE_STATE_RBUSY: begin
                 if (~l2_busy) begin
                     addr_internal <= {tag_addr, set_addr, 5'h0};
                     wreq_internal <= 1'b1;
                     wdata_internal <= l2_rdata;
-                    state <= `DCACHE_STATE_READ;
+                    state <= `ICACHE_STATE_READ;
                 end
             end
-            `DCACHE_STATE_READ: begin
+            `ICACHE_STATE_READ: begin
                 if (addr_internal[4:2] == 3'h7) begin
                     wreq_internal <= 1'b0;
                     use_external <= 1'b1;
-                    state <= `DCACHE_STATE_IDLE;
+                    state <= `ICACHE_STATE_IDLE;
                     set_valid_req <= 1'b0;
                 end else begin
                     set_valid_req <= 1'b1;
