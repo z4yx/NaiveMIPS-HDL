@@ -34,7 +34,7 @@ tri[31:0] gpio1;
 
 tri[31:0] ext_data;
 
-soc_toplevel soc(/*autoinst*/
+soc_toplevel_cache soc(/*autoinst*/
            .ram_data(ram_data),
            .base_ram_addr(base_ram_address),
            .base_ram_ce_n(base_ram_ce_n),

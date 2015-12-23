@@ -43,7 +43,7 @@ assign tx_request = bus_write && bus_address==`REG_UART_SEND;
 assign rx_clear = bus_read && bus_address==`REG_UART_RECV;
 assign uart_irq = rx_data_available;
 
-always @(*) begin
+always @(posedge clk_bus) begin
     if(bus_read) begin
         case(bus_address)
         `REG_UART_STATUS: begin

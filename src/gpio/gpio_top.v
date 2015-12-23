@@ -78,7 +78,7 @@ for(i=0; i<32; i=i+1) begin:label
 end
 endgenerate
 
-always @(*) begin
+always @(posedge clk_bus) begin
     if(bus_read) begin
         case(bus_address)
         `REG_GPIO_IO0: begin
