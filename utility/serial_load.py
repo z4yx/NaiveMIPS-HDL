@@ -128,22 +128,18 @@ def flash_test():
     FLASH_BASE = 0xbe000000
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
-    buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
 
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
-    buf = read_ram(FLASH_BASE+4, 4)
     buf = read_ram(FLASH_BASE+4, 4)
     print "Device code: %s" % binascii.hexlify(buf[0])
 
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE+8, 4)
-    buf = read_ram(FLASH_BASE+8, 4)
     print "Lock bits: %s" % binascii.hexlify(buf[0])
 
     write_ram(FLASH_BASE, "\xff\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
-    buf = read_ram(FLASH_BASE+4, 16)
     print "data: %s" % binascii.hexlify(buf)
 
     # !!! clear lock bits !!!
@@ -161,7 +157,6 @@ def flash_test():
     while True:
         write_ram(FLASH_BASE, "\x70\x00\x00\x00")
         buf = read_ram(FLASH_BASE, 4)
-        buf = read_ram(FLASH_BASE, 4)
         print "Status: %s" % binascii.hexlify(buf[0])
         if (ord(buf[0]) & 0x80)!=0:
             break
@@ -169,7 +164,6 @@ def flash_test():
 
     write_ram(FLASH_BASE, "\xff\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
-    buf = read_ram(FLASH_BASE+4, 16)
     print "data: %s" % binascii.hexlify(buf)
 
 def load_and_run(f, addr, entry):
@@ -215,6 +209,7 @@ def start_terminal():
 
 # uart_loopback_test()
 # ram_test()
+# flash_test()
 
 with open(sys.argv[1], 'rb') as f:
     # load_and_run(f, 0, 0)
