@@ -1,12 +1,12 @@
-module DCache(clk, reset, rreq, wreq, addr, rdata, wdata, miss, 
-              l2_rreq, l2_wreq, l2_addr, l2_burst_size, l2_rdata, l2_wdata, l2_busy,
+module DCache(clk, reset, rreq, wreq, addr, rdata, wdata, wmask, miss, 
+              l2_rreq, l2_wreq, l2_addr, l2_burst_size, l2_rdata, l2_wdata, l2_busy, 
               peek_addr, peek_rdata, peek_miss, invalid_line, invalid_req);
     input  wire clk, reset;
     
     input  wire rreq, wreq;
     input  wire [31:0] addr;
     input  wire [31:0] wdata;
-    
+    input  wire [3:0] wmask;
     output wire [31:0] rdata;
     output wire miss;
 
@@ -65,6 +65,7 @@ module DCache(clk, reset, rreq, wreq, addr, rdata, wdata, miss,
                     .wreq(use_external ? wreq : wreq_internal), 
                     .addr(use_external ? addr : addr_internal), 
                     .wdata(use_external ? wdata : wdata_internal), 
+                    .wmask(use_external ? wmask : 4'hF),
                     .hit(unit_hit_array[gen]), .rdata(unit_rdata_array[gen]), 
                     .valid(unit_valid[gen]), .my_tag_addr(unit_tag_addr[gen]), 
                     .my_set_addr(gen[3:0]), 
@@ -84,7 +85,7 @@ module DCache(clk, reset, rreq, wreq, addr, rdata, wdata, miss,
     assign peek_miss = ~|peek_hit_array;
     endgenerate
     
-    assign miss = ~unit_hit | (state != `DCACHE_STATE_IDLE);
+    assign miss = (~unit_hit | (state != `DCACHE_STATE_IDLE)) & (rreq | wreq);
     assign rdata = unit_rdata;
     
     reg [3:0] op_count;

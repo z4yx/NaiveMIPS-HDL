@@ -1,6 +1,6 @@
 module MemorySystem(clk, reset, 
                     irreq, iaddr, irdata, imiss, 
-                    drreq, dwreq, daddr, drdata, dwdata, dmiss);
+                    drreq, dwreq, daddr, drdata, dwdata, dwmask, dmiss);
     input  wire clk, reset;
     
     input  wire irreq;
@@ -11,6 +11,7 @@ module MemorySystem(clk, reset,
     input  wire drreq, dwreq;
     input  wire [31:0] daddr;
     input  wire [31:0] dwdata;
+    input  wire [3:0]  dwmask;
     output wire [31:0] drdata;
     output wire dmiss;
     
@@ -120,7 +121,7 @@ module MemorySystem(clk, reset,
                  
     /******************** L1 Data Cache *************************/
     // Decide if the address is uncached
-    wire uncached = 1'b0; //daddr[9];   // This is only assigned for debugging  
+    wire uncached = daddr[31] & daddr[30];   // This is only assigned for debugging  
     
     // Connect DCache
     wire [31:0] dcache_rdata;
@@ -134,7 +135,7 @@ module MemorySystem(clk, reset,
                   .rreq(~uncached & drreq), 
                   .wreq(~uncached & dwreq), 
                   .addr(daddr), 
-                  .rdata(dcache_rdata), .wdata(dwdata), .miss(dcache_miss),
+                  .rdata(dcache_rdata), .wdata(dwdata), .wmask(dwmask), .miss(dcache_miss),
                   .l2_rreq(l2_drreq), .l2_wreq(l2_dwreq), .l2_addr(l2_daddr), 
                   .l2_burst_size(l2_dburst_size), 
                   .l2_rdata(l2_rdata), .l2_wdata(l2_dwdata), .l2_busy(l2_dbusy),
