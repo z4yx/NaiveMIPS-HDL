@@ -190,22 +190,29 @@ def load_elf_and_run(f):
     go_ram(elffile['e_entry'])
 
 def start_terminal():
-    slt_list = [sys.stdin, ser]
-    while True:
-        recv = ser.read()
-        if not(recv is None):
-            sys.stdout.write(recv)
-        continue
-
-        ready = select.select(slt_list, [], [])
-        if ser in ready:
-            recv = ser.read()
-            if not(recv is None):
-                sys.stdout.write(recv)
-        if sys.stdin in ready:
-            recv = sys.stdin.read()
-            if not(recv is None):
-                write_uart(recv)
+    import termios, tty
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    new = termios.tcgetattr(fd)
+    new[3] = new[3] & ~termios.ICANON & ~termios.ECHO
+    new[6][termios.VMIN] = 1
+    new[6][termios.VTIME] = 0
+    try:
+        # tty.setraw(fd)
+        termios.tcsetattr(fd, termios.TCSADRAIN, new)
+        slt_list = [sys.stdin, ser]
+        while True:
+            ready = select.select(slt_list, [], [])[0]
+            for f in ready:
+                recv = f.read(1)
+                if f.fileno()==fd:
+                    write_uart(recv)
+                else:
+                    sys.stdout.write(recv)
+    except Exception, e:
+        raise e
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 # uart_loopback_test()
 # ram_test()
