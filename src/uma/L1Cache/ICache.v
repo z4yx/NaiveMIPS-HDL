@@ -97,6 +97,8 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
     endgenerate
     
     reg [3:0] op_count;
+    reg [22:0] tag_addr_latch;
+    reg [3:0]  set_addr_latch;
     always @(posedge clk) begin
         if (reset) begin
             state <= `ICACHE_STATE_IDLE;
@@ -112,6 +114,8 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
                     use_external <= 1'b0;
                     l2_rreq <= 1'b1;
                     l2_addr <= {tag_addr, set_addr, 5'h0};
+                    tag_addr_latch <= tag_addr;
+                    set_addr_latch <= set_addr;
                     l2_burst_size <= 5'h8;
                     set_valid_addr <= set_addr;
                 end
@@ -119,11 +123,11 @@ module ICache(clk, reset, rreq, addr, rdata, miss,
             `ICACHE_STATE_RWAIT: begin
                 l2_rreq <= 1'b0;
                 state <= `ICACHE_STATE_RBUSY;
-                unit_tag_addr[set_addr] <= tag_addr;
+                unit_tag_addr[set_addr_latch] <= tag_addr_latch;
             end
             `ICACHE_STATE_RBUSY: begin
                 if (~l2_busy) begin
-                    addr_internal <= {tag_addr, set_addr, 5'h0};
+                    addr_internal <= {tag_addr_latch, set_addr_latch, 5'h0};
                     wreq_internal <= 1'b1;
                     wdata_internal <= l2_rdata;
                     state <= `ICACHE_STATE_READ;

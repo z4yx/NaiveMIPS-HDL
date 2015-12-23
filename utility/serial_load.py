@@ -128,22 +128,18 @@ def flash_test():
     FLASH_BASE = 0xbe000000
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
-    buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
 
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
-    buf = read_ram(FLASH_BASE+4, 4)
     buf = read_ram(FLASH_BASE+4, 4)
     print "Device code: %s" % binascii.hexlify(buf[0])
 
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE+8, 4)
-    buf = read_ram(FLASH_BASE+8, 4)
     print "Lock bits: %s" % binascii.hexlify(buf[0])
 
     write_ram(FLASH_BASE, "\xff\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
-    buf = read_ram(FLASH_BASE+4, 16)
     print "data: %s" % binascii.hexlify(buf)
 
     # !!! clear lock bits !!!
@@ -161,7 +157,6 @@ def flash_test():
     while True:
         write_ram(FLASH_BASE, "\x70\x00\x00\x00")
         buf = read_ram(FLASH_BASE, 4)
-        buf = read_ram(FLASH_BASE, 4)
         print "Status: %s" % binascii.hexlify(buf[0])
         if (ord(buf[0]) & 0x80)!=0:
             break
@@ -169,7 +164,6 @@ def flash_test():
 
     write_ram(FLASH_BASE, "\xff\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
-    buf = read_ram(FLASH_BASE+4, 16)
     print "data: %s" % binascii.hexlify(buf)
 
 def load_and_run(f, addr, entry):
@@ -196,25 +190,33 @@ def load_elf_and_run(f):
     go_ram(elffile['e_entry'])
 
 def start_terminal():
-    slt_list = [sys.stdin, ser]
-    while True:
-        recv = ser.read()
-        if not(recv is None):
-            sys.stdout.write(recv)
-        continue
-
-        ready = select.select(slt_list, [], [])
-        if ser in ready:
-            recv = ser.read()
-            if not(recv is None):
-                sys.stdout.write(recv)
-        if sys.stdin in ready:
-            recv = sys.stdin.read()
-            if not(recv is None):
-                write_uart(recv)
+    import termios, tty
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    new = termios.tcgetattr(fd)
+    new[3] = new[3] & ~termios.ICANON & ~termios.ECHO
+    new[6][termios.VMIN] = 1
+    new[6][termios.VTIME] = 0
+    try:
+        # tty.setraw(fd)
+        termios.tcsetattr(fd, termios.TCSADRAIN, new)
+        slt_list = [sys.stdin, ser]
+        while True:
+            ready = select.select(slt_list, [], [])[0]
+            for f in ready:
+                recv = f.read(1)
+                if f.fileno()==fd:
+                    write_uart(recv)
+                else:
+                    sys.stdout.write(recv)
+    except Exception, e:
+        raise e
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 # uart_loopback_test()
 # ram_test()
+# flash_test()
 
 with open(sys.argv[1], 'rb') as f:
     # load_and_run(f, 0, 0)

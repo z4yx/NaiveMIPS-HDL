@@ -23,17 +23,24 @@ reg clk;
 // assign ram_data_io = (dbus_write ? dbus_wrdata : {32{1'bz}});
 // assign dbus_rddata = ram_data_io;
 
-prog_rom fake_rom(/*autoinst*/
-          .data(ibus_rddata),
-          .address({19'b0, ibus_address[12:0]}));
-
-mem fake_ram(/*autoinst*/
-           .data_o(dbus_rddata),
-           .address(dbus_address[31:2]),
-           .data_i(dbus_wrdata),
-           .rd(dbus_read),
-           .wr(dbus_write),
-           .byte_enable(dbus_byteenable));
+reg[31:0] address_reg;
+reg[31:0] wrdata_reg;
+reg wr_reg;
+reg rd_reg;
+always @(posedge clk) begin
+    address_reg <= dbus_address;
+    wrdata_reg <= dbus_wrdata;
+    wr_reg <= dbus_write;
+    rd_reg <= dbus_read;
+end
+mem fake_ram(
+       .data_o(dbus_rddata),
+       .address(address_reg[31:2]),
+       .data_i(wrdata_reg),
+       .rd(rd_reg),
+       .wr(wr_reg),
+       .byte_enable(4'b1111)
+    );
 
 // AS7C34098A base1(/*autoinst*/
 //             .DataIO(ram_data_io[15:0]),
@@ -53,21 +60,15 @@ mem fake_ram(/*autoinst*/
 //             .UB_n(~dbus_byteenable[3]));
 
 naive_mips mips(/*autoinst*/
-            .ibus_address(ibus_address[31:0]),
-            .ibus_byteenable(ibus_byteenable[3:0]),
-            .ibus_read(ibus_read),
-            .ibus_write(ibus_write),
-            .ibus_wrdata(ibus_wrdata[31:0]),
-            .dbus_address(dbus_address[31:0]),
-            .dbus_byteenable(dbus_byteenable[3:0]),
-            .dbus_read(dbus_read),
-            .dbus_write(dbus_write),
-            .dbus_wrdata(dbus_wrdata[31:0]),
             .rst_n(rst_n),
             .clk(clk),
-            .ibus_rddata(ibus_rddata[31:0]),
-            .dbus_rddata(dbus_rddata[31:0]),
-            .dbus_stall(1'b0),
+            .bus_read (dbus_read),
+            .bus_write(dbus_write),
+            .bus_ack  (dbus_read | dbus_write),
+            .bus_stall(1'b0),
+            .bus_address(dbus_address),
+            .bus_wrdata(dbus_wrdata),
+            .bus_rddata(dbus_rddata),
             .hardware_int_in(hardware_int));
 
 defparam mips.pc_instance.PC_INITIAL = 32'h80000000;
@@ -91,7 +92,7 @@ begin
     hardware_int = 4'b0;
     #41 rst_n=1'b1;
 
-    $readmemh({test_name,".mem"},fake_rom.rom);
+    $readmemh({test_name,".mem"},fake_ram.ram);
     fd = $fopen({test_name,".ans"},"r");
     if(fd == 0) begin
         $display("Failed to open answer file for %s", test_name);
