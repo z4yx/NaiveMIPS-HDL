@@ -175,6 +175,8 @@ regs main_regs(/*autoinst*/
 mmu_top mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(ibus_address),
+      .data_uncached(dbus_uncached),
+      .inst_uncached(),
       .data_exp_miss(mm_daddr_exp_miss),
       .inst_exp_miss(if_iaddr_exp_miss),
       .data_exp_illegal(if_iaddr_exp_illegal),

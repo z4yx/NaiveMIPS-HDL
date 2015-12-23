@@ -4,6 +4,7 @@ module mem_map(/*autoport*/
          addr_o,
          invalid,
          using_tlb,
+         uncached,
 //input
          addr_i,
          en,
@@ -14,8 +15,10 @@ input wire en;
 input wire um;
 output wire invalid;
 output reg using_tlb;
+output wire uncached;
 
 assign invalid = (en & um & addr_i[31]);
+assign uncached = addr_i[31:29] == 3'b101;
 always @(*) begin
     using_tlb <= 1'b0;
     addr_o <= 32'b0;

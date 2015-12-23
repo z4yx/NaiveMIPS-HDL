@@ -1,22 +1,24 @@
 `default_nettype none
 module mmu_top(/*autoport*/
 //output
-         data_address_o,
-         inst_address_o,
-         data_exp_miss,
-         inst_exp_miss,
-         data_exp_illegal,
-         inst_exp_illegal,
+     data_address_o,
+     inst_address_o,
+     data_uncached,
+     inst_uncached,
+     data_exp_miss,
+     inst_exp_miss,
+     data_exp_illegal,
+     inst_exp_illegal,
 //input
-         rst_n,
-         clk,
-         data_address_i,
-         inst_address_i,
-         data_en,
-         inst_en,
-         user_mode,
-         tlb_config,
-         tlbwi);
+     rst_n,
+     clk,
+     data_address_i,
+     inst_address_i,
+     data_en,
+     inst_en,
+     user_mode,
+     tlb_config,
+     tlbwi);
 
 input wire rst_n;
 input wire clk;
@@ -30,6 +32,8 @@ input wire user_mode;
 
 output wire[31:0] data_address_o;
 output wire[31:0] inst_address_o;
+output wire data_uncached;
+output wire inst_uncached;
 output wire data_exp_miss;
 output wire inst_exp_miss;
 output wire data_exp_illegal;
@@ -57,6 +61,7 @@ mem_map map_inst(/*autoinst*/
            .invalid(inst_exp_illegal),
            .addr_i(inst_address_i),
            .using_tlb(inst_tlb_map),
+           .uncached(inst_uncached),
            .en(inst_en),
            .um(user_mode));
 mem_map map_data(/*autoinst*/
@@ -64,6 +69,7 @@ mem_map map_data(/*autoinst*/
            .invalid(data_exp_illegal),
            .addr_i(data_address_i),
            .using_tlb(data_tlb_map),
+           .uncached (data_uncached),
            .en(data_en),
            .um(user_mode));
 
