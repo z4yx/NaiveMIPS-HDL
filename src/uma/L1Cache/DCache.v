@@ -89,6 +89,7 @@ module DCache(clk, reset, rreq, wreq, addr, rdata, wdata, wmask, miss,
     assign rdata = unit_rdata;
     
     reg [3:0] op_count;
+    reg [31:0] addr_latch;
     always @(posedge clk) begin
         if (reset) begin
             state <= `DCACHE_STATE_IDLE;
@@ -107,6 +108,7 @@ module DCache(clk, reset, rreq, wreq, addr, rdata, wdata, wmask, miss,
                         state <= `DCACHE_STATE_WWAIT;
                         l2_wreq <= 1'b1;
                         l2_addr <= {unit_tag_addr[set_addr], set_addr, 5'h0};
+                        addr_latch <= {tag_addr, set_addr, 5'h0};
                         l2_burst_size <= 5'h8;
                         
                         use_external <= 1'b0;
@@ -158,7 +160,7 @@ module DCache(clk, reset, rreq, wreq, addr, rdata, wdata, wmask, miss,
             end
             `DCACHE_STATE_RBUSY: begin
                 if (~l2_busy) begin
-                    addr_internal <= {tag_addr, set_addr, 5'h0};
+                    addr_internal <= addr_latch;
                     wreq_internal <= 1'b1;
                     wdata_internal <= l2_rdata;
                     state <= `DCACHE_STATE_READ;
