@@ -23,6 +23,9 @@ module gpu_top(
 
 );
 
+assign bus_data_o = 32'd0;
+assign bus_stall = 1'b0;
+
 
 `define HOR_PXL      800
 `define VER_PXL      600
@@ -54,6 +57,66 @@ wire [31:0] graphX;
 wire [31:0] graphY;
 reg  [31:0] pxlCnt;
 
+
+wire [31:0] wrdata;
+wire [31:0] wraddr;
+wire        wren;
+
+wire [31:0] rddata;
+wire        rden;
+wire [31:0] rdaddr;
+
+
+
+
+
+Memory mem(
+  .data(wrdata),
+  .wraddress(wraddr),
+  .wren(wren),
+  .inclock(clk_bus),
+  .inclocken(1),
+  .inaclr(~rst_n),
+  
+  .rdaddress(rdaddr),
+  .rden(rden),
+  .q(rddata),
+  .outclock(clk_bus),
+  .outclock(1),
+  .outaclr(~rst_n),
+
+);
+
+assign wrdata = bus_data_i;
+assign wraddr[23:0] = bus_address;
+assign wraddr[31:24] = 8'd0;
+assign wren = bus_write;
+
+assign pxlData = (de && nowColor) ? 12'hfff : 12'd0;
+assign rdaddr[26:0] = pxlCnt[31:5];
+assign rdaddr[31:27] = 5'd0;
+
+assign rden = pxlCnt[4:0] == 5'd30;
+
+
+reg nowColor; 
+reg [31:0] nowWord;
+
+
+always @(posedge clk_bus or negedge rst_n) begin
+  if(!rst_n)begin
+    nowWord <= 32'd0;
+  end else begin
+  
+    if(pxlCnt[4:0] == 5'd31) begin
+      nowWord <= rddata;
+    end else begin
+      nowWord <= nowWord;
+    end
+    
+  end
+
+end
 
 always @(posedge clk_bus or negedge rst_n) begin
 
@@ -122,5 +185,76 @@ always @(posedge clk_bus or negedge rst_n) begin
   end
 
 endmodule
+
+always @(*) begin
+
+  if(pxlCnt[4:0] == 5'd0) begin
+    nowColor <= nowWord[0];
+  end else if(pxlCnt[4:0] == 5'd1) begin
+    nowColor <= nowWord[1];
+  end else if(pxlCnt[4:0] == 5'd2) begin
+    nowColor <= nowWord[2];
+  end else if(pxlCnt[4:0] == 5'd3) begin
+    nowColor <= nowWord[3];
+  end else if(pxlCnt[4:0] == 5'd4) begin
+    nowColor <= nowWord[4];
+  end else if(pxlCnt[4:0] == 5'd5) begin
+    nowColor <= nowWord[5];
+  end else if(pxlCnt[4:0] == 5'd6) begin
+    nowColor <= nowWord[6];
+  end else if(pxlCnt[4:0] == 5'd7) begin
+    nowColor <= nowWord[7];
+  end else if(pxlCnt[4:0] == 5'd8) begin
+    nowColor <= nowWord[8];
+  end else if(pxlCnt[4:0] == 5'd9) begin
+    nowColor <= nowWord[9];
+  end else if(pxlCnt[4:0] == 5'd10) begin
+    nowColor <= nowWord[10];
+  end else if(pxlCnt[4:0] == 5'd11) begin
+    nowColor <= nowWord[11];
+  end else if(pxlCnt[4:0] == 5'd12) begin
+    nowColor <= nowWord[12];
+  end else if(pxlCnt[4:0] == 5'd13) begin
+    nowColor <= nowWord[13];
+  end else if(pxlCnt[4:0] == 5'd14) begin
+    nowColor <= nowWord[14];
+  end else if(pxlCnt[4:0] == 5'd15) begin
+    nowColor <= nowWord[15];
+  end else if(pxlCnt[4:0] == 5'd16) begin
+    nowColor <= nowWord[16];
+  end else if(pxlCnt[4:0] == 5'd17) begin
+    nowColor <= nowWord[17];
+  end else if(pxlCnt[4:0] == 5'd18) begin
+    nowColor <= nowWord[18];
+  end else if(pxlCnt[4:0] == 5'd19) begin
+    nowColor <= nowWord[19];
+  end else if(pxlCnt[4:0] == 5'd20) begin
+    nowColor <= nowWord[20];
+  end else if(pxlCnt[4:0] == 5'd21) begin
+    nowColor <= nowWord[21];
+  end else if(pxlCnt[4:0] == 5'd22) begin
+    nowColor <= nowWord[22];
+  end else if(pxlCnt[4:0] == 5'd23) begin
+    nowColor <= nowWord[23];
+  end else if(pxlCnt[4:0] == 5'd24) begin
+    nowColor <= nowWord[24];
+  end else if(pxlCnt[4:0] == 5'd25) begin
+    nowColor <= nowWord[25];
+  end else if(pxlCnt[4:0] == 5'd26) begin
+    nowColor <= nowWord[26];
+  end else if(pxlCnt[4:0] == 5'd27) begin
+    nowColor <= nowWord[27];
+  end else if(pxlCnt[4:0] == 5'd28) begin
+    nowColor <= nowWord[28];
+  end else if(pxlCnt[4:0] == 5'd29) begin
+    nowColor <= nowWord[29];
+  end else if(pxlCnt[4:0] == 5'd30) begin
+    nowColor <= nowWord[30];
+  end else begin
+    nowColor <= nowWord[31];
+  end
+  
+end
+
 
 
