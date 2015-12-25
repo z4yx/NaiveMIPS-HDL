@@ -1,5 +1,5 @@
 `default_nettype none
-`define EXT_UART_CLOCK
+// `define EXT_UART_CLOCK
 module soc_toplevel_cache(/*autoport*/
 //inout
        ssram_data,
@@ -131,7 +131,7 @@ wire [7:0]gpio_dbus_address;
 wire gpio_dbus_read;
 wire gpio_dbus_write;
 
-assign ssram_addr = ram_address[21:2];
+assign ssram_addr[21:2] = ram_address[21:2];
 assign ssram_clk = clk;
 assign ssram_oe_n = 1'b0;
 assign ssram_we_n = ram_wr_n;
