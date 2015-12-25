@@ -21,6 +21,7 @@ module dbus(/*autoport*/
             flash_data_enable,
             flash_rd,
             flash_wr,
+            bootrom_address,
 //input
             master_address,
             master_byteenable,
@@ -32,7 +33,8 @@ module dbus(/*autoport*/
             ram_data_o,
             ram_stall,
             flash_data_o,
-            flash_stall);
+            flash_stall,
+            bootrom_data_o);
 
 input wire[31:0] master_address;
 input wire[3:0] master_byteenable;
@@ -70,6 +72,9 @@ output reg flash_rd;
 output reg flash_wr;
 input wire flash_stall;
 
+input wire[31:0] bootrom_data_o;
+output wire[19:0] bootrom_address;
+
 assign ram_data_enable = master_byteenable;
 assign ram_data_i = master_wrdata;
 assign ram_address = master_address[23:0];
@@ -83,6 +88,8 @@ assign uart_address = master_address[3:0];
 
 assign gpio_data_i = master_wrdata;
 assign gpio_address = master_address[7:0];
+
+assign bootrom_address = master_address[19:0];
 
 always @(*) begin
     ram_rd <= 1'b0;
@@ -113,6 +120,8 @@ always @(*) begin
         gpio_rd <= master_read;
         gpio_wr <= master_write;
         master_rddata <= gpio_data_o;
+    end else if(master_address[31:20] == 12'h1fc) begin
+        master_rddata <= bootrom_data_o;
     end
 end
 

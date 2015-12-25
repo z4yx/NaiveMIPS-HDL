@@ -38,8 +38,8 @@ input wire clk_in;
 wire clk2x,clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
 
-`ifdef EXT_UART_CLOCK
 input wire clk_uart_in;
+`ifdef EXT_UART_CLOCK
 assign clk_uart = clk_uart_in;
 `else
 assign clk_uart = clk_uart_pll;
@@ -58,7 +58,7 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_in_n(locked));
 
 inout wire[31:0] ssram_data;
-output wire[19:0] ssram_addr;
+output wire[31:0] ssram_addr;
 output wire ssram_adsc_n;
 output wire ssram_adsp_n;
 output wire ssram_adv_n;
@@ -145,7 +145,7 @@ assign ssram1_ce_n = 1'b1;
 
 bootrom rom(
         .address(rom_address[12:2]),
-        .clock(~clk),
+        .clock(clk),
         .q(rom_data));
 
 naive_mips cpu(/*autoinst*/
@@ -191,6 +191,8 @@ dbus dbus0(/*autoinst*/
          .gpio_data_o(gpio_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
          .ram_stall(dbus_ram_stall),
+         .bootrom_address(rom_address),
+         .bootrom_data_o(rom_data),
          .flash_stall (flash_dbus_stall),
          .flash_data_o(flash_dbus_data_o[31:0]));
 
