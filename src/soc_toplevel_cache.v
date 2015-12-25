@@ -2,34 +2,35 @@
 `define EXT_UART_CLOCK
 module soc_toplevel_cache(/*autoport*/
 //inout
-            ram_data,
-            flash_data,
-            gpio0,
-            gpio1,
+       ssram_data,
+       ssram_be,
+       flash_data,
+       gpio0,
+       gpio1,
 //output
-            base_ram_addr,
-            base_ram_ce_n,
-            base_ram_oe_n,
-            base_ram_we_n,
-            ext_ram_addr,
-            ext_ram_ce_n,
-            ext_ram_oe_n,
-            ext_ram_we_n,
-            txd,
-            flash_address,
-            flash_rp_n,
-            flash_vpen,
-            flash_oe_n,
-            flash_ce,
-            flash_byte_n,
-            flash_we_n,
+       ssram_addr,
+       ssram_adsc_n,
+       ssram_adsp_n,
+       ssram_adv_n,
+       ssram_clk,
+       ssram_gw_n,
+       ssram_oe_n,
+       ssram_we_n,
+       ssram0_ce_n,
+       ssram1_ce_n,
+       txd,
+       flash_address,
+       flash_rp_n,
+       flash_vpen,
+       flash_oe_n,
+       flash_ce,
+       flash_byte_n,
+       flash_we_n,
 //input
-            rst_in_n,
-            clk_in,
-`ifdef EXT_UART_CLOCK
-				clk_uart_in,
-`endif
-            rxd);
+       rst_in_n,
+       clk_in,
+       clk_uart_in,
+       rxd);
 
 input wire rst_in_n;
 input wire clk_in;
@@ -56,23 +57,23 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .clk(clk),
          .rst_in_n(locked));
 
-inout wire[31:0] ram_data;
-
-// inout wire[31:0] base_ram_data;
-output wire[19:0] base_ram_addr;
-output wire base_ram_ce_n;
-output wire base_ram_oe_n;
-output wire base_ram_we_n;
-
-// inout wire[31:0] ext_ram_data;
-output wire[19:0] ext_ram_addr;
-output wire ext_ram_ce_n;
-output wire ext_ram_oe_n;
-output wire ext_ram_we_n;
+inout wire[31:0] ssram_data;
+output wire[19:0] ssram_addr;
+output wire ssram_adsc_n;
+output wire ssram_adsp_n;
+output wire ssram_adv_n;
+inout wire[3:0] ssram_be;
+output wire ssram_clk;
+output wire ssram_gw_n;
+output wire ssram_oe_n;
+output wire ssram_we_n;
+output wire ssram0_ce_n;
+output wire ssram1_ce_n;
 
 wire[23:0] ram_address;
 wire ram_wr_n;
 wire ram_rd_n;
+wire ram_ce_n;
 
 output wire txd;
 input wire rxd;
@@ -130,20 +131,17 @@ wire [7:0]gpio_dbus_address;
 wire gpio_dbus_read;
 wire gpio_dbus_write;
 
-wire using_base;
-//assign using_base = ram_dataenable[0];
-assign using_base = 1'b1;
-assign base_ram_ce_n = 1'b0;
-assign base_ram_oe_n = ram_rd_n || !using_base;
-assign base_ram_we_n = ram_wr_n || !using_base;
-assign base_ram_addr = ram_address[21:2];
-
-wire using_ext;
-assign using_ext = 1'b1;//ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
-assign ext_ram_ce_n = 1'b0;
-assign ext_ram_oe_n = ram_rd_n || !using_ext;
-assign ext_ram_we_n = ram_wr_n || !using_ext;
-assign ext_ram_addr = ram_address[21:2];
+assign ssram_addr = ram_address[21:2];
+assign ssram_clk = clk;
+assign ssram_oe_n = 1'b0;
+assign ssram_we_n = ram_wr_n;
+assign ssram_adsp_n = ~ram_wr_n;
+assign ssram_adv_n = 1'b1;
+assign ssram_adsc_n = 1'b0;
+assign ssram_be = 4'b0;
+assign ssram_gw_n = 1'b0;
+assign ssram0_ce_n = ram_ce_n;
+assign ssram1_ce_n = 1'b1;
 
 bootrom rom(
         .address(rom_address[12:2]),
@@ -196,13 +194,14 @@ dbus dbus0(/*autoinst*/
          .flash_stall (flash_dbus_stall),
          .flash_data_o(flash_dbus_data_o[31:0]));
 
-sync_sram sram0(/*autoinst*/
-            .ram_data(ram_data[31:0]),
+ssram_ctl ssram(/*autoinst*/
+            .ram_data(ssram_data[31:0]),
             .rddata(dbus_ram_rddata),
             .busy(dbus_ram_stall),
             .ram_address(ram_address[23:0]),
             .ram_wr_n(ram_wr_n),
             .ram_rd_n(ram_rd_n),
+            .ram_ce_n(ram_ce_n),
             .rst_n(rst_n),
             .clk(clk),
             .address(dbus_ram_address),

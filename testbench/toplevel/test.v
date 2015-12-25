@@ -6,16 +6,17 @@ reg clk_in;
 reg clk_uart_in;
 
 wire[31:0] ram_data;
-
-wire[19:0] base_ram_address;
+reg[19:0] base_ram_address;
 wire base_ram_we_n;
 wire base_ram_oe_n;
 wire base_ram_ce_n;
 
-wire[19:0] ext_ram_address;
-wire ext_ram_we_n;
-wire ext_ram_oe_n;
-wire ext_ram_ce_n;
+wire[31:0] ssram_data;
+wire[19:0] ssram_addr;
+wire ssram_adsp_n;
+wire ssram_clk;
+wire ssram_we_n;
+wire ssram0_ce_n;
 
 wire[15:0] flash_data;
 wire[21:0] flash_address;
@@ -34,16 +35,38 @@ tri[31:0] gpio1;
 
 tri[31:0] ext_data;
 
+reg ssram_en_int, ssram_we_int, ssram_en_delay_int;
+reg[31:0] ssram_out_int, ssram_in_int;
+wire ssram_oe_int;
+assign base_ram_ce_n = 1'b0;
+assign base_ram_oe_n = 1'b0;
+assign base_ram_we_n = ~(ssram_en_int&ssram_we_int);
+assign ram_data = ~base_ram_we_n ? ssram_in_int : {32{1'bz}};
+assign ssram_oe_int = ~ssram_we_int & ssram_en_int & ssram_en_delay_int;
+assign ssram_data = ssram_oe_int ? ssram_out_int : {32{1'bz}};
+always @(posedge ssram_clk) begin : proc_ssram
+    begin
+        ssram_en_int <= ~ssram0_ce_n;
+        ssram_en_delay_int <= ssram_en_int;
+        ssram_we_int <= ~ssram_we_n;
+        ssram_out_int <= ram_data;
+        ssram_in_int <= ssram_data;
+        base_ram_address <= ssram_addr;
+    end
+end
 soc_toplevel_cache soc(/*autoinst*/
-           .ram_data(ram_data),
-           .base_ram_addr(base_ram_address),
-           .base_ram_ce_n(base_ram_ce_n),
-           .base_ram_oe_n(base_ram_oe_n),
-           .base_ram_we_n(base_ram_we_n),
-           .ext_ram_addr(ext_ram_address),
-           .ext_ram_ce_n(ext_ram_ce_n),
-           .ext_ram_oe_n(ext_ram_oe_n),
-           .ext_ram_we_n(ext_ram_we_n),
+           .ssram_clk    (ssram_clk),
+           .ssram_adsc_n (),
+           .ssram_adv_n  (),
+           .ssram_adsp_n (ssram_adsp_n),
+           .ssram_gw_n   (),
+           .ssram_oe_n   (),
+           .ssram_we_n   (ssram_we_n),
+           .ssram0_ce_n  (ssram0_ce_n),
+           .ssram1_ce_n  (),
+           .ssram_addr   (ssram_addr),
+           .ssram_data   (ssram_data),
+           .ssram_be     (),
            .rst_in_n(rst_in_n),
            .clk_in(clk_in),
            .clk_uart_in(clk_uart_in),
@@ -73,22 +96,6 @@ AS7C34098A base2(/*autoinst*/
             .OE_n(base_ram_oe_n),
             .CE_n(base_ram_ce_n),
             .WE_n(base_ram_we_n),
-            .LB_n(1'b0),
-            .UB_n(1'b0));
-AS7C34098A ext1(/*autoinst*/
-            .DataIO(ext_data[15:0]),
-            .Address(ext_ram_address[17:0]),
-            .OE_n(ext_ram_oe_n),
-            .CE_n(ext_ram_ce_n),
-            .WE_n(ext_ram_we_n),
-            .LB_n(1'b0),
-            .UB_n(1'b0));
-AS7C34098A ext2(/*autoinst*/
-            .DataIO(ext_data[31:16]),
-            .Address(ext_ram_address[17:0]),
-            .OE_n(ext_ram_oe_n),
-            .CE_n(ext_ram_ce_n),
-            .WE_n(ext_ram_we_n),
             .LB_n(1'b0),
             .UB_n(1'b0));
 s29gl064n01 flash(
