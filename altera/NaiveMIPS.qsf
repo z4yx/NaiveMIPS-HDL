@@ -46,8 +46,8 @@ set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
+set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT NONE -section_id eda_simulation
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVCMOS"
 #============================================================
 # SSRAM0
@@ -279,20 +279,20 @@ set_location_assignment PIN_L25 -to gpio0[15]
 set_location_assignment PIN_M21 -to gpio0[16]
 set_location_assignment PIN_M22 -to gpio0[17]
 
-set_location_assignment PIN_B9 -to gpio0[18] #HEX6[0]
-set_location_assignment PIN_B10 -to gpio0[19] #HEX6[1]
-set_location_assignment PIN_C8 -to gpio0[20] #HEX6[2]
-set_location_assignment PIN_C9 -to gpio0[21] #HEX6[3]
-set_location_assignment PIN_D8 -to gpio0[22] #HEX6[4]
-set_location_assignment PIN_D9 -to gpio0[23] #HEX6[5]
-set_location_assignment PIN_E9 -to gpio0[24] #HEX6[6]
-set_location_assignment PIN_E10 -to gpio0[25] #HEX7[0]
-set_location_assignment PIN_F8 -to gpio0[26] #HEX7[1]
-set_location_assignment PIN_F9 -to gpio0[27] #HEX7[2]
-set_location_assignment PIN_C10 -to gpio0[28] #HEX7[3]
-set_location_assignment PIN_C11 -to gpio0[29] #HEX7[4]
-set_location_assignment PIN_C12 -to gpio0[30] #HEX7[5]
-set_location_assignment PIN_D12 -to gpio0[31] #HEX7[6]
+set_location_assignment PIN_B9 -to gpio0[18]
+set_location_assignment PIN_B10 -to gpio0[19]
+set_location_assignment PIN_C8 -to gpio0[20]
+set_location_assignment PIN_C9 -to gpio0[21]
+set_location_assignment PIN_D8 -to gpio0[22]
+set_location_assignment PIN_D9 -to gpio0[23]
+set_location_assignment PIN_E9 -to gpio0[24]
+set_location_assignment PIN_E10 -to gpio0[25]
+set_location_assignment PIN_F8 -to gpio0[26]
+set_location_assignment PIN_F9 -to gpio0[27]
+set_location_assignment PIN_C10 -to gpio0[28]
+set_location_assignment PIN_C11 -to gpio0[29]
+set_location_assignment PIN_C12 -to gpio0[30]
+set_location_assignment PIN_D12 -to gpio0[31]
 
 set_location_assignment PIN_V28 -to gpio1[0]
 set_location_assignment PIN_U30 -to gpio1[1]
@@ -377,4 +377,6 @@ set_global_assignment -name MIF_FILE bootrom.mif
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
