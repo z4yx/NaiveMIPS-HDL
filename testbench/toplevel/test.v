@@ -12,7 +12,7 @@ wire base_ram_oe_n;
 wire base_ram_ce_n;
 
 wire[31:0] ssram_data;
-wire[19:0] ssram_addr;
+wire[31:0] ssram_addr;
 wire ssram_adsp_n;
 wire ssram_clk;
 wire ssram_we_n;
@@ -51,7 +51,7 @@ always @(posedge ssram_clk) begin : proc_ssram
         ssram_we_int <= ~ssram_we_n;
         ssram_out_int <= ram_data;
         ssram_in_int <= ssram_data;
-        base_ram_address <= ssram_addr;
+        base_ram_address <= ssram_addr[21:2];
     end
 end
 soc_toplevel_cache soc(/*autoinst*/
@@ -156,7 +156,7 @@ defparam soc.uart0.rx1.COUNTER_PERIOD=3;
 defparam soc.uart0.tx1.COUNTER_PERIOD=3;
 
 defparam soc.uart0.tx1.ignore_for_sim=1;
-defparam soc.cpu.pc_instance.PC_INITIAL = 32'h80000000;
+// defparam soc.cpu.pc_instance.PC_INITIAL = 32'h80000000;
 
 task uart_send_byte;
 input [7:0] data;
