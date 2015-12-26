@@ -8,15 +8,21 @@ import time
 import random
 import binascii
 import select
+import array
 from elftools.elf.elffile import ELFFile
 
-ser = serial.Serial('/dev/cu.usbserial', 115200, timeout=1)
+SERIAL_DELAY = 0.0001
+FLASH_BASE = 0xbe000000
+FLASH_BLKSIZE = 128*1024
+ser = serial.Serial('/dev/cu.usbserial-FTHK1N4K', 115200, timeout=1)
+# ser = serial.Serial('/dev/cu.usbserial', 115200, timeout=1)
 
 def write_uart(buf):
     for b in buf:
         ser.write(b)
         ser.flush()
-        time.sleep(0.0001)
+        if SERIAL_DELAY>0:
+            time.sleep(SERIAL_DELAY)
 
 def write_ram(start, content):
     time.sleep(0.01)
@@ -106,9 +112,9 @@ def uart_loopback_test():
 
 def ram_test():
 
+    offset = 0x80000000
     while True:
-        size = 32*1024
-        offset = 0x80000000 + 0*1024
+        size = 64*1024
         data = ''.join(chr(random.randint(0,255)) for _ in range(size))
 
         write_ram(offset, data)
@@ -123,9 +129,52 @@ def ram_test():
                 if data[x] != recv[x]:
                     print "%x!=%x @ 0x%x" % (ord(data[x]),ord(recv[x]),x)
             break
+        offset += size
+        offset &= 0x803fffff
+
+def read_flash(offset, size):
+    # write_ram(FLASH_BASE, "\x20\x00\x00\x00")
+    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    # time.sleep(0.5)
+
+    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    orig = read_ram(FLASH_BASE+offset*2, size*2)
+    result = []
+    for i in xrange(0, len(orig), 4):  #only lower 16-bits of 32-bits data are valid
+        result.append(orig[i])
+        result.append(orig[i+1])
+    return ''.join(result)
+
+def wait_flash():
+    while True:
+        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
+        buf = read_ram(FLASH_BASE, 4)
+        print "Status: %s" % binascii.hexlify(buf[0])
+        if (ord(buf[0]) & 0x80)!=0:
+            break
+        print "Waiting..."
+
+def write_flash(f):
+    size = os.fstat(f.fileno()).st_size
+    blocks = (size+FLASH_BLKSIZE-1)/FLASH_BLKSIZE
+    print "File size: %d" % size
+    print "Flash blocks: %d" % blocks
+
+    for i in xrange(0, blocks):
+        write_ram(FLASH_BASE+i*4, "\x20\x00\x00\x00")
+        write_ram(FLASH_BASE+i*4, "\xD0\x00\x00\x00")
+        wait_flash()
+    content = f.read()
+    for i in xrange(0, size, 2):
+        # st = time.time()
+        write_ram(FLASH_BASE+i*2, "\x40\x00\x00\x00")
+        write_ram(FLASH_BASE+i*2, ''.join([content[i], content[i+1], '\x00', '\x00']) )
+        # print time.time()-st
+        # wait_flash()
+        # print time.time()-st
+    print "Done"
 
 def flash_test():
-    FLASH_BASE = 0xbe000000
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
@@ -214,12 +263,14 @@ def start_terminal():
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
+SERIAL_DELAY=0
 # uart_loopback_test()
-# ram_test()
+ram_test()
 # flash_test()
 
 with open(sys.argv[1], 'rb') as f:
     # load_and_run(f, 0, 0)
+    # write_flash(f)
     load_elf_and_run(f)
 
     start_terminal()
