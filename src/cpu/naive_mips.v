@@ -3,28 +3,41 @@
 
 module naive_mips(/*autoport*/
 //output
-          bus_address,
-          bus_read,
-          bus_write,
-          bus_wrdata,
+      ibus_address,
+      ibus_byteenable,
+      ibus_read,
+      ibus_write,
+      ibus_wrdata,
+      dbus_address,
+      dbus_byteenable,
+      dbus_read,
+      dbus_write,
+      dbus_wrdata,
 //input
-          rst_n,
-          clk,
-          bus_rddata,
-          bus_ack,
-          bus_stall,
-          hardware_int_in);
+      rst_n,
+      clk,
+      ibus_rddata,
+      dbus_rddata,
+      dbus_stall,
+      hardware_int_in);
 
 input wire rst_n;
 input wire clk;
 
-output wire[31:0] bus_address;
-output wire bus_read;
-output wire bus_write;
-output wire[31:0] bus_wrdata;
-input wire[31:0] bus_rddata;
-input wire bus_ack;
-input wire bus_stall;
+output wire[31:0] ibus_address;
+output wire[3:0] ibus_byteenable;
+output wire ibus_read;
+output wire ibus_write;
+output wire[31:0] ibus_wrdata;
+input wire[31:0] ibus_rddata;
+
+output wire[31:0] dbus_address;
+output wire[3:0] dbus_byteenable;
+output wire dbus_read;
+output wire dbus_write;
+output wire[31:0] dbus_wrdata;
+input wire[31:0] dbus_rddata;
+input wire dbus_stall;
 
 input wire[4:0] hardware_int_in;
 
@@ -148,46 +161,6 @@ wire cp0_user_mode;
 wire timer_int;
 wire[5:0] hardware_int;
 
-
-wire[31:0] ibus_address;
-wire ibus_read;
-wire[31:0] ibus_rddata;
-wire ibus_stall;
-
-wire[31:0] dbus_address;
-wire[3:0] dbus_byteenable;
-wire dbus_read;
-wire dbus_write;
-wire[31:0] dbus_wrdata;
-wire[31:0] dbus_rddata;
-wire dbus_stall;
-wire dbus_uncached;
-
-MemorySystem cache(
-                .clk(clk),
-                .reset(~rst_n),
-                .irreq(ibus_read),
-                .iaddr(ibus_address),
-                .irdata(ibus_rddata),
-                .imiss(ibus_stall), 
-                .drreq(dbus_read),
-                .dwreq(dbus_write),
-                .daddr(dbus_address),
-                .drdata(dbus_rddata),
-                .dwdata(dbus_wrdata),
-                .dwmask(dbus_byteenable),
-                .dmiss(dbus_stall),
-                .uncached(dbus_uncached),
-
-                .slave_addr  (bus_address),
-                .slave_wdata (bus_wrdata),
-                .slave_rdata0(bus_rddata),
-                .slave_rreq  (bus_read),
-                .slave_wreq  (bus_write),
-                .slave_ack0  (bus_ack),
-                .slave_busy0 (bus_stall)
-                );
-
 regs main_regs(/*autoinst*/
          .rdata1(id_reg_s_value_from_regs),
          .rdata2(id_reg_t_value_from_regs),
@@ -218,7 +191,10 @@ mmu_top mmu(/*autoinst*/
       .tlbwi(wb_we_tlb),
       .user_mode(cp0_user_mode));
 
+assign ibus_byteenable = 4'b1111;
 assign ibus_read = 1'b1;
+assign ibus_write = 1'b0;
+assign ibus_wrdata = 32'b0;
 assign if_inst = (if_iaddr_exp_miss||if_iaddr_exp_illegal) ? 32'b0 : ibus_rddata;
 
 assign dbus_byteenable = mm_mem_byte_en;
@@ -243,8 +219,6 @@ always @(*) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
       (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
-        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
-    end else if(ibus_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
     end else begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
