@@ -26,11 +26,13 @@ module board_scan(/*autoport*/
 //input
           rst_in_n,
           clk_in,
+			 clk_uart_in,
           rxd,
           rs232_rxd);
 
 input wire rst_in_n;
 input wire clk_in;
+input wire clk_uart_in;
 
 wire clk2x,clk,locked,rst_n;
 wire clk_uart;
