@@ -5,6 +5,8 @@ NET "clk_uart_in" LOC = U25;
 NET "rst_in_n" LOC = T1;
 NET "txd" LOC = N23;
 NET "rxd" LOC = P26;
+NET "rs232_txd" LOC = P24;
+NET "rs232_rxd" LOC = R26;
 
 #LEDS
 NET "gpio0[0]" LOC = N26;
