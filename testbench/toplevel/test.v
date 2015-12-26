@@ -151,6 +151,8 @@ defparam soc.uart0.tx1.COUNTER_PERIOD=3;
 defparam soc.uart0.tx1.ignore_for_sim=1;
 defparam soc.cpu.pc_instance.PC_INITIAL = 32'h80000000;
 
+defparam soc.cpu.dbg_host.tx_dbg.ignore_for_sim=1;
+
 task uart_send_byte;
 input [7:0] data;
 begin
@@ -178,6 +180,28 @@ begin
     uart_send_byte(data[15:8]);
     uart_send_byte(data[23:16]);
     uart_send_byte(data[31:24]);
+end
+endtask
+
+task debugger_send_byte;
+input [7:0] data;
+begin
+    @(negedge soc.cpu.dbg_host.clk);
+    soc.cpu.dbg_host.rx_dbg.rx_avai_for_sim = 1'b1;
+    soc.cpu.dbg_host.rx_dbg.rx_data_for_sim = data;
+    @(negedge soc.cpu.dbg_host.clk);
+    soc.cpu.dbg_host.rx_dbg.rx_avai_for_sim = 1'b0;
+    @(negedge soc.cpu.dbg_host.clk);
+end
+endtask
+
+task debugger_send_word;
+input [31:0] data;
+begin
+    debugger_send_byte(data[7:0]);
+    debugger_send_byte(data[15:8]);
+    debugger_send_byte(data[23:16]);
+    debugger_send_byte(data[31:24]);
 end
 endtask
 
@@ -214,7 +238,44 @@ initial begin
     uart_send_word(32'h00005566);
 end
 */
-
+/*
+initial begin 
+    wait(soc.rst_n == 1'b1);
+    debugger_send_byte(8'd5); //CMD_SET_BP
+    debugger_send_word(32'h8000002c);
+    #800;
+    debugger_send_byte(8'd3); //CMD_EN_BP
+    debugger_send_word(32'h0);
+    #800;
+    debugger_send_byte(8'd4); //CMD_DIS_BP
+    debugger_send_word(32'h0);
+    #800;
+    debugger_send_byte(8'd6); //CMD_READ_REG
+    debugger_send_word(32'h8);
+    #800;
+    debugger_send_byte(8'd2); //CMD_CONT
+    debugger_send_word(32'h0);
+    #800;
+    debugger_send_byte(8'd10); //CMD_READ_PC
+    debugger_send_word(32'h0);
+    #800;
+    debugger_send_byte(8'd6); //CMD_READ_REG
+    debugger_send_word(32'h8);
+    #800;
+    debugger_send_byte(8'd6); //CMD_READ_REG
+    debugger_send_word(32'h8);
+    #800;
+    debugger_send_byte(8'd3); //CMD_EN_BP
+    debugger_send_word(32'h0);
+    #800;
+    debugger_send_byte(8'd6); //CMD_READ_REG
+    debugger_send_word(32'h8);
+    #800;
+    debugger_send_byte(8'd6); //CMD_READ_REG
+    debugger_send_word(32'h8);
+    #800;
+end
+*/
 
 initial begin
     $readmemh("ram_preload.mem.0", base1.mem_array0);

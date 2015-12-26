@@ -23,13 +23,13 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
+            debugger_uart_txd,
 //input
             rst_in_n,
             clk_in,
-`ifdef EXT_UART_CLOCK
-				clk_uart_in,
-`endif
-            rxd);
+            clk_uart_in,
+            rxd,
+            debugger_uart_rxd);
 
 input wire rst_in_n;
 input wire clk_in;
@@ -37,8 +37,8 @@ input wire clk_in;
 wire clk2x,clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
 
-`ifdef EXT_UART_CLOCK
 input wire clk_uart_in;
+`ifdef EXT_UART_CLOCK
 assign clk_uart = clk_uart_in;
 `else
 assign clk_uart = clk_uart_pll;
@@ -89,6 +89,9 @@ output wire flash_we_n;
 
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
+
+input wire debugger_uart_rxd;
+output wire debugger_uart_txd;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -197,6 +200,9 @@ naive_mips cpu(/*autoinst*/
          .dbus_wrdata(dbus_wrdata[31:0]),
          .rst_n(rst_n),
          .clk(clk),
+         .debugger_uart_clk(clk_uart),
+         .debugger_uart_rxd(debugger_uart_rxd),
+         .debugger_uart_txd(debugger_uart_txd),
          .ibus_rddata(ibus_rddata[31:0]),
          .dbus_rddata(dbus_rddata[31:0]),
          .dbus_stall(dbus_stall),
