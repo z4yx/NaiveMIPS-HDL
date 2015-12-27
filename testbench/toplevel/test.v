@@ -247,16 +247,19 @@ initial begin
     debugger_send_byte(8'd3); //CMD_EN_BP
     debugger_send_word(32'h0);
     #800;
+    debugger_send_byte(8'd12); //CMD_READ_IMEM
+    debugger_send_word(32'h80000004);
+    #800;
     debugger_send_byte(8'd4); //CMD_DIS_BP
     debugger_send_word(32'h0);
     #800;
-    debugger_send_byte(8'd6); //CMD_READ_REG
-    debugger_send_word(32'h8);
-    #800;
-    debugger_send_byte(8'd2); //CMD_CONT
+    debugger_send_byte(8'd11); //CMD_RESET
     debugger_send_word(32'h0);
     #800;
     debugger_send_byte(8'd10); //CMD_READ_PC
+    debugger_send_word(32'h0);
+    #800;
+    debugger_send_byte(8'd2); //CMD_CONT
     debugger_send_word(32'h0);
     #800;
     debugger_send_byte(8'd6); //CMD_READ_REG

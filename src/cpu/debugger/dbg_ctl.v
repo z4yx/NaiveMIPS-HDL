@@ -5,6 +5,9 @@ module dbg_ctl (/*autoport*/
             debug_stall,
             main_reg_addr,
             cp0_reg_addr,
+            pc_reset,
+            debugger_mem_read,
+            debugger_mem_addr,
             host_result,
 //input
             clk,
@@ -14,6 +17,7 @@ module dbg_ctl (/*autoport*/
             cp0_reg_value,
             hilo_reg_value,
             pc_reg_value,
+            debugger_mem_data,
             host_cmd,
             host_param,
             host_cmd_en);
@@ -33,6 +37,8 @@ module dbg_ctl (/*autoport*/
 `define CMD_READ_HI 8'd8
 `define CMD_READ_LO 8'd9
 `define CMD_READ_PC 8'd10
+`define CMD_RESET 8'd11
+`define CMD_READ_IMEM 8'd12
 
 input wire clk;
 input wire rst_n;
@@ -53,6 +59,11 @@ output wire[4:0] cp0_reg_addr;
 input wire[63:0] hilo_reg_value;
 
 input wire[31:0] pc_reg_value;
+output reg pc_reset;
+
+output wire debugger_mem_read;
+output wire[31:0] debugger_mem_addr;
+input wire[31:0] debugger_mem_data;
 
 input wire[7:0] host_cmd;
 input wire[31:0] host_param;
@@ -66,6 +77,8 @@ reg[4:0] dbg_state;
 
 assign cp0_reg_addr = host_param[4:0];
 assign main_reg_addr = host_param[4:0];
+assign debugger_mem_addr = host_param;
+assign debugger_mem_read = host_cmd==`CMD_READ_IMEM && host_cmd_en;
 
 always @(posedge clk or negedge rst_n) begin : proc_host
     if(~rst_n) begin
@@ -73,11 +86,12 @@ always @(posedge clk or negedge rst_n) begin : proc_host
         breakpoint <= 32'hffffffff;
         command_cont <= 1'b0;
         command_stop <= 1'b0;
+        pc_reset <= 1'b0;
     end else begin 
         command_cont <= 1'b0;
         command_stop <= 1'b0;
         host_result <= 32'b0;
-        
+        pc_reset <= 1'b0;
         if(host_cmd_en) begin
             $display("Debugger Cmd=%d Param=%d",host_cmd,host_param);
             case (host_cmd)
@@ -101,6 +115,11 @@ always @(posedge clk or negedge rst_n) begin : proc_host
                 host_result <= hilo_reg_value[31:0];
             `CMD_READ_PC:
                 host_result <= pc_reg_value;
+            `CMD_RESET:
+                pc_reset <= 1'b1;
+            `CMD_READ_IMEM: begin 
+                host_result <= debugger_mem_data;
+            end
             default : /* default */;
             endcase
         end

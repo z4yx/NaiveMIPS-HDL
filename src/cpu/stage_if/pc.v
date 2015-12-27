@@ -10,7 +10,8 @@ module pc(/*autoport*/
       is_exception,
       exception_new_pc,
       is_debug,
-      debug_new_pc);
+      debug_new_pc,
+      debug_reset);
 
 parameter PC_INITIAL = 32'hbfc00000;
 
@@ -24,11 +25,15 @@ input wire is_exception;
 input wire[31:0] exception_new_pc;
 input wire is_debug;
 input wire[31:0] debug_new_pc;
+input wire debug_reset;
 
 output reg[31:0] pc_reg;
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
+        pc_reg <= PC_INITIAL;
+    end
+    else if(debug_reset) begin 
         pc_reg <= PC_INITIAL;
     end
     else if(is_debug) begin
@@ -46,5 +51,7 @@ always @(posedge clk or negedge rst_n) begin
         end
     end
 end
+
+always @(posedge clk) $display("PC=%x",pc_reg);
 
 endmodule

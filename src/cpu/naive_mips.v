@@ -177,6 +177,10 @@ wire[31:0] debugger_cp0_val;
 wire[4:0] debugger_cp0_addr;
 wire[63:0] debugger_hilo_val;
 wire[31:0] debugger_new_pc;
+wire debugger_mem_read;
+wire[31:0] debugger_mem_addr;
+wire[31:0] debugger_mem_data;
+wire debugger_pc_reset;
 
 wire[7:0] debugger_host_cmd;
 wire[31:0] debugger_host_param;
@@ -208,6 +212,10 @@ dbg_ctl debugger(/*autoinst*/
            .cp0_reg_value(debugger_cp0_val),
            .hilo_reg_value(debugger_hilo_val),
            .pc_reg_value(if_pc),
+           .debugger_mem_read(debugger_mem_read),
+           .debugger_mem_addr(debugger_mem_addr),
+           .debugger_mem_data(debugger_mem_data),
+           .pc_reset         (debugger_pc_reset),
            .host_cmd(debugger_host_cmd),
            .host_param(debugger_host_param),
            .host_cmd_en(debugger_host_cmd_en));
@@ -237,9 +245,9 @@ mmu_top mmu(/*autoinst*/
       .rst_n(rst_n),
       .clk(clk),
       .data_address_i(mm_mem_address),
-      .inst_address_i(if_pc),
+      .inst_address_i(debugger_mem_read ? debugger_mem_addr : if_pc),
       .data_en(mm_mem_rd || mm_mem_wr),
-      .inst_en(1'b1),
+      .inst_en(1'b1 | debugger_mem_read),
       .tlb_config(cp0_tlb_config),
       .tlbwi(wb_we_tlb),
       .user_mode(cp0_user_mode));
@@ -256,6 +264,8 @@ assign dbus_write = mm_mem_wr && !flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
 assign mm_stall = dbus_stall;
+
+assign debugger_mem_data = if_inst;
 
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
@@ -288,6 +298,7 @@ pc pc_instance(/*autoinst*/
          .is_exception(exception_flush),
          .exception_new_pc(exception_new_pc),
          .is_debug    (debugger_flush),
+         .debug_reset (debugger_pc_reset),
          .debug_new_pc(debugger_new_pc),
          .is_branch(id_is_branch),
          .branch_address(id_branch_address));
