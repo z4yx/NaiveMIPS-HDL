@@ -27,18 +27,18 @@ module dbg_ctl (/*autoport*/
 `define DBG_WAIT_PIPELINE 5'd2
 `define DBG_STOPPED 5'd3
 
-`define CMD_STOP 8'd1
-`define CMD_CONT 8'd2
-`define CMD_EN_BP 8'd3
-`define CMD_DIS_BP 8'd4
-`define CMD_SET_BP 8'd5
-`define CMD_READ_REG 8'd6
-`define CMD_READ_CP0 8'd7
-`define CMD_READ_HI 8'd8
-`define CMD_READ_LO 8'd9
-`define CMD_READ_PC 8'd10
-`define CMD_RESET 8'd11
-`define CMD_READ_IMEM 8'd12
+`define CMD_STOP 8'h1
+`define CMD_CONT 8'h2
+`define CMD_EN_BP 8'h3
+`define CMD_DIS_BP 8'h4
+`define CMD_SET_BP 8'h85
+`define CMD_READ_REG 8'h86
+`define CMD_READ_CP0 8'h87
+`define CMD_READ_HI 8'h8
+`define CMD_READ_LO 8'h9
+`define CMD_READ_PC 8'ha
+`define CMD_RESET 8'hb
+`define CMD_READ_IMEM 8'h8c
 
 input wire clk;
 input wire rst_n;

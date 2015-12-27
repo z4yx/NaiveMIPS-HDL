@@ -64,8 +64,16 @@ always @(posedge clk or negedge rst_n) begin : proc_uart_debugger
         state <= 0;
     end else begin
         case (state)
-        8'd0,    //Receiving 1 byte command and 4 byte parameters
-        8'd1,    
+        8'd0:    //Receiving 1 byte command
+        begin 
+            if(rx_data_available) begin 
+                if(rx_data[7])
+                    state <= 8'd1;
+                else
+                    state <= 8'd5;
+            end
+        end
+        8'd1,    //4 byte parameters
         8'd2,    
         8'd3,    
         8'd4: begin
