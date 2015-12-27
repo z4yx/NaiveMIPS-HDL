@@ -8,7 +8,10 @@ module pc(/*autoport*/
       branch_address,
       is_branch,
       is_exception,
-      exception_new_pc);
+      exception_new_pc,
+      is_debug,
+      debug_new_pc,
+      debug_reset);
 
 parameter PC_INITIAL = 32'hbfc00000;
 
@@ -20,12 +23,21 @@ input wire[31:0] branch_address;
 input wire is_branch;
 input wire is_exception;
 input wire[31:0] exception_new_pc;
+input wire is_debug;
+input wire[31:0] debug_new_pc;
+input wire debug_reset;
 
 output reg[31:0] pc_reg;
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         pc_reg <= PC_INITIAL;
+    end
+    else if(debug_reset) begin 
+        pc_reg <= PC_INITIAL;
+    end
+    else if(is_debug) begin
+        pc_reg <= debug_new_pc;
     end
     else if(is_exception) begin
         pc_reg <= exception_new_pc & 32'hfffffffc;
@@ -39,5 +51,7 @@ always @(posedge clk or negedge rst_n) begin
         end
     end
 end
+
+always @(posedge clk) $display("PC=%x",pc_reg);
 
 endmodule
