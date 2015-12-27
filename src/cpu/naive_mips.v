@@ -208,6 +208,7 @@ dbg_ctl debugger(/*autoinst*/
            .clk(clk),
            .rst_n(rst_n),
            .inst_pc_value(mm_pc_value),
+           .inst_in_delayslot(mm_in_delayslot),
            .main_reg_value(debugger_reg_val),
            .cp0_reg_value(debugger_cp0_val),
            .hilo_reg_value(debugger_hilo_val),

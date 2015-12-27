@@ -249,9 +249,25 @@ initial begin
     debugger_send_byte(8'h8c); //CMD_READ_IMEM
     debugger_send_word(32'h80000004);
     #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'ha); //CMD_READ_PC
+    #800;
     debugger_send_byte(8'd4); //CMD_DIS_BP
     #800;
-    debugger_send_byte(8'hb); //CMD_RESET
+    // debugger_send_byte(8'hb); //CMD_RESET
+    // #800;
+    debugger_send_byte(8'hd); //CMD_STEP
     #800;
     debugger_send_byte(8'ha); //CMD_READ_PC
     #800;
