@@ -22,7 +22,9 @@ module cp0(/*autoport*/
          exp_epc,
          exp_bd,
          exp_code,
-         exp_bad_vaddr);
+         exp_bad_vaddr,
+         debugger_rd_addr,
+         debugger_data_o);
 
 `define CP0_Index 5'd0
 `define CP0_EntryLo0 5'd2
@@ -40,7 +42,7 @@ input wire clk;
 input wire rst_n;
 
 input wire[4:0] rd_addr;
-output reg[31:0] data_o;
+output wire[31:0] data_o;
 input wire we;
 input wire[4:0] wr_addr;
 input wire[31:0] data_i;
@@ -61,7 +63,18 @@ input wire exp_bd;
 input wire[4:0] exp_code;
 input wire[31:0] exp_bad_vaddr;
 
+input wire[4:0] debugger_rd_addr;
+input wire[31:0] debugger_data_o;
+
 reg[31:0] cp0_regs[0:31];
+
+wire[4:0] rd_addr_internal[0:1];
+reg[31:0] data_o_internal[0:1];
+
+assign rd_addr_internal[0] = rd_addr;
+assign data_o = data_o_internal[0];
+assign rd_addr_internal[1] = debugger_rd_addr;
+assign debugger_data_o = data_o_internal[1];
 
 assign user_mode = !cp0_regs[`CP0_Status][1] && cp0_regs[`CP0_Status][4];
 assign ebase = {2'b10, cp0_regs[`CP0_EBase][29:12]};
@@ -77,49 +90,56 @@ assign tlb_config = {
 assign allow_int = !cp0_regs[`CP0_Status][1] && cp0_regs[`CP0_Status][0];
 assign software_int_o = cp0_regs[`CP0_Cause][9:8];
 
-always @(*) begin
-    if (!rst_n) begin
-        data_o <= 32'b0;
+genvar read_i;
+generate
+for (read_i = 0; read_i < 2; read_i=read_i+1) begin
+    
+    always @(*) begin
+        if (!rst_n) begin
+            data_o_internal[read_i] <= 32'b0;
+        end
+        else 
+            case(rd_addr_internal[read_i])
+            `CP0_Compare: begin
+                data_o_internal[read_i] <= cp0_regs[`CP0_Compare];
+            end
+            `CP0_Count: begin
+                data_o_internal[read_i] <= cp0_regs[`CP0_Count];
+            end
+            `CP0_EBase: begin
+                data_o_internal[read_i] <= {2'b10, cp0_regs[`CP0_EBase][29:12], 12'b0};
+            end
+            `CP0_EPC: begin
+                data_o_internal[read_i] <= cp0_regs[`CP0_EPC];
+            end
+            `CP0_BadVAddr: begin
+                data_o_internal[read_i] <= cp0_regs[`CP0_BadVAddr];
+            end
+            `CP0_Cause: begin
+                data_o_internal[read_i] <= {cp0_regs[`CP0_Cause][31],15'b0, hardware_int, cp0_regs[`CP0_Cause][9:8], 1'b0, cp0_regs[`CP0_Cause][6:2], 2'b00};
+            end
+            `CP0_Status: begin
+                data_o_internal[read_i] <= {27'b0, cp0_regs[`CP0_Status][4:3], 1'b0, cp0_regs[`CP0_Status][1:0]};
+            end
+            `CP0_EntryHi: begin
+                data_o_internal[read_i] <= {cp0_regs[`CP0_EntryHi][31:13], 13'b0};
+            end
+            `CP0_EntryLo0: begin
+                data_o_internal[read_i] <= {2'b0, cp0_regs[`CP0_EntryLo0][29:6], 3'b0, cp0_regs[`CP0_EntryLo0][2:1], 1'b0};
+            end
+            `CP0_EntryLo1: begin
+                data_o_internal[read_i] <= {2'b0, cp0_regs[`CP0_EntryLo1][29:6], 3'b0, cp0_regs[`CP0_EntryLo1][2:1], 1'b0};
+            end
+            `CP0_Index: begin
+                data_o_internal[read_i] <= {28'b0, cp0_regs[`CP0_Index][3:0]};
+            end
+            default:
+                data_o_internal[read_i] <= 32'b0;
+            endcase
     end
-    else 
-        case(rd_addr)
-        `CP0_Compare: begin
-            data_o <= cp0_regs[`CP0_Compare];
-        end
-        `CP0_Count: begin
-            data_o <= cp0_regs[`CP0_Count];
-        end
-        `CP0_EBase: begin
-            data_o <= {2'b10, cp0_regs[`CP0_EBase][29:12], 12'b0};
-        end
-        `CP0_EPC: begin
-            data_o <= cp0_regs[`CP0_EPC];
-        end
-        `CP0_BadVAddr: begin
-            data_o <= cp0_regs[`CP0_BadVAddr];
-        end
-        `CP0_Cause: begin
-            data_o <= {cp0_regs[`CP0_Cause][31],15'b0, hardware_int, cp0_regs[`CP0_Cause][9:8], 1'b0, cp0_regs[`CP0_Cause][6:2], 2'b00};
-        end
-        `CP0_Status: begin
-            data_o <= {27'b0, cp0_regs[`CP0_Status][4:3], 1'b0, cp0_regs[`CP0_Status][1:0]};
-        end
-        `CP0_EntryHi: begin
-            data_o <= {cp0_regs[`CP0_EntryHi][31:13], 13'b0};
-        end
-        `CP0_EntryLo0: begin
-            data_o <= {2'b0, cp0_regs[`CP0_EntryLo0][29:6], 3'b0, cp0_regs[`CP0_EntryLo0][2:1], 1'b0};
-        end
-        `CP0_EntryLo1: begin
-            data_o <= {2'b0, cp0_regs[`CP0_EntryLo1][29:6], 3'b0, cp0_regs[`CP0_EntryLo1][2:1], 1'b0};
-        end
-        `CP0_Index: begin
-            data_o <= {28'b0, cp0_regs[`CP0_Index][3:0]};
-        end
-        default:
-            data_o <= 32'b0;
-        endcase
-end
+
+end //for
+endgenerate
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin

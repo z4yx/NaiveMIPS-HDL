@@ -308,6 +308,8 @@ cp0 cp0_instance(/*autoinst*/
      .data_o(ex_cp0_value),
      .clk(clk),
      .rst_n(rst_n),
+     .debugger_rd_addr(debugger_cp0_addr),
+     .debugger_data_o(debugger_cp0_val),
      .rd_addr(ex_cp0_rdaddr),
      .we(wb_we_cp0),
      .wr_addr(wb_cp0_wraddr),
