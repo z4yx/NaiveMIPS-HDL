@@ -320,6 +320,7 @@ set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
 set_global_assignment -name ACTIVE_SERIAL_CLOCK FREQ_40MHZ
+set_global_assignment -name VERILOG_FILE ../src/ticker/ticker.v
 set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/div_uu.v
 set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlbConverter.v
 set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlb.v
