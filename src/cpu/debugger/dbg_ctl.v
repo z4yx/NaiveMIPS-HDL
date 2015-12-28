@@ -43,6 +43,7 @@ module dbg_ctl (/*autoport*/
 `define CMD_RESET 8'hb
 `define CMD_READ_IMEM 8'h8c
 `define CMD_STEP 8'h0d
+`define CMD_QUERY 8'h0e
 
 input wire clk;
 input wire rst_n;
@@ -128,6 +129,8 @@ always @(posedge clk or negedge rst_n) begin : proc_host
                 host_result <= debugger_mem_data;
             `CMD_STEP:
                 command_step <= 1'b1;
+            `CMD_QUERY:
+                host_result <= dbg_state;
             default : /* default */;
             endcase
         end
