@@ -9,13 +9,15 @@ import random
 import binascii
 import select
 import array
+import getopt
 from elftools.elf.elffile import ELFFile
+from elftools.elf.descriptions import describe_p_type
 
 SERIAL_DELAY = 0.0001
+SERIAL_DEVICE = ""
 FLASH_BASE = 0xbe000000
 FLASH_BLKSIZE = 128*1024
-ser = serial.Serial('/dev/cu.usbserial-FTHK1N4K', 115200, timeout=1)
-# ser = serial.Serial('/dev/cu.usbserial', 115200, timeout=1)
+
 
 def write_uart(buf):
     for b in buf:
@@ -229,7 +231,10 @@ def load_elf_and_run(f):
     elffile = ELFFile(f)
 
     for segment in elffile.iter_segments():
-        print "Program Header: Size: %d, Virtual Address: 0x%x" % (segment['p_filesz'], segment['p_vaddr'])
+        t = describe_p_type(segment['p_type'])
+        print "Program Header: Size: %d, Virtual Address: 0x%x, Type: %s" % (segment['p_filesz'], segment['p_vaddr'], t)
+        if not (segment['p_vaddr'] & 0x80000000):
+            continue
         if segment['p_filesz']==0 or segment['p_vaddr']==0:
             print "Skipped"
             continue
@@ -263,14 +268,87 @@ def start_terminal():
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
-SERIAL_DELAY=0
-# uart_loopback_test()
-ram_test()
-# flash_test()
+def usage():
+    print "Usage: %s <options>" % sys.argv[0]
+    print "  NaiveBootloader host program."
+    print "  Options are:"
+    print """
+    -h --help          Display this information
+    -s <device>
+    --serial=<device>  Specify serial port
+    -b <baud>
+    --baud=<baud>      Specify serial baudrate
+    -t <test>
+    --test=<test>      Run a test
+        uart           UART loopback test
+        ram            RAM read/write test
+        flash          Flash access test
+    -l <elf_file>      Load ELF to RAM and run
+    --bin <address>    Load binary file, specify load address
+    -p <bin_file>      Program file to Flash
+    --term             Start a terminal after loading
+"""
 
-with open(sys.argv[1], 'rb') as f:
-    # load_and_run(f, 0, 0)
-    # write_flash(f)
-    load_elf_and_run(f)
+if __name__ == "__main__":
+    # global SERIAL_DEVICE, SERIAL_DELAY
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:l:f", ["help", "serial=", "baud=", "bin=", "test=", "term"])
+    except getopt.GetoptError, e:
+        usage()
+        sys.exit(2)
+    baud = 115200
+    tests = None
+    prog_file = None
+    load_file = None
+    file_binary = False
+    binary_base = 0
+    term = False
+    for opt,arg in opts:
+        if opt in ('-h', '--help'):
+            usage()
+            sys.exit(0)
+        elif opt in ('-s', '--serial'):
+            SERIAL_DEVICE = arg
+        elif opt in ('-b', '--baud'):
+            baud = int(arg)
+        elif opt in ('-t', '--test'):
+            tests = arg
+        elif opt in ('--bin'):
+            file_binary = True
+            binary_base = int(arg) #TODO: hex
+        elif opt in ('-p'):
+            prog_file = opt
+        elif opt in ('-l'):
+            load_file = opt
+        elif opt in ('-f'):
+            SERIAL_DELAY=0
+        elif opt in ('--term'):
+            term = True
 
-    start_terminal()
+    global ser
+    ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
+
+    if tests:
+        if tests == 'uart':
+            uart_loopback_test()
+        elif tests == 'ram':
+            ram_test()
+        elif tests == 'flash':
+            flash_test()
+        else:
+            print "Unknown test: '%s'" % tests
+            sys.exit(1)
+        sys.exit(0)
+    if prog_file:
+        with open(prog_file, 'rb') as f:
+            if not file_binary:
+                load_elf_and_run(f)
+            else:
+                load_and_run(f, binary_base, binary_base)
+
+    if load_file:
+        with open(load_file, 'rb') as f:
+            write_flash(f)
+
+    if term:
+        start_terminal()
