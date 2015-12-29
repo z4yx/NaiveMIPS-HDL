@@ -244,12 +244,18 @@ initial begin
     debugger_send_byte(8'h85); //CMD_SET_BP
     debugger_send_word(32'h8000002c);
     #800;
+    debugger_send_byte(8'he); //CMD_QUERY
+    #800;
     debugger_send_byte(8'd3); //CMD_EN_BP
+    #800;
+    debugger_send_byte(8'he); //CMD_QUERY
     #800;
     debugger_send_byte(8'h8c); //CMD_READ_IMEM
     debugger_send_word(32'h80000004);
     #800;
     debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'he); //CMD_QUERY
     #800;
     debugger_send_byte(8'hd); //CMD_STEP
     #800;
