@@ -3,6 +3,7 @@ module sys_pll(/*autoport*/
          c0,
          c1,
          c2,
+         c3,
          locked,
 //input
          areset,
@@ -13,6 +14,7 @@ input wire     inclk0;
 output wire    c0;
 output wire    c1;
 output wire    c2;
+output wire    c3;
 output wire    locked;
 
 
@@ -23,6 +25,7 @@ clk_wiz_v3_6 clknetwork(
     .CLK_OUT1           (c0),
     .CLK_OUT2           (c1),
 //    .CLK_OUT3           (c2),
+    .CLK_OUT4           (c3),
     // Status and control signals
     .RESET              (areset),
     .LOCKED             (locked));

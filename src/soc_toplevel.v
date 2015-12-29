@@ -36,6 +36,7 @@ input wire clk_in;
 
 wire clk2x,clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
+wire clk_tick;
 
 `ifdef EXT_UART_CLOCK
 input wire clk_uart_in;
@@ -50,6 +51,7 @@ sys_pll pll1(
     .c0(clk),
     .c1(clk2x),
     .c2(clk_uart_pll),
+    .c3(clk_tick),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
@@ -147,6 +149,12 @@ wire [31:0]gpio_dbus_data_i;
 wire [7:0]gpio_dbus_address;
 wire gpio_dbus_read;
 wire gpio_dbus_write;
+
+wire [31:0]ticker_dbus_data_o;
+wire [31:0]ticker_dbus_data_i;
+wire [7:0]ticker_dbus_address;
+wire ticker_dbus_read;
+wire ticker_dbus_write;
 
 wire using_base;
 //assign using_base = ram_dataenable[0];
@@ -247,6 +255,10 @@ dbus dbus0(/*autoinst*/
          .gpio_data_i(gpio_dbus_data_i),
          .gpio_rd(gpio_dbus_read),
          .gpio_wr(gpio_dbus_write),
+         .ticker_address(ticker_dbus_address),
+         .ticker_data_i(ticker_dbus_data_i),
+         .ticker_rd(ticker_dbus_read),
+         .ticker_wr(ticker_dbus_write),
          .ram_address(dbus_ram_address[23:0]),
          .ram_data_i(dbus_ram_wrdata[31:0]),
          .ram_data_enable(dbus_ram_byteenable[3:0]),
@@ -265,6 +277,7 @@ dbus dbus0(/*autoinst*/
          .master_stall(dbus_stall),
          .uart_data_o(uart_data_o[31:0]),
          .gpio_data_o(gpio_dbus_data_o),
+         .ticker_data_o(ticker_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
          .ram_stall(dbus_ram_stall),
          .flash_stall (flash_dbus_stall),
@@ -311,6 +324,17 @@ gpio_top gpio_inst(/*autoinst*/
          .bus_data_i(gpio_dbus_data_i[31:0]),
          .bus_read(gpio_dbus_read),
          .bus_write(gpio_dbus_write));
+
+ticker ticker_inst(
+        .clk_bus(clk),
+        .rst_n(rst_n),
+        .clk_tick(clk_tick),
+        .rst_tick_n(rst_n),
+        .bus_data_o(ticker_dbus_data_o[31:0]),
+        .bus_address(ticker_dbus_address[7:0]),
+        .bus_data_i(ticker_dbus_data_i[31:0]),
+        .bus_read(ticker_dbus_read),
+        .bus_write(ticker_dbus_write));
 
 assign irq_line = {2'b0,uart_irq,2'b0};
 
