@@ -3,26 +3,33 @@
 
 module naive_mips(/*autoport*/
 //output
-      ibus_address,
-      ibus_byteenable,
-      ibus_read,
-      ibus_write,
-      ibus_wrdata,
-      dbus_address,
-      dbus_byteenable,
-      dbus_read,
-      dbus_write,
-      dbus_wrdata,
+          debugger_uart_txd,
+          ibus_address,
+          ibus_byteenable,
+          ibus_read,
+          ibus_write,
+          ibus_wrdata,
+          dbus_address,
+          dbus_byteenable,
+          dbus_read,
+          dbus_write,
+          dbus_wrdata,
 //input
-      rst_n,
-      clk,
-      ibus_rddata,
-      dbus_rddata,
-      dbus_stall,
-      hardware_int_in);
+          rst_n,
+          clk,
+          debugger_uart_rxd,
+          debugger_uart_clk,
+          ibus_rddata,
+          dbus_rddata,
+          dbus_stall,
+          hardware_int_in);
 
 input wire rst_n;
 input wire clk;
+
+input wire debugger_uart_rxd;
+input wire debugger_uart_clk;
+output wire debugger_uart_txd;
 
 output wire[31:0] ibus_address;
 output wire[3:0] ibus_byteenable;
@@ -41,6 +48,7 @@ input wire dbus_stall;
 
 input wire[4:0] hardware_int_in;
 
+wire flush;
 wire exception_flush;
 wire[31:0] exception_new_pc;
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
@@ -161,21 +169,75 @@ wire cp0_user_mode;
 wire timer_int;
 wire[5:0] hardware_int;
 
+wire debugger_flush;
+wire debugger_stall;
+wire[31:0] debugger_reg_val;
+wire[4:0] debugger_reg_addr;
+wire[31:0] debugger_cp0_val;
+wire[4:0] debugger_cp0_addr;
+wire[63:0] debugger_hilo_val;
+wire[31:0] debugger_new_pc;
+wire debugger_mem_read;
+wire[31:0] debugger_mem_addr;
+wire[31:0] debugger_mem_data;
+wire debugger_pc_reset;
+
+wire[7:0] debugger_host_cmd;
+wire[31:0] debugger_host_param;
+wire[31:0] debugger_host_result;
+wire debugger_host_cmd_en;
+
+dbg_uart dbg_host(/*autoinst*/
+          .host_cmd(debugger_host_cmd),
+          .host_param(debugger_host_param),
+          .host_en(debugger_host_cmd_en),
+          .clk(clk),
+          .clk_uart(debugger_uart_clk),
+          .rxd     (debugger_uart_rxd),
+          .txd     (debugger_uart_txd),
+          .rst_n(rst_n),
+          .host_result(debugger_host_result));
+
+dbg_ctl debugger(/*autoinst*/
+           .new_pc_value(debugger_new_pc),
+           .flush(debugger_flush),
+           .debug_stall(debugger_stall),
+           .main_reg_addr(debugger_reg_addr),
+           .cp0_reg_addr(debugger_cp0_addr),
+           .host_result(debugger_host_result),
+           .clk(clk),
+           .rst_n(rst_n),
+           .inst_pc_value(mm_pc_value),
+           .inst_in_delayslot(mm_in_delayslot),
+           .main_reg_value(debugger_reg_val),
+           .cp0_reg_value(debugger_cp0_val),
+           .hilo_reg_value(debugger_hilo_val),
+           .pc_reg_value(if_pc),
+           .debugger_mem_read(debugger_mem_read),
+           .debugger_mem_addr(debugger_mem_addr),
+           .debugger_mem_data(debugger_mem_data),
+           .pc_reset         (debugger_pc_reset),
+           .host_cmd(debugger_host_cmd),
+           .host_param(debugger_host_param),
+           .host_cmd_en(debugger_host_cmd_en));
+
 regs main_regs(/*autoinst*/
          .rdata1(id_reg_s_value_from_regs),
          .rdata2(id_reg_t_value_from_regs),
+         .rdata3(debugger_reg_val),
          .clk(clk),
          .rst_n(rst_n),
          .we(wb_reg_we),
          .waddr(wb_reg_addr_i),
          .wdata(wb_data_i),
          .raddr1(id_reg_s),
-         .raddr2(id_reg_t));
+         .raddr2(id_reg_t),
+         .raddr3(debugger_reg_addr));
 
 mmu_top mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(ibus_address),
-      .data_uncached(dbus_uncached),
+      .data_uncached(),
       .inst_uncached(),
       .data_exp_miss(mm_daddr_exp_miss),
       .inst_exp_miss(if_iaddr_exp_miss),
@@ -184,9 +246,9 @@ mmu_top mmu(/*autoinst*/
       .rst_n(rst_n),
       .clk(clk),
       .data_address_i(mm_mem_address),
-      .inst_address_i(if_pc),
+      .inst_address_i(debugger_mem_read ? debugger_mem_addr : if_pc),
       .data_en(mm_mem_rd || mm_mem_wr),
-      .inst_en(1'b1),
+      .inst_en(1'b1 | debugger_mem_read),
       .tlb_config(cp0_tlb_config),
       .tlbwi(wb_we_tlb),
       .user_mode(cp0_user_mode));
@@ -199,10 +261,12 @@ assign if_inst = (if_iaddr_exp_miss||if_iaddr_exp_illegal) ? 32'b0 : ibus_rddata
 
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd;
-assign dbus_write = mm_mem_wr && !exception_flush;
+assign dbus_write = mm_mem_wr && !flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
 assign mm_stall = dbus_stall;
+
+assign debugger_mem_data = if_inst;
 
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
@@ -210,10 +274,12 @@ assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
 assign hardware_int[5] = timer_int;
 assign hardware_int[4:0] = hardware_int_in;
 
+assign flush = debugger_flush | exception_flush;
+
 always @(*) begin
     if (!rst_n) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
-    end else if(mm_stall) begin
+    end else if(mm_stall || debugger_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00000;
     end else if(ex_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
@@ -232,6 +298,9 @@ pc pc_instance(/*autoinst*/
          .enable(en_pc),
          .is_exception(exception_flush),
          .exception_new_pc(exception_new_pc),
+         .is_debug    (debugger_flush),
+         .debug_reset (debugger_pc_reset),
+         .debug_new_pc(debugger_new_pc),
          .is_branch(id_is_branch),
          .branch_address(id_branch_address));
 
@@ -239,6 +308,8 @@ cp0 cp0_instance(/*autoinst*/
      .data_o(ex_cp0_value),
      .clk(clk),
      .rst_n(rst_n),
+     .debugger_rd_addr(debugger_cp0_addr),
+     .debugger_data_o(debugger_cp0_val),
      .rd_addr(ex_cp0_rdaddr),
      .we(wb_we_cp0),
      .wr_addr(wb_cp0_wraddr),
@@ -267,13 +338,13 @@ always @(posedge clk or negedge rst_n) begin
         id_iaddr_exp_miss <= 1'b0;
         id_iaddr_exp_illegal <= 1'b0;
     end
-    else if(en_ifid && !exception_flush) begin
+    else if(en_ifid && !flush) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
         id_in_delayslot <= id_is_branch;
         id_iaddr_exp_miss <= if_iaddr_exp_miss;
         id_iaddr_exp_illegal <= if_iaddr_exp_illegal;
-    end else if(en_idex || exception_flush) begin
+    end else if(en_idex || flush) begin
         id_inst <= 32'b0; //NOP;
         id_pc_value <= 32'b0;
         id_in_delayslot <= 1'b0;
@@ -347,7 +418,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_iaddr_exp_miss <= 1'b0;
         ex_iaddr_exp_illegal <= 1'b0;
     end
-    else if(en_idex && !exception_flush) begin
+    else if(en_idex && !flush) begin
         ex_immediate <= id_immediate;
         ex_op_type <= id_op_type;
         ex_op <= id_op;
@@ -362,7 +433,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= id_pc_value;
         ex_iaddr_exp_miss <= id_iaddr_exp_miss;
         ex_iaddr_exp_illegal <= id_iaddr_exp_illegal;
-    end else if(en_exmm || exception_flush) begin
+    end else if(en_exmm || flush) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
         ex_reg_s <= 5'b0;
@@ -405,7 +476,7 @@ ex stage_ex(/*autoinst*/
             .we_tlb(ex_we_tlb),
             .clk(clk),
             .rst_n(rst_n),
-            .exception_flush(exception_flush),
+            .exception_flush(flush),
             .stall(ex_stall),
             .we_cp0(ex_we_cp0),
             .is_priv_inst(ex_is_priv_inst),
@@ -443,7 +514,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_we_tlb <= 1'b0;
         mm_is_priv_inst <= 1'b0;
     end
-    else if(en_exmm && !exception_flush) begin
+    else if(en_exmm && !flush) begin
         mm_mem_access_op <= ex_mem_access_op;
         mm_mem_access_sz <= ex_mem_access_sz;
         mm_data_i <= ex_data_o;
@@ -464,7 +535,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
         mm_we_tlb <= ex_we_tlb;
         mm_is_priv_inst <= ex_is_priv_inst;
-    end else if(en_mmwb || exception_flush) begin
+    end else if(en_mmwb || flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
         mm_data_i <= 32'b0;
@@ -502,7 +573,7 @@ mm stage_mm(/*autoinst*/
             .reg_addr_i(mm_reg_addr_i),
             .addr_i(mm_addr_i),
             .mem_data_i(mm_mem_data_i),
-            .exception_flush(exception_flush),
+            .exception_flush(flush),
             .flag_unsigned(mm_flag_unsigned));
 
 exception exception_detect(/*autoinst*/
@@ -545,7 +616,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_cp0_wraddr <= 5'b0;
         wb_we_tlb <= 1'b0;
     end
-    else if(en_mmwb && !exception_flush) begin
+    else if(en_mmwb && !flush) begin
         wb_mem_access_op <= mm_mem_access_op;
         wb_mem_access_sz <= mm_mem_access_sz;
         wb_data_i <= mm_data_o;

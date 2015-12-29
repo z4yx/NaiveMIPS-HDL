@@ -8,15 +8,23 @@ import time
 import random
 import binascii
 import select
+import array
+import getopt
 from elftools.elf.elffile import ELFFile
+from elftools.elf.descriptions import describe_p_type
 
-ser = serial.Serial('/dev/cu.usbserial', 115200, timeout=1)
+SERIAL_DELAY = 0.0001
+SERIAL_DEVICE = ""
+FLASH_BASE = 0xbe000000
+FLASH_BLKSIZE = 128*1024
+
 
 def write_uart(buf):
     for b in buf:
         ser.write(b)
         ser.flush()
-        time.sleep(0.0001)
+        if SERIAL_DELAY>0:
+            time.sleep(SERIAL_DELAY)
 
 def write_ram(start, content):
     time.sleep(0.01)
@@ -106,9 +114,9 @@ def uart_loopback_test():
 
 def ram_test():
 
+    offset = 0x80000000
     while True:
-        size = 32*1024
-        offset = 0x80000000 + 0*1024
+        size = 64*1024
         data = ''.join(chr(random.randint(0,255)) for _ in range(size))
 
         write_ram(offset, data)
@@ -123,9 +131,52 @@ def ram_test():
                 if data[x] != recv[x]:
                     print "%x!=%x @ 0x%x" % (ord(data[x]),ord(recv[x]),x)
             break
+        offset += size
+        offset &= 0x803fffff
+
+def read_flash(offset, size):
+    # write_ram(FLASH_BASE, "\x20\x00\x00\x00")
+    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    # time.sleep(0.5)
+
+    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    orig = read_ram(FLASH_BASE+offset*2, size*2)
+    result = []
+    for i in xrange(0, len(orig), 4):  #only lower 16-bits of 32-bits data are valid
+        result.append(orig[i])
+        result.append(orig[i+1])
+    return ''.join(result)
+
+def wait_flash():
+    while True:
+        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
+        buf = read_ram(FLASH_BASE, 4)
+        print "Status: %s" % binascii.hexlify(buf[0])
+        if (ord(buf[0]) & 0x80)!=0:
+            break
+        print "Waiting..."
+
+def write_flash(f):
+    size = os.fstat(f.fileno()).st_size
+    blocks = (size+FLASH_BLKSIZE-1)/FLASH_BLKSIZE
+    print "File size: %d" % size
+    print "Flash blocks: %d" % blocks
+
+    for i in xrange(0, blocks):
+        write_ram(FLASH_BASE+i*4, "\x20\x00\x00\x00")
+        write_ram(FLASH_BASE+i*4, "\xD0\x00\x00\x00")
+        wait_flash()
+    content = f.read()
+    for i in xrange(0, size, 2):
+        # st = time.time()
+        write_ram(FLASH_BASE+i*2, "\x40\x00\x00\x00")
+        write_ram(FLASH_BASE+i*2, ''.join([content[i], content[i+1], '\x00', '\x00']) )
+        # print time.time()-st
+        # wait_flash()
+        # print time.time()-st
+    print "Done"
 
 def flash_test():
-    FLASH_BASE = 0xbe000000
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
@@ -180,7 +231,10 @@ def load_elf_and_run(f):
     elffile = ELFFile(f)
 
     for segment in elffile.iter_segments():
-        print "Program Header: Size: %d, Virtual Address: 0x%x" % (segment['p_filesz'], segment['p_vaddr'])
+        t = describe_p_type(segment['p_type'])
+        print "Program Header: Size: %d, Virtual Address: 0x%x, Type: %s" % (segment['p_filesz'], segment['p_vaddr'], t)
+        if not (segment['p_vaddr'] & 0x80000000):
+            continue
         if segment['p_filesz']==0 or segment['p_vaddr']==0:
             print "Skipped"
             continue
@@ -214,12 +268,87 @@ def start_terminal():
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
-# uart_loopback_test()
-# ram_test()
-# flash_test()
+def usage():
+    print "Usage: %s <options>" % sys.argv[0]
+    print "  NaiveBootloader host program."
+    print "  Options are:"
+    print """
+    -h --help          Display this information
+    -s <device>
+    --serial=<device>  Specify serial port
+    -b <baud>
+    --baud=<baud>      Specify serial baudrate
+    -t <test>
+    --test=<test>      Run a test
+        uart           UART loopback test
+        ram            RAM read/write test
+        flash          Flash access test
+    -l <elf_file>      Load ELF to RAM and run
+    --bin <address>    Load binary file, specify load address
+    -p <bin_file>      Program file to Flash
+    --term             Start a terminal after loading
+"""
 
-with open(sys.argv[1], 'rb') as f:
-    # load_and_run(f, 0, 0)
-    load_elf_and_run(f)
+if __name__ == "__main__":
+    # global SERIAL_DEVICE, SERIAL_DELAY
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:l:f", ["help", "serial=", "baud=", "bin=", "test=", "term"])
+    except getopt.GetoptError, e:
+        usage()
+        sys.exit(2)
+    baud = 115200
+    tests = None
+    prog_file = None
+    load_file = None
+    file_binary = False
+    binary_base = 0
+    term = False
+    for opt,arg in opts:
+        if opt in ('-h', '--help'):
+            usage()
+            sys.exit(0)
+        elif opt in ('-s', '--serial'):
+            SERIAL_DEVICE = arg
+        elif opt in ('-b', '--baud'):
+            baud = int(arg)
+        elif opt in ('-t', '--test'):
+            tests = arg
+        elif opt in ('--bin'):
+            file_binary = True
+            binary_base = int(arg) #TODO: hex
+        elif opt in ('-p'):
+            prog_file = opt
+        elif opt in ('-l'):
+            load_file = opt
+        elif opt in ('-f'):
+            SERIAL_DELAY=0
+        elif opt in ('--term'):
+            term = True
 
-    start_terminal()
+    global ser
+    ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
+
+    if tests:
+        if tests == 'uart':
+            uart_loopback_test()
+        elif tests == 'ram':
+            ram_test()
+        elif tests == 'flash':
+            flash_test()
+        else:
+            print "Unknown test: '%s'" % tests
+            sys.exit(1)
+        sys.exit(0)
+    if prog_file:
+        with open(prog_file, 'rb') as f:
+            if not file_binary:
+                load_elf_and_run(f)
+            else:
+                load_and_run(f, binary_base, binary_base)
+
+    if load_file:
+        with open(load_file, 'rb') as f:
+            write_flash(f)
+
+    if term:
+        start_terminal()
