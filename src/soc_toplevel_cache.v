@@ -35,7 +35,7 @@ module soc_toplevel_cache(/*autoport*/
 input wire rst_in_n;
 input wire clk_in;
 
-wire clk2x,clk,locked,rst_n;
+wire clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
 
 input wire clk_uart_in;
@@ -49,7 +49,6 @@ sys_pll pll1(
     .areset(!rst_in_n),
     .inclk0(clk_in),
     .c0(clk),
-    .c1(clk2x),
     .c2(clk_uart_pll),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
