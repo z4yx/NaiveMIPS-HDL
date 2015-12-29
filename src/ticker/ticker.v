@@ -1,4 +1,4 @@
-module ticker_top(
+module ticker(
 
   input wire            clk_bus,
   input wire            rst_n,
@@ -8,8 +8,7 @@ module ticker_top(
 
   //bus
   output wire[31:0]     bus_data_o,
-  output wire           bus_stall,
-  input wire[23:0]      bus_address,
+  input wire[7:0]      bus_address,
   input wire[31:0]      bus_data_i,
   input wire            bus_read,
   input wire            bus_write
@@ -21,7 +20,6 @@ reg[31:0] ticker_d1;
 reg[31:0] ticker_d2;
 
 
-assign bus_stall = 1'b0;
 
 assign bus_data_o = bus_read ? ticker_d2 : 32'd0;
 
