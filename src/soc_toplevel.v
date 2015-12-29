@@ -23,13 +23,13 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
-            debugger_uart_txd,
+            rs232_txd,
 //input
             rst_in_n,
             clk_in,
             clk_uart_in,
             rxd,
-            debugger_uart_rxd);
+            rs232_rxd);
 
 input wire rst_in_n;
 input wire clk_in;
@@ -90,8 +90,8 @@ output wire flash_we_n;
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
 
-input wire debugger_uart_rxd;
-output wire debugger_uart_txd;
+input wire rs232_rxd;
+output wire rs232_txd;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -151,6 +151,9 @@ wire [7:0]gpio_dbus_address;
 wire gpio_dbus_read;
 wire gpio_dbus_write;
 
+wire debugger_uart_rxd;
+wire debugger_uart_txd;
+
 wire using_base;
 //assign using_base = ram_dataenable[0];
 assign using_base = 1'b1;
@@ -165,6 +168,9 @@ assign ext_ram_ce_n = 1'b0;
 assign ext_ram_oe_n = ram_rd_n || !using_ext;
 assign ext_ram_we_n = ram_wr_n || !using_ext;
 assign ext_ram_addr = ram_address[21:2];
+
+assign debugger_uart_rxd = rs232_rxd;
+assign rs232_txd = debugger_uart_txd;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
