@@ -162,18 +162,44 @@ def write_flash(f):
     print "File size: %d" % size
     print "Flash blocks: %d" % blocks
 
+    # !!! clear lock bits !!!
+    write_ram(FLASH_BASE, "\x60\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+
     for i in xrange(0, blocks):
         write_ram(FLASH_BASE+i*4, "\x20\x00\x00\x00")
         write_ram(FLASH_BASE+i*4, "\xD0\x00\x00\x00")
         wait_flash()
     content = f.read()
+
+    write_uart('2')
+    x = ser.read(1)
+    if not x:
+        print "ack timed out"
+        raise IOError
+        return
+    assert x=='~'
+
+    assert size%2 == 0
+
+    write_uart(struct.pack('<I',FLASH_BASE))
+    time.sleep(0.01)
+    write_uart(struct.pack('<I',size/2))
+    time.sleep(0.01)
+
     for i in xrange(0, size, 2):
         # st = time.time()
-        write_ram(FLASH_BASE+i*2, "\x40\x00\x00\x00")
-        write_ram(FLASH_BASE+i*2, ''.join([content[i], content[i+1], '\x00', '\x00']) )
+        # write_ram(FLASH_BASE+i*2, "\x40\x00\x00\x00")
+        # write_ram(FLASH_BASE+i*2, ''.join([content[i], content[i+1], '\x00', '\x00']) )
+        write_uart([content[i], content[i+1], '\x00', '\x00'])
+        # while time.time()-st < 0.000175:
+        #     pass
         # print time.time()-st
+        if i % 1024 == 0:
+            print "%d KB written" % (i/1024)
         # wait_flash()
         # print time.time()-st
+    time.sleep(0.01)
     print "Done"
 
 def flash_test():
@@ -291,8 +317,11 @@ def usage():
 
 if __name__ == "__main__":
     # global SERIAL_DEVICE, SERIAL_DELAY
+    if len(sys.argv) <= 1:
+        usage()
+        sys.exit(2)
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:l:f", ["help", "serial=", "baud=", "bin=", "test=", "term"])
+        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:r:l:fg:", ["help", "serial=", "baud=", "bin=", "test=", "term"])
     except getopt.GetoptError, e:
         usage()
         sys.exit(2)
@@ -300,9 +329,12 @@ if __name__ == "__main__":
     tests = None
     prog_file = None
     load_file = None
+    read_file = None
     file_binary = False
     binary_base = 0
     term = False
+    go = False
+    go_addr = 0
     for opt,arg in opts:
         if opt in ('-h', '--help'):
             usage()
@@ -317,13 +349,18 @@ if __name__ == "__main__":
             file_binary = True
             binary_base = int(arg) #TODO: hex
         elif opt in ('-p'):
-            prog_file = opt
+            prog_file = arg
+        elif opt in ('-r'):
+            read_file = arg
         elif opt in ('-l'):
-            load_file = opt
+            load_file = arg
         elif opt in ('-f'):
             SERIAL_DELAY=0
         elif opt in ('--term'):
             term = True
+        elif opt in ('-g'):
+            go = True
+            go_addr = int(arg) #TODO: hex
 
     global ser
     ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
@@ -339,16 +376,24 @@ if __name__ == "__main__":
             print "Unknown test: '%s'" % tests
             sys.exit(1)
         sys.exit(0)
+    if read_file:
+        with open(read_file, 'wb') as f:
+            f.write(read_flash(0, 10*1024))
+        sys.exit(0)
     if prog_file:
         with open(prog_file, 'rb') as f:
+            write_flash(f)
+        sys.exit(0)
+    if load_file:
+        with open(load_file, 'rb') as f:
             if not file_binary:
                 load_elf_and_run(f)
             else:
                 load_and_run(f, binary_base, binary_base)
 
-    if load_file:
-        with open(load_file, 'rb') as f:
-            write_flash(f)
+
+    if go:
+        go_ram(go_addr)
 
     if term:
         start_terminal()
