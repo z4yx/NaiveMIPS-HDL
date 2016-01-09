@@ -1,12 +1,14 @@
-module gpu_top(
+`default_nettype none
+module gpu(
 
   input wire            clk_bus,
+  input wire            clk_pixel,
   input wire            rst_n,
 
   //bus
   //output
-  output reg[31:0]      bus_data_o,
-  output wire           bus_stall
+  output wire[31:0]      bus_data_o,
+  output wire           bus_stall,
   //input
   input wire[23:0]      bus_address,
   input wire[31:0]      bus_data_i,
@@ -14,11 +16,10 @@ module gpu_top(
   input wire            bus_write,
 
   //vga
-  output wire          odck,
-  output reg           de,
+  output wire           de,
   output reg           vsync,
   output reg           hsync,
-  output wire[11:0]    pxlData
+  output wire[8:0]     pxlData
 
 
 );
@@ -29,7 +30,7 @@ assign bus_stall = 1'b0;
 
 `define HOR_PXL      800
 `define VER_PXL      600
-`define TOL_PXL      HOR_PXL * VER_PXL
+`define TOL_PXL      `HOR_PXL * `VER_PXL
 `define HSYNC_POL    1 //positive
 `define VSYNC_POL    1 //positive
 `define HBACK_POCH   64
@@ -46,8 +47,9 @@ assign bus_stall = 1'b0;
 `define VPXL_BEGIN   `VSYNC_TIME + `VBACK_POCH
 
 
-assign odck = clk_bus;
 
+reg nowColor; 
+reg [31:0] nowWord;
 
 reg [31:0] x;
 reg [31:0] y;
@@ -59,51 +61,39 @@ reg  [31:0] pxlCnt;
 
 
 wire [31:0] wrdata;
-wire [31:0] wraddr;
+wire [13:0] wraddr;
 wire        wren;
 
 wire [31:0] rddata;
 wire        rden;
-wire [31:0] rdaddr;
+wire [13:0] rdaddr;
 
+GPUMemory mem(
+  .data_a(wrdata),
+  .address_a(wraddr),
+  .wren_a(wren),
+  .clock_a(clk_bus),
+  .aclr_a(~rst_n),
+  .q_a      (),
 
-
-
-
-Memory mem(
-  .data(wrdata),
-  .wraddress(wraddr),
-  .wren(wren),
-  .inclock(clk_bus),
-  .inclocken(1),
-  .inaclr(~rst_n),
-  
-  .rdaddress(rdaddr),
-  .rden(rden),
-  .q(rddata),
-  .outclock(clk_bus),
-  .outclock(1),
-  .outaclr(~rst_n),
-
+  .data_b   (),
+  .address_b(rdaddr),
+  .wren_b   (1'b0),
+  .clock_b(clk_pixel),
+  .aclr_b(~rst_n),
+  .q_b(rddata)
 );
 
 assign wrdata = bus_data_i;
-assign wraddr[23:0] = bus_address;
-assign wraddr[31:24] = 8'd0;
+assign wraddr = bus_address[17:4];
 assign wren = bus_write;
 
-assign pxlData = (de && nowColor) ? 12'hfff : 12'd0;
-assign rdaddr[26:0] = pxlCnt[31:5];
-assign rdaddr[31:27] = 5'd0;
-
-assign rden = pxlCnt[4:0] == 5'd30;
+assign pxlData = (de && nowColor) ? 9'h1ff : 9'd0;
+assign rdaddr[13:0] = pxlCnt[31:5];
 
 
-reg nowColor; 
-reg [31:0] nowWord;
 
-
-always @(posedge clk_bus or negedge rst_n) begin
+always @(posedge clk_pixel or negedge rst_n) begin
   if(!rst_n)begin
     nowWord <= 32'd0;
   end else begin
@@ -118,7 +108,7 @@ always @(posedge clk_bus or negedge rst_n) begin
 
 end
 
-always @(posedge clk_bus or negedge rst_n) begin
+always @(posedge clk_pixel or negedge rst_n) begin
 
   if(!rst_n)begin
     x      <= 0;
@@ -138,7 +128,7 @@ always @(posedge clk_bus or negedge rst_n) begin
 
 end
 
-always @(posedge clk_bus or negedge rst_n) begin
+always @(posedge clk_pixel or negedge rst_n) begin
 
   if(!rst_n)begin
     hsync  <= `HSYNC_POL;
@@ -151,7 +141,7 @@ always @(posedge clk_bus or negedge rst_n) begin
   end
 end
 
-always @(posedge clk_bus or negedge rst_n) begin
+always @(posedge clk_pixel or negedge rst_n) begin
 
   if(!rst_n)begin
     vsync  <= `VSYNC_POL;
@@ -164,27 +154,26 @@ always @(posedge clk_bus or negedge rst_n) begin
   end
 end
 
-assign graphX = x >= HPXL_BEIGN ? (x - HPXL_BEIGN < HOR_PXL ? x - HPXL_BEIGN : 0) : 0;
-assign graphY = y >= VPXL_BEGIN ? (y - VPXL_BEGIN < VER_PXL ? y - VPXL_BEGIN : 0) : 0;
+assign graphX = x >= `HPXL_BEIGN ? (x - `HPXL_BEIGN < `HOR_PXL ? x - `HPXL_BEIGN : 0) : 0;
+assign graphY = y >= `VPXL_BEGIN ? (y - `VPXL_BEGIN < `VER_PXL ? y - `VPXL_BEGIN : 0) : 0;
 
-assign de = x >= HPXL_BEIGN && x - HPXL_BEIGN < HOR_PXL && y >= VPXL_BEGIN && y - VPXL_BEGIN < VER_PXL
+assign de = x >= `HPXL_BEIGN && x - `HPXL_BEIGN < `HOR_PXL && y >= `VPXL_BEGIN && y - `VPXL_BEGIN < `VER_PXL;
 
 
-always @(posedge clk_bus or negedge rst_n) begin
+always @(posedge clk_pixel or negedge rst_n) begin
 
   if(!rst_n)begin
     pxlCnt <= 0;
   end else begin
     if(de) begin
-      if(pxlCnt == TOL_PXL - 1) begin
+      if(pxlCnt == `TOL_PXL - 1) begin
         pxlCnt <= 0;
       end else begin 
         pxlCnt <= pxlCnt + 1;
       end
     end
   end
-
-endmodule
+end
 
 always @(*) begin
 
@@ -256,5 +245,6 @@ always @(*) begin
   
 end
 
+endmodule
 
 

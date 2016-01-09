@@ -8,6 +8,20 @@ NET "rxd" LOC = P26;
 NET "rs232_txd" LOC = P24;
 NET "rs232_rxd" LOC = R26;
 
+#VGA
+NET "vga_pixel[8]" LOC = F24;
+NET "vga_pixel[7]" LOC = G24;
+NET "vga_pixel[6]" LOC = H24;
+NET "vga_pixel[5]" LOC = E26;
+NET "vga_pixel[4]" LOC = E25;
+NET "vga_pixel[3]" LOC = E24;
+NET "vga_pixel[2]" LOC = N24;
+NET "vga_pixel[1]" LOC = N25;
+NET "vga_pixel[0]" LOC = M24;
+
+NET "vga_hsync" LOC = L23;
+NET "vga_vsync" LOC = J23;
+
 #LEDS
 NET "gpio0[0]" LOC = N26;
 NET "gpio0[1]" LOC = M26;

@@ -24,6 +24,9 @@ module soc_toplevel(/*autoport*/
             flash_byte_n,
             flash_we_n,
             rs232_txd,
+            vga_pixel,
+            vga_hsync,
+            vga_vsync,
 //input
             rst_in_n,
             clk_in,
@@ -95,6 +98,10 @@ inout wire[31:0] gpio1;
 input wire rs232_rxd;
 output wire rs232_txd;
 
+output wire[8:0] vga_pixel;
+output wire vga_hsync;
+output wire vga_vsync;
+
 wire[4:0] irq_line;
 wire uart_irq;
 
@@ -152,6 +159,12 @@ wire [31:0]gpio_dbus_data_i;
 wire [7:0]gpio_dbus_address;
 wire gpio_dbus_read;
 wire gpio_dbus_write;
+
+wire [31:0]gpu_dbus_data_o;
+wire [31:0]gpu_dbus_data_i;
+wire [7:0]gpu_dbus_address;
+wire gpu_dbus_read;
+wire gpu_dbus_write;
 
 wire [31:0]ticker_dbus_data_o;
 wire [31:0]ticker_dbus_data_i;
@@ -271,6 +284,10 @@ dbus dbus0(/*autoinst*/
          .ticker_data_i(ticker_dbus_data_i),
          .ticker_rd(ticker_dbus_read),
          .ticker_wr(ticker_dbus_write),
+         .gpu_address(gpu_dbus_address),
+         .gpu_data_i(gpu_dbus_data_i),
+         .gpu_rd(gpu_dbus_read),
+         .gpu_wr(gpu_dbus_write),
          .ram_address(dbus_ram_address[23:0]),
          .ram_data_i(dbus_ram_wrdata[31:0]),
          .ram_data_enable(dbus_ram_byteenable[3:0]),
@@ -290,6 +307,7 @@ dbus dbus0(/*autoinst*/
          .uart_data_o(uart_data_o[31:0]),
          .gpio_data_o(gpio_dbus_data_o),
          .ticker_data_o(ticker_dbus_data_o),
+         .gpu_data_o(gpu_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
          .ram_stall(dbus_ram_stall),
          .flash_stall (flash_dbus_stall),
@@ -347,6 +365,21 @@ ticker ticker_inst(
         .bus_data_i(ticker_dbus_data_i[31:0]),
         .bus_read(ticker_dbus_read),
         .bus_write(ticker_dbus_write));
+
+gpu gpu_inst(
+        .clk_bus  (clk),
+        .clk_pixel(clk_in), //50 MHz
+        .rst_n    (rst_n),
+        .bus_read (gpu_dbus_read),
+        .bus_write(gpu_dbus_write),
+        .bus_data_o(gpu_dbus_data_o),
+        .bus_address(gpu_dbus_address),
+        .bus_data_i(gpu_dbus_data_i),
+        .de       (),
+        .vsync    (vga_vsync),
+        .hsync    (vga_hsync),
+        .pxlData  (vga_pixel)
+);
 
 assign irq_line = {2'b0,uart_irq,2'b0};
 
