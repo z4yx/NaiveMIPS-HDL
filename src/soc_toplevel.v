@@ -162,7 +162,7 @@ wire gpio_dbus_write;
 
 wire [31:0]gpu_dbus_data_o;
 wire [31:0]gpu_dbus_data_i;
-wire [7:0]gpu_dbus_address;
+wire [23:0]gpu_dbus_address;
 wire gpu_dbus_read;
 wire gpu_dbus_write;
 
