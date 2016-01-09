@@ -166,9 +166,9 @@ def write_flash(f):
     write_ram(FLASH_BASE, "\x60\x00\x00\x00")
     write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
 
-    for i in xrange(0, blocks):
-        write_ram(FLASH_BASE+i*4, "\x20\x00\x00\x00")
-        write_ram(FLASH_BASE+i*4, "\xD0\x00\x00\x00")
+    for i in tqdm(range(0, blocks), desc='Erasing:', unit='Blocks'):
+        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\x20\x00\x00\x00")
+        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\xD0\x00\x00\x00")
         wait_flash()
     content = f.read()
 
