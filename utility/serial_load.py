@@ -219,13 +219,9 @@ def write_flash(f):
 
     for i in tqdm(xrange(0, size, 2), desc='Programming:', unit='B', unit_scale=True):
         # st = time.time()
-        # write_ram(FLASH_BASE+i*2, "\x40\x00\x00\x00")
-        # write_ram(FLASH_BASE+i*2, ''.join([content[i], content[i+1], '\x00', '\x00']) )
         write_uart([content[i], content[i+1], '\x00', '\x00'])
         # while time.time()-st < 0.000175:
         #     pass
-        # print time.time()-st
-        # wait_flash()
         # print time.time()-st
     time.sleep(0.01)
     print "Done"
@@ -317,6 +313,7 @@ def start_terminal():
                     write_uart(recv)
                 else:
                     sys.stdout.write(recv)
+                    sys.stdout.flush()
     except Exception, e:
         raise e
     finally:
