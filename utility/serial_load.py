@@ -12,12 +12,28 @@ import array
 import getopt
 from elftools.elf.elffile import ELFFile
 from elftools.elf.descriptions import describe_p_type
+from tqdm import tqdm, trange
 
 SERIAL_DELAY = 0.0001
 SERIAL_DEVICE = ""
 FLASH_BASE = 0xbe000000
 FLASH_BLKSIZE = 128*1024
+FLASH_SIZE = 64*FLASH_BLKSIZE
 
+class ProgressPH(object):
+    class fake_tqdm():
+        def __init__(self, *args):
+            pass
+        def update(self, n):
+            pass
+        def close(self):
+            pass
+    def __init__(self):
+        pass
+    def __exit__(self, *args, **kwds):
+        pass
+    def __enter__(self, *args, **kwds):
+        return type(self).fake_tqdm()
 
 def write_uart(buf):
     for b in buf:
@@ -26,7 +42,7 @@ def write_uart(buf):
         if SERIAL_DELAY>0:
             time.sleep(SERIAL_DELAY)
 
-def write_ram(start, content):
+def write_ram(start, content, progress=False):
     time.sleep(0.01)
     write_uart('0')
     x = ser.read(1)
@@ -43,7 +59,7 @@ def write_ram(start, content):
     time.sleep(0.01)
 
     cnt=0
-    for b in content:
+    for b in (tqdm(content, desc="Writing", unit='B', unit_scale=True) if progress else content):
         write_uart(b)
         cnt+=1
 
@@ -51,9 +67,10 @@ def write_ram(start, content):
         write_uart('\x00')
         cnt+=1
 
-    print "%d bytes written"%cnt
+    if progress:
+        print "%d bytes written"%cnt
 
-def read_ram(start, length):
+def read_ram(start, length, progress=False):
     time.sleep(0.01)
     write_uart('1')
     x = ser.read(1)
@@ -69,12 +86,21 @@ def read_ram(start, length):
     time.sleep(0.01)
     write_uart(struct.pack('<I',length/4))
 
-    buf = ser.read(length)
+    buf = ''
+    with (tqdm(total=length, desc="Reading", unit='B', unit_scale=True) if progress else ProgressPH()) as bar:
+        BLOCK = 256
+        while length > 0:
+            s = ser.read(BLOCK if BLOCK<=length else length)
+            bar.update(len(s))
+            length -= len(s)
+            buf += s
+
     if len(buf) < length:
         print "read data timed out"
         raise IOError
         return
-    print "%d bytes read"%len(buf)
+    if progress:
+        print "%d bytes read"%len(buf)
     return buf
 
 def go_ram(start):
@@ -119,9 +145,9 @@ def ram_test():
         size = 64*1024
         data = ''.join(chr(random.randint(0,255)) for _ in range(size))
 
-        write_ram(offset, data)
+        write_ram(offset, data, True)
         # raw_input("Press Enter to continue...")
-        recv = read_ram(offset, size)
+        recv = read_ram(offset, size, True)
 
 
         if data != recv:
@@ -140,21 +166,23 @@ def read_flash(offset, size):
     # time.sleep(0.5)
 
     write_ram(FLASH_BASE, "\xff\x00\x00\x00")
-    orig = read_ram(FLASH_BASE+offset*2, size*2)
+    orig = read_ram(FLASH_BASE+offset*2, size*2, True)
     result = []
     for i in xrange(0, len(orig), 4):  #only lower 16-bits of 32-bits data are valid
         result.append(orig[i])
         result.append(orig[i+1])
+    if size%2:
+        result.pop()
     return ''.join(result)
 
 def wait_flash():
     while True:
         write_ram(FLASH_BASE, "\x70\x00\x00\x00")
         buf = read_ram(FLASH_BASE, 4)
-        print "Status: %s" % binascii.hexlify(buf[0])
+        # print "Status: %s" % binascii.hexlify(buf[0])
         if (ord(buf[0]) & 0x80)!=0:
             break
-        print "Waiting..."
+        # print "Waiting..."
 
 def write_flash(f):
     size = os.fstat(f.fileno()).st_size
@@ -180,14 +208,16 @@ def write_flash(f):
         return
     assert x=='~'
 
-    assert size%2 == 0
+    if size%2 != 0:
+        content += '\x00'
+        size += 1
 
     write_uart(struct.pack('<I',FLASH_BASE))
     time.sleep(0.01)
     write_uart(struct.pack('<I',size/2))
     time.sleep(0.01)
 
-    for i in xrange(0, size, 2):
+    for i in tqdm(xrange(0, size, 2), desc='Programming:', unit='B', unit_scale=True):
         # st = time.time()
         # write_ram(FLASH_BASE+i*2, "\x40\x00\x00\x00")
         # write_ram(FLASH_BASE+i*2, ''.join([content[i], content[i+1], '\x00', '\x00']) )
@@ -195,8 +225,6 @@ def write_flash(f):
         # while time.time()-st < 0.000175:
         #     pass
         # print time.time()-st
-        if i % 1024 == 0:
-            print "%d KB written" % (i/1024)
         # wait_flash()
         # print time.time()-st
     time.sleep(0.01)
@@ -249,7 +277,7 @@ def load_and_run(f, addr, entry):
     print "Load address: 0x%x" % addr
     print "Entry point: 0x%x" % entry
 
-    write_ram(addr, f.read())
+    write_ram(addr, f.read(), True)
     go_ram(entry)
 
 
@@ -264,7 +292,7 @@ def load_elf_and_run(f):
         if segment['p_filesz']==0 or segment['p_vaddr']==0:
             print "Skipped"
             continue
-        write_ram(segment['p_vaddr'], segment.data())
+        write_ram(segment['p_vaddr'], segment.data(), True)
 
     print "Entry: 0x%x" % elffile['e_entry']
     go_ram(elffile['e_entry'])
@@ -294,6 +322,14 @@ def start_terminal():
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
+def string2number( aString ):
+    if aString.startswith("0x") or aString.startswith("0X"):
+        return int(aString,16)
+    elif aString.startswith("0"):
+        return int(aString,8)
+    else:
+        return int(aString)
+
 def usage():
     print "Usage: %s <options>" % sys.argv[0]
     print "  NaiveBootloader host program."
@@ -312,6 +348,8 @@ def usage():
     -l <elf_file>      Load ELF to RAM and run
     --bin <address>    Load binary file, specify load address
     -p <bin_file>      Program file to Flash
+    -r <bin_file>      Read from Flash to file
+    --size <size>      Read only <size> bytes
     --term             Start a terminal after loading
 """
 
@@ -321,7 +359,7 @@ if __name__ == "__main__":
         usage()
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:r:l:fg:", ["help", "serial=", "baud=", "bin=", "test=", "term"])
+        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:r:l:fg:", ["help", "serial=", "baud=", "bin=", "test=", "term", "size="])
     except getopt.GetoptError, e:
         usage()
         sys.exit(2)
@@ -330,6 +368,7 @@ if __name__ == "__main__":
     prog_file = None
     load_file = None
     read_file = None
+    read_size = FLASH_SIZE
     file_binary = False
     binary_base = 0
     term = False
@@ -347,11 +386,13 @@ if __name__ == "__main__":
             tests = arg
         elif opt in ('--bin'):
             file_binary = True
-            binary_base = int(arg) #TODO: hex
+            binary_base = string2number(arg)
         elif opt in ('-p'):
             prog_file = arg
         elif opt in ('-r'):
             read_file = arg
+        elif opt in ('--size'):
+            read_size = string2number(arg)
         elif opt in ('-l'):
             load_file = arg
         elif opt in ('-f'):
@@ -360,7 +401,11 @@ if __name__ == "__main__":
             term = True
         elif opt in ('-g'):
             go = True
-            go_addr = int(arg) #TODO: hex
+            go_addr = string2number(arg)
+
+    if not SERIAL_DEVICE:
+        print 'Please specify serial port!'
+        sys.exit(1)
 
     global ser
     ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
@@ -378,7 +423,7 @@ if __name__ == "__main__":
         sys.exit(0)
     if read_file:
         with open(read_file, 'wb') as f:
-            f.write(read_flash(0, 10*1024))
+            f.write(read_flash(0, read_size))
         sys.exit(0)
     if prog_file:
         with open(prog_file, 'rb') as f:
