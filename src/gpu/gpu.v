@@ -30,7 +30,7 @@ assign bus_stall = 1'b0;
 
 `define HOR_PXL      800
 `define VER_PXL      600
-`define TOL_PXL      `HOR_PXL * `VER_PXL
+`define TOL_PXL      (`HOR_PXL * `VER_PXL)
 `define HSYNC_POL    1 //positive
 `define VSYNC_POL    1 //positive
 `define HBACK_POCH   64
@@ -40,11 +40,11 @@ assign bus_stall = 1'b0;
 `define VFRNT_POCH   37
 `define VSYNC_TIME   6
 
-`define HTOL_TIME    `HBACK_POCH + `HFRNT_POCH + `HSYNC_TIME + `HOR_PXL
-`define VTOL_TIME    `VBACK_POCH + `VFRNT_POCH + `VSYNC_TIME + `VER_PXL
+`define HTOL_TIME    (`HBACK_POCH + `HFRNT_POCH + `HSYNC_TIME + `HOR_PXL)
+`define VTOL_TIME    (`VBACK_POCH + `VFRNT_POCH + `VSYNC_TIME + `VER_PXL)
 
-`define HPXL_BEIGN   `HSYNC_TIME + `HBACK_POCH 
-`define VPXL_BEGIN   `VSYNC_TIME + `VBACK_POCH
+`define HPXL_BEIGN   (`HSYNC_TIME + `HBACK_POCH )
+`define VPXL_BEGIN   (`VSYNC_TIME + `VBACK_POCH)
 
 
 
@@ -85,11 +85,11 @@ GPUMemory mem(
 );
 
 assign wrdata = bus_data_i;
-assign wraddr = bus_address[17:4];
+assign wraddr = bus_address[15:2];
 assign wren = bus_write;
 
 assign pxlData = (de && nowColor) ? 9'h1ff : 9'd0;
-assign rdaddr[13:0] = pxlCnt[31:5];
+assign rdaddr[13:0] = pxlCnt[31:5]+1 == (`TOL_PXL/32) ? 0 : pxlCnt[31:5]+1;
 
 
 
