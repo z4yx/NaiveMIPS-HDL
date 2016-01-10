@@ -14,7 +14,7 @@ from elftools.elf.elffile import ELFFile
 from elftools.elf.descriptions import describe_p_type
 from tqdm import tqdm, trange
 
-SERIAL_DELAY = 0.0001
+SERIAL_DELAY = 0.00001
 SERIAL_DEVICE = ""
 FLASH_BASE = 0xbe000000
 FLASH_BLKSIZE = 128*1024
@@ -246,12 +246,24 @@ def flash_test():
     print "data: %s" % binascii.hexlify(buf)
 
     # !!! clear lock bits !!!
-    # write_ram(FLASH_BASE, "\x60\x00\x00\x00")
-    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x60\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
 
     # !!! erase test !!!
-    # write_ram(FLASH_BASE, "\x20\x00\x00\x00")
-    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x20\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+
+    while True:
+        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
+        buf = read_ram(FLASH_BASE, 4)
+        print "Status: %s" % binascii.hexlify(buf[0])
+        if (ord(buf[0]) & 0x80)!=0:
+            break
+        print "Waiting..."
+
+    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    buf = read_ram(FLASH_BASE, 4)
+    print "data: %s" % binascii.hexlify(buf)
 
     # !!! program test !!!
     write_ram(FLASH_BASE, "\x40\x00\x00\x00")
