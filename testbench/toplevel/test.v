@@ -5,13 +5,14 @@ reg rst_in_n;
 reg clk_in;
 reg clk_uart_in;
 
-wire[31:0] ram_data;
 
+wire[31:0] base_ram_data;
 wire[19:0] base_ram_address;
 wire base_ram_we_n;
 wire base_ram_oe_n;
 wire base_ram_ce_n;
 
+wire[31:0] ext_ram_data;
 wire[19:0] ext_ram_address;
 wire ext_ram_we_n;
 wire ext_ram_oe_n;
@@ -35,11 +36,12 @@ tri[31:0] gpio1;
 tri[31:0] ext_data;
 
 soc_toplevel soc(/*autoinst*/
-           .ram_data(ram_data),
+           .base_ram_data(base_ram_data),
            .base_ram_addr(base_ram_address),
            .base_ram_ce_n(base_ram_ce_n),
            .base_ram_oe_n(base_ram_oe_n),
            .base_ram_we_n(base_ram_we_n),
+           .ext_ram_data(ext_ram_data),
            .ext_ram_addr(ext_ram_address),
            .ext_ram_ce_n(ext_ram_ce_n),
            .ext_ram_oe_n(ext_ram_oe_n),
@@ -60,7 +62,7 @@ soc_toplevel soc(/*autoinst*/
            .gpio0(gpio0),
            .gpio1(gpio1));
 AS7C34098A base1(/*autoinst*/
-            .DataIO(ram_data[15:0]),
+            .DataIO(base_ram_data[15:0]),
             .Address(base_ram_address[17:0]),
             .OE_n(base_ram_oe_n),
             .CE_n(base_ram_ce_n),
@@ -68,7 +70,7 @@ AS7C34098A base1(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A base2(/*autoinst*/
-            .DataIO(ram_data[31:16]),
+            .DataIO(base_ram_data[31:16]),
             .Address(base_ram_address[17:0]),
             .OE_n(base_ram_oe_n),
             .CE_n(base_ram_ce_n),
@@ -76,7 +78,7 @@ AS7C34098A base2(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A ext1(/*autoinst*/
-            .DataIO(ext_data[15:0]),
+            .DataIO(ext_ram_data[15:0]),
             .Address(ext_ram_address[17:0]),
             .OE_n(ext_ram_oe_n),
             .CE_n(ext_ram_ce_n),
@@ -84,7 +86,7 @@ AS7C34098A ext1(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A ext2(/*autoinst*/
-            .DataIO(ext_data[31:16]),
+            .DataIO(ext_ram_data[31:16]),
             .Address(ext_ram_address[17:0]),
             .OE_n(ext_ram_oe_n),
             .CE_n(ext_ram_ce_n),
