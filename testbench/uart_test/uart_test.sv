@@ -109,7 +109,7 @@ initial begin
         end while(bus_data_o[1]==1'b0);
         
         @(negedge clk_bus);
-        bus_address = 32'h4; //REG_UART_RECV
+        bus_address = 32'h8; //REG_UART_RECV
         bus_read = 1'b1;
         bus_write = 1'b0;
         bus_data_i = 32'b0;
