@@ -267,14 +267,12 @@ def flash_test():
     buf = read_ram(FLASH_BASE, 4)
     print "data: %s" % binascii.hexlify(buf)
 
-def load_and_run(f, addr, entry):
+def load_binary_file(f, addr):
     size = os.fstat(f.fileno()).st_size
     print "File size: %d" % size
     print "Load address: 0x%x" % addr
-    print "Entry point: 0x%x" % entry
 
     write_ram(addr, f.read(), True)
-    go_ram(entry)
 
 
 def load_elf_and_run(f):
@@ -334,16 +332,18 @@ def usage():
     print """
     -h --help          Display this information
     -s <device>
-    --serial=<device>  Specify serial port
+    --serial <device>  Specify serial port
     -b <baud>
-    --baud=<baud>      Specify serial baudrate
+    --baud <baud>      Specify serial baudrate
     -t <test>
-    --test=<test>      Run a test
+    --test <test>      Run a test
         uart           UART loopback test
         ram            RAM read/write test
         flash          Flash access test
     -l <elf_file>      Load ELF to RAM and run
     --bin <address>    Load binary file, specify load address
+    -g <address>
+    --run <address>    Jump to <address> and run
     -p <bin_file>      Program file to Flash
     -r <bin_file>      Read from Flash to file
     --size <size>      Read only <size> bytes
@@ -356,7 +356,7 @@ if __name__ == "__main__":
         usage()
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:r:l:fg:", ["help", "serial=", "baud=", "bin=", "test=", "term", "size="])
+        opts, args = getopt.getopt(sys.argv[1:], "hs:b:t:p:r:l:fg:", ["help", "serial=", "baud=", "bin=", "test=", "term", "size=", "run="])
     except getopt.GetoptError, e:
         usage()
         sys.exit(2)
@@ -396,7 +396,7 @@ if __name__ == "__main__":
             SERIAL_DELAY=0
         elif opt in ('--term'):
             term = True
-        elif opt in ('-g'):
+        elif opt in ('-g','--run'):
             go = True
             go_addr = string2number(arg)
 
@@ -431,7 +431,7 @@ if __name__ == "__main__":
             if not file_binary:
                 load_elf_and_run(f)
             else:
-                load_and_run(f, binary_base, binary_base)
+                load_binary_file(f, binary_base)
 
 
     if go:
