@@ -2,7 +2,8 @@
 `define EXT_UART_CLOCK
 module soc_toplevel(/*autoport*/
 //inout
-            ram_data,
+            base_ram_data,
+            ext_ram_data,
             flash_data,
             gpio0,
             gpio1,
