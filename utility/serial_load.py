@@ -145,6 +145,8 @@ def ram_test():
         size = 64*1024
         data = ''.join(chr(random.randint(0,255)) for _ in range(size))
 
+        print "offset=0x%x" % offset
+
         write_ram(offset, data, True)
         # raw_input("Press Enter to continue...")
         recv = read_ram(offset, size, True)
