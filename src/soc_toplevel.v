@@ -61,15 +61,14 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .clk(clk),
          .rst_in_n(locked));
 
-inout wire[31:0] ram_data;
 
-// inout wire[31:0] base_ram_data;
+inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
 output wire base_ram_ce_n;
 output wire base_ram_oe_n;
 output wire base_ram_we_n;
 
-// inout wire[31:0] ext_ram_data;
+inout wire[31:0] ext_ram_data;
 output wire[19:0] ext_ram_addr;
 output wire ext_ram_ce_n;
 output wire ext_ram_oe_n;
@@ -79,6 +78,7 @@ wire[29:0] ram_address;
 wire ram_wr_n;
 wire ram_rd_n;
 wire[3:0] ram_dataenable;
+wire[31:0] ram_data_i, ram_data_o;
 
 output wire txd;
 input wire rxd;
@@ -175,20 +175,19 @@ wire ticker_dbus_write;
 wire debugger_uart_rxd;
 wire debugger_uart_txd;
 
-wire using_base;
-//assign using_base = ram_dataenable[0];
-assign using_base = 1'b1;
-assign base_ram_ce_n = 1'b0;
-assign base_ram_oe_n = ram_rd_n || !using_base;
-assign base_ram_we_n = ram_wr_n || !using_base;
+assign base_ram_ce_n = ram_address[22];
+assign base_ram_oe_n = ram_rd_n;
+assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
+assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : {32{1'hz}};
 
-wire using_ext;
-assign using_ext = 1'b1;//ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
-assign ext_ram_ce_n = 1'b0;
-assign ext_ram_oe_n = ram_rd_n || !using_ext;
-assign ext_ram_we_n = ram_wr_n || !using_ext;
+assign ext_ram_ce_n = ~ram_address[22];
+assign ext_ram_oe_n = ram_rd_n;
+assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
+assign ext_ram_data  = (~ext_ram_ce_n && ~ext_ram_we_n) ? ram_data_o : {32{1'hz}};
+
+assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
 
 assign debugger_uart_rxd = rs232_rxd;
 assign rs232_txd = debugger_uart_txd;
@@ -236,7 +235,8 @@ naive_mips cpu(/*autoinst*/
          .hardware_int_in(irq_line));
 
 two_port mainram(/*autoinst*/
-           .ram_data(ram_data[31:0]),
+           .ram_data_i(ram_data_i),
+           .ram_data_o(ram_data_o),
            .rddata1(ibus_ram_rddata),
            .rddata2(dbus_ram_rddata),
            .ram_address(ram_address),

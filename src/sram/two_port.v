@@ -1,11 +1,10 @@
 `default_nettype none
 module two_port(/*autoport*/
-//inout
-            ram_data,
 //output
             rddata1,
             rddata2,
             ram_address,
+            ram_data_o,
             ram_wr_n,
             ram_rd_n,
             dataenable,
@@ -21,7 +20,8 @@ module two_port(/*autoport*/
             wrdata2,
             dataenable2,
             rd2,
-            wr2);
+            wr2,
+            ram_data_i);
 
 input wire rst_n;
 input wire clk2x;
@@ -41,7 +41,8 @@ input wire rd2;
 input wire wr2;
 
 output reg[31:0] ram_address;
-inout wire[31:0] ram_data;
+input wire[31:0] ram_data_i;
+output wire[31:0] ram_data_o;
 output reg ram_wr_n;
 output reg ram_rd_n;
 output reg[3:0] dataenable;
@@ -49,8 +50,7 @@ output reg[3:0] dataenable;
 reg[3:0] state;
 reg[31:0] wrbuf;
 
-assign ram_data = !ram_wr_n ? wrbuf : {32{1'bz}};
-// assign rddata2 = ram_data;
+assign ram_data_o = wrbuf;
 
 always @(posedge clk2x or negedge rst_n) begin
     if (!rst_n) begin
@@ -72,7 +72,7 @@ always @(posedge clk2x or negedge rst_n) begin
         else if (state[1]) begin
             ram_address <= address2;
             wrbuf <= wrdata2;
-            rddata1 <= ram_data;
+            rddata1 <= ram_data_i;
             ram_wr_n <= ~wr2;
             ram_rd_n <= ~rd2;
             dataenable <= dataenable2;
@@ -81,7 +81,7 @@ always @(posedge clk2x or negedge rst_n) begin
             ram_wr_n <= 1'b1;
             ram_rd_n <= 1'b1;
             if (state[2]) begin
-                rddata2 <= ram_data;
+                rddata2 <= ram_data_i;
             end
         end
     end
