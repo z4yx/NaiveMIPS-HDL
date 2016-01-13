@@ -24,6 +24,8 @@ module gpu(
 
 );
 
+`define REG_PIX_OFFSET 24'h50000
+
 assign bus_data_o = 32'd0;
 assign bus_stall = 1'b0;
 
@@ -46,7 +48,9 @@ assign bus_stall = 1'b0;
 `define HPXL_BEIGN   (`HSYNC_TIME + `HBACK_POCH )
 `define VPXL_BEGIN   (`VSYNC_TIME + `VBACK_POCH)
 
+reg [13:0] pixelOffsetReg[0:1];
 
+reg [13:0] pixelOffset;
 
 reg nowColor; 
 reg [31:0] nowWord;
@@ -67,6 +71,8 @@ wire        wren;
 wire [31:0] rddata;
 wire        rden;
 wire [13:0] rdaddr;
+
+wire [26:0] offsetTemp;
 
 GPUMemory mem(
   .data_a(wrdata),
@@ -89,9 +95,30 @@ assign wraddr = bus_address[15:2];
 assign wren = bus_write;
 
 assign pxlData = (de && nowColor) ? 9'h1ff : 9'd0;
-assign rdaddr[13:0] = pxlCnt[31:5]+1 == (`TOL_PXL/32) ? 0 : pxlCnt[31:5]+1;
+assign offsetTemp = pxlCnt[31:5]+1+pixelOffset;
+assign rdaddr[13:0] = offsetTemp >= (2*`TOL_PXL/32) ? offsetTemp-(2*`TOL_PXL/32) : 
+                      (offsetTemp >= `TOL_PXL/32 ? offsetTemp-`TOL_PXL/32 : offsetTemp);
 
 
+always @(posedge clk_bus or negedge rst_n) begin
+  if(~rst_n) begin
+    pixelOffsetReg[0] <= 0;
+  end else if(bus_write) begin
+    if(bus_address == `REG_PIX_OFFSET) begin
+      pixelOffsetReg[0] <= (`TOL_PXL/32) - bus_data_i;
+    end
+  end
+end
+
+always @(posedge clk_pixel or negedge rst_n) begin
+  if(~rst_n) begin
+    pixelOffset <= 0;
+    pixelOffsetReg[1] <= 0;
+  end else begin
+    pixelOffset <= pixelOffsetReg[1];
+    pixelOffsetReg[1] <= pixelOffsetReg[0];
+  end
+end
 
 always @(posedge clk_pixel or negedge rst_n) begin
   if(!rst_n)begin

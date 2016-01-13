@@ -39,6 +39,12 @@ initial begin
     @(negedge clk_bus);
     @(negedge clk_bus);
     bus_write = 1;
+    bus_address = 24'h50000; //REG_PIX_OFFSET
+    bus_data_i = 800*2/32; //offset = 2 line
+    @(negedge clk_bus);
+    bus_address = 0;
+    bus_data_i = 32'haaaaaaaa;
+    @(negedge clk_bus);
     bus_address = (800*600/32-1)*4;
     bus_data_i = 32'h55555555;
     @(negedge clk_bus);
