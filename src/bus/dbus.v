@@ -15,6 +15,10 @@ module dbus(/*autoport*/
             ticker_data_i,
             ticker_rd,
             ticker_wr,
+            gpu_address,
+            gpu_data_i,
+            gpu_rd,
+            gpu_wr,
             ram_address,
             ram_data_i,
             ram_data_enable,
@@ -34,6 +38,7 @@ module dbus(/*autoport*/
             uart_data_o,
             gpio_data_o,
             ticker_data_o,
+            gpu_data_o,
             ram_data_o,
             ram_stall,
             flash_data_o,
@@ -64,6 +69,12 @@ output wire[31:0] ticker_data_i;
 input wire[31:0] ticker_data_o;
 output reg ticker_rd;
 output reg ticker_wr;
+
+output wire[23:0] gpu_address;
+output wire[31:0] gpu_data_i;
+input wire[31:0] gpu_data_o;
+output reg gpu_rd;
+output reg gpu_wr;
 
 output wire[23:0] ram_address;
 output wire[31:0] ram_data_i;
@@ -98,6 +109,9 @@ assign gpio_address = master_address[7:0];
 assign ticker_data_i = master_wrdata;
 assign ticker_address = master_address[7:0];
 
+assign gpu_data_i = master_wrdata;
+assign gpu_address = master_address[23:0];
+
 always @(*) begin
     ram_rd <= 1'b0;
     ram_wr <= 1'b0;
@@ -109,6 +123,8 @@ always @(*) begin
     gpio_wr <= 1'b0;
     ticker_rd <= 1'b0;
     ticker_wr <= 1'b0;
+    gpu_rd <= 1'b0;
+    gpu_wr <= 1'b0;
     master_rddata <= 32'h0;
     master_stall <= 1'b0;
     if(master_address[31:24] == 8'h00) begin
@@ -121,6 +137,10 @@ always @(*) begin
         flash_wr <= master_write;
         master_rddata <= flash_data_o;
         master_stall <= flash_stall;
+    end else if(master_address[31:24] == 8'h1b) begin
+        gpu_rd <= master_read;
+        gpu_wr <= master_write;
+        master_rddata <= gpu_data_o;
     end else if(master_address[31:4] == 28'h1fd003f) begin
         uart_rd <= master_read;
         uart_wr <= master_write;

@@ -64,7 +64,7 @@ input wire[4:0] exp_code;
 input wire[31:0] exp_bad_vaddr;
 
 input wire[4:0] debugger_rd_addr;
-input wire[31:0] debugger_data_o;
+output wire[31:0] debugger_data_o;
 
 reg[31:0] cp0_regs[0:31];
 
@@ -92,7 +92,7 @@ assign software_int_o = cp0_regs[`CP0_Cause][9:8];
 
 genvar read_i;
 generate
-for (read_i = 0; read_i < 2; read_i=read_i+1) begin
+for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
     
     always @(*) begin
         if (!rst_n) begin

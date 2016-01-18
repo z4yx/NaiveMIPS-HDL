@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 14.7
-# Date: Sat Jan 09 10:37:18 2016
+# Date: Sat Jan 09 13:43:00 2016
 #
 ##############################################################
 #
@@ -46,9 +46,9 @@ CSET axi_id_width=4
 CSET axi_slave_type=Memory_Slave
 CSET axi_type=AXI4_Full
 CSET byte_size=9
-CSET coe_file=E:\Projects\NaiveMIPS-HDL\xilinx\NaiveMIPS\bootrom.coe
-CSET collision_warnings=ALL
-CSET component_name=blk_mem_gen_v7_3
+CSET coe_file=no_coe_file_loaded
+CSET collision_warnings=WARNING_ONLY
+CSET component_name=gpu_mem_xilinx
 CSET disable_collision_warnings=false
 CSET disable_out_of_range_warnings=false
 CSET ecc=false
@@ -57,11 +57,11 @@ CSET enable_32bit_address=false
 CSET enable_a=Always_Enabled
 CSET enable_b=Always_Enabled
 CSET error_injection_type=Single_Bit_Error_Injection
-CSET fill_remaining_memory_locations=true
+CSET fill_remaining_memory_locations=false
 CSET interface_type=Native
-CSET load_init_file=true
+CSET load_init_file=false
 CSET mem_file=no_Mem_file_loaded
-CSET memory_type=Single_Port_ROM
+CSET memory_type=True_Dual_Port_RAM
 CSET operating_mode_a=WRITE_FIRST
 CSET operating_mode_b=WRITE_FIRST
 CSET output_reset_value_a=0
@@ -69,10 +69,10 @@ CSET output_reset_value_b=0
 CSET pipeline_stages=0
 CSET port_a_clock=100
 CSET port_a_enable_rate=100
-CSET port_a_write_rate=0
-CSET port_b_clock=0
-CSET port_b_enable_rate=0
-CSET port_b_write_rate=0
+CSET port_a_write_rate=50
+CSET port_b_clock=100
+CSET port_b_enable_rate=100
+CSET port_b_write_rate=50
 CSET primitive=8kx2
 CSET read_width_a=32
 CSET read_width_b=32
@@ -85,9 +85,9 @@ CSET register_portb_output_of_softecc=false
 CSET remaining_memory_locations=0
 CSET reset_memory_latch_a=false
 CSET reset_memory_latch_b=false
-CSET reset_priority_a=CE
-CSET reset_priority_b=CE
-CSET reset_type=SYNC
+CSET reset_priority_a=SR
+CSET reset_priority_b=SR
+CSET reset_type=ASYNC
 CSET softecc=false
 CSET use_axi_id=false
 CSET use_bram_block=Stand_Alone
@@ -95,9 +95,9 @@ CSET use_byte_write_enable=false
 CSET use_error_injection_pins=false
 CSET use_regcea_pin=false
 CSET use_regceb_pin=false
-CSET use_rsta_pin=false
-CSET use_rstb_pin=false
-CSET write_depth_a=2048
+CSET use_rsta_pin=true
+CSET use_rstb_pin=true
+CSET write_depth_a=15000
 CSET write_width_a=32
 CSET write_width_b=32
 # END Parameters
@@ -105,4 +105,4 @@ CSET write_width_b=32
 MISC pkg_timestamp=2012-11-19T16:22:25Z
 # END Extra information
 GENERATE
-# CRC: 9c373e5d
+# CRC: d1c55a5e

@@ -64,9 +64,9 @@ module clk_wiz_v3_6_exdes
   input         CLK_IN1,
   // Reset that only drives logic in example design
   input         COUNTER_RESET,
-  output [2:1]  CLK_OUT,
+  output [4:1]  CLK_OUT,
   // High bits of counters driven by clocks
-  output [2:1]  COUNT,
+  output [4:1]  COUNT,
   // Status and control signals
   input         RESET,
   output        LOCKED
@@ -76,7 +76,8 @@ module clk_wiz_v3_6_exdes
   //-------------------------------
   // Counter width
   localparam    C_W       = 16;
-  localparam    NUM_C     = 2;
+  // Number of counters
+  localparam    NUM_C     = 4;
   genvar        count_gen;
   // When the clock goes out of lock, reset the counters
   wire          reset_int = !LOCKED || RESET || COUNTER_RESET;
@@ -93,14 +94,22 @@ module clk_wiz_v3_6_exdes
   wire [NUM_C:1] clk;
   reg [C_W-1:0]  counter [NUM_C:1];
 
+  // Insert BUFGs on all input clocks that don't already have them
+  //--------------------------------------------------------------
+  BUFG clkin1_buf
+   (.O (clk_in1_buf),
+    .I (CLK_IN1));
+
   // Instantiation of the clocking network
   //--------------------------------------
   clk_wiz_v3_6 clknetwork
    (// Clock in ports
-    .CLK_IN1            (CLK_IN1),
+    .CLK_IN1            (clk_in1_buf),
     // Clock out ports
     .CLK_OUT1           (clk_int[1]),
     .CLK_OUT2           (clk_int[2]),
+    .CLK_OUT3           (clk_int[3]),
+    .CLK_OUT4           (clk_int[4]),
     // Status and control signals
     .RESET              (RESET),
     .LOCKED             (LOCKED));
@@ -128,6 +137,8 @@ endgenerate
   //-----------------------------------------
   assign clk[1] = clk_int[1];
   assign clk[2] = clk_int[2];
+  assign clk[3] = clk_int[3];
+  assign clk[4] = clk_int[4];
 
 
   // Reset synchronizer
