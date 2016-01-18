@@ -143,6 +143,18 @@ set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
 set_global_assignment -name ACTIVE_SERIAL_CLOCK FREQ_40MHZ
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/div_uu.v
+set_global_assignment -name VERILOG_FILE ../src/flag_sync.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlbConverter.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlb.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/mmu_top.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/mem_map.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/debugger/dbg_uart.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/debugger/dbg_ctl.v
+set_global_assignment -name VERILOG_FILE ../src/ticker/ticker.v
+set_global_assignment -name VERILOG_FILE ../src/sram/bytes_conv.v
+set_global_assignment -name VERILOG_FILE ../src/gpu/gpu.v
+set_global_assignment -name QIP_FILE GPUMemory.qip
 set_global_assignment -name VERILOG_FILE ../src/gpio/gpio_top.v
 set_global_assignment -name VERILOG_FILE ../src/cpu/stage_mm/exception.v
 set_global_assignment -name VERILOG_FILE ../src/cpu/cp0.v
