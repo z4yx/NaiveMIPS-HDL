@@ -89,7 +89,7 @@ reg [4:0]ex_reg_t;
 reg [31:0]ex_reg_s_value;
 reg [31:0]ex_reg_t_value;
 wire [1:0]ex_mem_access_op;
-wire [1:0]ex_mem_access_sz;
+wire [2:0]ex_mem_access_sz;
 wire [31:0]ex_data_o;
 wire [31:0]ex_mem_addr;
 wire [4:0]ex_reg_addr;
@@ -119,7 +119,7 @@ reg mm_syscall;
 reg mm_eret;
 reg mm_invalid_inst;
 wire [31:0]mm_mem_data_o;
-reg [1:0]mm_mem_access_sz;
+reg [2:0]mm_mem_access_sz;
 reg [4:0]mm_reg_addr_i;
 wire [31:0]mm_mem_data_i;
 wire [31:0]mm_mem_address;
@@ -148,7 +148,6 @@ reg mm_is_priv_inst;
 wire wb_reg_we;
 reg [31:0]wb_data_i;
 reg [1:0]wb_mem_access_op;
-reg [1:0]wb_mem_access_sz;
 reg [4:0]wb_reg_addr_i;
 reg [2:0]wb_cp0_wrsel;
 reg [63:0]wb_reg_hilo;
@@ -626,7 +625,6 @@ assign cp0_exp_bd = mm_in_delayslot;
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
-        wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
         wb_reg_hilo <= 64'b0;
@@ -638,7 +636,6 @@ always @(posedge clk or negedge rst_n) begin
     end
     else if(en_mmwb && !flush) begin
         wb_mem_access_op <= mm_mem_access_op;
-        wb_mem_access_sz <= mm_mem_access_sz;
         wb_data_i <= mm_data_o;
         wb_reg_addr_i <= mm_reg_addr_i;
         wb_reg_hilo <= mm_reg_hilo;
@@ -649,7 +646,6 @@ always @(posedge clk or negedge rst_n) begin
         wb_cp0_wrsel <= mm_cp0_wrsel;
     end else begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
-        wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
         wb_reg_hilo <= 64'b0;
@@ -664,7 +660,6 @@ end
 wb stage_wb(/*autoinst*/
             .reg_we(wb_reg_we),
             .mem_access_op(wb_mem_access_op),
-            .mem_access_sz(wb_mem_access_sz),
             .data_i(wb_data_i),
             .reg_addr_i(wb_reg_addr_i));
 

@@ -4,12 +4,10 @@ module wb(/*autoport*/
       reg_we,
 //input
       mem_access_op,
-      mem_access_sz,
       data_i,
       reg_addr_i);
 
 input wire[1:0] mem_access_op;
-input wire[1:0] mem_access_sz;
 input wire[31:0] data_i;
 input wire[4:0] reg_addr_i;
 

@@ -164,6 +164,7 @@ end
 initial begin
     unit_test("../testcase/inst_mem");
     unit_test("../testcase/mem_endian");
+    unit_test("../testcase/inst_unalign");
     unit_test("../testcase/inst_div");
     unit_test("../testcase/inst_alu");
     unit_test("../testcase/inst_move");

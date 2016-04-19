@@ -54,7 +54,7 @@ input wire[63:0] reg_hilo_value;
 input wire[31:0] reg_cp0_value;
 
 output reg[1:0] mem_access_op;
-output reg[1:0] mem_access_sz;
+output reg[2:0] mem_access_sz;
 output reg[31:0] data_o;
 output reg[31:0] mem_addr;
 output reg[4:0] reg_addr;
@@ -151,8 +151,8 @@ always @(*) begin
         data_o <= address;
         reg_addr <= reg_d;
     end
-    `OP_LB,`OP_LH,`OP_LL,`OP_LW: begin
-        data_o <= 32'h0;
+    `OP_LB,`OP_LH,`OP_LL,`OP_LW,`OP_LWL,`OP_LWR: begin
+        data_o <= reg_t_value;
         reg_addr <= reg_t;
     end
     `OP_LU: begin
@@ -189,7 +189,7 @@ always @(*) begin
         data_o <= reg_t_value>>immediate;
         reg_addr <= reg_d;
     end
-    `OP_SB,`OP_SC,`OP_SH,`OP_SW: begin
+    `OP_SB,`OP_SC,`OP_SH,`OP_SW,`OP_SWL,`OP_SWR: begin
         data_o <= reg_t_value;
         reg_addr <= reg_t;
     end
@@ -303,6 +303,8 @@ always @(*) begin
     case (op)
     `OP_LB,
     `OP_LH,
+    `OP_LWL,
+    `OP_LWR,
     `OP_LL,
     `OP_LW: begin
         mem_addr <= reg_s_value+signExtImm;
@@ -310,6 +312,8 @@ always @(*) begin
      end
     `OP_SB,
     `OP_SH,
+    `OP_SWL,
+    `OP_SWR,
     `OP_SC,
     `OP_SW: begin
         mem_addr <= reg_s_value+signExtImm;
@@ -330,6 +334,12 @@ always @(*) begin
     `OP_LH,
     `OP_SH:
         mem_access_sz <= `ACCESS_SZ_HALF;
+    `OP_LWL,
+    `OP_SWL:
+        mem_access_sz <= `ACCESS_SZ_LEFT;
+    `OP_LWR,
+    `OP_SWR:
+        mem_access_sz <= `ACCESS_SZ_RIGHT;
     default:
         mem_access_sz <= `ACCESS_SZ_WORD;
     endcase

@@ -66,10 +66,14 @@ always @(*) begin
     6'h20,6'h24: op <= `OP_LB;
     6'h21,6'h25: op <= `OP_LH;
     6'h23: op <= `OP_LW;
+    6'h22: op <= `OP_LWL;
+    6'h26: op <= `OP_LWR;
     6'h28: op <= `OP_SB;
     6'h29: op <= `OP_SH;
     // 6'h30: op <= `OP_LL;
     6'h2B: op <= `OP_SW;
+    6'h2a: op <= `OP_SWL;
+    6'h2e: op <= `OP_SWR;
     6'h2F: op <= `OP_CACHE;
     // 6'h38: op <= `OP_SC;
     default: op <= `OP_INVAILD;
