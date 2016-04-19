@@ -9,12 +9,15 @@ module cp0(/*autoport*/
          tlb_config,
          allow_int,
          software_int_o,
+         debugger_data_o,
 //input
          clk,
          rst_n,
          rd_addr,
+         rd_sel,
          we,
          wr_addr,
+         wr_sel,
          data_i,
          hardware_int,
          clean_exl,
@@ -24,27 +27,32 @@ module cp0(/*autoport*/
          exp_code,
          exp_bad_vaddr,
          debugger_rd_addr,
-         debugger_data_o);
+         debugger_rd_sel);
 
-`define CP0_Index 5'd0
-`define CP0_EntryLo0 5'd2
-`define CP0_EntryLo1 5'd3
-`define CP0_BadVAddr 5'd8
-`define CP0_Count 5'd9
-`define CP0_EntryHi 5'd10
-`define CP0_Compare 5'd11
-`define CP0_Status 5'd12
-`define CP0_Cause 5'd13
-`define CP0_EPC 5'd14
-`define CP0_EBase 5'd15
+`define CP0_Index {5'd0,3'd0}
+`define CP0_EntryLo0 {5'd2,3'd0}
+`define CP0_EntryLo1 {5'd3,3'd0}
+`define CP0_BadVAddr {5'd8,3'd0}
+`define CP0_Count {5'd9,3'd0}
+`define CP0_EntryHi {5'd10,3'd0}
+`define CP0_Compare {5'd11,3'd0}
+`define CP0_Status {5'd12,3'd0}
+`define CP0_Cause {5'd13,3'd0}
+`define CP0_EPC {5'd14,3'd0}
+`define CP0_PRId {5'd15,3'd0}
+`define CP0_EBase {5'd15,3'd1}
+`define CP0_Config {5'd16,3'd0}
+`define CP0_Config1 {5'd16,3'd1}
 
 input wire clk;
 input wire rst_n;
 
 input wire[4:0] rd_addr;
+input wire[2:0] rd_sel;
 output wire[31:0] data_o;
 input wire we;
 input wire[4:0] wr_addr;
+input wire[2:0] wr_sel;
 input wire[31:0] data_i;
 input wire[5:0] hardware_int;
 output reg timer_int;
@@ -64,31 +72,43 @@ input wire[4:0] exp_code;
 input wire[31:0] exp_bad_vaddr;
 
 input wire[4:0] debugger_rd_addr;
+input wire[2:0] debugger_rd_sel;
 output wire[31:0] debugger_data_o;
 
-reg[31:0] cp0_regs[0:31];
+reg[31:0] cp0_regs_Status;
+reg[31:0] cp0_regs_Cause;
+reg[31:0] cp0_regs_Count;
+reg[31:0] cp0_regs_Compare;
+reg[31:0] cp0_regs_EPC;
+reg[31:0] cp0_regs_EBase;
+reg[31:0] cp0_regs_EntryLo1;
+reg[31:0] cp0_regs_EntryLo0;
+reg[31:0] cp0_regs_EntryHi;
+reg[31:0] cp0_regs_Index;
+reg[31:0] cp0_regs_BadVAddr;
+reg[31:0] cp0_regs_Config;
 
-wire[4:0] rd_addr_internal[0:1];
+wire[7:0] rd_addr_internal[0:1];
 reg[31:0] data_o_internal[0:1];
 
-assign rd_addr_internal[0] = rd_addr;
+assign rd_addr_internal[0] = {rd_addr,rd_sel};
 assign data_o = data_o_internal[0];
-assign rd_addr_internal[1] = debugger_rd_addr;
+assign rd_addr_internal[1] = {debugger_rd_addr,debugger_rd_sel};
 assign debugger_data_o = data_o_internal[1];
 
-assign user_mode = !cp0_regs[`CP0_Status][1] && cp0_regs[`CP0_Status][4];
-assign ebase = {2'b10, cp0_regs[`CP0_EBase][29:12]};
-assign epc = cp0_regs[`CP0_EPC];
+assign user_mode = !cp0_regs_Status[1] && cp0_regs_Status[4];
+assign ebase = {2'b10, cp0_regs_EBase[29:12]};
+assign epc = cp0_regs_EPC;
 assign tlb_config = {
-    cp0_regs[`CP0_EntryHi][31:13],
-    cp0_regs[`CP0_EntryLo1][29:6],
-    cp0_regs[`CP0_EntryLo1][2:1],
-    cp0_regs[`CP0_EntryLo0][29:6],
-    cp0_regs[`CP0_EntryLo0][2:1],
-    cp0_regs[`CP0_Index][3:0]
+    cp0_regs_EntryHi[31:13],
+    cp0_regs_EntryLo1[29:6],
+    cp0_regs_EntryLo1[2:1],
+    cp0_regs_EntryLo0[29:6],
+    cp0_regs_EntryLo0[2:1],
+    cp0_regs_Index[3:0]
 };
-assign allow_int = !cp0_regs[`CP0_Status][1] && cp0_regs[`CP0_Status][0];
-assign software_int_o = cp0_regs[`CP0_Cause][9:8];
+assign allow_int = !cp0_regs_Status[1] && cp0_regs_Status[0];
+assign software_int_o = cp0_regs_Cause[9:8];
 
 genvar read_i;
 generate
@@ -101,37 +121,46 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
         else 
             case(rd_addr_internal[read_i])
             `CP0_Compare: begin
-                data_o_internal[read_i] <= cp0_regs[`CP0_Compare];
+                data_o_internal[read_i] <= cp0_regs_Compare;
             end
             `CP0_Count: begin
-                data_o_internal[read_i] <= cp0_regs[`CP0_Count];
+                data_o_internal[read_i] <= cp0_regs_Count;
             end
             `CP0_EBase: begin
-                data_o_internal[read_i] <= {2'b10, cp0_regs[`CP0_EBase][29:12], 12'b0};
+                data_o_internal[read_i] <= {2'b10, cp0_regs_EBase[29:12], 12'b0};
             end
             `CP0_EPC: begin
-                data_o_internal[read_i] <= cp0_regs[`CP0_EPC];
+                data_o_internal[read_i] <= cp0_regs_EPC;
             end
             `CP0_BadVAddr: begin
-                data_o_internal[read_i] <= cp0_regs[`CP0_BadVAddr];
+                data_o_internal[read_i] <= cp0_regs_BadVAddr;
             end
             `CP0_Cause: begin
-                data_o_internal[read_i] <= {cp0_regs[`CP0_Cause][31],15'b0, hardware_int, cp0_regs[`CP0_Cause][9:8], 1'b0, cp0_regs[`CP0_Cause][6:2], 2'b00};
+                data_o_internal[read_i] <= {cp0_regs_Cause[31],7'b0,cp0_regs_Cause[23],7'b0, hardware_int, cp0_regs_Cause[9:8], 1'b0, cp0_regs_Cause[6:2], 2'b00};
             end
             `CP0_Status: begin
-                data_o_internal[read_i] <= {27'b0, cp0_regs[`CP0_Status][4:3], 1'b0, cp0_regs[`CP0_Status][1:0]};
+                data_o_internal[read_i] <= cp0_regs_Status;
             end
             `CP0_EntryHi: begin
-                data_o_internal[read_i] <= {cp0_regs[`CP0_EntryHi][31:13], 13'b0};
+                data_o_internal[read_i] <= {cp0_regs_EntryHi[31:13], 13'b0};
             end
             `CP0_EntryLo0: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs[`CP0_EntryLo0][29:6], 3'b0, cp0_regs[`CP0_EntryLo0][2:1], 1'b0};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo0[29:6], 3'b0, cp0_regs_EntryLo0[2:1], 1'b0};
             end
             `CP0_EntryLo1: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs[`CP0_EntryLo1][29:6], 3'b0, cp0_regs[`CP0_EntryLo1][2:1], 1'b0};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:6], 3'b0, cp0_regs_EntryLo1[2:1], 1'b0};
             end
             `CP0_Index: begin
-                data_o_internal[read_i] <= {28'b0, cp0_regs[`CP0_Index][3:0]};
+                data_o_internal[read_i] <= {28'b0, cp0_regs_Index[3:0]};
+            end
+            `CP0_PRId: begin 
+                data_o_internal[read_i] <= {8'b0, 8'b0, 16'h8000}; //MIPS32 4Kc
+            end
+            `CP0_Config: begin 
+                data_o_internal[read_i] <= {1'b1, 21'b0, 3'b1, 4'b0, cp0_regs_Config[2:0]}; //Release 1
+            end
+            `CP0_Config1: begin 
+                data_o_internal[read_i] <= {1'b0, 6'd15, 3'd0, 3'd0, 3'd0, 3'd0, 3'd0, 3'd0, 7'd0}; //Cache Size
             end
             default:
                 data_o_internal[read_i] <= 32'b0;
@@ -143,65 +172,72 @@ endgenerate
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-        cp0_regs[`CP0_Count] <= 32'b0;
-        cp0_regs[`CP0_Compare] <= 32'b0;
-        cp0_regs[`CP0_Status] <= 32'h10000000;
-        cp0_regs[`CP0_EBase] <= 32'h80000000;
-        cp0_regs[`CP0_Cause][9:8] <= 2'b0;
+        cp0_regs_Count <= 32'b0;
+        cp0_regs_Compare <= 32'b0;
+        cp0_regs_Status <= 32'h10000000;
+        cp0_regs_EBase <= 32'h80000000;
+        cp0_regs_Cause[9:8] <= 2'b0;
+        cp0_regs_Cause[23] <= 1'b0;
         timer_int <= 1'b0;
     end
     else begin
-        cp0_regs[`CP0_Count] <= cp0_regs[`CP0_Count]+32'd1;
-        if(cp0_regs[`CP0_Compare] != 32'b0 && cp0_regs[`CP0_Compare]==cp0_regs[`CP0_Count])
+        cp0_regs_Count <= cp0_regs_Count+32'd1;
+        if(cp0_regs_Compare != 32'b0 && cp0_regs_Compare==cp0_regs_Count)
             timer_int <= 1'b1;
         if(we) begin
-            case(wr_addr)
+            case({wr_addr,wr_sel})
             `CP0_Compare: begin
                 timer_int <= 1'b0;
-                cp0_regs[`CP0_Compare] <= data_i;
+                cp0_regs_Compare <= data_i;
             end
             `CP0_Count: begin
-                cp0_regs[`CP0_Count] <= data_i;
+                cp0_regs_Count <= data_i;
             end
             `CP0_EBase: begin
-                cp0_regs[`CP0_EBase][29:12] <= data_i[29:12]; //only bits 29..12 is writable
+                cp0_regs_EBase[29:12] <= data_i[29:12]; //only bits 29..12 is writable
             end
             `CP0_EPC: begin
-                cp0_regs[`CP0_EPC] <= data_i;
+                cp0_regs_EPC <= data_i;
             end
             `CP0_Cause: begin
-                cp0_regs[`CP0_Cause][9:8] <= data_i[9:8];
+                cp0_regs_Cause[9:8] <= data_i[9:8];
+                cp0_regs_Cause[23] <= data_i[23]; //IV
             end
             `CP0_Status: begin
-                cp0_regs[`CP0_Status][4] <= data_i[4];
-                cp0_regs[`CP0_Status][1:0] <= data_i[1:0];
+                cp0_regs_Status[22] <= data_i[22]; //BEV
+                cp0_regs_Status[15:8] <= data_i[15:8]; //IM
+                cp0_regs_Status[4] <= data_i[4]; //UM
+                cp0_regs_Status[2:0] <= data_i[2:0]; //ERL, EXL, IE
             end
             `CP0_EntryHi: begin
-                cp0_regs[`CP0_EntryHi][31:13] <= data_i[31:13];
+                cp0_regs_EntryHi[31:13] <= data_i[31:13];
             end
             `CP0_EntryLo0: begin
-                cp0_regs[`CP0_EntryLo0][29:6] <= data_i[29:6];
-                cp0_regs[`CP0_EntryLo0][2:1] <= data_i[2:1];
+                cp0_regs_EntryLo0[29:6] <= data_i[29:6];
+                cp0_regs_EntryLo0[2:1] <= data_i[2:1];
             end
             `CP0_EntryLo1: begin
-                cp0_regs[`CP0_EntryLo1][29:6] <= data_i[29:6];
-                cp0_regs[`CP0_EntryLo1][2:1] <= data_i[2:1];
+                cp0_regs_EntryLo1[29:6] <= data_i[29:6];
+                cp0_regs_EntryLo1[2:1] <= data_i[2:1];
             end
             `CP0_Index: begin
-                cp0_regs[`CP0_Index][3:0] <= data_i[3:0];
+                cp0_regs_Index[3:0] <= data_i[3:0];
+            end
+            `CP0_Config: begin 
+                cp0_regs_Config[2:0] <= data_i[2:0];
             end
 
             endcase
         end
         if(en_exp_i) begin
-            cp0_regs[`CP0_BadVAddr] <= exp_bad_vaddr;
-            cp0_regs[`CP0_Status][1] <= 1'b1;
-            cp0_regs[`CP0_Cause][31] <= exp_bd;
-            cp0_regs[`CP0_Cause][6:2] <= exp_code;
-            cp0_regs[`CP0_EPC] <= exp_epc;
+            cp0_regs_BadVAddr <= exp_bad_vaddr;
+            cp0_regs_Status[1] <= 1'b1;
+            cp0_regs_Cause[31] <= exp_bd;
+            cp0_regs_Cause[6:2] <= exp_code;
+            cp0_regs_EPC <= exp_epc;
         end
         if(clean_exl) begin
-            cp0_regs[`CP0_Status][1] <= 1'b0;
+            cp0_regs_Status[1] <= 1'b0;
         end
     end
 end

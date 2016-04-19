@@ -14,6 +14,7 @@ module ex(/*autoport*/
           we_cp0,
           cp0_wr_addr,
           cp0_rd_addr,
+          cp0_sel,
           syscall,
           eret,
           we_tlb,
@@ -64,6 +65,7 @@ output wire stall;
 output reg we_cp0;
 output reg[4:0] cp0_wr_addr;
 output reg[4:0] cp0_rd_addr;
+output reg[2:0] cp0_sel;
 output wire syscall;
 output wire eret;
 output wire we_tlb;
@@ -122,6 +124,7 @@ always @(*) begin
     we_cp0 <= 1'b0;
     cp0_rd_addr <= 5'b0;
     cp0_wr_addr <= 5'b0;
+    cp0_sel <= 3'b0;
     case (op)
     `OP_ADD: begin
         if(!flag_unsigned && reg_s_value[31]==tmp_sign_operand[31] && (reg_s_value[31]^tmp_add[31])) begin
@@ -222,11 +225,13 @@ always @(*) begin
         reg_addr <= 5'h0;
     end
     `OP_MFC0: begin
+        cp0_sel <= immediate[2:0];
         cp0_rd_addr <= reg_d;
         data_o <= reg_cp0_value;
         reg_addr <= reg_t;
     end
     `OP_MTC0: begin
+        cp0_sel <= immediate[2:0];
         data_o <= reg_t_value;
         cp0_wr_addr <= reg_d;
         we_cp0 <= 1'b1;

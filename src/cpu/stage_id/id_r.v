@@ -62,8 +62,6 @@ always @(*) begin
         6'h2a,6'h2b: op <= `OP_SLT;
         default: op <= `OP_INVAILD;
         endcase
-    end else if(inst[31:26]==6'h10) begin
-        op <= `OP_MFC0;
     end else if(inst[31:26]==6'h1c) begin //SPECIAL2
         case(inst[5:0])
         6'h01,6'h00: op <= `OP_MADD;

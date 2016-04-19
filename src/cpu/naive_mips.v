@@ -103,6 +103,7 @@ wire ex_stall;
 wire ex_we_cp0;
 wire [4:0]ex_cp0_wraddr;
 wire [4:0]ex_cp0_rdaddr;
+wire [2:0]ex_cp0_sel;
 wire [31:0]ex_cp0_value;
 reg ex_in_delayslot;
 reg [31:0]ex_pc_value;
@@ -133,6 +134,7 @@ reg [63:0]mm_reg_hilo;
 reg mm_flag_unsigned;
 reg mm_we_cp0;
 reg [4:0]mm_cp0_wraddr;
+reg [2:0]mm_cp0_wrsel;
 reg [31:0]mm_pc_value;
 wire mm_daddr_exp_miss;
 reg mm_iaddr_exp_miss;
@@ -148,6 +150,7 @@ reg [31:0]wb_data_i;
 reg [1:0]wb_mem_access_op;
 reg [1:0]wb_mem_access_sz;
 reg [4:0]wb_reg_addr_i;
+reg [2:0]wb_cp0_wrsel;
 reg [63:0]wb_reg_hilo;
 reg wb_we_hilo;
 reg wb_we_cp0;
@@ -311,8 +314,10 @@ cp0 cp0_instance(/*autoinst*/
      .debugger_rd_addr(debugger_cp0_addr),
      .debugger_data_o(debugger_cp0_val),
      .rd_addr(ex_cp0_rdaddr),
+     .rd_sel(ex_cp0_sel),
      .we(wb_we_cp0),
      .wr_addr(wb_cp0_wraddr),
+     .wr_sel(wb_cp0_wrsel),
      .data_i(wb_data_i),
      .user_mode(cp0_user_mode),
      .ebase(cp0_ebase),
@@ -482,6 +487,7 @@ ex stage_ex(/*autoinst*/
             .is_priv_inst(ex_is_priv_inst),
             .cp0_wr_addr(ex_cp0_wraddr),
             .cp0_rd_addr(ex_cp0_rdaddr),
+            .cp0_sel(ex_cp0_sel),
             .reg_cp0_value(ex_cp0_value));
 
 hilo_reg hilo(/*autoinst*/
@@ -513,6 +519,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_illegal <= 1'b0;
         mm_we_tlb <= 1'b0;
         mm_is_priv_inst <= 1'b0;
+        mm_cp0_wrsel <= 3'b0;
     end
     else if(en_exmm && !flush) begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -535,6 +542,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
         mm_we_tlb <= ex_we_tlb;
         mm_is_priv_inst <= ex_is_priv_inst;
+        mm_cp0_wrsel <= ex_cp0_sel;
     end else if(en_mmwb || flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -556,6 +564,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_illegal <= 1'b0;
         mm_we_tlb <= 1'b0;
         mm_is_priv_inst <= 1'b0;
+        mm_cp0_wrsel <= 3'b0;
     end
 end
 
@@ -615,6 +624,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_cp0 <= 1'b0;
         wb_cp0_wraddr <= 5'b0;
         wb_we_tlb <= 1'b0;
+        wb_cp0_wrsel <= 3'b0;
     end
     else if(en_mmwb && !flush) begin
         wb_mem_access_op <= mm_mem_access_op;
@@ -626,6 +636,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_cp0 <= mm_we_cp0;
         wb_cp0_wraddr <= mm_cp0_wraddr;
         wb_we_tlb <= mm_we_tlb;
+        wb_cp0_wrsel <= mm_cp0_wrsel;
     end else begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
         wb_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -636,6 +647,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_cp0 <= 1'b0;
         wb_cp0_wraddr <= 5'b0;
         wb_we_tlb <= 1'b0;
+        wb_cp0_wrsel <= 3'b0;
     end
 end
 
