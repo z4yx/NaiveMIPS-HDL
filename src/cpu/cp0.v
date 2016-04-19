@@ -9,6 +9,9 @@ module cp0(/*autoport*/
          tlb_config,
          allow_int,
          software_int_o,
+         interrupt_mask,
+         special_int_vec,
+         boot_exp_vec,
          debugger_data_o,
 //input
          clk,
@@ -63,6 +66,9 @@ output wire[31:0] epc;
 output wire[74:0] tlb_config;
 output wire allow_int;
 output wire[1:0] software_int_o;
+output wire[7:0] interrupt_mask;
+output wire special_int_vec;
+output wire boot_exp_vec;
 
 input wire clean_exl;
 input wire en_exp_i;
@@ -109,6 +115,9 @@ assign tlb_config = {
 };
 assign allow_int = !cp0_regs_Status[1] && cp0_regs_Status[0];
 assign software_int_o = cp0_regs_Cause[9:8];
+assign interrupt_mask = cp0_regs_Status[15:8];
+assign special_int_vec = cp0_regs_Cause[23];
+assign boot_exp_vec = cp0_regs_Status[22];
 
 genvar read_i;
 generate
@@ -174,7 +183,7 @@ always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         cp0_regs_Count <= 32'b0;
         cp0_regs_Compare <= 32'b0;
-        cp0_regs_Status <= 32'h10000000;
+        cp0_regs_Status <= 32'h10400000; //BEV=1
         cp0_regs_EBase <= 32'h80000000;
         cp0_regs_Cause[9:8] <= 2'b0;
         cp0_regs_Cause[23] <= 1'b0;

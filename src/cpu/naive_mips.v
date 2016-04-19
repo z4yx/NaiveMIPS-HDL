@@ -171,6 +171,9 @@ wire[74:0] cp0_tlb_config;
 wire cp0_user_mode;
 wire timer_int;
 wire[5:0] hardware_int;
+wire[7:0] cp0_interrupt_mask;
+wire cp0_special_int_vec;
+wire cp0_boot_exp_vec;
 
 wire debugger_flush;
 wire debugger_stall;
@@ -312,6 +315,7 @@ cp0 cp0_instance(/*autoinst*/
      .clk(clk),
      .rst_n(rst_n),
      .debugger_rd_addr(debugger_cp0_addr),
+     .debugger_rd_sel(3'b0),
      .debugger_data_o(debugger_cp0_val),
      .rd_addr(ex_cp0_rdaddr),
      .rd_sel(ex_cp0_sel),
@@ -327,6 +331,9 @@ cp0 cp0_instance(/*autoinst*/
      .hardware_int(hardware_int),
      .software_int_o(cp0_software_int),
      .allow_int(cp0_allow_int),
+     .special_int_vec(cp0_special_int_vec),
+     .boot_exp_vec   (cp0_boot_exp_vec),
+     .interrupt_mask (cp0_interrupt_mask),
      .en_exp_i(cp0_exp_en),
      .clean_exl(cp0_clean_exl),
      .exp_bd(cp0_exp_bd),
@@ -609,6 +616,9 @@ exception exception_detect(/*autoinst*/
      .mem_access_vaddr(mm_mem_address),
      .in_delayslot(mm_in_delayslot),
      .overflow(mm_overflow),
+     .special_int_vec(cp0_special_int_vec),
+     .boot_exp_vec(cp0_boot_exp_vec),
+     .interrupt_mask(cp0_interrupt_mask),
      .hardware_int(hardware_int),
      .software_int(cp0_software_int));
 assign cp0_exp_bd = mm_in_delayslot;
