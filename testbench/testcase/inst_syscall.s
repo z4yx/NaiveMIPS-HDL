@@ -9,6 +9,7 @@ _start:
    or   $t0,$t0,$t1
    ori $1,$0,0x100     # $1 = 0x100
    or   $1,$1,$t1
+   mtc0 $0, $12, 0     # Status_BEV=0
    jr $1
    mtc0 $t0, $15, 1    # set ebase
 

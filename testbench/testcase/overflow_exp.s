@@ -12,6 +12,7 @@ _start:
     ori  $1,$1,0x0010           # $1 = 0x80000010
     ori  $2,$2,0x0001           # $2 = 0x80000001
     mtc0 $8, $15, 1             # set ebase
+    mtc0 $0, $12, 0     # Status_BEV=0
     nop
     nop
     add  $3,$2,$1               # overflow,$3 keep 0x00000000

@@ -7,6 +7,7 @@ _start:
 __start:
    la   $t0,__exception_vector
    mtc0 $t0, $15, 1    # set ebase
+   mtc0 $0, $12, 0     # Status_BEV=0
    ori  $1,$0,0x100
    b    entry
    nop
