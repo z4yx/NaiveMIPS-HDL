@@ -37,6 +37,7 @@ input wire clk_in;
 
 wire clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
+wire clk_tick;
 
 input wire clk_uart_in;
 `ifdef EXT_UART_CLOCK
@@ -50,6 +51,7 @@ sys_pll pll1(
     .inclk0(clk_in),
     .c0(clk),
     .c2(clk_uart_pll),
+    .c3(clk_tick),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
@@ -130,6 +132,12 @@ wire [7:0]gpio_dbus_address;
 wire gpio_dbus_read;
 wire gpio_dbus_write;
 
+wire [31:0]ticker_dbus_data_o;
+wire [31:0]ticker_dbus_data_i;
+wire [7:0]ticker_dbus_address;
+wire ticker_dbus_read;
+wire ticker_dbus_write;
+
 assign ssram_addr[21:2] = ram_address[21:2];
 assign ssram_clk = clk;
 assign ssram_oe_n = 1'b0;
@@ -166,6 +174,10 @@ dbus dbus0(/*autoinst*/
          .uart_data_i(uart_data_i[31:0]),
          .uart_rd(uart_read),
          .uart_wr(uart_write),
+         .ticker_address(ticker_dbus_address),
+         .ticker_data_i(ticker_dbus_data_i),
+         .ticker_rd(ticker_dbus_read),
+         .ticker_wr(ticker_dbus_write),
          .gpio_address(gpio_dbus_address),
          .gpio_data_i(gpio_dbus_data_i),
          .gpio_rd(gpio_dbus_read),
@@ -188,6 +200,7 @@ dbus dbus0(/*autoinst*/
          .master_stall(dbus_stall),
          .uart_data_o(uart_data_o[31:0]),
          .gpio_data_o(gpio_dbus_data_o),
+         .ticker_data_o(ticker_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
          .ram_stall(dbus_ram_stall),
          .bootrom_address(rom_address),
@@ -252,6 +265,17 @@ gpio_top gpio_inst(/*autoinst*/
          .bus_read(gpio_dbus_read),
          .bus_write(gpio_dbus_write));
 
+ticker ticker_inst(
+        .clk_bus(clk),
+        .rst_n(rst_n),
+        .clk_tick(clk_tick),
+        .rst_tick_n(rst_n),
+        .bus_data_o(ticker_dbus_data_o[31:0]),
+        .bus_address(ticker_dbus_address[7:0]),
+        .bus_data_i(ticker_dbus_data_i[31:0]),
+        .bus_read(ticker_dbus_read),
+        .bus_write(ticker_dbus_write));
+		  
 assign irq_line = {2'b0,uart_irq,2'b0};
 
 endmodule
