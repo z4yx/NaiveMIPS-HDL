@@ -350,6 +350,7 @@ always @(*) begin
     `OP_MFC0,
     `OP_MTC0,
     `OP_CACHE,
+    `OP_WAIT,
     `OP_ERET,
     `OP_TLBWI:
         is_priv_inst <= 1'b1;

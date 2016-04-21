@@ -49,19 +49,19 @@ always @(*) begin
     6'h0e: op <= `OP_XOR;
     6'h0f: op <= `OP_LU;
     6'h10: begin //CP0 related
-        case(reg_s)
-        5'h0: op <= `OP_MFC0;
-        5'h4: op <= `OP_MTC0;
-        5'h10: begin
+        if(reg_s == 5'h0) op <= `OP_MFC0;
+        else if(reg_s == 5'h4) op <= `OP_MTC0;
+        else if(reg_s[4] == 1'b1) begin
             if(inst[5:0] == 6'h18)
                 op <= `OP_ERET;
+            else if(inst[5:0] == 6'h20)
+                op <= `OP_WAIT;
             else if(inst[5:0] == 6'h2)
                 op <= `OP_TLBWI;
             else
                 op <= `OP_INVAILD;
         end
-        default: op <= `OP_INVAILD;
-        endcase
+        else op <= `OP_INVAILD;
     end
     6'h20,6'h24: op <= `OP_LB;
     6'h21,6'h25: op <= `OP_LH;
