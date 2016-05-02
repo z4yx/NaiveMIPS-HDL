@@ -163,7 +163,7 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {28'b0, cp0_regs_Index[3:0]};
             end
             `CP0_PRId: begin 
-                data_o_internal[read_i] <= {8'b0, 8'b0, 16'h8000}; //MIPS32 4Kc
+                data_o_internal[read_i] <= {8'b0, 8'b1, 16'h8000}; //MIPS32 4Kc
             end
             `CP0_Config: begin 
                 data_o_internal[read_i] <= {1'b1, 21'b0, 3'b1, 4'b0, cp0_regs_Config[2:0]}; //Release 1
