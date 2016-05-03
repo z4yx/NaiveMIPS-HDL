@@ -231,6 +231,7 @@ naive_mips cpu(/*autoinst*/
          .debugger_uart_rxd(debugger_uart_rxd),
          .debugger_uart_txd(debugger_uart_txd),
          .ibus_rddata(ibus_rddata[31:0]),
+         .ibus_stall(1'b0),
          .dbus_rddata(dbus_rddata[31:0]),
          .dbus_stall(dbus_stall),
          .hardware_int_in(irq_line));

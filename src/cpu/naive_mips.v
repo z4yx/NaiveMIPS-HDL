@@ -20,6 +20,7 @@ module naive_mips(/*autoport*/
           debugger_uart_rxd,
           debugger_uart_clk,
           ibus_rddata,
+          ibus_stall,
           dbus_rddata,
           dbus_stall,
           hardware_int_in);
@@ -37,6 +38,7 @@ output wire ibus_read;
 output wire ibus_write;
 output wire[31:0] ibus_wrdata;
 input wire[31:0] ibus_rddata;
+input wire ibus_stall;
 
 output wire[31:0] dbus_address;
 output wire[3:0] dbus_byteenable;
@@ -290,6 +292,8 @@ always @(*) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
       (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
+    end else if(ibus_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
     end else begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
