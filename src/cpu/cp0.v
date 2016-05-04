@@ -35,6 +35,7 @@ module cp0(/*autoport*/
 `define CP0_Index {5'd0,3'd0}
 `define CP0_EntryLo0 {5'd2,3'd0}
 `define CP0_EntryLo1 {5'd3,3'd0}
+`define CP0_Context {5'd4,3'd0}
 `define CP0_BadVAddr {5'd8,3'd0}
 `define CP0_Count {5'd9,3'd0}
 `define CP0_EntryHi {5'd10,3'd0}
@@ -85,6 +86,7 @@ reg[31:0] cp0_regs_Status;
 reg[31:0] cp0_regs_Cause;
 reg[31:0] cp0_regs_Count;
 reg[31:0] cp0_regs_Compare;
+reg[31:0] cp0_regs_Context;
 reg[31:0] cp0_regs_EPC;
 reg[31:0] cp0_regs_EBase;
 reg[31:0] cp0_regs_EntryLo1;
@@ -149,6 +151,9 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
             end
             `CP0_Status: begin
                 data_o_internal[read_i] <= cp0_regs_Status;
+            end
+            `CP0_Context: begin
+                data_o_internal[read_i] <= {cp0_regs_Context[31:4], 4'b0};
             end
             `CP0_EntryHi: begin
                 data_o_internal[read_i] <= {cp0_regs_EntryHi[31:13], 13'b0};
@@ -232,6 +237,9 @@ always @(posedge clk or negedge rst_n) begin
             `CP0_Index: begin
                 cp0_regs_Index[3:0] <= data_i[3:0];
             end
+            `CP0_Context: begin
+                cp0_regs_Context[31:23] <= data_i[31:23];
+            end
             `CP0_Config: begin 
                 cp0_regs_Config[2:0] <= data_i[2:0];
             end
@@ -240,6 +248,7 @@ always @(posedge clk or negedge rst_n) begin
         end
         if(en_exp_i) begin
             cp0_regs_BadVAddr <= exp_bad_vaddr;
+            cp0_regs_Context[22:4] <= exp_bad_vaddr[31:13];
             cp0_regs_Status[1] <= 1'b1;
             cp0_regs_Cause[31] <= exp_bd;
             cp0_regs_Cause[6:2] <= exp_code;
