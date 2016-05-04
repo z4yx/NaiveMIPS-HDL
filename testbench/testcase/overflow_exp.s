@@ -2,8 +2,8 @@
    .set noat
    .set noreorder
    .set nomacro
-   .global _start
-_start:
+   .global __start
+__start:
     la   $8,__exception_vector
     lui  $t1,0x8000
     or   $t0,$t0,$t1
