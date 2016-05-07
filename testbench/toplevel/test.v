@@ -5,13 +5,14 @@ reg rst_in_n;
 reg clk_in;
 reg clk_uart_in;
 
-wire[31:0] ram_data;
 
+wire[31:0] base_ram_data;
 wire[19:0] base_ram_address;
 wire base_ram_we_n;
 wire base_ram_oe_n;
 wire base_ram_ce_n;
 
+wire[31:0] ext_ram_data;
 wire[19:0] ext_ram_address;
 wire ext_ram_we_n;
 wire ext_ram_oe_n;
@@ -35,11 +36,12 @@ tri[31:0] gpio1;
 tri[31:0] ext_data;
 
 soc_toplevel soc(/*autoinst*/
-           .ram_data(ram_data),
+           .base_ram_data(base_ram_data),
            .base_ram_addr(base_ram_address),
            .base_ram_ce_n(base_ram_ce_n),
            .base_ram_oe_n(base_ram_oe_n),
            .base_ram_we_n(base_ram_we_n),
+           .ext_ram_data(ext_ram_data),
            .ext_ram_addr(ext_ram_address),
            .ext_ram_ce_n(ext_ram_ce_n),
            .ext_ram_oe_n(ext_ram_oe_n),
@@ -60,7 +62,7 @@ soc_toplevel soc(/*autoinst*/
            .gpio0(gpio0),
            .gpio1(gpio1));
 AS7C34098A base1(/*autoinst*/
-            .DataIO(ram_data[15:0]),
+            .DataIO(base_ram_data[15:0]),
             .Address(base_ram_address[17:0]),
             .OE_n(base_ram_oe_n),
             .CE_n(base_ram_ce_n),
@@ -68,7 +70,7 @@ AS7C34098A base1(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A base2(/*autoinst*/
-            .DataIO(ram_data[31:16]),
+            .DataIO(base_ram_data[31:16]),
             .Address(base_ram_address[17:0]),
             .OE_n(base_ram_oe_n),
             .CE_n(base_ram_ce_n),
@@ -76,7 +78,7 @@ AS7C34098A base2(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A ext1(/*autoinst*/
-            .DataIO(ext_data[15:0]),
+            .DataIO(ext_ram_data[15:0]),
             .Address(ext_ram_address[17:0]),
             .OE_n(ext_ram_oe_n),
             .CE_n(ext_ram_ce_n),
@@ -84,7 +86,7 @@ AS7C34098A ext1(/*autoinst*/
             .LB_n(1'b0),
             .UB_n(1'b0));
 AS7C34098A ext2(/*autoinst*/
-            .DataIO(ext_data[31:16]),
+            .DataIO(ext_ram_data[31:16]),
             .Address(ext_ram_address[17:0]),
             .OE_n(ext_ram_oe_n),
             .CE_n(ext_ram_ce_n),
@@ -151,6 +153,8 @@ defparam soc.uart0.tx1.COUNTER_PERIOD=3;
 defparam soc.uart0.tx1.ignore_for_sim=1;
 defparam soc.cpu.pc_instance.PC_INITIAL = 32'h80000000;
 
+defparam soc.cpu.dbg_host.tx_dbg.ignore_for_sim=1;
+
 task uart_send_byte;
 input [7:0] data;
 begin
@@ -178,6 +182,28 @@ begin
     uart_send_byte(data[15:8]);
     uart_send_byte(data[23:16]);
     uart_send_byte(data[31:24]);
+end
+endtask
+
+task debugger_send_byte;
+input [7:0] data;
+begin
+    @(negedge soc.cpu.dbg_host.clk);
+    soc.cpu.dbg_host.rx_dbg.rx_avai_for_sim = 1'b1;
+    soc.cpu.dbg_host.rx_dbg.rx_data_for_sim = data;
+    @(negedge soc.cpu.dbg_host.clk);
+    soc.cpu.dbg_host.rx_dbg.rx_avai_for_sim = 1'b0;
+    @(negedge soc.cpu.dbg_host.clk);
+end
+endtask
+
+task debugger_send_word;
+input [31:0] data;
+begin
+    debugger_send_byte(data[7:0]);
+    debugger_send_byte(data[15:8]);
+    debugger_send_byte(data[23:16]);
+    debugger_send_byte(data[31:24]);
 end
 endtask
 
@@ -214,7 +240,57 @@ initial begin
     uart_send_word(32'h00005566);
 end
 */
-
+/*
+initial begin 
+    wait(soc.rst_n == 1'b1);
+    debugger_send_byte(8'h85); //CMD_SET_BP
+    debugger_send_word(32'h8000002c);
+    #800;
+    debugger_send_byte(8'he); //CMD_QUERY
+    #800;
+    debugger_send_byte(8'd3); //CMD_EN_BP
+    #800;
+    debugger_send_byte(8'he); //CMD_QUERY
+    #800;
+    debugger_send_byte(8'h8c); //CMD_READ_IMEM
+    debugger_send_word(32'h80000004);
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'he); //CMD_QUERY
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'ha); //CMD_READ_PC
+    #800;
+    debugger_send_byte(8'd4); //CMD_DIS_BP
+    #800;
+    // debugger_send_byte(8'hb); //CMD_RESET
+    // #800;
+    debugger_send_byte(8'hd); //CMD_STEP
+    #800;
+    debugger_send_byte(8'ha); //CMD_READ_PC
+    #800;
+    debugger_send_byte(8'd2); //CMD_CONT
+    #800;
+    debugger_send_byte(8'h86); //CMD_READ_REG
+    debugger_send_word(32'h8);
+    #800;
+    debugger_send_byte(8'h86); //CMD_READ_REG
+    debugger_send_word(32'h8);
+    #800;
+    debugger_send_byte(8'd3); //CMD_EN_BP
+    #800;
+end
+*/
 
 initial begin
     $readmemh("ram_preload.mem.0", base1.mem_array0);

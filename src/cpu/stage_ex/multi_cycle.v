@@ -14,7 +14,7 @@ module multi_cycle(/*autoport*/
          operand2,
          hilo_i);
 			
-parameter DIV_CYCLES = 34;
+parameter DIV_CYCLES = 36;
 
 input wire clk;
 input wire rst_n;
@@ -35,7 +35,8 @@ wire [31:0] dquotient, dremain;
 reg [DIV_CYCLES:0] div_stage;
 wire div_done;
 
-divider divider_instance(/*autoinst*/
+/*
+divider divider_instance(
            .quotient(tmp_quotient),
            .remain(tmp_remain),
            .aclr(!rst_n),
@@ -43,6 +44,17 @@ divider divider_instance(/*autoinst*/
            .clock(clk),
            .denom(abs_opa2),
            .numer(abs_opa1));
+*/
+div_uu #(.z_width(64)) div_uu0(
+    .clk (clk),
+    .ena (op == `OP_DIV),
+    .z   ({32'h0,abs_opa1}),
+    .d   (abs_opa2),
+    .q   (tmp_quotient),
+    .s   (tmp_remain),
+    .div0(),
+    .ovf ()
+);
 
 assign abs_opa1 = (flag_unsigned||!operand1[31]) ? operand1 : -operand1;
 assign abs_opa2 = (flag_unsigned||!operand2[31]) ? operand2 : -operand2;

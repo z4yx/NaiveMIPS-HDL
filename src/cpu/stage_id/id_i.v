@@ -49,27 +49,31 @@ always @(*) begin
     6'h0e: op <= `OP_XOR;
     6'h0f: op <= `OP_LU;
     6'h10: begin //CP0 related
-        case(reg_s)
-        5'h0: op <= `OP_MFC0;
-        5'h4: op <= `OP_MTC0;
-        5'h10: begin
+        if(reg_s == 5'h0) op <= `OP_MFC0;
+        else if(reg_s == 5'h4) op <= `OP_MTC0;
+        else if(reg_s[4] == 1'b1) begin
             if(inst[5:0] == 6'h18)
                 op <= `OP_ERET;
+            else if(inst[5:0] == 6'h20)
+                op <= `OP_WAIT;
             else if(inst[5:0] == 6'h2)
                 op <= `OP_TLBWI;
             else
                 op <= `OP_INVAILD;
         end
-        default: op <= `OP_INVAILD;
-        endcase
+        else op <= `OP_INVAILD;
     end
     6'h20,6'h24: op <= `OP_LB;
     6'h21,6'h25: op <= `OP_LH;
     6'h23: op <= `OP_LW;
+    6'h22: op <= `OP_LWL;
+    6'h26: op <= `OP_LWR;
     6'h28: op <= `OP_SB;
     6'h29: op <= `OP_SH;
     // 6'h30: op <= `OP_LL;
     6'h2B: op <= `OP_SW;
+    6'h2a: op <= `OP_SWL;
+    6'h2e: op <= `OP_SWR;
     6'h2F: op <= `OP_CACHE;
     // 6'h38: op <= `OP_SC;
     default: op <= `OP_INVAILD;

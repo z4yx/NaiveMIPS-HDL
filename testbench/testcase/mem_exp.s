@@ -7,6 +7,9 @@ _start:
 __start:
    la   $t0,__exception_vector
    mtc0 $t0, $15, 1    # set ebase
+   mtc0 $0, $12, 0     # Status_BEV=0
+   lui  $t1,0xaa80     # PTE
+   mtc0 $t1,$4,0       # Context
    ori  $1,$0,0x100
    b    entry
    nop
@@ -27,7 +30,8 @@ entry:
    lb  $2, 0x0001($1)
    sh  $2, 0x0003($1)  #AdES
 
-   ori $8, $0, 0x400
+   lui $8, 0x6789
+   ori $8, $8, 0xa400
    jr  $8              #TLBL miss
    lui $16, 0xdead
 
@@ -43,6 +47,7 @@ _loop:
    .org 0x1000                  # must be 4K alignment
 __exception_vector:
    addi  $4,$4,1
+   mfc0  $26, $4,  0             # test Context
    mfc0  $26, $13, 0             # read cause
    mfc0  $26, $8,  0             # bad vaddr
    mtc0  $26, $10, 0             # VPN2

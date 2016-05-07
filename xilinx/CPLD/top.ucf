@@ -4,6 +4,10 @@
 NET "clk"  LOC = "P1"  ;
 NET "rxd"  LOC = "P58"  ;
 NET "txd"  LOC = "P54"  ;
+NET "interconn[0]"  LOC = "P6"  ;
+NET "interconn[1]"  LOC = "P7"  ;
+NET "interconn[2]"  LOC = "P8"  ;
+NET "interconn[3]"  LOC = "P9"  ;
 
 #PACE: Start of PACE Area Constraints
 

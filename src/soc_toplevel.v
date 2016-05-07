@@ -2,7 +2,8 @@
 `define EXT_UART_CLOCK
 module soc_toplevel(/*autoport*/
 //inout
-            ram_data,
+            base_ram_data,
+            ext_ram_data,
             flash_data,
             gpio0,
             gpio1,
@@ -23,22 +24,26 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
+            rs232_txd,
+            vga_pixel,
+            vga_hsync,
+            vga_vsync,
 //input
             rst_in_n,
             clk_in,
-`ifdef EXT_UART_CLOCK
-				clk_uart_in,
-`endif
-            rxd);
+            clk_uart_in,
+            rxd,
+            rs232_rxd);
 
 input wire rst_in_n;
 input wire clk_in;
 
 wire clk2x,clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
+wire clk_tick;
 
-`ifdef EXT_UART_CLOCK
 input wire clk_uart_in;
+`ifdef EXT_UART_CLOCK
 assign clk_uart = clk_uart_in;
 `else
 assign clk_uart = clk_uart_pll;
@@ -50,21 +55,21 @@ sys_pll pll1(
     .c0(clk),
     .c1(clk2x),
     .c2(clk_uart_pll),
+    .c3(clk_tick),
     .locked(locked));
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
          .clk(clk),
          .rst_in_n(locked));
 
-inout wire[31:0] ram_data;
 
-// inout wire[31:0] base_ram_data;
+inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
 output wire base_ram_ce_n;
 output wire base_ram_oe_n;
 output wire base_ram_we_n;
 
-// inout wire[31:0] ext_ram_data;
+inout wire[31:0] ext_ram_data;
 output wire[19:0] ext_ram_addr;
 output wire ext_ram_ce_n;
 output wire ext_ram_oe_n;
@@ -74,6 +79,7 @@ wire[29:0] ram_address;
 wire ram_wr_n;
 wire ram_rd_n;
 wire[3:0] ram_dataenable;
+wire[31:0] ram_data_i, ram_data_o;
 
 output wire txd;
 input wire rxd;
@@ -89,6 +95,13 @@ output wire flash_we_n;
 
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
+
+input wire rs232_rxd;
+output wire rs232_txd;
+
+output wire[8:0] vga_pixel;
+output wire vga_hsync;
+output wire vga_vsync;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -148,20 +161,37 @@ wire [7:0]gpio_dbus_address;
 wire gpio_dbus_read;
 wire gpio_dbus_write;
 
-wire using_base;
-//assign using_base = ram_dataenable[0];
-assign using_base = 1'b1;
-assign base_ram_ce_n = 1'b0;
-assign base_ram_oe_n = ram_rd_n || !using_base;
-assign base_ram_we_n = ram_wr_n || !using_base;
-assign base_ram_addr = ram_address[21:2];
+wire [31:0]gpu_dbus_data_o;
+wire [31:0]gpu_dbus_data_i;
+wire [23:0]gpu_dbus_address;
+wire gpu_dbus_read;
+wire gpu_dbus_write;
 
-wire using_ext;
-assign using_ext = 1'b1;//ram_dataenable[1]&&ram_dataenable[2]&&ram_dataenable[3];
-assign ext_ram_ce_n = 1'b0;
-assign ext_ram_oe_n = ram_rd_n || !using_ext;
-assign ext_ram_we_n = ram_wr_n || !using_ext;
+wire [31:0]ticker_dbus_data_o;
+wire [31:0]ticker_dbus_data_i;
+wire [7:0]ticker_dbus_address;
+wire ticker_dbus_read;
+wire ticker_dbus_write;
+
+wire debugger_uart_rxd;
+wire debugger_uart_txd;
+
+assign base_ram_ce_n = ram_address[22];
+assign base_ram_oe_n = ram_rd_n;
+assign base_ram_we_n = ram_wr_n;
+assign base_ram_addr = ram_address[21:2];
+assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : {32{1'hz}};
+
+assign ext_ram_ce_n = ~ram_address[22];
+assign ext_ram_oe_n = ram_rd_n;
+assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
+assign ext_ram_data  = (~ext_ram_ce_n && ~ext_ram_we_n) ? ram_data_o : {32{1'hz}};
+
+assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
+
+assign debugger_uart_rxd = rs232_rxd;
+assign rs232_txd = debugger_uart_txd;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -197,13 +227,18 @@ naive_mips cpu(/*autoinst*/
          .dbus_wrdata(dbus_wrdata[31:0]),
          .rst_n(rst_n),
          .clk(clk),
+         .debugger_uart_clk(clk_uart),
+         .debugger_uart_rxd(debugger_uart_rxd),
+         .debugger_uart_txd(debugger_uart_txd),
          .ibus_rddata(ibus_rddata[31:0]),
+         .ibus_stall(1'b0),
          .dbus_rddata(dbus_rddata[31:0]),
          .dbus_stall(dbus_stall),
          .hardware_int_in(irq_line));
 
 two_port mainram(/*autoinst*/
-           .ram_data(ram_data[31:0]),
+           .ram_data_i(ram_data_i),
+           .ram_data_o(ram_data_o),
            .rddata1(ibus_ram_rddata),
            .rddata2(dbus_ram_rddata),
            .ram_address(ram_address),
@@ -247,6 +282,14 @@ dbus dbus0(/*autoinst*/
          .gpio_data_i(gpio_dbus_data_i),
          .gpio_rd(gpio_dbus_read),
          .gpio_wr(gpio_dbus_write),
+         .ticker_address(ticker_dbus_address),
+         .ticker_data_i(ticker_dbus_data_i),
+         .ticker_rd(ticker_dbus_read),
+         .ticker_wr(ticker_dbus_write),
+         .gpu_address(gpu_dbus_address),
+         .gpu_data_i(gpu_dbus_data_i),
+         .gpu_rd(gpu_dbus_read),
+         .gpu_wr(gpu_dbus_write),
          .ram_address(dbus_ram_address[23:0]),
          .ram_data_i(dbus_ram_wrdata[31:0]),
          .ram_data_enable(dbus_ram_byteenable[3:0]),
@@ -265,6 +308,8 @@ dbus dbus0(/*autoinst*/
          .master_stall(dbus_stall),
          .uart_data_o(uart_data_o[31:0]),
          .gpio_data_o(gpio_dbus_data_o),
+         .ticker_data_o(ticker_dbus_data_o),
+         .gpu_data_o(gpu_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
          .ram_stall(dbus_ram_stall),
          .flash_stall (flash_dbus_stall),
@@ -311,6 +356,32 @@ gpio_top gpio_inst(/*autoinst*/
          .bus_data_i(gpio_dbus_data_i[31:0]),
          .bus_read(gpio_dbus_read),
          .bus_write(gpio_dbus_write));
+
+ticker ticker_inst(
+        .clk_bus(clk),
+        .rst_n(rst_n),
+        .clk_tick(clk_tick),
+        .rst_tick_n(rst_n),
+        .bus_data_o(ticker_dbus_data_o[31:0]),
+        .bus_address(ticker_dbus_address[7:0]),
+        .bus_data_i(ticker_dbus_data_i[31:0]),
+        .bus_read(ticker_dbus_read),
+        .bus_write(ticker_dbus_write));
+
+gpu gpu_inst(
+        .clk_bus  (clk),
+        .clk_pixel(clk_in), //50 MHz
+        .rst_n    (rst_n),
+        .bus_read (gpu_dbus_read),
+        .bus_write(gpu_dbus_write),
+        .bus_data_o(gpu_dbus_data_o),
+        .bus_address(gpu_dbus_address),
+        .bus_data_i(gpu_dbus_data_i),
+        .de       (),
+        .vsync    (vga_vsync),
+        .hsync    (vga_hsync),
+        .pxlData  (vga_pixel)
+);
 
 assign irq_line = {2'b0,uart_irq,2'b0};
 

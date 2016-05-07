@@ -28,11 +28,7 @@ module divider(
     output [31:0] remain
     );
 
-/*
 div_gen_v3_0 x_div(
   .rfd(), .sclr(aclr), .ce(clken), .clk(clock), .dividend(numer), .quotient(quotient), .divisor(denom), .fractional(remain)
 );
-*/
-assign quotient=32'h0;
-assign remain=32'h0;
 endmodule

@@ -3,26 +3,34 @@
 
 module naive_mips(/*autoport*/
 //output
-      ibus_address,
-      ibus_byteenable,
-      ibus_read,
-      ibus_write,
-      ibus_wrdata,
-      dbus_address,
-      dbus_byteenable,
-      dbus_read,
-      dbus_write,
-      dbus_wrdata,
+          debugger_uart_txd,
+          ibus_address,
+          ibus_byteenable,
+          ibus_read,
+          ibus_write,
+          ibus_wrdata,
+          dbus_address,
+          dbus_byteenable,
+          dbus_read,
+          dbus_write,
+          dbus_wrdata,
 //input
-      rst_n,
-      clk,
-      ibus_rddata,
-      dbus_rddata,
-      dbus_stall,
-      hardware_int_in);
+          rst_n,
+          clk,
+          debugger_uart_rxd,
+          debugger_uart_clk,
+          ibus_rddata,
+          ibus_stall,
+          dbus_rddata,
+          dbus_stall,
+          hardware_int_in);
 
 input wire rst_n;
 input wire clk;
+
+input wire debugger_uart_rxd;
+input wire debugger_uart_clk;
+output wire debugger_uart_txd;
 
 output wire[31:0] ibus_address;
 output wire[3:0] ibus_byteenable;
@@ -30,6 +38,7 @@ output wire ibus_read;
 output wire ibus_write;
 output wire[31:0] ibus_wrdata;
 input wire[31:0] ibus_rddata;
+input wire ibus_stall;
 
 output wire[31:0] dbus_address;
 output wire[3:0] dbus_byteenable;
@@ -41,6 +50,7 @@ input wire dbus_stall;
 
 input wire[4:0] hardware_int_in;
 
+wire flush;
 wire exception_flush;
 wire[31:0] exception_new_pc;
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
@@ -81,7 +91,7 @@ reg [4:0]ex_reg_t;
 reg [31:0]ex_reg_s_value;
 reg [31:0]ex_reg_t_value;
 wire [1:0]ex_mem_access_op;
-wire [1:0]ex_mem_access_sz;
+wire [2:0]ex_mem_access_sz;
 wire [31:0]ex_data_o;
 wire [31:0]ex_mem_addr;
 wire [4:0]ex_reg_addr;
@@ -95,6 +105,7 @@ wire ex_stall;
 wire ex_we_cp0;
 wire [4:0]ex_cp0_wraddr;
 wire [4:0]ex_cp0_rdaddr;
+wire [2:0]ex_cp0_sel;
 wire [31:0]ex_cp0_value;
 reg ex_in_delayslot;
 reg [31:0]ex_pc_value;
@@ -110,7 +121,7 @@ reg mm_syscall;
 reg mm_eret;
 reg mm_invalid_inst;
 wire [31:0]mm_mem_data_o;
-reg [1:0]mm_mem_access_sz;
+reg [2:0]mm_mem_access_sz;
 reg [4:0]mm_reg_addr_i;
 wire [31:0]mm_mem_data_i;
 wire [31:0]mm_mem_address;
@@ -125,6 +136,7 @@ reg [63:0]mm_reg_hilo;
 reg mm_flag_unsigned;
 reg mm_we_cp0;
 reg [4:0]mm_cp0_wraddr;
+reg [2:0]mm_cp0_wrsel;
 reg [31:0]mm_pc_value;
 wire mm_daddr_exp_miss;
 reg mm_iaddr_exp_miss;
@@ -138,8 +150,8 @@ reg mm_is_priv_inst;
 wire wb_reg_we;
 reg [31:0]wb_data_i;
 reg [1:0]wb_mem_access_op;
-reg [1:0]wb_mem_access_sz;
 reg [4:0]wb_reg_addr_i;
+reg [2:0]wb_cp0_wrsel;
 reg [63:0]wb_reg_hilo;
 reg wb_we_hilo;
 reg wb_we_cp0;
@@ -160,21 +172,80 @@ wire[74:0] cp0_tlb_config;
 wire cp0_user_mode;
 wire timer_int;
 wire[5:0] hardware_int;
+wire[7:0] cp0_interrupt_mask;
+wire cp0_special_int_vec;
+wire cp0_boot_exp_vec;
+
+wire debugger_flush;
+wire debugger_stall;
+wire[31:0] debugger_reg_val;
+wire[4:0] debugger_reg_addr;
+wire[31:0] debugger_cp0_val;
+wire[4:0] debugger_cp0_addr;
+wire[63:0] debugger_hilo_val;
+wire[31:0] debugger_new_pc;
+wire debugger_mem_read;
+wire[31:0] debugger_mem_addr;
+wire[31:0] debugger_mem_data;
+wire debugger_pc_reset;
+
+wire[7:0] debugger_host_cmd;
+wire[31:0] debugger_host_param;
+wire[31:0] debugger_host_result;
+wire debugger_host_cmd_en;
+
+dbg_uart dbg_host(/*autoinst*/
+          .host_cmd(debugger_host_cmd),
+          .host_param(debugger_host_param),
+          .host_en(debugger_host_cmd_en),
+          .clk(clk),
+          .clk_uart(debugger_uart_clk),
+          .rxd     (debugger_uart_rxd),
+          .txd     (debugger_uart_txd),
+          .rst_n(rst_n),
+          .host_result(debugger_host_result));
+
+dbg_ctl debugger(/*autoinst*/
+           .new_pc_value(debugger_new_pc),
+           .flush(debugger_flush),
+           .debug_stall(debugger_stall),
+           .main_reg_addr(debugger_reg_addr),
+           .cp0_reg_addr(debugger_cp0_addr),
+           .host_result(debugger_host_result),
+           .clk(clk),
+           .rst_n(rst_n),
+           .inst_pc_value(mm_pc_value),
+           .inst_in_delayslot(mm_in_delayslot),
+           .main_reg_value(debugger_reg_val),
+           .cp0_reg_value(debugger_cp0_val),
+           .hilo_reg_value(debugger_hilo_val),
+           .pc_reg_value(if_pc),
+           .debugger_mem_read(debugger_mem_read),
+           .debugger_mem_addr(debugger_mem_addr),
+           .debugger_mem_data(debugger_mem_data),
+           .pc_reset         (debugger_pc_reset),
+           .host_cmd(debugger_host_cmd),
+           .host_param(debugger_host_param),
+           .host_cmd_en(debugger_host_cmd_en));
 
 regs main_regs(/*autoinst*/
          .rdata1(id_reg_s_value_from_regs),
          .rdata2(id_reg_t_value_from_regs),
+         .rdata3(debugger_reg_val),
          .clk(clk),
          .rst_n(rst_n),
          .we(wb_reg_we),
          .waddr(wb_reg_addr_i),
          .wdata(wb_data_i),
          .raddr1(id_reg_s),
-         .raddr2(id_reg_t));
+         .raddr2(id_reg_t),
+         .raddr3(debugger_reg_addr));
 
 mmu_top mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(ibus_address),
+      .data_uncached(),
+      .inst_uncached(),
       .data_exp_miss(mm_daddr_exp_miss),
       .inst_exp_miss(if_iaddr_exp_miss),
       .data_exp_illegal(if_iaddr_exp_illegal),
@@ -182,9 +253,9 @@ mmu_top mmu(/*autoinst*/
       .rst_n(rst_n),
       .clk(clk),
       .data_address_i(mm_mem_address),
-      .inst_address_i(if_pc),
+      .inst_address_i(debugger_mem_read ? debugger_mem_addr : if_pc),
       .data_en(mm_mem_rd || mm_mem_wr),
-      .inst_en(1'b1),
+      .inst_en(1'b1 | debugger_mem_read),
       .tlb_config(cp0_tlb_config),
       .tlbwi(wb_we_tlb),
       .user_mode(cp0_user_mode));
@@ -197,10 +268,12 @@ assign if_inst = (if_iaddr_exp_miss||if_iaddr_exp_illegal) ? 32'b0 : ibus_rddata
 
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd;
-assign dbus_write = mm_mem_wr && !exception_flush;
+assign dbus_write = mm_mem_wr && !flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
 assign mm_stall = dbus_stall;
+
+assign debugger_mem_data = if_inst;
 
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
@@ -208,15 +281,19 @@ assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
 assign hardware_int[5] = timer_int;
 assign hardware_int[4:0] = hardware_int_in;
 
+assign flush = debugger_flush | exception_flush;
+
 always @(*) begin
     if (!rst_n) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
-    end else if(mm_stall) begin
+    end else if(mm_stall || debugger_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00000;
     end else if(ex_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
       (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
+    end else if(ibus_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
     end else begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
@@ -230,6 +307,9 @@ pc pc_instance(/*autoinst*/
          .enable(en_pc),
          .is_exception(exception_flush),
          .exception_new_pc(exception_new_pc),
+         .is_debug    (debugger_flush),
+         .debug_reset (debugger_pc_reset),
+         .debug_new_pc(debugger_new_pc),
          .is_branch(id_is_branch),
          .branch_address(id_branch_address));
 
@@ -237,9 +317,14 @@ cp0 cp0_instance(/*autoinst*/
      .data_o(ex_cp0_value),
      .clk(clk),
      .rst_n(rst_n),
+     .debugger_rd_addr(debugger_cp0_addr),
+     .debugger_rd_sel(3'b0),
+     .debugger_data_o(debugger_cp0_val),
      .rd_addr(ex_cp0_rdaddr),
+     .rd_sel(ex_cp0_sel),
      .we(wb_we_cp0),
      .wr_addr(wb_cp0_wraddr),
+     .wr_sel(wb_cp0_wrsel),
      .data_i(wb_data_i),
      .user_mode(cp0_user_mode),
      .ebase(cp0_ebase),
@@ -249,6 +334,9 @@ cp0 cp0_instance(/*autoinst*/
      .hardware_int(hardware_int),
      .software_int_o(cp0_software_int),
      .allow_int(cp0_allow_int),
+     .special_int_vec(cp0_special_int_vec),
+     .boot_exp_vec   (cp0_boot_exp_vec),
+     .interrupt_mask (cp0_interrupt_mask),
      .en_exp_i(cp0_exp_en),
      .clean_exl(cp0_clean_exl),
      .exp_bd(cp0_exp_bd),
@@ -265,13 +353,13 @@ always @(posedge clk or negedge rst_n) begin
         id_iaddr_exp_miss <= 1'b0;
         id_iaddr_exp_illegal <= 1'b0;
     end
-    else if(en_ifid && !exception_flush) begin
+    else if(en_ifid && !flush) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
         id_in_delayslot <= id_is_branch;
         id_iaddr_exp_miss <= if_iaddr_exp_miss;
         id_iaddr_exp_illegal <= if_iaddr_exp_illegal;
-    end else if(en_idex || exception_flush) begin
+    end else if(en_idex || flush) begin
         id_inst <= 32'b0; //NOP;
         id_pc_value <= 32'b0;
         id_in_delayslot <= 1'b0;
@@ -345,7 +433,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_iaddr_exp_miss <= 1'b0;
         ex_iaddr_exp_illegal <= 1'b0;
     end
-    else if(en_idex && !exception_flush) begin
+    else if(en_idex && !flush) begin
         ex_immediate <= id_immediate;
         ex_op_type <= id_op_type;
         ex_op <= id_op;
@@ -360,7 +448,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= id_pc_value;
         ex_iaddr_exp_miss <= id_iaddr_exp_miss;
         ex_iaddr_exp_illegal <= id_iaddr_exp_illegal;
-    end else if(en_exmm || exception_flush) begin
+    end else if(en_exmm || flush) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
         ex_reg_s <= 5'b0;
@@ -403,12 +491,13 @@ ex stage_ex(/*autoinst*/
             .we_tlb(ex_we_tlb),
             .clk(clk),
             .rst_n(rst_n),
-            .exception_flush(exception_flush),
+            .exception_flush(flush),
             .stall(ex_stall),
             .we_cp0(ex_we_cp0),
             .is_priv_inst(ex_is_priv_inst),
             .cp0_wr_addr(ex_cp0_wraddr),
             .cp0_rd_addr(ex_cp0_rdaddr),
+            .cp0_sel(ex_cp0_sel),
             .reg_cp0_value(ex_cp0_value));
 
 hilo_reg hilo(/*autoinst*/
@@ -440,8 +529,9 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_illegal <= 1'b0;
         mm_we_tlb <= 1'b0;
         mm_is_priv_inst <= 1'b0;
+        mm_cp0_wrsel <= 3'b0;
     end
-    else if(en_exmm && !exception_flush) begin
+    else if(en_exmm && !flush) begin
         mm_mem_access_op <= ex_mem_access_op;
         mm_mem_access_sz <= ex_mem_access_sz;
         mm_data_i <= ex_data_o;
@@ -462,7 +552,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
         mm_we_tlb <= ex_we_tlb;
         mm_is_priv_inst <= ex_is_priv_inst;
-    end else if(en_mmwb || exception_flush) begin
+        mm_cp0_wrsel <= ex_cp0_sel;
+    end else if(en_mmwb || flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
         mm_data_i <= 32'b0;
@@ -483,6 +574,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_illegal <= 1'b0;
         mm_we_tlb <= 1'b0;
         mm_is_priv_inst <= 1'b0;
+        mm_cp0_wrsel <= 3'b0;
     end
 end
 
@@ -500,7 +592,7 @@ mm stage_mm(/*autoinst*/
             .reg_addr_i(mm_reg_addr_i),
             .addr_i(mm_addr_i),
             .mem_data_i(mm_mem_data_i),
-            .exception_flush(exception_flush),
+            .exception_flush(flush),
             .flag_unsigned(mm_flag_unsigned));
 
 exception exception_detect(/*autoinst*/
@@ -527,6 +619,9 @@ exception exception_detect(/*autoinst*/
      .mem_access_vaddr(mm_mem_address),
      .in_delayslot(mm_in_delayslot),
      .overflow(mm_overflow),
+     .special_int_vec(cp0_special_int_vec),
+     .boot_exp_vec(cp0_boot_exp_vec),
+     .interrupt_mask(cp0_interrupt_mask),
      .hardware_int(hardware_int),
      .software_int(cp0_software_int));
 assign cp0_exp_bd = mm_in_delayslot;
@@ -534,7 +629,6 @@ assign cp0_exp_bd = mm_in_delayslot;
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
-        wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
         wb_reg_hilo <= 64'b0;
@@ -542,10 +636,10 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_cp0 <= 1'b0;
         wb_cp0_wraddr <= 5'b0;
         wb_we_tlb <= 1'b0;
+        wb_cp0_wrsel <= 3'b0;
     end
-    else if(en_mmwb && !exception_flush) begin
+    else if(en_mmwb && !flush) begin
         wb_mem_access_op <= mm_mem_access_op;
-        wb_mem_access_sz <= mm_mem_access_sz;
         wb_data_i <= mm_data_o;
         wb_reg_addr_i <= mm_reg_addr_i;
         wb_reg_hilo <= mm_reg_hilo;
@@ -553,9 +647,9 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_cp0 <= mm_we_cp0;
         wb_cp0_wraddr <= mm_cp0_wraddr;
         wb_we_tlb <= mm_we_tlb;
+        wb_cp0_wrsel <= mm_cp0_wrsel;
     end else begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
-        wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
         wb_reg_hilo <= 64'b0;
@@ -563,13 +657,13 @@ always @(posedge clk or negedge rst_n) begin
         wb_we_cp0 <= 1'b0;
         wb_cp0_wraddr <= 5'b0;
         wb_we_tlb <= 1'b0;
+        wb_cp0_wrsel <= 3'b0;
     end
 end
 
 wb stage_wb(/*autoinst*/
             .reg_we(wb_reg_we),
             .mem_access_op(wb_mem_access_op),
-            .mem_access_sz(wb_mem_access_sz),
             .data_i(wb_data_i),
             .reg_addr_i(wb_reg_addr_i));
 

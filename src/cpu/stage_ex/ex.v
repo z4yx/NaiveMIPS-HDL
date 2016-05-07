@@ -14,6 +14,7 @@ module ex(/*autoport*/
           we_cp0,
           cp0_wr_addr,
           cp0_rd_addr,
+          cp0_sel,
           syscall,
           eret,
           we_tlb,
@@ -53,7 +54,7 @@ input wire[63:0] reg_hilo_value;
 input wire[31:0] reg_cp0_value;
 
 output reg[1:0] mem_access_op;
-output reg[1:0] mem_access_sz;
+output reg[2:0] mem_access_sz;
 output reg[31:0] data_o;
 output reg[31:0] mem_addr;
 output reg[4:0] reg_addr;
@@ -64,6 +65,7 @@ output wire stall;
 output reg we_cp0;
 output reg[4:0] cp0_wr_addr;
 output reg[4:0] cp0_rd_addr;
+output reg[2:0] cp0_sel;
 output wire syscall;
 output wire eret;
 output wire we_tlb;
@@ -122,6 +124,7 @@ always @(*) begin
     we_cp0 <= 1'b0;
     cp0_rd_addr <= 5'b0;
     cp0_wr_addr <= 5'b0;
+    cp0_sel <= 3'b0;
     case (op)
     `OP_ADD: begin
         if(!flag_unsigned && reg_s_value[31]==tmp_sign_operand[31] && (reg_s_value[31]^tmp_add[31])) begin
@@ -148,8 +151,8 @@ always @(*) begin
         data_o <= address;
         reg_addr <= reg_d;
     end
-    `OP_LB,`OP_LH,`OP_LL,`OP_LW: begin
-        data_o <= 32'h0;
+    `OP_LB,`OP_LH,`OP_LL,`OP_LW,`OP_LWL,`OP_LWR: begin
+        data_o <= reg_t_value;
         reg_addr <= reg_t;
     end
     `OP_LU: begin
@@ -186,7 +189,7 @@ always @(*) begin
         data_o <= reg_t_value>>immediate;
         reg_addr <= reg_d;
     end
-    `OP_SB,`OP_SC,`OP_SH,`OP_SW: begin
+    `OP_SB,`OP_SC,`OP_SH,`OP_SW,`OP_SWL,`OP_SWR: begin
         data_o <= reg_t_value;
         reg_addr <= reg_t;
     end
@@ -222,11 +225,13 @@ always @(*) begin
         reg_addr <= 5'h0;
     end
     `OP_MFC0: begin
+        cp0_sel <= immediate[2:0];
         cp0_rd_addr <= reg_d;
         data_o <= reg_cp0_value;
         reg_addr <= reg_t;
     end
     `OP_MTC0: begin
+        cp0_sel <= immediate[2:0];
         data_o <= reg_t_value;
         cp0_wr_addr <= reg_d;
         we_cp0 <= 1'b1;
@@ -298,6 +303,8 @@ always @(*) begin
     case (op)
     `OP_LB,
     `OP_LH,
+    `OP_LWL,
+    `OP_LWR,
     `OP_LL,
     `OP_LW: begin
         mem_addr <= reg_s_value+signExtImm;
@@ -305,6 +312,8 @@ always @(*) begin
      end
     `OP_SB,
     `OP_SH,
+    `OP_SWL,
+    `OP_SWR,
     `OP_SC,
     `OP_SW: begin
         mem_addr <= reg_s_value+signExtImm;
@@ -325,6 +334,12 @@ always @(*) begin
     `OP_LH,
     `OP_SH:
         mem_access_sz <= `ACCESS_SZ_HALF;
+    `OP_LWL,
+    `OP_SWL:
+        mem_access_sz <= `ACCESS_SZ_LEFT;
+    `OP_LWR,
+    `OP_SWR:
+        mem_access_sz <= `ACCESS_SZ_RIGHT;
     default:
         mem_access_sz <= `ACCESS_SZ_WORD;
     endcase
@@ -335,6 +350,7 @@ always @(*) begin
     `OP_MFC0,
     `OP_MTC0,
     `OP_CACHE,
+    `OP_WAIT,
     `OP_ERET,
     `OP_TLBWI:
         is_priv_inst <= 1'b1;

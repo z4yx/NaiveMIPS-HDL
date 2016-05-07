@@ -56,6 +56,11 @@
 `define OP_TLBWI 8'd50
 `define OP_SYSCALL 8'd51
 `define OP_CACHE 8'd52
+`define OP_LWL  8'd53
+`define OP_LWR  8'd54
+`define OP_SWL  8'd55
+`define OP_SWR  8'd56
+`define OP_WAIT 8'd57
 
 `define OP_INVAILD 8'hff
 
@@ -63,6 +68,8 @@
 `define ACCESS_OP_M2R 2'd1
 `define ACCESS_OP_R2M 2'd2
 
-`define ACCESS_SZ_WORD 2'd0
-`define ACCESS_SZ_HALF 2'd1
-`define ACCESS_SZ_BYTE 2'd2
+`define ACCESS_SZ_WORD 3'd0
+`define ACCESS_SZ_HALF 3'd1
+`define ACCESS_SZ_BYTE 3'd2
+`define ACCESS_SZ_LEFT 3'd3
+`define ACCESS_SZ_RIGHT 3'd4

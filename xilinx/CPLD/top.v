@@ -21,9 +21,16 @@
 module top(
 input wire clk,
 input wire rxd,
-output wire txd
+output wire txd,
+input wire exp1,
+output wire exp2,
+inout wire[3:0] interconn
     );
 
-assign txd = rxd;
+assign txd = interconn[0];
+assign interconn[1] = rxd;
+
+assign exp2 = interconn[2];
+assign interconn[3] = exp1;
 
 endmodule
