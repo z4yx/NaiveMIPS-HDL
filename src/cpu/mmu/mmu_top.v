@@ -9,6 +9,7 @@ module mmu_top(/*autoport*/
      inst_exp_miss,
      data_exp_illegal,
      inst_exp_illegal,
+     tlbp_result,
 //input
      rst_n,
      clk,
@@ -18,7 +19,8 @@ module mmu_top(/*autoport*/
      inst_en,
      user_mode,
      tlb_config,
-     tlbwi);
+     tlbwi,
+     tlbp);
 
 input wire rst_n;
 input wire clk;
@@ -41,6 +43,9 @@ output wire inst_exp_illegal;
 
 input wire[74:0] tlb_config;
 input wire tlbwi;
+input wire tlbp;
+
+output wire[31:0] tlbp_result;
 
 wire data_tlb_map, inst_tlb_map;
 wire data_miss, inst_miss;
@@ -76,6 +81,8 @@ mem_map map_data(/*autoinst*/
 tlb tlb0(
   .tlbConfig(tlb_config),
   .tlbwi(tlbwi),
+  .tlbp(tlbp),
+  .tlbp_result(tlbp_result),
 
   .dataAddrVirt(data_address_i),
   .insAddrVirt(inst_address_i),

@@ -29,6 +29,8 @@ module cp0(/*autoport*/
          exp_bd,
          exp_code,
          exp_bad_vaddr,
+         we_probe,
+         probe_result,
          debugger_rd_addr,
          debugger_rd_sel);
 
@@ -77,6 +79,9 @@ input wire[31:0] exp_epc;
 input wire exp_bd;
 input wire[4:0] exp_code;
 input wire[31:0] exp_bad_vaddr;
+
+input wire we_probe;
+input wire[31:0] probe_result;
 
 input wire[4:0] debugger_rd_addr;
 input wire[2:0] debugger_rd_sel;
@@ -165,7 +170,7 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:6], 3'b0, cp0_regs_EntryLo1[2:1], 1'b0};
             end
             `CP0_Index: begin
-                data_o_internal[read_i] <= {28'b0, cp0_regs_Index[3:0]};
+                data_o_internal[read_i] <= {cp0_regs_Index[31], 27'b0, cp0_regs_Index[3:0]};
             end
             `CP0_PRId: begin 
                 data_o_internal[read_i] <= {8'b0, 8'b1, 16'h8000}; //MIPS32 4Kc
@@ -246,6 +251,8 @@ always @(posedge clk or negedge rst_n) begin
 
             endcase
         end
+        if(we_probe)
+            cp0_regs_Index <= probe_result;
         if(en_exp_i) begin
             cp0_regs_BadVAddr <= exp_bad_vaddr;
             cp0_regs_Context[22:4] <= exp_bad_vaddr[31:13];

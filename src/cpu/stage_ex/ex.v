@@ -19,6 +19,7 @@ module ex(/*autoport*/
           eret,
           we_tlb,
           is_priv_inst,
+          probe_tlb,
 //input
           clk,
           rst_n,
@@ -70,6 +71,7 @@ output wire syscall;
 output wire eret;
 output wire we_tlb;
 output reg is_priv_inst;
+output wire probe_tlb;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -95,6 +97,7 @@ assign tmp_sub = reg_s_value - tmp_sign_operand; //used by SLT/SLTI and SUB
 assign syscall = op == `OP_SYSCALL;
 assign eret = op == `OP_ERET;
 assign we_tlb = op == `OP_TLBWI;
+assign probe_tlb = op == `OP_TLBP;
 
 multi_cycle mul_instance(/*autoinst*/
            .result(mul_result),
@@ -352,6 +355,7 @@ always @(*) begin
     `OP_CACHE,
     `OP_WAIT,
     `OP_ERET,
+    `OP_TLBP,
     `OP_TLBWI:
         is_priv_inst <= 1'b1;
     default:

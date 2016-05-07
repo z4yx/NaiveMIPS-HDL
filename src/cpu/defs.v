@@ -61,6 +61,7 @@
 `define OP_SWL  8'd55
 `define OP_SWR  8'd56
 `define OP_WAIT 8'd57
+`define OP_TLBP 8'd58
 
 `define OP_INVAILD 8'hff
 

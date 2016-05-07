@@ -58,6 +58,8 @@ always @(*) begin
                 op <= `OP_WAIT;
             else if(inst[5:0] == 6'h2)
                 op <= `OP_TLBWI;
+            else if(inst[5:0] == 6'h8)
+                op <= `OP_TLBP;
             else
                 op <= `OP_INVAILD;
         end

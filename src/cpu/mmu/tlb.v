@@ -2,6 +2,9 @@
 module tlb(
   input wire[74:0] tlbConfig,
   input wire tlbwi,
+  input wire tlbp,
+
+  output wire[31:0] tlbp_result,
 
   input wire[31:0] dataAddrVirt,
   input wire[31:0] insAddrVirt,
