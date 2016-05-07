@@ -6,6 +6,7 @@
 _start:
 __start:
    la   $t0,__exception_vector
+   mtc0  $0, $10, 0    # ASID=0
    mtc0 $t0, $15, 1    # set ebase
    mtc0 $0, $12, 0     # Status_BEV=0
    lui  $t1,0xaa80     # PTE
@@ -50,9 +51,8 @@ __exception_vector:
    mfc0  $26, $4,  0             # test Context
    mfc0  $26, $13, 0             # read cause
    mfc0  $26, $8,  0             # bad vaddr
-   mtc0  $26, $10, 0             # VPN2
    mtc0  $0, $3,   0             # EntryLo1
-   ori   $27, $0,  2
+   ori   $27, $0,  6             # D=1,V=1
    mtc0  $27,$2,   0             # EntryLo0
    mtc0  $4, $0,   0             # Index
    tlbwi

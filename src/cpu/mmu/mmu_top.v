@@ -9,6 +9,7 @@ module mmu_top(/*autoport*/
      inst_exp_miss,
      data_exp_illegal,
      inst_exp_illegal,
+     data_exp_dirty,
      tlbp_result,
 //input
      rst_n,
@@ -20,7 +21,8 @@ module mmu_top(/*autoport*/
      user_mode,
      tlb_config,
      tlbwi,
-     tlbp);
+     tlbp,
+     asid);
 
 input wire rst_n;
 input wire clk;
@@ -40,15 +42,17 @@ output wire data_exp_miss;
 output wire inst_exp_miss;
 output wire data_exp_illegal;
 output wire inst_exp_illegal;
+output wire data_exp_dirty;
 
-input wire[74:0] tlb_config;
+input wire[83:0] tlb_config;
 input wire tlbwi;
 input wire tlbp;
+input wire[7:0] asid;
 
 output wire[31:0] tlbp_result;
 
 wire data_tlb_map, inst_tlb_map;
-wire data_miss, inst_miss;
+wire data_miss, inst_miss, data_dirty;
 
 wire[31:0] data_address_direct;
 wire[31:0] inst_address_direct;
@@ -57,6 +61,7 @@ wire[31:0] data_address_tlb;
 wire[31:0] inst_address_tlb;
 
 assign data_exp_miss = (data_miss && data_tlb_map);
+assign data_exp_dirty = (data_dirty || !data_tlb_map);
 assign inst_exp_miss = (inst_miss && inst_tlb_map);
 assign data_address_o = data_tlb_map ? data_address_tlb : data_address_direct;
 assign inst_address_o = inst_tlb_map ? inst_address_tlb : inst_address_direct;
@@ -83,6 +88,11 @@ tlb tlb0(
   .tlbwi(tlbwi),
   .tlbp(tlbp),
   .tlbp_result(tlbp_result),
+
+  .dataDirt(data_dirty),
+  .insDirt (),
+
+  .nowASID(asid),
 
   .dataAddrVirt(data_address_i),
   .insAddrVirt(inst_address_i),

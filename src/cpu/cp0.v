@@ -12,6 +12,8 @@ module cp0(/*autoport*/
          interrupt_mask,
          special_int_vec,
          boot_exp_vec,
+         asid,
+         in_exl,
          debugger_data_o,
 //input
          clk,
@@ -29,6 +31,7 @@ module cp0(/*autoport*/
          exp_bd,
          exp_code,
          exp_bad_vaddr,
+         exp_asid,
          we_probe,
          probe_result,
          debugger_rd_addr,
@@ -66,12 +69,14 @@ output reg timer_int;
 output wire user_mode;
 output wire[19:0] ebase;
 output wire[31:0] epc;
-output wire[74:0] tlb_config;
+output wire[83:0] tlb_config;
 output wire allow_int;
 output wire[1:0] software_int_o;
 output wire[7:0] interrupt_mask;
 output wire special_int_vec;
 output wire boot_exp_vec;
+output wire[7:0] asid;
+output wire in_exl;
 
 input wire clean_exl;
 input wire en_exp_i;
@@ -79,6 +84,7 @@ input wire[31:0] exp_epc;
 input wire exp_bd;
 input wire[4:0] exp_code;
 input wire[31:0] exp_bad_vaddr;
+input wire[7:0] exp_asid;
 
 input wire we_probe;
 input wire[31:0] probe_result;
@@ -113,6 +119,8 @@ assign user_mode = !cp0_regs_Status[1] && cp0_regs_Status[4];
 assign ebase = {2'b10, cp0_regs_EBase[29:12]};
 assign epc = cp0_regs_EPC;
 assign tlb_config = {
+    cp0_regs_EntryHi[7:0],
+    cp0_regs_EntryLo1[0] & cp0_regs_EntryLo0[0],
     cp0_regs_EntryHi[31:13],
     cp0_regs_EntryLo1[29:6],
     cp0_regs_EntryLo1[2:1],
@@ -125,6 +133,8 @@ assign software_int_o = cp0_regs_Cause[9:8];
 assign interrupt_mask = cp0_regs_Status[15:8];
 assign special_int_vec = cp0_regs_Cause[23];
 assign boot_exp_vec = cp0_regs_Status[22];
+assign asid = cp0_regs_EntryHi[7:0];
+assign in_exl = cp0_regs_Status[1];
 
 genvar read_i;
 generate
@@ -161,13 +171,13 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {cp0_regs_Context[31:4], 4'b0};
             end
             `CP0_EntryHi: begin
-                data_o_internal[read_i] <= {cp0_regs_EntryHi[31:13], 13'b0};
+                data_o_internal[read_i] <= {cp0_regs_EntryHi[31:13], 5'b0, cp0_regs_EntryHi[7:0]};
             end
             `CP0_EntryLo0: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo0[29:6], 3'b0, cp0_regs_EntryLo0[2:1], 1'b0};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo0[29:6], 3'b0, cp0_regs_EntryLo0[2:0]};
             end
             `CP0_EntryLo1: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:6], 3'b0, cp0_regs_EntryLo1[2:1], 1'b0};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:6], 3'b0, cp0_regs_EntryLo1[2:0]};
             end
             `CP0_Index: begin
                 data_o_internal[read_i] <= {cp0_regs_Index[31], 27'b0, cp0_regs_Index[3:0]};
@@ -230,14 +240,15 @@ always @(posedge clk or negedge rst_n) begin
             end
             `CP0_EntryHi: begin
                 cp0_regs_EntryHi[31:13] <= data_i[31:13];
+                cp0_regs_EntryHi[7:0] <= data_i[7:0];
             end
             `CP0_EntryLo0: begin
                 cp0_regs_EntryLo0[29:6] <= data_i[29:6];
-                cp0_regs_EntryLo0[2:1] <= data_i[2:1];
+                cp0_regs_EntryLo0[2:0] <= data_i[2:0];
             end
             `CP0_EntryLo1: begin
                 cp0_regs_EntryLo1[29:6] <= data_i[29:6];
-                cp0_regs_EntryLo1[2:1] <= data_i[2:1];
+                cp0_regs_EntryLo1[2:0] <= data_i[2:0];
             end
             `CP0_Index: begin
                 cp0_regs_Index[3:0] <= data_i[3:0];
@@ -256,6 +267,8 @@ always @(posedge clk or negedge rst_n) begin
         if(en_exp_i) begin
             cp0_regs_BadVAddr <= exp_bad_vaddr;
             cp0_regs_Context[22:4] <= exp_bad_vaddr[31:13];
+            cp0_regs_EntryHi[31:13] <= exp_bad_vaddr[31:13];
+            cp0_regs_EntryHi[7:0] <= exp_asid;
             cp0_regs_Status[1] <= 1'b1;
             cp0_regs_Cause[31] <= exp_bd;
             cp0_regs_Cause[6:2] <= exp_code;

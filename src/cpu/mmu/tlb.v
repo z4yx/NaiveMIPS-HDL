@@ -104,6 +104,33 @@ tlbConverter conv4data(
   .dirt(dataDirt)
 );
 
+tlbProbe probe(
+
+//  .tlbEntries(tlbEntries),
+
+  .tlbEntry0(tlbEntries[0]),
+  .tlbEntry1(tlbEntries[1]),
+  .tlbEntry2(tlbEntries[2]),
+  .tlbEntry3(tlbEntries[3]),
+  .tlbEntry4(tlbEntries[4]),
+  .tlbEntry5(tlbEntries[5]),
+  .tlbEntry6(tlbEntries[6]),
+  .tlbEntry7(tlbEntries[7]),
+  .tlbEntry8(tlbEntries[8]),
+  .tlbEntry9(tlbEntries[9]),
+  .tlbEntry10(tlbEntries[10]),
+  .tlbEntry11(tlbEntries[11]),
+  .tlbEntry12(tlbEntries[12]),
+  .tlbEntry13(tlbEntries[13]),
+  .tlbEntry14(tlbEntries[14]),
+  .tlbEntry15(tlbEntries[15]),
+
+  .virtAddr({tlbConfig[74:56], {13{1'b0}}}),
+  .miss(tlbp_result[31]),
+  .nowASID(nowASID),
+  .matchWhich(tlbp_result[3:0])
+);
+
 always @(posedge clk or negedge rst_n) begin
 
   if (rst_n == 0) begin :label

@@ -8,11 +8,13 @@ module exception(/*autoport*/
            exp_code,
            exp_bad_vaddr,
            exception_new_pc,
+           exp_asid,
 //input
            iaddr_exp_miss,
            daddr_exp_miss,
            iaddr_exp_illegal,
            daddr_exp_illegal,
+           daddr_exp_dirty,
            data_we,
            invalid_inst,
            syscall,
@@ -29,12 +31,17 @@ module exception(/*autoport*/
            restrict_priv_inst,
            interrupt_mask,
            special_int_vec,
-           boot_exp_vec);
+           boot_exp_vec,
+           if_asid,
+           mm_asid,
+           if_exl,
+           mm_exl);
 
 input wire iaddr_exp_miss;
 input wire daddr_exp_miss;
 input wire iaddr_exp_illegal;
 input wire daddr_exp_illegal;
+input wire daddr_exp_dirty;
 input wire data_we;
 input wire invalid_inst;
 input wire syscall;
@@ -52,6 +59,10 @@ input wire restrict_priv_inst;
 input wire[7:0] interrupt_mask;
 input wire special_int_vec;
 input wire boot_exp_vec;
+input wire[7:0] if_asid;
+input wire[7:0] mm_asid;
+input wire if_exl;
+input wire mm_exl;
 
 output reg flush;
 output reg cp0_wr_exp;
@@ -60,6 +71,7 @@ output reg[31:0] exp_epc;
 output reg[4:0] exp_code;
 output reg[31:0] exp_bad_vaddr;
 output reg[31:0] exception_new_pc;
+output reg[7:0] exp_asid;
 
 wire[31:0] exception_base;
 
@@ -69,6 +81,7 @@ assign exception_base = boot_exp_vec ? 32'hBFC00200 : {ebase_in, 12'b0};
 // assign exception_base = boot_exp_vec ? 32'hBFC00200 : 32'h80000000;
 
 always @(*) begin
+    exp_asid <= 8'b0;
     cp0_wr_exp <= 1'b1;
     cp0_clean_exl <= 1'b0;
     flush <= 1'b1;
@@ -87,7 +100,9 @@ always @(*) begin
         $display("Exception: Instruction address illegal");
     end
     else if(iaddr_exp_miss) begin
-        exception_new_pc <= exception_base + 32'h0;
+        if(!if_exl)
+            exception_new_pc <= exception_base + 32'h0;
+        exp_asid <= if_asid;
         exp_bad_vaddr <= pc_value;
         exp_code <= 5'h02; //TLBL
         $display("Exception: Instruction TLB miss");
@@ -121,10 +136,18 @@ always @(*) begin
         $display("Exception: Data address illegal, WE=%d",data_we);
     end
     else if(daddr_exp_miss) begin
-        exception_new_pc <= exception_base + 32'h0;
+        if(!mm_exl)
+            exception_new_pc <= exception_base + 32'h0;
+        exp_asid <= mm_asid;
         exp_bad_vaddr <= mem_access_vaddr;
         exp_code <= data_we ? 5'h03 : 5'h02; //TLBS : TLBL
         $display("Exception: Data TLB miss, WE=%d",data_we);
+    end
+    else if(daddr_exp_dirty) begin
+        exp_asid <= mm_asid;
+        exp_bad_vaddr <= mem_access_vaddr;
+        exp_code <= 5'h1; //Mod
+        $display("Exception: Data TLB Mod");
     end
     else begin
         cp0_wr_exp <= 1'b0;

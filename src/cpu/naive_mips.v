@@ -59,6 +59,8 @@ wire [31:0]if_pc;
 wire [31:0]if_inst;
 wire if_iaddr_exp_miss;
 wire if_iaddr_exp_illegal;
+wire [7:0]if_asid;
+wire if_in_exl;
 
 wire [15:0]id_immediate;
 wire [1:0]id_op_type;
@@ -75,6 +77,8 @@ reg id_in_delayslot;
 reg [31:0]id_pc_value;
 reg id_iaddr_exp_miss;
 reg id_iaddr_exp_illegal;
+reg [7:0]id_iaddr_exp_asid;
+reg id_iaddr_exp_exl;
 
 wire [31:0] id_reg_s_value_from_regs, id_reg_t_value_from_regs;
 wire [31:0] id_reg_s_value, id_reg_t_value;
@@ -114,6 +118,8 @@ reg ex_iaddr_exp_illegal;
 wire ex_we_tlb;
 wire ex_is_priv_inst;
 wire ex_probe_tlb;
+reg [7:0]ex_iaddr_exp_asid;
+reg ex_iaddr_exp_exl;
 
 wire mm_mem_wr;
 reg mm_in_delayslot;
@@ -143,12 +149,15 @@ wire mm_daddr_exp_miss;
 reg mm_iaddr_exp_miss;
 reg mm_iaddr_exp_illegal;
 wire mm_daddr_exp_illegal;
+wire mm_daddr_dirty;
 wire mm_alignment_err;
 reg mm_we_tlb;
 wire mm_stall;
 reg mm_is_priv_inst;
 reg mm_probe_tlb;
 wire[31:0] mm_probe_result;
+reg [7:0]mm_iaddr_exp_asid;
+reg mm_iaddr_exp_exl;
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -169,17 +178,20 @@ wire cp0_clean_exl;
 wire cp0_exp_en;
 wire cp0_exp_bd;
 wire[4:0] cp0_exp_code;
+wire[7:0] cp0_exp_asid;
 wire[31:0] cp0_exp_badv;
 wire[31:0] cp0_exp_epc;
 wire[19:0] cp0_ebase;
 wire[31:0] cp0_epc;
-wire[74:0] cp0_tlb_config;
+wire[83:0] cp0_tlb_config;
 wire cp0_user_mode;
 wire timer_int;
 wire[5:0] hardware_int;
 wire[7:0] cp0_interrupt_mask;
 wire cp0_special_int_vec;
 wire cp0_boot_exp_vec;
+wire[7:0]cp0_asid;
+wire cp0_in_exl;
 
 wire debugger_flush;
 wire debugger_stall;
@@ -255,6 +267,7 @@ mmu_top mmu(/*autoinst*/
       .inst_exp_miss(if_iaddr_exp_miss),
       .data_exp_illegal(if_iaddr_exp_illegal),
       .inst_exp_illegal(mm_daddr_exp_illegal),
+      .data_exp_dirty(mm_daddr_dirty),
       .rst_n(rst_n),
       .clk(clk),
       .data_address_i(mm_mem_address),
@@ -265,6 +278,7 @@ mmu_top mmu(/*autoinst*/
       .tlbwi(wb_we_tlb),
       .tlbp(mm_probe_tlb),
       .tlbp_result(mm_probe_result),
+      .asid(cp0_asid),
       .user_mode(cp0_user_mode));
 
 assign ibus_byteenable = 4'b1111;
@@ -272,6 +286,8 @@ assign ibus_read = 1'b1;
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
 assign if_inst = (if_iaddr_exp_miss||if_iaddr_exp_illegal) ? 32'b0 : ibus_rddata;
+assign if_in_exl = cp0_in_exl;
+assign if_asid = cp0_asid;
 
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd;
@@ -343,6 +359,8 @@ cp0 cp0_instance(/*autoinst*/
      .allow_int(cp0_allow_int),
      .special_int_vec(cp0_special_int_vec),
      .boot_exp_vec   (cp0_boot_exp_vec),
+     .asid           (cp0_asid),
+     .in_exl         (cp0_in_exl),
      .interrupt_mask (cp0_interrupt_mask),
      .en_exp_i(cp0_exp_en),
      .clean_exl(cp0_clean_exl),
@@ -351,6 +369,7 @@ cp0 cp0_instance(/*autoinst*/
      .exp_bd(cp0_exp_bd),
      .exp_epc(cp0_exp_epc),
      .exp_code(cp0_exp_code),
+     .exp_asid(cp0_exp_asid),
      .exp_bad_vaddr(cp0_exp_badv)
 );
 
@@ -361,6 +380,8 @@ always @(posedge clk or negedge rst_n) begin
         id_in_delayslot <= 1'b0;
         id_iaddr_exp_miss <= 1'b0;
         id_iaddr_exp_illegal <= 1'b0;
+        id_iaddr_exp_asid <= 8'b0;
+        id_iaddr_exp_exl <= 1'b0;
     end
     else if(en_ifid && !flush) begin
         id_inst <= if_inst;
@@ -368,12 +389,16 @@ always @(posedge clk or negedge rst_n) begin
         id_in_delayslot <= id_is_branch;
         id_iaddr_exp_miss <= if_iaddr_exp_miss;
         id_iaddr_exp_illegal <= if_iaddr_exp_illegal;
+        id_iaddr_exp_asid <= if_asid;
+        id_iaddr_exp_exl <= if_in_exl;
     end else if(en_idex || flush) begin
         id_inst <= 32'b0; //NOP;
         id_pc_value <= 32'b0;
         id_in_delayslot <= 1'b0;
         id_iaddr_exp_miss <= 1'b0;
         id_iaddr_exp_illegal <= 1'b0;
+        id_iaddr_exp_asid <= 8'b0;
+        id_iaddr_exp_exl <= 1'b0;
     end
 end
 
@@ -441,6 +466,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= 32'b0;
         ex_iaddr_exp_miss <= 1'b0;
         ex_iaddr_exp_illegal <= 1'b0;
+        ex_iaddr_exp_asid <= 8'b0;
+        ex_iaddr_exp_exl <= 1'b0;
     end
     else if(en_idex && !flush) begin
         ex_immediate <= id_immediate;
@@ -457,6 +484,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= id_pc_value;
         ex_iaddr_exp_miss <= id_iaddr_exp_miss;
         ex_iaddr_exp_illegal <= id_iaddr_exp_illegal;
+        ex_iaddr_exp_asid <= id_iaddr_exp_asid;
+        ex_iaddr_exp_exl <= id_iaddr_exp_exl;
     end else if(en_exmm || flush) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
@@ -472,6 +501,8 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= 32'b0;
         ex_iaddr_exp_miss <= 1'b0;
         ex_iaddr_exp_illegal <= 1'b0;
+        ex_iaddr_exp_asid <= 8'b0;
+        ex_iaddr_exp_exl <= 1'b0;
     end
 end
 
@@ -541,6 +572,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_is_priv_inst <= 1'b0;
         mm_cp0_wrsel <= 3'b0;
         mm_probe_tlb <= 1'b0;
+        mm_iaddr_exp_asid <= 8'b0;
+        mm_iaddr_exp_exl <= 1'b0;
     end
     else if(en_exmm && !flush) begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -565,6 +598,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_is_priv_inst <= ex_is_priv_inst;
         mm_cp0_wrsel <= ex_cp0_sel;
         mm_probe_tlb <= ex_probe_tlb;
+        mm_iaddr_exp_asid <= ex_iaddr_exp_asid;
+        mm_iaddr_exp_exl <= ex_iaddr_exp_exl;
     end else if(en_mmwb || flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -588,6 +623,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_is_priv_inst <= 1'b0;
         mm_cp0_wrsel <= 3'b0;
         mm_probe_tlb <= 1'b0;
+        mm_iaddr_exp_asid <= 8'b0;
+        mm_iaddr_exp_exl <= 1'b0;
     end
 end
 
@@ -618,9 +655,11 @@ exception exception_detect(/*autoinst*/
      .allow_int(cp0_allow_int),
      .exp_epc(cp0_exp_epc),
      .exp_code(cp0_exp_code),
+     .exp_asid(cp0_exp_asid),
      .exp_bad_vaddr(cp0_exp_badv),
      .iaddr_exp_miss(mm_iaddr_exp_miss),
      .daddr_exp_miss(mm_daddr_exp_miss),
+     .daddr_exp_dirty(mm_mem_wr & ~mm_daddr_dirty),
      .iaddr_exp_illegal(mm_iaddr_exp_illegal || (mm_pc_value[1:0]!=2'b00)),
      .daddr_exp_illegal(mm_daddr_exp_illegal || mm_alignment_err),
      .data_we(mm_mem_wr),
@@ -629,6 +668,10 @@ exception exception_detect(/*autoinst*/
      .eret(mm_eret),
      .restrict_priv_inst(mm_is_priv_inst && cp0_user_mode),
      .pc_value(mm_pc_value),
+     .if_asid(mm_iaddr_exp_asid),
+     .mm_asid(cp0_asid),
+     .if_exl(mm_iaddr_exp_exl),
+     .mm_exl(cp0_in_exl),
      .mem_access_vaddr(mm_mem_address),
      .in_delayslot(mm_in_delayslot),
      .overflow(mm_overflow),
