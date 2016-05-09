@@ -24,12 +24,13 @@ module tlbConverter(
   input wire[31:0] virtAddr,
   output wire miss,
   input wire[7:0] nowASID,
+  output wire valid,
+  output reg[3:0] matchWhich,
   output wire dirt
 );
 
 wire[15:0] matched;
 wire[79:0] tlbEntries[0:15];
-reg[3:0] matchWhich;
 
 wire[23:0] PFN;
 
@@ -55,6 +56,7 @@ assign tlbEntries[15]=tlbEntry15;
 
 assign PFN[23:0] = virtAddr[12] ? tlbEntries[matchWhich][51:28] : tlbEntries[matchWhich][25:2];
 assign dirt = virtAddr[12] ? tlbEntries[matchWhich][27] : tlbEntries[matchWhich][1];
+assign valid = virtAddr[12] ? tlbEntries[matchWhich][26] : tlbEntries[matchWhich][0];
 
 assign miss = matched == 16'd0;
 
@@ -66,8 +68,6 @@ assign phyAddr[31:12] = PFN[19:0];
 //  for(i = 0; i < 16 ; i=i+1) begin
 //    assign matched[i] = tlbEntries[i][70:52] == virtAddr[31:13] &&
 //                                      ^ Vpn2
-//     (virtAddr[12] ? tlbEntries[i][26] : tlbEntries[i][0]) &&
-//                                   ^V1                 ^V0
 //     (tlbEntries[i][79:72] == nowASID || tlbEntries[i][71]);
 //                    ^ASID                               ^G
 //  end
@@ -77,52 +77,36 @@ assign phyAddr[31:12] = PFN[19:0];
 //generated
 
 assign matched[0] = tlbEntries[0][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[0][26] : tlbEntries[0][0]) &&
  (tlbEntries[0][79:72] == nowASID || tlbEntries[0][71]);
 assign matched[1] = tlbEntries[1][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[1][26] : tlbEntries[1][0]) &&
  (tlbEntries[1][79:72] == nowASID || tlbEntries[1][71]);
 assign matched[2] = tlbEntries[2][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[2][26] : tlbEntries[2][0]) &&
  (tlbEntries[2][79:72] == nowASID || tlbEntries[2][71]);
 assign matched[3] = tlbEntries[3][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[3][26] : tlbEntries[3][0]) &&
  (tlbEntries[3][79:72] == nowASID || tlbEntries[3][71]);
 assign matched[4] = tlbEntries[4][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[4][26] : tlbEntries[4][0]) &&
  (tlbEntries[4][79:72] == nowASID || tlbEntries[4][71]);
 assign matched[5] = tlbEntries[5][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[5][26] : tlbEntries[5][0]) &&
  (tlbEntries[5][79:72] == nowASID || tlbEntries[5][71]);
 assign matched[6] = tlbEntries[6][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[6][26] : tlbEntries[6][0]) &&
  (tlbEntries[6][79:72] == nowASID || tlbEntries[6][71]);
 assign matched[7] = tlbEntries[7][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[7][26] : tlbEntries[7][0]) &&
  (tlbEntries[7][79:72] == nowASID || tlbEntries[7][71]);
 assign matched[8] = tlbEntries[8][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[8][26] : tlbEntries[8][0]) &&
  (tlbEntries[8][79:72] == nowASID || tlbEntries[8][71]);
 assign matched[9] = tlbEntries[9][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[9][26] : tlbEntries[9][0]) &&
  (tlbEntries[9][79:72] == nowASID || tlbEntries[9][71]);
 assign matched[10] = tlbEntries[10][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[10][26] : tlbEntries[10][0]) &&
  (tlbEntries[10][79:72] == nowASID || tlbEntries[10][71]);
 assign matched[11] = tlbEntries[11][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[11][26] : tlbEntries[11][0]) &&
  (tlbEntries[11][79:72] == nowASID || tlbEntries[11][71]);
 assign matched[12] = tlbEntries[12][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[12][26] : tlbEntries[12][0]) &&
  (tlbEntries[12][79:72] == nowASID || tlbEntries[12][71]);
 assign matched[13] = tlbEntries[13][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[13][26] : tlbEntries[13][0]) &&
  (tlbEntries[13][79:72] == nowASID || tlbEntries[13][71]);
 assign matched[14] = tlbEntries[14][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[14][26] : tlbEntries[14][0]) &&
  (tlbEntries[14][79:72] == nowASID || tlbEntries[14][71]);
 assign matched[15] = tlbEntries[15][70:52] == virtAddr[31:13] &&
- (virtAddr[12] ? tlbEntries[15][26] : tlbEntries[15][0]) &&
  (tlbEntries[15][79:72] == nowASID || tlbEntries[15][71]);
 
 //endgenerated

@@ -15,6 +15,8 @@ module tlb(
   output wire insMiss,
   output wire dataDirt,
   output wire insDirt,
+  output wire insValid,
+  output wire dataValid,
 
   output wire[31:0] dataAddrPhy,
   output wire[31:0] insAddrPhy,
@@ -73,6 +75,8 @@ tlbConverter conv4inst(
   .virtAddr(insAddrVirt),
   .miss(insMiss),
   .nowASID(nowASID),
+  .matchWhich(),
+  .valid(insValid),
   .dirt(insDirt)
 );
 
@@ -101,10 +105,12 @@ tlbConverter conv4data(
   .virtAddr(dataAddrVirt),
   .miss(dataMiss),
   .nowASID(nowASID),
+  .matchWhich(),
+  .valid(dataValid),
   .dirt(dataDirt)
 );
 
-tlbProbe probe(
+tlbConverter prober(
 
 //  .tlbEntries(tlbEntries),
 
@@ -125,10 +131,13 @@ tlbProbe probe(
   .tlbEntry14(tlbEntries[14]),
   .tlbEntry15(tlbEntries[15]),
 
+  .phyAddr(),
   .virtAddr({tlbConfig[74:56], {13{1'b0}}}),
   .miss(tlbp_result[31]),
   .nowASID(nowASID),
-  .matchWhich(tlbp_result[3:0])
+  .matchWhich(tlbp_result[3:0]),
+  .valid(),
+  .dirt()
 );
 
 always @(posedge clk or negedge rst_n) begin

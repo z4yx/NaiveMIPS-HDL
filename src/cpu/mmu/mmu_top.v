@@ -10,6 +10,8 @@ module mmu_top(/*autoport*/
      data_exp_illegal,
      inst_exp_illegal,
      data_exp_dirty,
+     data_exp_invalid,
+     inst_exp_invalid,
      tlbp_result,
 //input
      rst_n,
@@ -43,6 +45,8 @@ output wire inst_exp_miss;
 output wire data_exp_illegal;
 output wire inst_exp_illegal;
 output wire data_exp_dirty;
+output wire data_exp_invalid;
+output wire inst_exp_invalid;
 
 input wire[83:0] tlb_config;
 input wire tlbwi;
@@ -53,6 +57,7 @@ output wire[31:0] tlbp_result;
 
 wire data_tlb_map, inst_tlb_map;
 wire data_miss, inst_miss, data_dirty;
+wire data_valid, inst_valid;
 
 wire[31:0] data_address_direct;
 wire[31:0] inst_address_direct;
@@ -62,7 +67,9 @@ wire[31:0] inst_address_tlb;
 
 assign data_exp_miss = (data_miss && data_tlb_map);
 assign data_exp_dirty = (data_dirty || !data_tlb_map);
+assign data_exp_invalid = (~data_valid & data_tlb_map);
 assign inst_exp_miss = (inst_miss && inst_tlb_map);
+assign inst_exp_invalid = (~inst_valid & data_tlb_map);
 assign data_address_o = data_tlb_map ? data_address_tlb : data_address_direct;
 assign inst_address_o = inst_tlb_map ? inst_address_tlb : inst_address_direct;
 
@@ -91,6 +98,9 @@ tlb tlb0(
 
   .dataDirt(data_dirty),
   .insDirt (),
+
+  .insValid (inst_valid),
+  .dataValid(data_valid),
 
   .nowASID(asid),
 

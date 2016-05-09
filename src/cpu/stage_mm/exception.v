@@ -12,6 +12,8 @@ module exception(/*autoport*/
 //input
            iaddr_exp_miss,
            daddr_exp_miss,
+           iaddr_exp_invalid,
+           daddr_exp_invalid,
            iaddr_exp_illegal,
            daddr_exp_illegal,
            daddr_exp_dirty,
@@ -39,6 +41,8 @@ module exception(/*autoport*/
 
 input wire iaddr_exp_miss;
 input wire daddr_exp_miss;
+input wire iaddr_exp_invalid;
+input wire daddr_exp_invalid;
 input wire iaddr_exp_illegal;
 input wire daddr_exp_illegal;
 input wire daddr_exp_dirty;
@@ -107,6 +111,12 @@ always @(*) begin
         exp_code <= 5'h02; //TLBL
         $display("Exception: Instruction TLB miss");
     end
+    else if(iaddr_exp_invalid) begin
+        exp_asid <= if_asid;
+        exp_bad_vaddr <= pc_value;
+        exp_code <= 5'h02; //TLBL
+        $display("Exception: Instruction TLB invalid");
+    end
     else if(syscall) begin
         exp_code <= 5'h08;
         $display("Exception: Syscall");
@@ -142,6 +152,12 @@ always @(*) begin
         exp_bad_vaddr <= mem_access_vaddr;
         exp_code <= data_we ? 5'h03 : 5'h02; //TLBS : TLBL
         $display("Exception: Data TLB miss, WE=%d",data_we);
+    end
+    else if(daddr_exp_invalid) begin
+        exp_asid <= mm_asid;
+        exp_bad_vaddr <= mem_access_vaddr;
+        exp_code <= data_we ? 5'h03 : 5'h02; //TLBS : TLBL
+        $display("Exception: Data TLB invalid, WE=%d",data_we);
     end
     else if(daddr_exp_dirty) begin
         exp_asid <= mm_asid;

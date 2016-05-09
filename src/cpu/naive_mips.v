@@ -59,6 +59,7 @@ wire [31:0]if_pc;
 wire [31:0]if_inst;
 wire if_iaddr_exp_miss;
 wire if_iaddr_exp_illegal;
+wire if_iaddr_exp_invalid;
 wire [7:0]if_asid;
 wire if_in_exl;
 
@@ -77,6 +78,7 @@ reg id_in_delayslot;
 reg [31:0]id_pc_value;
 reg id_iaddr_exp_miss;
 reg id_iaddr_exp_illegal;
+reg id_iaddr_exp_invalid;
 reg [7:0]id_iaddr_exp_asid;
 reg id_iaddr_exp_exl;
 
@@ -115,6 +117,7 @@ reg ex_in_delayslot;
 reg [31:0]ex_pc_value;
 reg ex_iaddr_exp_miss;
 reg ex_iaddr_exp_illegal;
+reg ex_iaddr_exp_invalid;
 wire ex_we_tlb;
 wire ex_is_priv_inst;
 wire ex_probe_tlb;
@@ -148,8 +151,10 @@ reg [31:0]mm_pc_value;
 wire mm_daddr_exp_miss;
 reg mm_iaddr_exp_miss;
 reg mm_iaddr_exp_illegal;
+reg mm_iaddr_exp_invalid;
 wire mm_daddr_exp_illegal;
 wire mm_daddr_dirty;
+wire mm_daddr_exp_invalid;
 wire mm_alignment_err;
 reg mm_we_tlb;
 wire mm_stall;
@@ -268,6 +273,8 @@ mmu_top mmu(/*autoinst*/
       .data_exp_illegal(if_iaddr_exp_illegal),
       .inst_exp_illegal(mm_daddr_exp_illegal),
       .data_exp_dirty(mm_daddr_dirty),
+      .inst_exp_invalid(if_iaddr_exp_invalid),
+      .data_exp_invalid(mm_daddr_exp_invalid),
       .rst_n(rst_n),
       .clk(clk),
       .data_address_i(mm_mem_address),
@@ -282,10 +289,10 @@ mmu_top mmu(/*autoinst*/
       .user_mode(cp0_user_mode));
 
 assign ibus_byteenable = 4'b1111;
-assign ibus_read = 1'b1;
+assign ibus_read = ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
-assign if_inst = (if_iaddr_exp_miss||if_iaddr_exp_illegal) ? 32'b0 : ibus_rddata;
+assign if_inst = (if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid) ? 32'b0 : ibus_rddata;
 assign if_in_exl = cp0_in_exl;
 assign if_asid = cp0_asid;
 
@@ -380,6 +387,7 @@ always @(posedge clk or negedge rst_n) begin
         id_in_delayslot <= 1'b0;
         id_iaddr_exp_miss <= 1'b0;
         id_iaddr_exp_illegal <= 1'b0;
+        id_iaddr_exp_invalid <= 1'b0;
         id_iaddr_exp_asid <= 8'b0;
         id_iaddr_exp_exl <= 1'b0;
     end
@@ -389,6 +397,7 @@ always @(posedge clk or negedge rst_n) begin
         id_in_delayslot <= id_is_branch;
         id_iaddr_exp_miss <= if_iaddr_exp_miss;
         id_iaddr_exp_illegal <= if_iaddr_exp_illegal;
+        id_iaddr_exp_invalid <= if_iaddr_exp_invalid;
         id_iaddr_exp_asid <= if_asid;
         id_iaddr_exp_exl <= if_in_exl;
     end else if(en_idex || flush) begin
@@ -397,6 +406,7 @@ always @(posedge clk or negedge rst_n) begin
         id_in_delayslot <= 1'b0;
         id_iaddr_exp_miss <= 1'b0;
         id_iaddr_exp_illegal <= 1'b0;
+        id_iaddr_exp_invalid <= 1'b0;
         id_iaddr_exp_asid <= 8'b0;
         id_iaddr_exp_exl <= 1'b0;
     end
@@ -466,6 +476,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= 32'b0;
         ex_iaddr_exp_miss <= 1'b0;
         ex_iaddr_exp_illegal <= 1'b0;
+        ex_iaddr_exp_invalid <= 1'b0;
         ex_iaddr_exp_asid <= 8'b0;
         ex_iaddr_exp_exl <= 1'b0;
     end
@@ -484,6 +495,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= id_pc_value;
         ex_iaddr_exp_miss <= id_iaddr_exp_miss;
         ex_iaddr_exp_illegal <= id_iaddr_exp_illegal;
+        ex_iaddr_exp_invalid <= id_iaddr_exp_invalid;
         ex_iaddr_exp_asid <= id_iaddr_exp_asid;
         ex_iaddr_exp_exl <= id_iaddr_exp_exl;
     end else if(en_exmm || flush) begin
@@ -501,6 +513,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_pc_value <= 32'b0;
         ex_iaddr_exp_miss <= 1'b0;
         ex_iaddr_exp_illegal <= 1'b0;
+        ex_iaddr_exp_invalid <= 1'b0;
         ex_iaddr_exp_asid <= 8'b0;
         ex_iaddr_exp_exl <= 1'b0;
     end
@@ -568,6 +581,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_invalid_inst <= 1'b0;
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
+        mm_iaddr_exp_invalid <= 1'b0;
         mm_we_tlb <= 1'b0;
         mm_is_priv_inst <= 1'b0;
         mm_cp0_wrsel <= 3'b0;
@@ -594,6 +608,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_invalid_inst <= ex_op == `OP_INVAILD;
         mm_iaddr_exp_miss <= ex_iaddr_exp_miss;
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
+        mm_iaddr_exp_invalid <= ex_iaddr_exp_invalid;
         mm_we_tlb <= ex_we_tlb;
         mm_is_priv_inst <= ex_is_priv_inst;
         mm_cp0_wrsel <= ex_cp0_sel;
@@ -619,6 +634,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_invalid_inst <= 1'b0;
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
+        mm_iaddr_exp_invalid <= 1'b0;
         mm_we_tlb <= 1'b0;
         mm_is_priv_inst <= 1'b0;
         mm_cp0_wrsel <= 3'b0;
@@ -662,6 +678,8 @@ exception exception_detect(/*autoinst*/
      .daddr_exp_dirty(mm_mem_wr & ~mm_daddr_dirty),
      .iaddr_exp_illegal(mm_iaddr_exp_illegal || (mm_pc_value[1:0]!=2'b00)),
      .daddr_exp_illegal(mm_daddr_exp_illegal || mm_alignment_err),
+     .iaddr_exp_invalid(mm_iaddr_exp_invalid),
+     .daddr_exp_invalid(mm_daddr_exp_invalid),
      .data_we(mm_mem_wr),
      .invalid_inst(mm_invalid_inst),
      .syscall(mm_syscall),
