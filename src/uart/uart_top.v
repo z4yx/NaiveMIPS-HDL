@@ -39,15 +39,32 @@ wire[7:0] rx_data;
 wire rx_data_available;
 wire rx_clear;
 
+reg txidle_ie, rxavai_ie;
+
 assign tx_request = bus_write && bus_address==`REG_UART_SEND;
 assign rx_clear = bus_read && bus_address==`REG_UART_RECV;
-assign uart_irq = rx_data_available;
+assign uart_irq = (rx_data_available&rxavai_ie)|(tx_idle&txidle_ie);
+
+always @(posedge clk_bus or negedge rst_n) begin
+    if(~rst_n)begin 
+        txidle_ie <= 1'b0;
+        rxavai_ie <= 1'b1;
+    end
+    else if(bus_write) begin
+        case(bus_address)
+        `REG_UART_STATUS: begin
+            rxavai_ie <= bus_data_i[4];
+            txidle_ie <= bus_data_i[3];
+        end
+        endcase
+    end
+end
 
 always @(*) begin
     if(bus_read) begin
         case(bus_address)
         `REG_UART_STATUS: begin
-            bus_data_o <= {30'b0, rx_data_available, tx_idle};
+            bus_data_o <= {27'b0,rxavai_ie,txidle_ie,1'b0,rx_data_available,tx_idle};
         end
         `REG_UART_RECV: begin
             bus_data_o <= {24'b0, rx_data};
