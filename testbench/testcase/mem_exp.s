@@ -38,11 +38,19 @@ entry:
 
    .org 0x400
    ori $16, $16, 0xbeef
-   sw  $16, 0x2a04($0)
-   j _loop
-   lw  $17, 0x4a04($0)
+   lui $2, 0x8000
+   sw  $16, 0xa04($2)
+   or  $16, $0, $0
+   lw  $16, 0x2a04($0) #TLBL miss
+   lw  $17, 0x5a04($0) #TLBL miss then TLBL invalid
+   ori  $18, $0, 0xface
+   lw   $18, 0x4a04($0) #No exception here
+   ori  $18, $0, 0xfac1
+   b    _loop           #cannot use j here
+   sw   $18, 0x2a04($0) #TLB Mod, delay slot
 _loop:
-   j _loop
+   lw   $17, 0xa04($2)
+   b    _loop
    nop
 
    .org 0x1000                  # must be 4K alignment
@@ -52,7 +60,7 @@ __exception_vector:
    mfc0  $26, $13, 0             # read cause
    mfc0  $26, $8,  0             # bad vaddr
    mtc0  $0, $3,   0             # EntryLo1
-   ori   $27, $0,  6             # D=1,V=1
+   ori   $27, $0,  2             # D=0,V=1
    mtc0  $27,$2,   0             # EntryLo0
    mtc0  $4, $0,   0             # Index
    tlbwi
@@ -66,6 +74,13 @@ __exception_vector:
    .org 0x1180
    addi  $5,$5,1
    mfc0  $26, $13, 0             # read cause
+   andi   $26, $26, 0x7c
+   ori   $27, $0, 8
+   beq   $26, $27, handle_invalid
+   nop
+   ori   $27, $0, 4
+   beq   $26, $27, handle_mod
+   nop
    mfc0  $26, $8,  0             # bad vaddr
    mfc0 $27,$14,0x0
    addi $27,$27,0x4
@@ -74,3 +89,20 @@ __exception_vector:
    nop
    nop
    eret
+handle_invalid:
+handle_mod:
+   ori   $27, $0,  6             # D=1,V=1
+   mtc0  $27,$3,   0             # EntryLo1
+   mtc0  $27,$2,   0             # EntryLo0
+   tlbp
+   nop
+   nop
+   nop
+   mfc0  $26,$0, 0               # Index
+   tlbwi
+   and   $27,$27,$0
+   and   $26,$26,$0
+   nop
+   nop
+   eret
+
