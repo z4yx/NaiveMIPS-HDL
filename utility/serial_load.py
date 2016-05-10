@@ -195,6 +195,7 @@ def write_flash(f):
     # !!! clear lock bits !!!
     write_ram(FLASH_BASE, "\x60\x00\x00\x00")
     write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    wait_flash()
 
     for i in tqdm(range(0, blocks), desc='Erasing:', unit='Blocks'):
         write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\x20\x00\x00\x00")
@@ -248,10 +249,12 @@ def flash_test():
     # !!! clear lock bits !!!
     write_ram(FLASH_BASE, "\x60\x00\x00\x00")
     write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    wait_flash()
 
     # !!! erase test !!!
     write_ram(FLASH_BASE, "\x20\x00\x00\x00")
     write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    wait_flash()
 
     while True:
         write_ram(FLASH_BASE, "\x70\x00\x00\x00")
