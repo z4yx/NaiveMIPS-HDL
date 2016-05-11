@@ -77,6 +77,7 @@ always @(*) begin
     6'h2a: op <= `OP_SWL;
     6'h2e: op <= `OP_SWR;
     6'h2F: op <= `OP_CACHE;
+    6'h33: op <= `OP_PREF;
     // 6'h38: op <= `OP_SC;
     default: op <= `OP_INVAILD;
     endcase
