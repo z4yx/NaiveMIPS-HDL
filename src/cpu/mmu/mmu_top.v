@@ -69,7 +69,7 @@ assign data_exp_miss = (data_miss && data_tlb_map);
 assign data_exp_dirty = (data_dirty || !data_tlb_map);
 assign data_exp_invalid = (~data_valid & data_tlb_map);
 assign inst_exp_miss = (inst_miss && inst_tlb_map);
-assign inst_exp_invalid = (~inst_valid & data_tlb_map);
+assign inst_exp_invalid = (~inst_valid & inst_tlb_map);
 assign data_address_o = data_tlb_map ? data_address_tlb : data_address_direct;
 assign inst_address_o = inst_tlb_map ? inst_address_tlb : inst_address_direct;
 
