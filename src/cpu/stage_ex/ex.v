@@ -258,15 +258,15 @@ always @(*) begin
         reg_addr <= reg_d;
     end
     `OP_SLLV: begin
-        data_o <= reg_t_value<<reg_s_value;
+        data_o <= reg_t_value<<reg_s_value[4:0];
         reg_addr <= reg_d;
     end
     `OP_SRLV: begin
-        data_o <= reg_t_value>>reg_s_value;
+        data_o <= reg_t_value>>reg_s_value[4:0];
         reg_addr <= reg_d;
     end
     `OP_SRAV: begin
-        data_o <= (reg_t_value>>reg_s_value)|(reg_t_value[31] ? ~({32{1'b1}}>>reg_s_value) : 32'h0);
+        data_o <= (reg_t_value>>reg_s_value[4:0])|(reg_t_value[31] ? ~({32{1'b1}}>>reg_s_value[4:0]) : 32'h0);
         reg_addr <= reg_d;
     end
     `OP_CLO: begin
