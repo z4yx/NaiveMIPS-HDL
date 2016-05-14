@@ -39,7 +39,8 @@ module exception(/*autoport*/
            if_asid,
            mm_asid,
            if_exl,
-           mm_exl);
+           mm_exl,
+           is_real_inst);
 
 input wire iaddr_exp_miss;
 input wire daddr_exp_miss;
@@ -69,6 +70,7 @@ input wire[7:0] if_asid;
 input wire[7:0] mm_asid;
 input wire if_exl;
 input wire mm_exl;
+input wire is_real_inst;
 
 output reg flush;
 output reg cp0_wr_exp;
@@ -98,7 +100,7 @@ always @(*) begin
     exp_epc <= in_delayslot ? (pc_value-32'd4) : pc_value;
     exp_bad_vaddr <= 32'b0;
     exception_new_pc <= exception_base + 32'h180;
-    if(allow_int && ({hardware_int,software_int} & interrupt_mask)!=8'h0) begin
+    if(is_real_inst && allow_int && ({hardware_int,software_int} & interrupt_mask)!=8'h0) begin
         if(special_int_vec)
             exception_new_pc <= exception_base + 32'h200;
         exp_code <= 5'h00;
