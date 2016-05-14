@@ -182,6 +182,8 @@ wire[1:0] cp0_software_int;
 wire cp0_clean_exl;
 wire cp0_exp_en;
 wire cp0_exp_bd;
+wire cp0_exp_asid_we;
+wire cp0_badv_we;
 wire[4:0] cp0_exp_code;
 wire[7:0] cp0_exp_asid;
 wire[31:0] cp0_exp_badv;
@@ -377,6 +379,8 @@ cp0 cp0_instance(/*autoinst*/
      .exp_epc(cp0_exp_epc),
      .exp_code(cp0_exp_code),
      .exp_asid(cp0_exp_asid),
+     .exp_asid_we(cp0_exp_asid_we),
+     .exp_badv_we(cp0_badv_we),
      .exp_bad_vaddr(cp0_exp_badv)
 );
 
@@ -667,6 +671,8 @@ exception exception_detect(/*autoinst*/
      .ebase_in(cp0_ebase),
      .epc_in(cp0_epc),
      .cp0_wr_exp(cp0_exp_en),
+     .cp0_badv_we(cp0_badv_we),
+     .cp0_exp_asid_we(cp0_exp_asid_we),
      .cp0_clean_exl(cp0_clean_exl),
      .allow_int(cp0_allow_int),
      .exp_epc(cp0_exp_epc),
