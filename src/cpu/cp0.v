@@ -110,12 +110,14 @@ reg[31:0] cp0_regs_Config;
 wire[7:0] rd_addr_internal[0:1];
 reg[31:0] data_o_internal[0:1];
 
+reg[1:0] timer_count;
+
 assign rd_addr_internal[0] = {rd_addr,rd_sel};
 assign data_o = data_o_internal[0];
 assign rd_addr_internal[1] = {debugger_rd_addr,debugger_rd_sel};
 assign debugger_data_o = data_o_internal[1];
 
-assign user_mode = !cp0_regs_Status[1] && cp0_regs_Status[4];
+assign user_mode = cp0_regs_Status[4:1]==4'b1000;
 assign ebase = {2'b10, cp0_regs_EBase[29:12]};
 assign epc = cp0_regs_EPC;
 assign tlb_config = {
@@ -128,7 +130,7 @@ assign tlb_config = {
     cp0_regs_EntryLo0[2:1],
     cp0_regs_Index[3:0]
 };
-assign allow_int = !cp0_regs_Status[1] && cp0_regs_Status[0];
+assign allow_int = cp0_regs_Status[2:0]==3'b001;
 assign software_int_o = cp0_regs_Cause[9:8];
 assign interrupt_mask = cp0_regs_Status[15:8];
 assign special_int_vec = cp0_regs_Cause[23];
@@ -203,14 +205,16 @@ always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         cp0_regs_Count <= 32'b0;
         cp0_regs_Compare <= 32'b0;
-        cp0_regs_Status <= 32'h10400000; //BEV=1
+        cp0_regs_Status <= 32'h10400004; //BEV=1,ERL=1 is required
         cp0_regs_EBase <= 32'h80000000;
         cp0_regs_Cause[9:8] <= 2'b0;
         cp0_regs_Cause[23] <= 1'b0;
         timer_int <= 1'b0;
+		  timer_count <= 2'b0;
     end
     else begin
-        cp0_regs_Count <= cp0_regs_Count+32'd1;
+        cp0_regs_Count <= cp0_regs_Count+(timer_count[1]&timer_count[0]);
+		  timer_count <= timer_count + 2'b1;
         if(cp0_regs_Compare != 32'b0 && cp0_regs_Compare==cp0_regs_Count)
             timer_int <= 1'b1;
         if(we) begin
@@ -233,6 +237,7 @@ always @(posedge clk or negedge rst_n) begin
                 cp0_regs_Cause[23] <= data_i[23]; //IV
             end
             `CP0_Status: begin
+                cp0_regs_Status[28] <= data_i[28]; //CU0
                 cp0_regs_Status[22] <= data_i[22]; //BEV
                 cp0_regs_Status[15:8] <= data_i[15:8]; //IM
                 cp0_regs_Status[4] <= data_i[4]; //UM
