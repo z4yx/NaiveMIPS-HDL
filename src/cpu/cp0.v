@@ -31,7 +31,9 @@ module cp0(/*autoport*/
          exp_bd,
          exp_code,
          exp_bad_vaddr,
+         exp_badv_we,
          exp_asid,
+         exp_asid_we,
          we_probe,
          probe_result,
          debugger_rd_addr,
@@ -84,7 +86,9 @@ input wire[31:0] exp_epc;
 input wire exp_bd;
 input wire[4:0] exp_code;
 input wire[31:0] exp_bad_vaddr;
+input wire exp_badv_we;
 input wire[7:0] exp_asid;
+input wire exp_asid_we;
 
 input wire we_probe;
 input wire[31:0] probe_result;
@@ -270,10 +274,12 @@ always @(posedge clk or negedge rst_n) begin
         if(we_probe)
             cp0_regs_Index <= probe_result;
         if(en_exp_i) begin
-            cp0_regs_BadVAddr <= exp_bad_vaddr;
+            if(exp_badv_we)
+                cp0_regs_BadVAddr <= exp_bad_vaddr;
             cp0_regs_Context[22:4] <= exp_bad_vaddr[31:13];
             cp0_regs_EntryHi[31:13] <= exp_bad_vaddr[31:13];
-            cp0_regs_EntryHi[7:0] <= exp_asid;
+            if(exp_asid_we)
+                cp0_regs_EntryHi[7:0] <= exp_asid;
             cp0_regs_Status[1] <= 1'b1;
             cp0_regs_Cause[31] <= exp_bd;
             cp0_regs_Cause[6:2] <= exp_code;

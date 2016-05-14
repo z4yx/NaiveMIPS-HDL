@@ -7,8 +7,10 @@ module exception(/*autoport*/
            exp_epc,
            exp_code,
            exp_bad_vaddr,
+           cp0_badv_we,
            exception_new_pc,
            exp_asid,
+           cp0_exp_asid_we,
 //input
            iaddr_exp_miss,
            daddr_exp_miss,
@@ -74,8 +76,10 @@ output reg cp0_clean_exl;
 output reg[31:0] exp_epc;
 output reg[4:0] exp_code;
 output reg[31:0] exp_bad_vaddr;
+output reg cp0_badv_we;
 output reg[31:0] exception_new_pc;
 output reg[7:0] exp_asid;
+output reg cp0_exp_asid_we;
 
 wire[31:0] exception_base;
 
@@ -88,6 +92,8 @@ always @(*) begin
     exp_asid <= 8'b0;
     cp0_wr_exp <= 1'b1;
     cp0_clean_exl <= 1'b0;
+    cp0_badv_we <= 1'b0;
+    cp0_exp_asid_we <= 1'b0;
     flush <= 1'b1;
     exp_epc <= in_delayslot ? (pc_value-32'd4) : pc_value;
     exp_bad_vaddr <= 32'b0;
@@ -100,6 +106,7 @@ always @(*) begin
     end
     else if(iaddr_exp_illegal) begin
         exp_bad_vaddr <= pc_value;
+        cp0_badv_we <= 1'b1;
         exp_code <= 5'h04; //AdEL
         $display("Exception: Instruction address illegal");
     end
@@ -107,13 +114,17 @@ always @(*) begin
         if(!if_exl)
             exception_new_pc <= exception_base + 32'h0;
         exp_asid <= if_asid;
+        cp0_exp_asid_we <= 1'b1;
         exp_bad_vaddr <= pc_value;
+        cp0_badv_we <= 1'b1;
         exp_code <= 5'h02; //TLBL
         $display("Exception: Instruction TLB miss");
     end
     else if(iaddr_exp_invalid) begin
         exp_asid <= if_asid;
+        cp0_exp_asid_we <= 1'b1;
         exp_bad_vaddr <= pc_value;
+        cp0_badv_we <= 1'b1;
         exp_code <= 5'h02; //TLBL
         $display("Exception: Instruction TLB invalid");
     end
@@ -142,6 +153,7 @@ always @(*) begin
     end
     else if(daddr_exp_illegal) begin
         exp_bad_vaddr <= mem_access_vaddr;
+        cp0_badv_we <= 1'b1;
         exp_code <= data_we ? 5'h05 : 5'h04; //AdES : AdEL
         $display("Exception: Data address illegal, WE=%d",data_we);
     end
@@ -149,19 +161,25 @@ always @(*) begin
         if(!mm_exl)
             exception_new_pc <= exception_base + 32'h0;
         exp_asid <= mm_asid;
+        cp0_exp_asid_we <= 1'b1;
         exp_bad_vaddr <= mem_access_vaddr;
+        cp0_badv_we <= 1'b1;
         exp_code <= data_we ? 5'h03 : 5'h02; //TLBS : TLBL
         $display("Exception: Data TLB miss, WE=%d",data_we);
     end
     else if(daddr_exp_invalid) begin
         exp_asid <= mm_asid;
+        cp0_exp_asid_we <= 1'b1;
         exp_bad_vaddr <= mem_access_vaddr;
+        cp0_badv_we <= 1'b1;
         exp_code <= data_we ? 5'h03 : 5'h02; //TLBS : TLBL
         $display("Exception: Data TLB invalid, WE=%d",data_we);
     end
     else if(daddr_exp_dirty) begin
         exp_asid <= mm_asid;
+        cp0_exp_asid_we <= 1'b1;
         exp_bad_vaddr <= mem_access_vaddr;
+        cp0_badv_we <= 1'b1;
         exp_code <= 5'h1; //Mod
         $display("Exception: Data TLB Mod");
     end
