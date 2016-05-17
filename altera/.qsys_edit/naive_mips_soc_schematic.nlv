@@ -1,0 +1,19 @@
+# # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
+# 
+preplace inst naive_mips_soc -pg 1 -lvl 1 -y 40 -regy -20
+preplace inst naive_mips_soc.pout -pg 1 -lvl 3 -y 210
+preplace inst naive_mips_soc.clock_bridge_0 -pg 1 -lvl 1 -y 90
+preplace inst naive_mips_soc.naive_mips_cpu_0 -pg 1 -lvl 2 -y 70
+preplace inst naive_mips_soc.pin -pg 1 -lvl 3 -y 110
+preplace inst naive_mips_soc.clk_0 -pg 1 -lvl 1 -y 30
+preplace netloc EXPORT<net_container>naive_mips_soc</net_container>(SLAVE)clock_bridge_0.in_clk,(SLAVE)naive_mips_soc.clk_uart) 1 0 1 NJ
+preplace netloc EXPORT<net_container>naive_mips_soc</net_container>(SLAVE)naive_mips_soc.rst_cpu,(SLAVE)clk_0.clk_in_reset) 1 0 1 NJ
+preplace netloc POINT_TO_POINT<net_container>naive_mips_soc</net_container>(MASTER)clock_bridge_0.out_clk,(SLAVE)naive_mips_cpu_0.debugger_clock) 1 1 1 NJ
+preplace netloc EXPORT<net_container>naive_mips_soc</net_container>(SLAVE)naive_mips_soc.clk_cpu,(SLAVE)clk_0.clk_in) 1 0 1 NJ
+preplace netloc FAN_OUT<net_container>naive_mips_soc</net_container>(SLAVE)naive_mips_cpu_0.cpu_clock,(MASTER)clk_0.clk,(SLAVE)pout.clk,(SLAVE)pin.clk) 1 1 2 290 60 560
+preplace netloc EXPORT<net_container>naive_mips_soc</net_container>(SLAVE)naive_mips_soc.led,(SLAVE)pout.external_connection) 1 0 3 NJ 240 NJ 240 NJ
+preplace netloc EXPORT<net_container>naive_mips_soc</net_container>(SLAVE)naive_mips_soc.sw,(SLAVE)pin.external_connection) 1 0 3 NJ 180 NJ 180 NJ
+preplace netloc FAN_OUT<net_container>naive_mips_soc</net_container>(SLAVE)naive_mips_cpu_0.global_reset,(SLAVE)pout.reset,(MASTER)clk_0.clk_reset,(SLAVE)pin.reset) 1 1 2 270 160 580
+preplace netloc FAN_OUT<net_container>naive_mips_soc</net_container>(SLAVE)pin.s1,(MASTER)naive_mips_cpu_0.data_master,(SLAVE)pout.s1) 1 2 1 540
+levelinfo -pg 1 0 60 770
+levelinfo -hier naive_mips_soc 70 100 320 610 760
