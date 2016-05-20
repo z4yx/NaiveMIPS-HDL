@@ -2,28 +2,32 @@
 `default_nettype none
 
 module naive_mips(/*autoport*/
-//output
+//clk
+          rst_n,
+          clk,
+//debugger
           debugger_uart_txd,
+          debugger_uart_rxd,
+          debugger_uart_clk,
+//interrupt
+          hardware_int_in,
+//ibus
           ibus_address,
           ibus_byteenable,
           ibus_read,
           ibus_write,
           ibus_wrdata,
+          ibus_rddata,
+          ibus_stall,
+//dbus
           dbus_address,
           dbus_byteenable,
           dbus_read,
           dbus_write,
           dbus_wrdata,
-//input
-          rst_n,
-          clk,
-          debugger_uart_rxd,
-          debugger_uart_clk,
-          ibus_rddata,
-          ibus_stall,
           dbus_rddata,
-          dbus_stall,
-          hardware_int_in);
+          dbus_stall
+          );
 
 input wire rst_n;
 input wire clk;
