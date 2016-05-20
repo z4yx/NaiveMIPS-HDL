@@ -26,7 +26,8 @@ module naive_mips(/*autoport*/
           dbus_write,
           dbus_wrdata,
           dbus_rddata,
-          dbus_stall
+          dbus_stall,
+          dbus_uncached
           );
 
 input wire rst_n;
@@ -51,6 +52,7 @@ output wire dbus_write;
 output wire[31:0] dbus_wrdata;
 input wire[31:0] dbus_rddata;
 input wire dbus_stall;
+output wire dbus_uncached;
 
 input wire[4:0] hardware_int_in;
 
@@ -275,7 +277,7 @@ regs main_regs(/*autoinst*/
 mmu_top mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(ibus_address),
-      .data_uncached(),
+      .data_uncached(dbus_uncached),
       .inst_uncached(),
       .data_exp_miss(mm_daddr_exp_miss),
       .inst_exp_miss(if_iaddr_exp_miss),
