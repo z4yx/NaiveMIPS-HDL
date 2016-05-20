@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <preferences>
  <debug showDebugMenu="0" />
- <systemtable filter="All Interfaces">
+ <systemtable filter="All Interfaces" showClockDomains="1" showResetDomains="0">
   <columns>
-   <connections preferredWidth="159" />
-   <irq preferredWidth="34" />
+   <connections preferredWidth="175" />
+   <irq preferredWidth="63" />
   </columns>
  </systemtable>
- <library
-   expandedCategories="Library/Basic Functions/Bridges and Adaptors,Library/Basic Functions/Bridges and Adaptors/Memory Mapped,Project,Library/Basic Functions/Simulation; Debug and Verification,Library/Interface Protocols/Serial,Library/Interface Protocols,Project/Tsinghua,Library,Library/Basic Functions/Simulation; Debug and Verification/Debug and Performance,Library/Basic Functions" />
- <window width="1212" height="920" x="643" y="57" />
+ <library expandedCategories="Library,Project/Tsinghua,Project" />
+ <window width="1482" height="902" x="643" y="57" />
  <generation block_symbol_file="0" simulation="VERILOG" />
 </preferences>

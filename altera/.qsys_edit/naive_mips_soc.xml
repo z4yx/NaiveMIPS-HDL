@@ -827,9 +827,8 @@
 										<fullscreen-action>false</fullscreen-action>
 										<node nodeId="1372710005721" orientation="HORIZONTAL" divider="0.2737430167597765">
 											<node nodeId="1375985011088" orientation="VERTICAL" divider="0.504054054054054">
-												<leaf id="2" nodeId="1375985003630">
+												<leaf id="3" nodeId="1375985003630">
 													<placeholders>
-														<placeholder>dock.single.Clock\ Domains\ \-\ Beta</placeholder>
 														<placeholder>dock.single.IP\ Catalog</placeholder>
 														<placeholder>dock.single.Reset\ Domains\ \-\ Beta</placeholder>
 													</placeholders>
@@ -840,11 +839,15 @@
 															<key shared="false">
 																<placeholder>dock.single.IP\ Catalog</placeholder>
 															</key>
+															<item key="convert" type="b">true</item>
+															<item key="convert-keys" type="a"/>
 														</entry>
 														<entry>
 															<key shared="false">
 																<placeholder>dock.single.Clock\ Domains\ \-\ Beta</placeholder>
 															</key>
+															<item key="convert" type="b">true</item>
+															<item key="convert-keys" type="a"/>
 														</entry>
 														<entry>
 															<key shared="false">
@@ -880,10 +883,11 @@
 											<node nodeId="1372710005725" orientation="VERTICAL" divider="0.75">
 												<node nodeId="1372710005727" orientation="HORIZONTAL" divider="0.6183193900785428">
 													<node nodeId="1372710005733" orientation="VERTICAL" divider="0.75">
-														<leaf id="3" nodeId="1372710005735">
+														<leaf id="2" nodeId="1372710005735">
 															<placeholders>
 																<placeholder>dock.single.Connections</placeholder>
 																<placeholder>dock.single.System\ Contents</placeholder>
+																<placeholder>dock.single.Parameters</placeholder>
 																<placeholder>dock.single.Assignments</placeholder>
 																<placeholder>dock.single.Schematic</placeholder>
 																<placeholder>dock.single.Clocks</placeholder>
@@ -935,7 +939,6 @@
 														<leaf id="-1" nodeId="1389812800464">
 															<placeholders>
 																<placeholder>dock.single.Details</placeholder>
-																<placeholder>dock.single.Parameters</placeholder>
 																<placeholder>dock.single.Block\ Symbol</placeholder>
 																<placeholder>dock.single.Presets</placeholder>
 															</placeholders>
@@ -950,11 +953,6 @@
 																<entry>
 																	<key shared="false">
 																		<placeholder>dock.single.Details</placeholder>
-																	</key>
-																</entry>
-																<entry>
-																	<key shared="false">
-																		<placeholder>dock.single.Parameters</placeholder>
 																	</key>
 																</entry>
 																<entry>
@@ -1072,16 +1070,6 @@
 									</children>
 								</child>
 								<child>
-									<layout factory="predefined" placeholder="dock.single.IP\ Catalog">
-										<replacement id="dockablesingle IP Catalog"/>
-										<delegate id="delegate_ccontrol backup factory id">
-											<id>IP Catalog</id>
-											<area/>
-										</delegate>
-									</layout>
-									<children ignore="false"/>
-								</child>
-								<child>
 									<layout factory="delegate_StackDockStationFactory">
 										<selected>0</selected>
 										<placeholders>
@@ -1119,15 +1107,6 @@
 												<key shared="false">
 													<placeholder>dock.single.Parameters</placeholder>
 												</key>
-												<item key="convert" type="b">true</item>
-												<item key="convert-keys" type="a">
-													<item type="s">index</item>
-													<item type="s">id</item>
-													<item type="s">placeholder</item>
-												</item>
-												<item key="dock.index" type="i">2</item>
-												<item key="dock.id" type="i">2</item>
-												<item key="dock.placeholder" type="s">dock.single.Parameters</item>
 											</entry>
 											<entry>
 												<key shared="false">
@@ -1139,8 +1118,8 @@
 													<item type="s">id</item>
 													<item type="s">placeholder</item>
 												</item>
-												<item key="dock.index" type="i">3</item>
-												<item key="dock.id" type="i">3</item>
+												<item key="dock.index" type="i">2</item>
+												<item key="dock.id" type="i">2</item>
 												<item key="dock.placeholder" type="s">dock.single.Interconnect\ Requirements</item>
 											</entry>
 											<entry>
@@ -1192,20 +1171,74 @@
 											<children ignore="false"/>
 										</child>
 										<child>
-											<layout factory="predefined" placeholder="dock.single.Parameters">
-												<replacement id="dockablesingle Parameters"/>
+											<layout factory="predefined" placeholder="dock.single.Interconnect\ Requirements">
+												<replacement id="dockablesingle Interconnect Requirements"/>
 												<delegate id="delegate_ccontrol backup factory id">
-													<id>Parameters</id>
+													<id>Interconnect Requirements</id>
+													<area/>
+												</delegate>
+											</layout>
+											<children ignore="false"/>
+										</child>
+									</children>
+								</child>
+								<child>
+									<layout factory="delegate_StackDockStationFactory">
+										<selected>0</selected>
+										<placeholders>
+											<version>0</version>
+											<format>dock.PlaceholderList</format>
+											<entry>
+												<key shared="false">
+													<placeholder>dock.single.IP\ Catalog</placeholder>
+												</key>
+												<item key="convert" type="b">true</item>
+												<item key="convert-keys" type="a">
+													<item type="s">index</item>
+													<item type="s">id</item>
+													<item type="s">placeholder</item>
+												</item>
+												<item key="dock.index" type="i">0</item>
+												<item key="dock.id" type="i">0</item>
+												<item key="dock.placeholder" type="s">dock.single.IP\ Catalog</item>
+											</entry>
+											<entry>
+												<key shared="false">
+													<placeholder>dock.single.Clock\ Domains\ \-\ Beta</placeholder>
+												</key>
+												<item key="convert" type="b">true</item>
+												<item key="convert-keys" type="a">
+													<item type="s">index</item>
+													<item type="s">id</item>
+													<item type="s">placeholder</item>
+												</item>
+												<item key="dock.index" type="i">1</item>
+												<item key="dock.id" type="i">1</item>
+												<item key="dock.placeholder" type="s">dock.single.Clock\ Domains\ \-\ Beta</item>
+											</entry>
+											<entry>
+												<key shared="false">
+													<placeholder>dock.single.Reset\ Domains\ \-\ Beta</placeholder>
+												</key>
+											</entry>
+										</placeholders>
+									</layout>
+									<children ignore="false">
+										<child>
+											<layout factory="predefined" placeholder="dock.single.IP\ Catalog">
+												<replacement id="dockablesingle IP Catalog"/>
+												<delegate id="delegate_ccontrol backup factory id">
+													<id>IP Catalog</id>
 													<area/>
 												</delegate>
 											</layout>
 											<children ignore="false"/>
 										</child>
 										<child>
-											<layout factory="predefined" placeholder="dock.single.Interconnect\ Requirements">
-												<replacement id="dockablesingle Interconnect Requirements"/>
+											<layout factory="predefined" placeholder="dock.single.Clock\ Domains\ \-\ Beta">
+												<replacement id="dockablesingle Clock Domains - Beta"/>
 												<delegate id="delegate_ccontrol backup factory id">
-													<id>Interconnect Requirements</id>
+													<id>Clock Domains - Beta</id>
 													<area/>
 												</delegate>
 											</layout>
@@ -1294,6 +1327,34 @@
 								<children ignore="false"/>
 							</layout>
 						</child>
+						<child key="single Parameters" root="ccontrol center" location="true">
+							<location>
+								<property factory="SplitDockPlaceholderProperty">
+									<placeholder>dock.single.Parameters</placeholder>
+									<backup-path>
+										<node location="RIGHT" size="0.7262569832402235" id="1372710005721"/>
+										<node location="TOP" size="0.75" id="1372710005725"/>
+										<node location="LEFT" size="0.6183193900785428" id="1372710005727"/>
+										<node location="TOP" size="0.75" id="1372710005733"/>
+										<leaf id="1372710005735"/>
+									</backup-path>
+								</property>
+								<property factory="StackDockPropertyFactory">
+									<index>2</index>
+									<placeholder>dock.single.Parameters</placeholder>
+								</property>
+							</location>
+							<layout>
+								<layout factory="predefined" placeholder="dock.single.Parameters">
+									<replacement id="dockablesingle Parameters"/>
+									<delegate id="delegate_ccontrol backup factory id">
+										<id>Parameters</id>
+										<area/>
+									</delegate>
+								</layout>
+								<children ignore="false"/>
+							</layout>
+						</child>
 						<child key="single Schematic" root="ccontrol center" location="true">
 							<location>
 								<property factory="SplitDockPlaceholderProperty">
@@ -1344,32 +1405,6 @@
 									<replacement id="dockablesingle Presets"/>
 									<delegate id="delegate_ccontrol backup factory id">
 										<id>Presets</id>
-										<area/>
-									</delegate>
-								</layout>
-								<children ignore="false"/>
-							</layout>
-						</child>
-						<child key="single Clock Domains - Beta" root="ccontrol center" location="true">
-							<location>
-								<property factory="SplitDockPlaceholderProperty">
-									<placeholder>dock.single.Clock\ Domains\ \-\ Beta</placeholder>
-									<backup-path>
-										<node location="LEFT" size="0.22181146025878004" id="1372710005721"/>
-										<node location="TOP" size="0.504054054054054" id="1375985011088"/>
-										<leaf id="1375985003630"/>
-									</backup-path>
-								</property>
-								<property factory="StackDockPropertyFactory">
-									<index>1</index>
-									<placeholder>dock.single.Clock\ Domains\ \-\ Beta</placeholder>
-								</property>
-							</location>
-							<layout>
-								<layout factory="predefined" placeholder="dock.single.Clock\ Domains\ \-\ Beta">
-									<replacement id="dockablesingle Clock Domains - Beta"/>
-									<delegate id="delegate_ccontrol backup factory id">
-										<id>Clock Domains - Beta</id>
 										<area/>
 									</delegate>
 								</layout>
@@ -1567,7 +1602,7 @@
 								</property>
 							</properties>
 						</entry>
-						<entry id="single Parameters" current="dock.mode.normal">
+						<entry id="single Parameters">
 							<history>
 								<mode>dock.mode.minimized</mode>
 								<mode>dock.mode.normal</mode>
@@ -1757,7 +1792,7 @@
 								</property>
 							</properties>
 						</entry>
-						<entry id="single Clock Domains - Beta">
+						<entry id="single Clock Domains - Beta" current="dock.mode.normal">
 							<history>
 								<mode>dock.mode.maximized</mode>
 								<mode>dock.mode.minimized</mode>
