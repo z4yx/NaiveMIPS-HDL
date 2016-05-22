@@ -6,8 +6,8 @@ module Cache #(
             TAG_WIDTH        = 20,
             ADDR_WIDTH       = 32
 )(
-		output wire [31:0] avalon_master_address,       // burst_master.address
-		output wire        avalon_master_burstcount,    //             .burstcount
+		output wire [ADDR_WIDTH-1:0] avalon_master_address,       // burst_master.address
+		output wire [CACHE_LINE_WIDTH:0]       avalon_master_burstcount,    //             .burstcount
 		input  wire [31:0] avalon_master_readdata,      //             .readdata
 		output wire [31:0] avalon_master_writedata,     //             .writedata
 		input  wire        avalon_master_waitrequest,   //             .waitrequest
@@ -16,7 +16,7 @@ module Cache #(
 		input  wire        avalon_master_readdatavalid, //             .readdatavalid
 		input  wire        rst_n,                       //        Reset.reset_n
 		input  wire        clk,                         //        Clock.clk
-		input  wire [31:0] avalon_slave_address,        // avalon_slave.address
+		input  wire [ADDR_WIDTH-1:0] avalon_slave_address,        // avalon_slave.address
 		input  wire        avalon_slave_read,           //             .read
 		input  wire        avalon_slave_write,          //             .write
 		output wire [31:0] avalon_slave_readdata,       //             .readdata
