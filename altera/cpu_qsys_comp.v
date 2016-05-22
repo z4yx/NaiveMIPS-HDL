@@ -79,9 +79,9 @@ naive_mips cpu(
          .debugger_uart_rxd(dbg_rxd),
          .debugger_uart_txd(dbg_txd),
          .ibus_rddata(inst_master_readdata),
-         .ibus_stall(inst_master_waitrequest),
-         .dbus_rddata(uni_master_readdata),
-         .dbus_stall(uni_master_waitrequest),
-         .hardware_int_in(inr_irq0_irq)
+         .ibus_stall(inst_master_waitrequest & (inst_master_read|inst_master_write)),
+         .dbus_rddata(data_master_readdata),
+         .dbus_stall(data_master_waitrequest & (data_master_read|data_master_write)),
+         .hardware_int_in(inr_irq0_irq),
          .dbus_uncached(dbus_uncached));
 endmodule

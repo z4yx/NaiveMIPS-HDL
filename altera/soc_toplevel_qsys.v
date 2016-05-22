@@ -315,6 +315,7 @@ output                                             VGA_VS;
 wire clk2x,clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
 wire clk_tick;
+wire [31:0] led_export;
 
 sys_pll pll1(
     .areset(!KEY[0]),
@@ -334,7 +335,7 @@ naive_mips_soc soc(
 		.clk_uart_clk(clk_uart_pll),     // clk_uart.clk
 		.debugger_dbg_txd(GPIO[0]), // debugger.dbg_txd
 		.debugger_dbg_rxd(GPIO[1]), //         .dbg_rxd
-		.led_export({LEDR,LEDG}),       //      led.export
+		.led_export(led_export),       //      led.export
 		.rst_cpu_reset_n(rst_n),  //  rst_cpu.reset_n
 		.sdram_addr(DRAM_ADDR),       //    sdram.addr
 		.sdram_ba(DRAM_BA),         //         .ba
@@ -349,7 +350,11 @@ naive_mips_soc soc(
 		.uart_rxd(UART_RXD),         //     uart.rxd
 		.uart_txd(UART_TXD)          //         .txd
 	);
+	
+SEG7_LUT_8 segs(HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7, led_export);
+	
 assign DRAM_CLK = clk;
+assign {LEDR,LEDG} = led_export;
 
 
 endmodule
