@@ -217,7 +217,7 @@
   <parameter name="writable" value="false" />
  </module>
  <module name="clk_0" kind="clock_source" version="15.1" enabled="1">
-  <parameter name="clockFrequency" value="50000000" />
+  <parameter name="clockFrequency" value="30000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="DEASSERT" />
@@ -243,7 +243,7 @@
   <parameter name="TRP" value="20.0" />
   <parameter name="TWR" value="14.0" />
   <parameter name="casLatency" value="3" />
-  <parameter name="clockRate" value="50000000" />
+  <parameter name="clockRate" value="30000000" />
   <parameter name="columnWidth" value="10" />
   <parameter name="componentName">$${FILENAME}_main_ram</parameter>
   <parameter name="dataWidth" value="32" />
@@ -285,7 +285,7 @@
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="50000000" />
+  <parameter name="clockRate" value="30000000" />
   <parameter name="direction" value="Input" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
@@ -299,7 +299,7 @@
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="50000000" />
+  <parameter name="clockRate" value="30000000" />
   <parameter name="direction" value="Output" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
