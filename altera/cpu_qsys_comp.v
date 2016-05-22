@@ -72,7 +72,7 @@ naive_mips cpu(
          .dbus_byteenable(uni_master_byteenable),
          .dbus_read(uni_master_read),
          .dbus_write(uni_master_write),
-         .dbus_wrdata(uni_master_writeuni),
+         .dbus_wrdata(uni_master_writedata),
          .rst_n(reset_n),
          .clk(cpu_clock_clk),
          .debugger_uart_clk(debugger_clock_clk),
