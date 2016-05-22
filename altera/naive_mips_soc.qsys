@@ -171,7 +171,7 @@
    kind="altera_avalon_onchip_memory2"
    version="15.1"
    enabled="1">
-  <parameter name="allowInSystemMemoryContentEditor" value="false" />
+  <parameter name="allowInSystemMemoryContentEditor" value="true" />
   <parameter name="autoInitializationFileName">$${FILENAME}_bootrom</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
@@ -182,7 +182,7 @@
   <parameter name="ecc_enabled" value="false" />
   <parameter name="initMemContent" value="true" />
   <parameter name="initializationFileName">E:/Projects/NaiveMIPS-HDL/altera/bootrom.mif</parameter>
-  <parameter name="instanceID" value="NONE" />
+  <parameter name="instanceID" value="BOOT" />
   <parameter name="memorySize" value="8192" />
   <parameter name="readDuringWriteMode" value="DONT_CARE" />
   <parameter name="resetrequest_enabled" value="false" />
