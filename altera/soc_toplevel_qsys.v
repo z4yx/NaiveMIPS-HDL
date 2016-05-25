@@ -331,12 +331,20 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_in_n(locked));
 
 naive_mips_soc soc(
-		.clk_cpu_clk(clk),      //  clk_cpu.clk
-		.clk_uart_clk(clk_uart_pll),     // clk_uart.clk
+		.clk_cpu_clk(clk),                    //   clk_cpu.clk
+		//.clk_other_clk(clk2x),                  // clk_other.clk
+		.clk_uart_clk(clk_uart_pll),                   //  clk_uart.clk
 		.debugger_dbg_txd(GPIO[0]), // debugger.dbg_txd
 		.debugger_dbg_rxd(GPIO[1]), //         .dbg_rxd
+		.flash_bus_tcm_address_out(FS_ADDR),      // flash_bus.tcm_address_out
+		.flash_bus_tcm_read_n_out(FL_OE_N),       //          .tcm_read_n_out
+		.flash_bus_tcm_reset_n_out(FL_RESET_N),      //          .tcm_reset_n_out
+		.flash_bus_tcm_write_n_out(FL_WE_N),      //          .tcm_write_n_out
+		.flash_bus_tcm_data_out(FS_DQ),         //          .tcm_data_out
+		.flash_bus_tcm_chipselect_n_out(FL_CE_N), //          .tcm_chipselect_n_out
 		.led_export(led_export),       //      led.export
 		.rst_cpu_reset_n(rst_n),  //  rst_cpu.reset_n
+		//.rst_other_reset_n(rst_n),              // rst_other.reset_n
 		.sdram_addr(DRAM_ADDR),       //    sdram.addr
 		.sdram_ba(DRAM_BA),         //         .ba
 		.sdram_cas_n(DRAM_CAS_N),      //         .cas_n
@@ -354,6 +362,7 @@ naive_mips_soc soc(
 SEG7_LUT_8 segs(HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7, led_export);
 	
 assign DRAM_CLK = clk;
+assign FL_WP_N  = 1'b1;
 assign {LEDR,LEDG} = led_export;
 
 
