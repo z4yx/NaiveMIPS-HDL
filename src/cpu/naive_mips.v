@@ -61,6 +61,7 @@ wire exception_flush;
 wire[31:0] exception_new_pc;
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 reg exception_flush_holding, debugger_flush_holding;
+reg ibus_read_holding;
 
 wire [31:0]if_pc;
 wire [31:0]if_inst;
@@ -301,7 +302,9 @@ mmu_top mmu(/*autoinst*/
       .user_mode(cp0_user_mode));
 
 assign ibus_byteenable = 4'b1111;
-assign ibus_read = ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
+assign ibus_read = (debugger_flush_holding | exception_flush_holding) ?
+                ibus_read_holding :
+                ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
 assign if_inst = (if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid) ? 32'b0 : ibus_rddata;
@@ -329,10 +332,13 @@ always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         debugger_flush_holding <= 1'b0;
         exception_flush_holding <= 1'b0;
+        ibus_read_holding <= 1'b0;
     end
     else begin
         debugger_flush_holding <= (debugger_flush|debugger_flush_holding) & ibus_stall;
         exception_flush_holding <= (exception_flush|exception_flush_holding) & ibus_stall;
+        if(debugger_flush|exception_flush)
+            ibus_read_holding <= ibus_read;
     end
 end
 
