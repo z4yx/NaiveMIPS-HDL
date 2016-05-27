@@ -2,6 +2,8 @@
 `default_nettype none
 module test_cpu();
 
+parameter IBUS_WAIT_CYCLE = 4;
+
 /*autodef*/
 wire dbus_write;
 wire ibus_read;
@@ -15,6 +17,8 @@ wire [31:0]dbus_wrdata;
 wire [31:0]dbus_rddata;
 wire [31:0]ibus_address;
 wire [3:0]dbus_byteenable;
+reg [31:0]ibus_rddata_ff, ibus_rddata_tmp;
+reg ibus_waitrequest;
 reg[4:0] hardware_int;
 reg rst_n;
 reg clk;
@@ -65,10 +69,37 @@ naive_mips mips(/*autoinst*/
             .dbus_wrdata(dbus_wrdata[31:0]),
             .rst_n(rst_n),
             .clk(clk),
-            .ibus_rddata(ibus_rddata[31:0]),
+            .ibus_rddata(ibus_rddata_ff),
             .dbus_rddata(dbus_rddata[31:0]),
             .dbus_stall(1'b0),
+            .ibus_stall((ibus_read|ibus_write)&ibus_waitrequest),
             .hardware_int_in(hardware_int));
+
+integer wait_cycle;
+initial begin
+    ibus_waitrequest = 1;
+    while(1) begin 
+        @(posedge clk);
+        ibus_waitrequest = 1;
+        @(negedge clk);
+        if(ibus_read & rst_n) begin 
+            wait_cycle = 0;
+            @(negedge clk);
+            ibus_rddata_tmp = ibus_rddata;
+            while(wait_cycle < IBUS_WAIT_CYCLE && rst_n)begin 
+                @(posedge clk);
+                @(negedge clk);
+                if(~ibus_read)begin 
+                    $display("read transaction prematurely ended");
+                    $stop;
+                end
+                wait_cycle = wait_cycle+1;
+            end
+            ibus_rddata_ff = ibus_rddata_tmp;
+            ibus_waitrequest = 0;
+        end
+    end
+end
 
 defparam mips.pc_instance.PC_INITIAL = 32'h80000000;
 
