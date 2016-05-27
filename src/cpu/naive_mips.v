@@ -60,6 +60,7 @@ wire flush;
 wire exception_flush;
 wire[31:0] exception_new_pc;
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
+reg exception_flush_holding, debugger_flush_holding;
 
 wire [31:0]if_pc;
 wire [31:0]if_inst;
@@ -322,7 +323,18 @@ assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
 assign hardware_int[5] = timer_int;
 assign hardware_int[4:0] = hardware_int_in;
 
-assign flush = debugger_flush | exception_flush;
+assign flush = debugger_flush | debugger_flush_holding | exception_flush | exception_flush_holding;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        debugger_flush_holding <= 1'b0;
+        exception_flush_holding <= 1'b0;
+    end
+    else begin
+        debugger_flush_holding <= debugger_flush & ibus_stall;
+        exception_flush_holding <= exception_flush & ibus_stall;
+    end
+end
 
 always @(*) begin
     if (!rst_n) begin
@@ -346,9 +358,9 @@ pc pc_instance(/*autoinst*/
          .rst_n(rst_n),
          .clk(clk),
          .enable(en_pc),
-         .is_exception(exception_flush),
+         .is_exception(exception_flush|exception_flush_holding),
          .exception_new_pc(exception_new_pc),
-         .is_debug    (debugger_flush),
+         .is_debug    (debugger_flush|debugger_flush_holding),
          .debug_reset (debugger_pc_reset),
          .debug_new_pc(debugger_new_pc),
          .is_branch(id_is_branch),
