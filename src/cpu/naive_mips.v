@@ -308,7 +308,7 @@ assign if_in_exl = cp0_in_exl;
 assign if_asid = cp0_asid;
 
 assign dbus_byteenable = mm_mem_byte_en;
-assign dbus_read = mm_mem_rd;
+assign dbus_read = mm_mem_rd && !flush;
 assign dbus_write = mm_mem_wr && !flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
