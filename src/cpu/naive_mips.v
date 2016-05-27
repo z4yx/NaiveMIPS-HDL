@@ -331,8 +331,8 @@ always @(posedge clk or negedge rst_n) begin
         exception_flush_holding <= 1'b0;
     end
     else begin
-        debugger_flush_holding <= debugger_flush & ibus_stall;
-        exception_flush_holding <= exception_flush & ibus_stall;
+        debugger_flush_holding <= (debugger_flush|debugger_flush_holding) & ibus_stall;
+        exception_flush_holding <= (exception_flush|exception_flush_holding) & ibus_stall;
     end
 end
 
@@ -357,10 +357,10 @@ pc pc_instance(/*autoinst*/
          .pc_reg(if_pc),
          .rst_n(rst_n),
          .clk(clk),
-         .enable(en_pc),
-         .is_exception(exception_flush|exception_flush_holding),
+         .enable(en_pc & ~flush),
+         .is_exception(exception_flush),
          .exception_new_pc(exception_new_pc),
-         .is_debug    (debugger_flush|debugger_flush_holding),
+         .is_debug    (debugger_flush),
          .debug_reset (debugger_pc_reset),
          .debug_new_pc(debugger_new_pc),
          .is_branch(id_is_branch),

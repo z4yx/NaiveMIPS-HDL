@@ -114,7 +114,7 @@ reg[31:0] cp0_regs_Config;
 wire[7:0] rd_addr_internal[0:1];
 reg[31:0] data_o_internal[0:1];
 
-reg[1:0] timer_count;
+reg[7:0] timer_count;
 
 assign rd_addr_internal[0] = {rd_addr,rd_sel};
 assign data_o = data_o_internal[0];
@@ -214,11 +214,11 @@ always @(posedge clk or negedge rst_n) begin
         cp0_regs_Cause[9:8] <= 2'b0;
         cp0_regs_Cause[23] <= 1'b0;
         timer_int <= 1'b0;
-		  timer_count <= 2'b0;
+        timer_count <= 'b0;
     end
     else begin
-        cp0_regs_Count <= cp0_regs_Count+(timer_count[1]&timer_count[0]);
-		  timer_count <= timer_count + 2'b1;
+        cp0_regs_Count <= cp0_regs_Count+(timer_count[2:0]==3'b111);
+        timer_count <= timer_count + 'b1;
         if(cp0_regs_Compare != 32'b0 && cp0_regs_Compare==cp0_regs_Count)
             timer_int <= 1'b1;
         if(we) begin
