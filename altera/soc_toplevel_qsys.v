@@ -316,6 +316,10 @@ wire clk2x,clk,locked,rst_n;
 wire clk_uart, clk_uart_pll;
 wire clk_tick;
 wire [31:0] led_export;
+wire mdio_out, mdio_oe;
+wire			enet_tx_clk_mac;
+wire			enet_tx_clk_phy;
+wire			enet_rx_clk_270deg;
 
 sys_pll pll1(
     .areset(!KEY[0]),
@@ -343,6 +347,30 @@ naive_mips_soc soc(
 		.flash_bus_tcm_data_out(FS_DQ),         //          .tcm_data_out
 		.flash_bus_tcm_chipselect_n_out(FL_CE_N), //          .tcm_chipselect_n_out
 		.led_export(led_export),       //      led.export
+		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
+		.mac_mdio_mdio_in(ENET_MDIO),               //           .mdio_in
+		.mac_mdio_mdio_out(mdio_out),              //           .mdio_out
+		.mac_mdio_mdio_oen(mdio_oe),              //           .mdio_oen
+		.mac_misc_ff_tx_crc_fwd(1'b0),         //   mac_misc.ff_tx_crc_fwd
+		.mac_misc_ff_tx_septy(),           //           .ff_tx_septy
+		.mac_misc_tx_ff_uflow(),           //           .tx_ff_uflow
+		.mac_misc_ff_tx_a_full(),          //           .ff_tx_a_full
+		.mac_misc_ff_tx_a_empty(),         //           .ff_tx_a_empty
+		.mac_misc_rx_err_stat(),           //           .rx_err_stat
+		.mac_misc_rx_frm_type(),           //           .rx_frm_type
+		.mac_misc_ff_rx_dsav(),            //           .ff_rx_dsav
+		.mac_misc_ff_rx_a_full(),          //           .ff_rx_a_full
+		.mac_misc_ff_rx_a_empty(),         //           .ff_rx_a_empty
+		.mac_rgmii_rgmii_in(ENET_RX_DATA),             //  mac_rgmii.rgmii_in
+		.mac_rgmii_rgmii_out(ENET_TX_DATA),            //           .rgmii_out
+		.mac_rgmii_rx_control(ENET_RX_DV),           //           .rx_control
+		.mac_rgmii_tx_control(ENET_TX_EN),           //           .tx_control
+		.mac_rxclk_clk(enet_rx_clk_270deg),                  //  mac_rxclk.clk
+		.mac_status_set_10(1'b0),              // mac_status.set_10
+		.mac_status_set_1000(1'b0),            //           .set_1000
+		.mac_status_eth_mode(),            //           .eth_mode
+		.mac_status_ena_10(),              //           .ena_10
+		.mac_txclk_clk(enet_tx_clk_mac),                  //  mac_txclk.clk
 		.rst_cpu_reset_n(rst_n),  //  rst_cpu.reset_n
 		//.rst_other_reset_n(rst_n),              // rst_other.reset_n
 		.sdram_addr(DRAM_ADDR),       //    sdram.addr
@@ -358,12 +386,29 @@ naive_mips_soc soc(
 		.uart_rxd(UART_RXD),         //     uart.rxd
 		.uart_txd(UART_TXD)          //         .txd
 	);
+ddr_o phy_ckgen
+(
+		.datain_h(1'b1),
+		.datain_l(1'b0),
+		.outclock(enet_tx_clk_phy),
+		.dataout(ENET_GTX_CLK)
+);
+
+// Ethernet RX PLL
+enet_rx_clk_pll enet_rx_clk_pll
+(
+		.inclk0(ENET_RX_CLK),
+		.c0(enet_rx_clk_270deg),
+		.c1(enet_tx_clk_mac),
+		.c2(enet_tx_clk_phy)
+);
 	
 SEG7_LUT_8 segs(HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7, led_export);
 	
 assign DRAM_CLK = clk;
 assign FL_WP_N  = 1'b1;
 assign {LEDR,LEDG} = led_export;
-
+assign ENET_MDIO = mdio_oe ? mdio_out : 1'bz;
+assign ENET_RST_N	= rst_n;
 
 endmodule

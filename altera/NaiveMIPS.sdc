@@ -23,6 +23,10 @@
 
 # Clock constraints
 
+create_clock -name "ENET_RX_CLK" -period 8.000ns [get_ports {ENET_RX_CLK}]
+
+set_input_delay  -clock "ENET_RX_CLK"  -min 2.000ns [get_ports ENET_RX_CLK]
+
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks
 

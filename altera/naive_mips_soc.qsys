@@ -57,6 +57,22 @@
          type = "int";
       }
    }
+   element eth_tse_0
+   {
+      datum _sortIndex
+      {
+         value = "11";
+         type = "int";
+      }
+   }
+   element eth_tse_0.control_port
+   {
+      datum baseAddress
+      {
+         value = "469762048";
+         type = "String";
+      }
+   }
    element half_data_width_0
    {
       datum _sortIndex
@@ -79,6 +95,62 @@
       {
          value = "5";
          type = "int";
+      }
+   }
+   element msgdma_eth_rx
+   {
+      datum _sortIndex
+      {
+         value = "12";
+         type = "int";
+      }
+   }
+   element msgdma_eth_rx.csr
+   {
+      datum baseAddress
+      {
+         value = "469764096";
+         type = "String";
+      }
+   }
+   element msgdma_eth_rx.descriptor_slave
+   {
+      datum baseAddress
+      {
+         value = "469764352";
+         type = "String";
+      }
+   }
+   element msgdma_eth_rx.response
+   {
+      datum baseAddress
+      {
+         value = "469764608";
+         type = "String";
+      }
+   }
+   element msgdma_eth_tx
+   {
+      datum _sortIndex
+      {
+         value = "13";
+         type = "int";
+      }
+   }
+   element msgdma_eth_tx.csr
+   {
+      datum baseAddress
+      {
+         value = "469764864";
+         type = "String";
+      }
+   }
+   element msgdma_eth_tx.descriptor_slave
+   {
+      datum baseAddress
+      {
+         value = "469765120";
+         type = "String";
       }
    }
    element naive_mips_cpu_0
@@ -240,6 +312,36 @@
    internal="pout.external_connection"
    type="conduit"
    dir="end" />
+ <interface
+   name="mac_mdio"
+   internal="eth_tse_0.mac_mdio_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="mac_misc"
+   internal="eth_tse_0.mac_misc_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="mac_rgmii"
+   internal="eth_tse_0.mac_rgmii_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="mac_rxclk"
+   internal="eth_tse_0.pcs_mac_rx_clock_connection"
+   type="clock"
+   dir="end" />
+ <interface
+   name="mac_status"
+   internal="eth_tse_0.mac_status_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="mac_txclk"
+   internal="eth_tse_0.pcs_mac_tx_clock_connection"
+   type="clock"
+   dir="end" />
  <interface name="rst_cpu" internal="clk_0.clk_in_reset" type="reset" dir="end" />
  <interface name="sdram" internal="main_ram.wire" type="conduit" dir="end" />
  <interface name="sw" internal="pin.external_connection" type="conduit" dir="end" />
@@ -348,6 +450,47 @@
   <parameter name="EXPLICIT_CLOCK_RATE" value="0" />
   <parameter name="NUM_CLOCK_OUTPUTS" value="1" />
  </module>
+ <module name="eth_tse_0" kind="altera_eth_tse" version="15.1" enabled="1">
+  <parameter name="AUTO_DEVICE" value="EP4CGX150DF31C8" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
+  <parameter name="core_variation" value="MAC_ONLY" />
+  <parameter name="deviceFamilyName" value="Cyclone IV GX" />
+  <parameter name="eg_addr" value="11" />
+  <parameter name="ena_hash" value="false" />
+  <parameter name="enable_alt_reconfig" value="false" />
+  <parameter name="enable_ecc" value="false" />
+  <parameter name="enable_ena" value="32" />
+  <parameter name="enable_gmii_loopback" value="false" />
+  <parameter name="enable_hd_logic" value="true" />
+  <parameter name="enable_mac_flow_ctrl" value="false" />
+  <parameter name="enable_mac_vlan" value="false" />
+  <parameter name="enable_magic_detect" value="false" />
+  <parameter name="enable_ptp_1step" value="false" />
+  <parameter name="enable_sgmii" value="false" />
+  <parameter name="enable_shift16" value="true" />
+  <parameter name="enable_sup_addr" value="false" />
+  <parameter name="enable_timestamping" value="false" />
+  <parameter name="enable_use_internal_fifo" value="true" />
+  <parameter name="export_pwrdn" value="false" />
+  <parameter name="ext_stat_cnt_ena" value="false" />
+  <parameter name="ifGMII" value="RGMII" />
+  <parameter name="ing_addr" value="11" />
+  <parameter name="max_channels" value="1" />
+  <parameter name="mdio_clk_div" value="40" />
+  <parameter name="nf_phyip_rcfg_enable" value="false" />
+  <parameter name="phy_identifier" value="0" />
+  <parameter name="phyip_en_synce_support" value="false" />
+  <parameter name="phyip_pll_base_data_rate" value="1250 Mbps" />
+  <parameter name="phyip_pll_type" value="CMU" />
+  <parameter name="phyip_pma_bonding_mode" value="x1" />
+  <parameter name="starting_channel_number" value="0" />
+  <parameter name="stat_cnt_ena" value="true" />
+  <parameter name="transceiver_type" value="NONE" />
+  <parameter name="tstamp_fp_width" value="4" />
+  <parameter name="useMDIO" value="true" />
+  <parameter name="use_mac_clken" value="false" />
+  <parameter name="use_misc_ports" value="true" />
+ </module>
  <module
    name="half_data_width_0"
    kind="half_data_width"
@@ -382,12 +525,96 @@
   <parameter name="registerDataIn" value="true" />
   <parameter name="rowWidth" value="13" />
  </module>
+ <module name="msgdma_eth_rx" kind="altera_msgdma" version="15.1" enabled="1">
+  <parameter name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_MAP" value="" />
+  <parameter
+     name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_WIDTH"
+     value="AddressWidth = -1" />
+  <parameter name="AUTO_DESCRIPTOR_WRITE_MASTER_ADDRESS_MAP" value="" />
+  <parameter
+     name="AUTO_DESCRIPTOR_WRITE_MASTER_ADDRESS_WIDTH"
+     value="AddressWidth = -1" />
+  <parameter name="AUTO_DEVICE" value="EP4CGX150DF31C8" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV GX" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
+  <parameter name="AUTO_MM_READ_ADDRESS_MAP" value="" />
+  <parameter name="AUTO_MM_READ_ADDRESS_WIDTH" value="AddressWidth = -1" />
+  <parameter name="AUTO_MM_WRITE_ADDRESS_MAP"><![CDATA[<address-map><slave name='main_ram.s1' start='0x0' end='0x8000000' /></address-map>]]></parameter>
+  <parameter name="AUTO_MM_WRITE_ADDRESS_WIDTH" value="AddressWidth = 27" />
+  <parameter name="BURST_ENABLE" value="1" />
+  <parameter name="BURST_WRAPPING_SUPPORT" value="0" />
+  <parameter name="CHANNEL_ENABLE" value="0" />
+  <parameter name="CHANNEL_WIDTH" value="8" />
+  <parameter name="DATA_FIFO_DEPTH" value="256" />
+  <parameter name="DATA_WIDTH" value="32" />
+  <parameter name="DESCRIPTOR_FIFO_DEPTH" value="128" />
+  <parameter name="ENHANCED_FEATURES" value="1" />
+  <parameter name="ERROR_ENABLE" value="1" />
+  <parameter name="ERROR_WIDTH" value="6" />
+  <parameter name="FIX_ADDRESS_WIDTH" value="32" />
+  <parameter name="MAX_BURST_COUNT" value="8" />
+  <parameter name="MAX_BYTE" value="8192" />
+  <parameter name="MAX_STRIDE" value="1" />
+  <parameter name="MODE" value="2" />
+  <parameter name="PACKET_ENABLE" value="1" />
+  <parameter name="PREFETCHER_DATA_WIDTH" value="32" />
+  <parameter name="PREFETCHER_ENABLE" value="0" />
+  <parameter name="PREFETCHER_MAX_READ_BURST_COUNT" value="2" />
+  <parameter name="PREFETCHER_READ_BURST_ENABLE" value="0" />
+  <parameter name="PROGRAMMABLE_BURST_ENABLE" value="0" />
+  <parameter name="RESPONSE_PORT" value="0" />
+  <parameter name="STRIDE_ENABLE" value="0" />
+  <parameter name="TRANSFER_TYPE" value="Aligned Accesses" />
+  <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
+ </module>
+ <module name="msgdma_eth_tx" kind="altera_msgdma" version="15.1" enabled="1">
+  <parameter name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_MAP" value="" />
+  <parameter
+     name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_WIDTH"
+     value="AddressWidth = -1" />
+  <parameter name="AUTO_DESCRIPTOR_WRITE_MASTER_ADDRESS_MAP" value="" />
+  <parameter
+     name="AUTO_DESCRIPTOR_WRITE_MASTER_ADDRESS_WIDTH"
+     value="AddressWidth = -1" />
+  <parameter name="AUTO_DEVICE" value="EP4CGX150DF31C8" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV GX" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
+  <parameter name="AUTO_MM_READ_ADDRESS_MAP"><![CDATA[<address-map><slave name='main_ram.s1' start='0x0' end='0x8000000' /></address-map>]]></parameter>
+  <parameter name="AUTO_MM_READ_ADDRESS_WIDTH" value="AddressWidth = 27" />
+  <parameter name="AUTO_MM_WRITE_ADDRESS_MAP" value="" />
+  <parameter name="AUTO_MM_WRITE_ADDRESS_WIDTH" value="AddressWidth = -1" />
+  <parameter name="BURST_ENABLE" value="1" />
+  <parameter name="BURST_WRAPPING_SUPPORT" value="0" />
+  <parameter name="CHANNEL_ENABLE" value="0" />
+  <parameter name="CHANNEL_WIDTH" value="8" />
+  <parameter name="DATA_FIFO_DEPTH" value="256" />
+  <parameter name="DATA_WIDTH" value="32" />
+  <parameter name="DESCRIPTOR_FIFO_DEPTH" value="128" />
+  <parameter name="ENHANCED_FEATURES" value="1" />
+  <parameter name="ERROR_ENABLE" value="1" />
+  <parameter name="ERROR_WIDTH" value="1" />
+  <parameter name="FIX_ADDRESS_WIDTH" value="32" />
+  <parameter name="MAX_BURST_COUNT" value="8" />
+  <parameter name="MAX_BYTE" value="8192" />
+  <parameter name="MAX_STRIDE" value="1" />
+  <parameter name="MODE" value="1" />
+  <parameter name="PACKET_ENABLE" value="1" />
+  <parameter name="PREFETCHER_DATA_WIDTH" value="32" />
+  <parameter name="PREFETCHER_ENABLE" value="0" />
+  <parameter name="PREFETCHER_MAX_READ_BURST_COUNT" value="2" />
+  <parameter name="PREFETCHER_READ_BURST_ENABLE" value="0" />
+  <parameter name="PROGRAMMABLE_BURST_ENABLE" value="0" />
+  <parameter name="RESPONSE_PORT" value="2" />
+  <parameter name="STRIDE_ENABLE" value="0" />
+  <parameter name="TRANSFER_TYPE" value="Aligned Accesses" />
+  <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
+ </module>
  <module
    name="naive_mips_cpu_0"
    kind="naive_mips_cpu"
    version="1.0"
    enabled="1">
-  <parameter name="AUTO_INR_IRQ0_INTERRUPTS_USED" value="4" />
+  <parameter name="AUTO_INR_IRQ0_INTERRUPTS_USED" value="7" />
  </module>
  <module name="pin" kind="altera_avalon_pio" version="15.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
@@ -463,6 +690,60 @@
    kind="avalon"
    version="15.1"
    start="naive_mips_cpu_0.data_master"
+   end="eth_tse_0.control_port">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.data_master"
+   end="msgdma_eth_rx.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000800" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.data_master"
+   end="msgdma_eth_tx.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000b00" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.data_master"
+   end="msgdma_eth_rx.descriptor_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000900" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.data_master"
+   end="msgdma_eth_tx.descriptor_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000c00" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.data_master"
+   end="msgdma_eth_rx.response">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000a00" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.data_master"
    end="main_ram.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
@@ -526,6 +807,60 @@
    kind="avalon"
    version="15.1"
    start="naive_mips_cpu_0.io_master"
+   end="eth_tse_0.control_port">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.io_master"
+   end="msgdma_eth_rx.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000800" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.io_master"
+   end="msgdma_eth_tx.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000b00" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.io_master"
+   end="msgdma_eth_rx.descriptor_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000900" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.io_master"
+   end="msgdma_eth_tx.descriptor_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000c00" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.io_master"
+   end="msgdma_eth_rx.response">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c000a00" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="naive_mips_cpu_0.io_master"
    end="uart_0.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x1fd003e0" />
@@ -549,6 +884,34 @@
   <parameter name="baseAddress" value="0x1fd00410" />
   <parameter name="defaultConnection" value="false" />
  </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="msgdma_eth_tx.mm_read"
+   end="main_ram.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="msgdma_eth_rx.mm_write"
+   end="main_ram.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon_streaming"
+   version="15.1"
+   start="eth_tse_0.receive"
+   end="msgdma_eth_rx.st_sink" />
+ <connection
+   kind="avalon_streaming"
+   version="15.1"
+   start="msgdma_eth_tx.st_source"
+   end="eth_tse_0.transmit" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="pout.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="pin.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="main_ram.clk" />
@@ -564,7 +927,22 @@
    kind="clock"
    version="15.1"
    start="clk_0.clk"
+   end="msgdma_eth_rx.clock" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="msgdma_eth_tx.clock" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
    end="half_data_width_0.clock_sink" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="eth_tse_0.control_port_clock_connection" />
  <connection
    kind="clock"
    version="15.1"
@@ -573,8 +951,32 @@
  <connection
    kind="clock"
    version="15.1"
+   start="clk_0.clk"
+   end="eth_tse_0.receive_clock_connection" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="eth_tse_0.transmit_clock_connection" />
+ <connection
+   kind="clock"
+   version="15.1"
    start="clock_bridge_0.out_clk"
    end="naive_mips_cpu_0.debugger_clock" />
+ <connection
+   kind="interrupt"
+   version="15.1"
+   start="naive_mips_cpu_0.inr_irq0"
+   end="msgdma_eth_rx.csr_irq">
+  <parameter name="irqNumber" value="0" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="15.1"
+   start="naive_mips_cpu_0.inr_irq0"
+   end="msgdma_eth_tx.csr_irq">
+  <parameter name="irqNumber" value="1" />
+ </connection>
  <connection
    kind="interrupt"
    version="15.1"
@@ -614,6 +1016,21 @@
    version="15.1"
    start="clk_0.clk_reset"
    end="bootrom.reset1" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="eth_tse_0.reset_connection" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="msgdma_eth_rx.reset_n" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="msgdma_eth_tx.reset_n" />
  <connection
    kind="reset"
    version="15.1"
