@@ -6,9 +6,10 @@
 _start:
    la $t0,__exception_vector   # $8 = 0x1000
    lui  $t1,0x8000
+   lui  $1, 0x1000     # CU0=1
    or   $t0,$t0,$t1
    mtc0 $t0, $15, 1    # set ebase
-   mtc0 $0, $12, 0     # Status_BEV=0
+   mtc0 $1, $12, 0     # Status_BEV=0
 
    ori $2,$0,0x0
    ori $1,$0,0x64
