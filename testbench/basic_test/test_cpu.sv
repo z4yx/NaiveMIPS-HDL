@@ -206,6 +206,7 @@ initial begin
     unit_test("../testcase/timer_int");
     unit_test("../testcase/mem_exp");
     unit_test("../testcase/tlb");
+    unit_test("../testcase/usermode");
     $display("Unit test succeeded!");
     $stop;
 end
