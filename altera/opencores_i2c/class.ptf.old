@@ -1,0 +1,116 @@
+CLASS opencores_i2c
+{
+   ASSOCIATED_FILES 
+   {
+      Add_Program = "";
+      Edit_Program = "";
+      Generator_Program = "";
+   }
+   MODULE_DEFAULTS 
+   {
+      class = "opencores_i2c";
+      class_version = "2.0";
+      SYSTEM_BUILDER_INFO 
+      {
+         Instantiate_In_System_Module = "1";
+         Is_Enabled = "1";
+         Date_Modified = "--unknown--";
+      }
+      WIZARD_SCRIPT_ARGUMENTS 
+      {
+      }
+      PORT_WIRING 
+      {
+        PORT scl_pad_io     {direction = "inout";   width     = "1";}
+        PORT sda_pad_io     {direction = "inout";   width     = "1";}
+        PORT wb_clk_i		 {width = "1"; direction = "input"; type = "clk";}
+        PORT wb_rst_i		 {width = "1"; direction = "input"; type = "reset";}
+
+      }
+      SLAVE avalon_i2c_slave
+      {
+         SYSTEM_BUILDER_INFO 
+         {
+            Bus_Type = "avalon";
+            Address_Alignment = "native";
+            Address_Width = "3";
+            Data_Width = "8";
+            Has_IRQ = "1";
+            Read_Wait_States = "peripheral_controlled";
+            Write_Wait_States = "peripheral_controlled";
+            Setup_Time = "0";
+            Hold_Time = "0";
+            Is_Memory_Device = "0";
+            Uses_Tri_State_Data_Bus = "0";
+            Is_Enabled = "1";
+         }
+         PORT_WIRING
+         {
+             PORT wb_adr_i
+            {
+               width = "3";
+               direction = "input";
+               type = "address";
+            }
+            PORT wb_dat_i
+            {
+               width = "8";
+               direction = "input";
+               type = "writedata";
+            }
+            PORT wb_dat_o
+            {
+               width = "8";
+               direction = "output";
+               type = "readdata";
+            }
+            PORT wb_we_i
+            {
+               width = "1";
+               direction = "input";
+               type = "write";
+            }
+            PORT wb_stb_i
+            {
+               width = "1";
+               direction = "input";
+               type = "chipselect";
+            }
+            PORT wb_cyc_i
+            {
+               width = "1";
+               direction = "input";
+               type = "chipselect";
+            }
+            PORT wb_ack_o
+            {
+               width = "1";
+               direction = "output";
+               type = "waitrequest_n";
+            }
+            PORT wb_inta_o
+            {
+               width = "1";
+               direction = "output";
+               type = "irq";
+            }
+         }
+      }
+   }
+   USER_INTERFACE 
+   {
+      USER_LABELS 
+      {
+         name = "OpenCores I2C Master";
+         technology = "Communication";
+      }
+   }
+   DEFAULT_GENERATOR 
+   {
+      top_module_name = "opencores_i2c";
+      black_box = "0";
+      vhdl_synthesis_files = "";
+      verilog_synthesis_files="opencores_i2c.v,i2c_master_defines.v,timescale.v,i2c_master_bit_ctrl.v,i2c_master_byte_ctrl.v,i2c_master_top.v";
+      black_box_files="";
+   }
+}

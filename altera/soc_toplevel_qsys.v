@@ -346,8 +346,11 @@ naive_mips_soc soc(
 		.flash_bus_tcm_write_n_out(FL_WE_N),      //          .tcm_write_n_out
 		.flash_bus_tcm_data_out(FS_DQ),         //          .tcm_data_out
 		.flash_bus_tcm_chipselect_n_out(FL_CE_N), //          .tcm_chipselect_n_out
+		.i2c_scl_pad_io(G_SENSOR_SCLK),                 //       i2c.scl_pad_io
+		.i2c_sda_pad_io(G_SENSOR_SDAT),                 //          .sda_pad_io
+		.irq_irq(G_SENSOR_INT1),                        //       irq.irq
 		.led_export(led_export),       //      led.export
-		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
+/*		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
 		.mac_mdio_mdio_in(ENET_MDIO),               //           .mdio_in
 		.mac_mdio_mdio_out(mdio_out),              //           .mdio_out
 		.mac_mdio_mdio_oen(mdio_oe),              //           .mdio_oen
@@ -371,6 +374,7 @@ naive_mips_soc soc(
 		.mac_status_eth_mode(),            //           .eth_mode
 		.mac_status_ena_10(),              //           .ena_10
 		.mac_txclk_clk(enet_tx_clk_mac),                  //  mac_txclk.clk
+		*/
 		.rst_cpu_reset_n(rst_n),  //  rst_cpu.reset_n
 		//.rst_other_reset_n(rst_n),              // rst_other.reset_n
 		.sdram_addr(DRAM_ADDR),       //    sdram.addr
