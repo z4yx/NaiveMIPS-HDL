@@ -6,13 +6,13 @@ module Cache #(
             TAG_WIDTH        = 20,
             ADDR_WIDTH       = 32
 )(
-		output wire [ADDR_WIDTH-1:0] avalon_master_address,       // burst_master.address
+		output reg [ADDR_WIDTH-1:0] avalon_master_address,       // burst_master.address
 		output wire [CACHE_LINE_WIDTH:0]       avalon_master_burstcount,    //             .burstcount
 		input  wire [31:0] avalon_master_readdata,      //             .readdata
 		output wire [31:0] avalon_master_writedata,     //             .writedata
 		input  wire        avalon_master_waitrequest,   //             .waitrequest
-		output wire        avalon_master_read,          //             .read
-		output wire        avalon_master_write,         //             .write
+		output reg        avalon_master_read,          //             .read
+		output reg        avalon_master_write,         //             .write
 		input  wire        avalon_master_readdatavalid, //             .readdatavalid
 		
 		input  wire        rst_n,                       //        Reset.reset_n
@@ -78,6 +78,8 @@ wire                        wrVaild;
 wire                        wrDirty;
 wire [31:0]                  wrData;
 
+wire [31:0]                  lkupDatas[`NUM_CACHE_LINES-1 : 0];
+
 genvar cache_line_i;
 
 generate 
@@ -110,14 +112,14 @@ generate
       .wrTag              (     wrTag),
       .wrVaild            (   wrVaild),
       .wrDirty            (   wrDirty),
-      .wrData             (    wrData)
+      .wrData             (    wrData),
+      .lkupData           (lkupDatas[cache_line_i])
     );
   end
 
 endgenerate
 
 wire cacheRewrite;
-assign cacheRewrite = 0;
 
 wire         writesDirect[`NUM_CACHE_LINES-1 : 0];
 wire         writesRewrit[`NUM_CACHE_LINES-1 : 0];
@@ -154,7 +156,7 @@ wire slaveMiss;
 wire slave2Miss;
 
 assign  slaveMiss = ! rdHits[slave_addr_idx];
-assign slave2Miss = ! rd2Hits[slave_addr_idx];
+assign slave2Miss = ! rd2Hits[rdslave_addr_idx];
 
 assign slave_rd_waitrequest = slaveMiss;
 assign avalon_rdslave_waitrequest = slave2Miss;
@@ -166,12 +168,116 @@ assign wrDirtyDirect = 1'b1;
 assign wrDataDirect = avalon_slave_writedata;
 assign slave_wr_waitrequest = slaveMiss;
 
+reg [1:0] state;
+
+`define IDLE  2'd0
+`define WR    2'd1
+`define RD    2'd2
+
+reg [CACHE_LINE_WIDTH-1 : 0] cacheLineWrRdOff;
+
+assign cacheRewrite = state == `WR || state ==`RD;
+
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin
     assign writesDirect[cache_line_i] = avalon_slave_write && rdHits[cache_line_i] && cache_line_i == slave_addr_idx;
   end
 endgenerate
 
+wire[ADDR_WIDTH-1:0] miss_address;
+reg [ADDR_WIDTH-1:0] miss_address_save;
+wire[ADDR_WIDTH-1:0] miss_address_sync;
+wire [TAG_WIDTH-1 : 0] miss_addr_tag;
+wire [`INDEX_WIDTH-1 : 0] miss_addr_idx;
+wire [CACHE_LINE_WIDTH-1 : 0] miss_addr_off;
+assign {miss_addr_tag, miss_addr_idx, miss_addr_off} = miss_address;
+assign miss_address_sync = slaveMiss ? avalon_slave_address : avalon_rdslave_address;
+assign miss_address = state == `IDLE ? miss_address_sync : miss_address_save;
 
+always @(posedge clk, negedge rst_n) begin
+  if(!rst_n) begin
+    miss_address_save <= 0;
+  end else begin
+    if(state == `IDLE) begin
+      miss_address_save <= miss_address_sync;
+    end
+  end
+end
+
+assign wrOffRewrit = cacheLineWrRdOff;
+assign avalon_master_writedata = lkupDatas[miss_addr_idx];
+assign avalon_master_burstcount = 2 ** CACHE_LINE_WIDTH - 1;
+
+generate 
+  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin
+    assign writesRewrit[cache_line_i] = state == `RD && avalon_master_readdatavalid && cache_line_i == miss_addr_idx;
+  end
+endgenerate
+assign wrDataRewrit = avalon_rdslave_readdata;
+assign wrDirtyRewrit = 1'b0;
+assign wrVaildRewrit = (cacheLineWrRdOff == (2 ** CACHE_LINE_WIDTH - 1)) ? 1'b1 : 1'b0;
+assign wrTagRewrit = miss_addr_tag;
+
+always @(posedge clk, negedge rst_n) begin
+
+  if(! rst_n) begin
+    state <= `IDLE;
+    cacheLineWrRdOff <= 0;
+    avalon_master_address <= 0;
+    avalon_master_read <= 1'b0;
+    avalon_master_write <= 1'b0;
+    cacheLineWrRdOff <= 0;
+  end else begin
+    case (state)
+      `IDLE: begin
+        if(slaveMiss || slave2Miss) begin
+          if(rdDirties[miss_addr_idx]) begin
+            state <= `WR;
+            avalon_master_address <= {rdTags[miss_addr_idx], miss_addr_idx, miss_addr_off - miss_addr_off};
+            avalon_master_write <= 1'b1;
+          end else begin
+            state <= `RD;
+            avalon_master_address <= {miss_addr_tag, miss_addr_idx, miss_addr_off - miss_addr_off};
+            avalon_master_read <= 1'b1;
+          end
+          
+        end
+        cacheLineWrRdOff <= 0;
+      end
+      `WR: begin
+        if(avalon_master_waitrequest) begin
+        end else begin
+          if(cacheLineWrRdOff == 2 ** CACHE_LINE_WIDTH - 1) begin
+            cacheLineWrRdOff <= 0;
+            avalon_master_write <= 1'b0;
+            state <= `RD;
+            
+            avalon_master_address <= {miss_addr_tag, miss_addr_idx, miss_addr_off - miss_addr_off};
+            avalon_master_read <= 1'b1;
+          end else begin
+            cacheLineWrRdOff <= cacheLineWrRdOff + 1;
+          end
+        end
+      end
+      `RD: begin
+        if(avalon_master_read && !avalon_master_waitrequest) begin
+          avalon_master_read <= 1'b0;
+        end
+        if(avalon_master_readdatavalid) begin
+            if(cacheLineWrRdOff == 2 ** CACHE_LINE_WIDTH - 1) begin
+              cacheLineWrRdOff <= 0;
+              state <= `IDLE;
+            end else begin
+              cacheLineWrRdOff <= cacheLineWrRdOff + 1;
+            end
+        end
+      end
+      default: begin
+        state <= `IDLE;
+      end
+    endcase
+  end
+
+end
 
 endmodule

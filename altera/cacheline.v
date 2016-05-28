@@ -25,7 +25,8 @@ module cacheline #(
   input wire [TAG_WIDTH-1 : 0]        wrTag,
   input wire                          wrVaild,
   input wire                          wrDirty,
-  input wire [31:0]                   wrData
+  input wire [31:0]                   wrData,
+  output wire [31:0]                  lkupData
 
 );
 
@@ -57,6 +58,8 @@ assign rd2Data = rd2Vaild ? words[ rd2Off[CACHE_LINE_WIDTH-1 : 2] ] : 0;
 assign rd2Dirty = rd2Vaild ? dirty : 1'b0;
 assign rd2Tag = tag;
 assign rd2Hit = vaild && (tag == need2Tag);
+
+assign lkupData = words[ wrOff[CACHE_LINE_WIDTH-1 : 2] ];
 
 
 integer i;
