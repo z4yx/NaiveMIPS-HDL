@@ -136,7 +136,7 @@ wire [31:0]                  wrDataRewrit;
 
 
 generate 
-  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin
+  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writes
     assign writes[cache_line_i] = cacheRewrite ? writesRewrit[cache_line_i] : writesDirect[cache_line_i];
   end
 endgenerate
@@ -179,7 +179,7 @@ reg [CACHE_LINE_WIDTH-1 : 0] cacheLineWrRdOff;
 assign cacheRewrite = state == `WR || state ==`RD;
 
 generate 
-  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin
+  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writesDirect
     assign writesDirect[cache_line_i] = avalon_slave_write && rdHits[cache_line_i] && cache_line_i == slave_addr_idx;
   end
 endgenerate
@@ -209,7 +209,7 @@ assign avalon_master_writedata = lkupDatas[miss_addr_idx];
 assign avalon_master_burstcount = 2 ** CACHE_LINE_WIDTH - 1;
 
 generate 
-  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin
+  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writesRewrit
     assign writesRewrit[cache_line_i] = state == `RD && avalon_master_readdatavalid && cache_line_i == miss_addr_idx;
   end
 endgenerate
