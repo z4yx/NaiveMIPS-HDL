@@ -23,7 +23,7 @@ module Cache #(
 		input  wire        avalon_slave_write,          //             .write
 		output wire [31:0] avalon_slave_readdata,       //             .readdata
 		input  wire [31:0] avalon_slave_writedata,      //             .writedata
-		output wire        avalon_slave_waitrequest     //             .waitrequest
+		output wire        avalon_slave_waitrequest,    //             .waitrequest
 		
     input  wire [ADDR_WIDTH-1:0] avalon_rdslave_address,        // avalon_rdslave.address
 		input  wire        avalon_rdslave_read,           //             .read
@@ -32,20 +32,20 @@ module Cache #(
 	);
 
 `define INDEX_WIDTH (ADDR_WIDTH - CACHE_LINE_WIDTH - TAG_WIDTH)
-`define NUM_CACHE_LINES (2**INDEX_WIDTH)
+`define NUM_CACHE_LINES (2**`INDEX_WIDTH)
 
 // seperate slave addr into tag, index, offset
 
-wire slave_addr_tag[ADDR_WIDTH-1: ADDR_WIDTH-TAG_WIDTH];
-wire slave_addr_idx[ADDR_WIDTH-TAG_WIDTH-1 : CACHE_LINE_WIDTH];
-wire slave_addr_off[CACHE_LINE_WIDTH-1 : 0];
+wire [TAG_WIDTH-1: 0] slave_addr_tag;
+wire [`INDEX_WIDTH-1 : 0] slave_addr_idx;
+wire [CACHE_LINE_WIDTH-1 : 0] slave_addr_off;
 assign {slave_addr_tag, slave_addr_idx, slave_addr_off} = avalon_slave_address;
 
 // separate rdslave addr into tag, index, offset
 
-wire rdslave_addr_tag[ADDR_WIDTH-1: ADDR_WIDTH-TAG_WIDTH];
-wire rdslave_addr_idx[ADDR_WIDTH-TAG_WIDTH-1 : CACHE_LINE_WIDTH];
-wire rdslave_addr_off[CACHE_LINE_WIDTH-1 : 0];
+wire [TAG_WIDTH-1 : 0] rdslave_addr_tag;
+wire [`INDEX_WIDTH-1 : 0] rdslave_addr_idx;
+wire [CACHE_LINE_WIDTH-1 : 0] rdslave_addr_off;
 assign {rdslave_addr_tag, rdslave_addr_idx, rdslave_addr_off} = avalon_rdslave_address;
 
 // separate slave_waitrequest into slave_wr_waitrequest and slave_rd_waitrequest
@@ -117,9 +117,10 @@ generate
 endgenerate
 
 wire cacheRewrite;
+assign cacheRewrite = 0;
 
 wire         writesDirect[`NUM_CACHE_LINES-1 : 0];
-wire         writesRewirt[`NUM_CACHE_LINES-1 : 0];
+wire         writesRewrit[`NUM_CACHE_LINES-1 : 0];
 wire [CACHE_LINE_WIDTH-1 : 0] wrOffDirect;
 wire [CACHE_LINE_WIDTH-1 : 0] wrOffRewrit;
 wire [TAG_WIDTH-1 : 0]        wrTagDirect;
@@ -131,12 +132,17 @@ wire                        wrDirtyRewrit;
 wire [31:0]                  wrDataDirect;
 wire [31:0]                  wrDataRewrit;
 
-assign writes = cacheRewrite ? writesRewrit : writesDirect
-assign wrOff = cacheRewrite ? wrOffRewrit : wrOffDirect
-assign wrTag = cacheRewrite ? wrTagRewrit : wrTagDirect
-assign wrVaild = cacheRewrite ? wrVaildRewrit : wrVaildDirect
-assign wrDirty = cacheRewrite ? wrDirtyRewrit : wrDirtyDirect
-assign wrData = cacheRewrite ? wrDataRewrit : wrDataDirect
+
+generate 
+  for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin
+    assign writes[cache_line_i] = cacheRewrite ? writesRewrit[cache_line_i] : writesDirect[cache_line_i];
+  end
+endgenerate
+assign wrOff = cacheRewrite ? wrOffRewrit : wrOffDirect;
+assign wrTag = cacheRewrite ? wrTagRewrit : wrTagDirect;
+assign wrVaild = cacheRewrite ? wrVaildRewrit : wrVaildDirect;
+assign wrDirty = cacheRewrite ? wrDirtyRewrit : wrDirtyDirect;
+assign wrData = cacheRewrite ? wrDataRewrit : wrDataDirect;
 
 assign rdAddr   = avalon_slave_address;
 assign rd2Addr  = avalon_rdslave_address;
@@ -162,7 +168,7 @@ assign slave_wr_waitrequest = slaveMiss;
 
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin
-    assign writesDirect[i] = avalon_slave_write && rdHits[i] && i == slave_addr_idx;
+    assign writesDirect[cache_line_i] = avalon_slave_write && rdHits[cache_line_i] && cache_line_i == slave_addr_idx;
   end
 endgenerate
 

@@ -27,7 +27,7 @@ module cacheline #(
   input wire                          wrDirty,
   input wire [31:0]                   wrData
 
-)
+);
 
 reg [31:0] words[ 2**(CACHE_LINE_WIDTH-2)-1 : 0];
 reg vaild;
@@ -58,14 +58,18 @@ assign rd2Dirty = rd2Vaild ? dirty : 1'b0;
 assign rd2Tag = tag;
 assign rd2Hit = vaild && (tag == need2Tag);
 
+
+integer i;
 always @(posedge clk, negedge rst_n) begin
 
   if(!rst_n) begin
+/*
     vaild <= 1'b0;
     dirty <= 1'b0;
-    for (i=0; i<=2**(CACHE_LINE_WIDTH-2)-1; i++ ) begin
+    for (i=0; i<=2**(CACHE_LINE_WIDTH-2)-1; i = i+1 ) begin
       words[i] <= 0;
     end
+*/
   end else begin
     if(write) begin
       dirty <= wrDirty;
@@ -74,6 +78,18 @@ always @(posedge clk, negedge rst_n) begin
       words[wrOff[CACHE_LINE_WIDTH-1 : 2]] <= wrData;
     end
   end
+end
+
+
+initial begin
+
+  vaild <= 1'b1;
+  dirty <= 1'b0;
+  tag <= 0;
+  for ( i = 0; i < 2**(CACHE_LINE_WIDTH-2) ; i=i+1) begin
+    words[i] <= i;
+  end
+
 end
 
 endmodule
