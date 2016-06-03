@@ -215,7 +215,7 @@ generate
 endgenerate
 assign wrDataRewrit = avalon_rdslave_readdata;
 assign wrDirtyRewrit = 1'b0;
-assign wrVaildRewrit = (cacheLineWrRdOff == (2 ** CACHE_LINE_WIDTH - 1)) ? 1'b1 : 1'b0;
+assign wrVaildRewrit = (cacheLineWrRdOff == (2 ** CACHE_LINE_WIDTH - 4)) ? 1'b1 : 1'b0;
 assign wrTagRewrit = miss_addr_tag;
 
 always @(posedge clk, negedge rst_n) begin
