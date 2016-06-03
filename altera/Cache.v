@@ -213,7 +213,7 @@ generate
     assign writesRewrit[cache_line_i] = state == `RD && avalon_master_readdatavalid && cache_line_i == miss_addr_idx;
   end
 endgenerate
-assign wrDataRewrit = avalon_rdslave_readdata;
+assign wrDataRewrit = avalon_master_readdata;
 assign wrDirtyRewrit = 1'b0;
 assign wrVaildRewrit = (cacheLineWrRdOff == (2 ** CACHE_LINE_WIDTH - 4)) ? 1'b1 : 1'b0;
 assign wrTagRewrit = miss_addr_tag;
