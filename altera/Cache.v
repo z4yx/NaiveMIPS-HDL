@@ -247,7 +247,7 @@ always @(posedge clk, negedge rst_n) begin
       `WR: begin
         if(avalon_master_waitrequest) begin
         end else begin
-          if(cacheLineWrRdOff == 2 ** CACHE_LINE_WIDTH - 1) begin
+          if(cacheLineWrRdOff == 2 ** CACHE_LINE_WIDTH - 4) begin
             cacheLineWrRdOff <= 0;
             avalon_master_write <= 1'b0;
             state <= `RD;
@@ -255,7 +255,7 @@ always @(posedge clk, negedge rst_n) begin
             avalon_master_address <= {miss_addr_tag, miss_addr_idx, miss_addr_off - miss_addr_off};
             avalon_master_read <= 1'b1;
           end else begin
-            cacheLineWrRdOff <= cacheLineWrRdOff + 1;
+            cacheLineWrRdOff <= cacheLineWrRdOff + 4;
           end
         end
       end
@@ -264,11 +264,11 @@ always @(posedge clk, negedge rst_n) begin
           avalon_master_read <= 1'b0;
         end
         if(avalon_master_readdatavalid) begin
-            if(cacheLineWrRdOff == 2 ** CACHE_LINE_WIDTH - 1) begin
+            if(cacheLineWrRdOff == 2 ** CACHE_LINE_WIDTH - 4) begin
               cacheLineWrRdOff <= 0;
               state <= `IDLE;
             end else begin
-              cacheLineWrRdOff <= cacheLineWrRdOff + 1;
+              cacheLineWrRdOff <= cacheLineWrRdOff + 4;
             end
         end
       end
