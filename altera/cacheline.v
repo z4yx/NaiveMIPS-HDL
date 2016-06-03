@@ -66,13 +66,11 @@ integer i;
 always @(posedge clk, negedge rst_n) begin
 
   if(!rst_n) begin
-/*
     vaild <= 1'b0;
     dirty <= 1'b0;
     for (i=0; i<=2**(CACHE_LINE_WIDTH-2)-1; i = i+1 ) begin
       words[i] <= 0;
     end
-*/
   end else begin
     if(write) begin
       dirty <= wrDirty;
