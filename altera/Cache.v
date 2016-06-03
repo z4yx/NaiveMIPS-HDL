@@ -206,7 +206,7 @@ end
 
 assign wrOffRewrit = cacheLineWrRdOff;
 assign avalon_master_writedata = lkupDatas[miss_addr_idx];
-assign avalon_master_burstcount = 2 ** CACHE_LINE_WIDTH - 1;
+assign avalon_master_burstcount = 2 ** CACHE_LINE_WIDTH;
 
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writesRewrit
