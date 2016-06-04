@@ -155,7 +155,7 @@ assign avalon_rdslave_readdata = rd2Datas[rdslave_addr_idx];
 wire slaveMiss;
 wire slave2Miss;
 
-assign  slaveMiss = ! rdHits[slave_addr_idx] && avalon_slave_read;
+assign  slaveMiss = ! rdHits[slave_addr_idx] && (avalon_slave_read || avalon_slave_write);
 assign slave2Miss = ! rd2Hits[rdslave_addr_idx] && avalon_rdslave_read;
 
 assign slave_rd_waitrequest = slaveMiss;
