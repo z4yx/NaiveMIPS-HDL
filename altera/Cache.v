@@ -24,6 +24,7 @@ module Cache #(
 		output wire [31:0] avalon_slave_readdata,       //             .readdata
 		input  wire [31:0] avalon_slave_writedata,      //             .writedata
 		output wire        avalon_slave_waitrequest,    //             .waitrequest
+		input  wire  [3:0] avalon_slave_byteenable,     //             .byteenable
 		
     input  wire [ADDR_WIDTH-1:0] avalon_rdslave_address,        // avalon_rdslave.address
 		input  wire        avalon_rdslave_read,           //             .read
@@ -77,6 +78,7 @@ wire [TAG_WIDTH-1 : 0]        wrTag;
 wire                        wrVaild;
 wire                        wrDirty;
 wire [31:0]                  wrData;
+wire [3:0]             wrByteEnable;
 
 wire [31:0]                  lkupDatas[`NUM_CACHE_LINES-1 : 0];
 
@@ -108,11 +110,12 @@ generate
       .rd2Tag             (   rd2Tags[cache_line_i]),
       
       .write              (    writes[cache_line_i]),
-      .wrOff              (     wrOff),
-      .wrTag              (     wrTag),
-      .wrVaild            (   wrVaild),
-      .wrDirty            (   wrDirty),
-      .wrData             (    wrData),
+      .wrOff              (       wrOff),
+      .wrTag              (       wrTag),
+      .wrVaild            (     wrVaild),
+      .wrDirty            (     wrDirty),
+      .wrData             (      wrData),
+      .wrByteEnable       (wrByteEnable),
       .lkupData           (lkupDatas[cache_line_i])
     );
   end
@@ -133,6 +136,8 @@ wire                        wrDirtyDirect;
 wire                        wrDirtyRewrit;
 wire [31:0]                  wrDataDirect;
 wire [31:0]                  wrDataRewrit;
+wire [3:0]             wrByteEnableDirect;
+wire [3:0]             wrByteEnableRewrit;
 
 
 generate 
@@ -145,6 +150,7 @@ assign wrTag = cacheRewrite ? wrTagRewrit : wrTagDirect;
 assign wrVaild = cacheRewrite ? wrVaildRewrit : wrVaildDirect;
 assign wrDirty = cacheRewrite ? wrDirtyRewrit : wrDirtyDirect;
 assign wrData = cacheRewrite ? wrDataRewrit : wrDataDirect;
+assign wrByteEnable = cacheRewrite ? wrByteEnableRewrit : wrByteEnableDirect;
 
 assign rdAddr   = avalon_slave_address;
 assign rd2Addr  = avalon_rdslave_address;
@@ -167,6 +173,7 @@ assign wrVaildDirect = 1'b1;
 assign wrDirtyDirect = 1'b1;
 assign wrDataDirect = avalon_slave_writedata;
 assign slave_wr_waitrequest = slaveMiss;
+assign wrByteEnableDirect = avalon_slave_byteenable;
 
 reg [1:0] state;
 
@@ -214,6 +221,7 @@ generate
   end
 endgenerate
 assign wrDataRewrit = avalon_master_readdata;
+assign wrByteEnableRewrit = 4'b1111;
 assign wrDirtyRewrit = 1'b0;
 assign wrVaildRewrit = (cacheLineWrRdOff == (2 ** CACHE_LINE_WIDTH - 4)) ? 1'b1 : 1'b0;
 assign wrTagRewrit = miss_addr_tag;

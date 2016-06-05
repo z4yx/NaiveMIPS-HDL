@@ -26,6 +26,7 @@ module cacheline #(
   input wire                          wrVaild,
   input wire                          wrDirty,
   input wire [31:0]                   wrData,
+  input wire [3:0]                    wrByteEnable,
   output wire [31:0]                  lkupData
 
 );
@@ -76,7 +77,11 @@ always @(posedge clk, negedge rst_n) begin
       dirty <= wrDirty;
       vaild <= wrVaild;
       tag <= wrTag;
-      words[wrOff[CACHE_LINE_WIDTH-1 : 2]] <= wrData;
+      for (i=0; i<= 3 ; i = i+1) begin
+        if(wrByteEnable[i]) begin
+          words[wrOff[CACHE_LINE_WIDTH-1 : 2]][ i*8 + 7 : i*8] <= wrData[ i*8 + 7 : i*8];
+        end
+      end
     end
   end
 end
