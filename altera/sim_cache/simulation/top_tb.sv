@@ -126,16 +126,19 @@ initial begin
     wait(`MASTER_INST.reset == 1'b0);
     @(negedge clk);
     $display("Starting cache test program");
-    iaddr = 0;
-    daddr = 4;
-    repeat(100) begin 
 
-      iaddr = iaddr+4;
-      daddr = daddr+4;
-      byte_en = 4'b0111;
-      d_rw = REQ_WRITE;
-      dwrdata = 32'hdead0000 | daddr;
+    repeat(1000) begin 
 
+      iaddr = $urandom_range(0, 255);
+      do begin 
+        daddr = $urandom_range(0, 255);
+      end while(daddr == iaddr);
+      byte_en = 4'b1111;
+      daddr[1:0] = 2'b00;
+      d_rw = ($random & 1) ? REQ_WRITE : REQ_READ;
+      dwrdata = $urandom_range(0, 32'hffffffff);
+
+      iaddr[1:0] = 2'b00; //4-Byte align
       pending_inst = 1;
       pending_data = 1;
       send_master_request_inst(iaddr);
@@ -150,6 +153,8 @@ initial begin
         $display("Write: [%h]=%h BE=%b",daddr, dwrdata, byte_en);
       end
     end
+    $display("Pass");
+    $stop;
 end
 
 endmodule 
