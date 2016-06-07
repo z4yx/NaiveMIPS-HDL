@@ -35,6 +35,9 @@ reg [31:0] words[ 2**(CACHE_LINE_WIDTH-2)-1 : 0];
 reg vaild;
 reg dirty;
 reg [TAG_WIDTH - 1 : 0] tag;
+wire preDirty;
+
+assign preDirty = dirty || (write && wrDirty);
 
 wire [TAG_WIDTH - 1 : 0] needTag;
 wire [CACHE_LINE_WIDTH-1 : 0] rdOff;
@@ -50,13 +53,13 @@ assign rd2Off = rd2Addr[CACHE_LINE_WIDTH-1 : 0];
 
 assign rdVaild = vaild;
 assign rdData = rdVaild ? words[ rdOff[CACHE_LINE_WIDTH-1 : 2] ] : 0;
-assign rdDirty = rdVaild ? dirty : 1'b0;
+assign rdDirty = rdVaild ? preDirty : 1'b0;
 assign rdTag = tag;
 assign rdHit = vaild && (tag == needTag);
 
 assign rd2Vaild = vaild;
 assign rd2Data = rd2Vaild ? words[ rd2Off[CACHE_LINE_WIDTH-1 : 2] ] : 0;
-assign rd2Dirty = rd2Vaild ? dirty : 1'b0;
+assign rd2Dirty = rd2Vaild ? preDirty : 1'b0;
 assign rd2Tag = tag;
 assign rd2Hit = vaild && (tag == need2Tag);
 
