@@ -18,7 +18,7 @@ output reg using_tlb;
 output wire uncached;
 
 assign invalid = (en & um & addr_i[31]);
-assign uncached = addr_i[31:29] == 3'b101;
+assign uncached = (addr_i[31:29] == 3'b101) | addr_i[28]; //hack for Linux with cache
 always @(*) begin
     using_tlb <= 1'b0;
     addr_o <= 32'b0;
