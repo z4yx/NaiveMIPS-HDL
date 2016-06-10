@@ -38,6 +38,7 @@ reg [TAG_WIDTH - 1 : 0] tag;
 wire preDirty;
 
 assign preDirty = dirty || (write && wrDirty);
+assign preVaild = write ? wrVaild : vaild;
 
 wire [TAG_WIDTH - 1 : 0] needTag;
 wire [CACHE_LINE_WIDTH-1 : 0] rdOff;
@@ -51,17 +52,17 @@ assign rdOff = rdAddr[CACHE_LINE_WIDTH-1 : 0];
 assign need2Tag = rd2Addr[ADDR_WIDTH-1 : ADDR_WIDTH-TAG_WIDTH];
 assign rd2Off = rd2Addr[CACHE_LINE_WIDTH-1 : 0];
 
-assign rdVaild = vaild;
+assign rdVaild = preVaild;
 assign rdData = rdVaild ? words[ rdOff[CACHE_LINE_WIDTH-1 : 2] ] : 0;
 assign rdDirty = rdVaild ? preDirty : 1'b0;
 assign rdTag = tag;
-assign rdHit = vaild && (tag == needTag);
+assign rdHit = preVaild && (tag == needTag);
 
-assign rd2Vaild = vaild;
+assign rd2Vaild = preVaild;
 assign rd2Data = rd2Vaild ? words[ rd2Off[CACHE_LINE_WIDTH-1 : 2] ] : 0;
 assign rd2Dirty = rd2Vaild ? preDirty : 1'b0;
 assign rd2Tag = tag;
-assign rd2Hit = vaild && (tag == need2Tag);
+assign rd2Hit = preVaild && (tag == need2Tag);
 
 assign lkupData = words[ wrOff[CACHE_LINE_WIDTH-1 : 2] ];
 
