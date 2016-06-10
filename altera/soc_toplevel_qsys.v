@@ -348,7 +348,7 @@ naive_mips_soc_cache soc(
 		.flash_bus_tcm_chipselect_n_out(FL_CE_N), //          .tcm_chipselect_n_out
 		.i2c_scl_pad_io(G_SENSOR_SCLK),                 //       i2c.scl_pad_io
 		.i2c_sda_pad_io(G_SENSOR_SDAT),                 //          .sda_pad_io
-		.irq_irq(G_SENSOR_INT1 & KEY[1]),                        //       irq.irq
+		.irq_irq(G_SENSOR_INT1 & SW[1]),                        //       irq.irq
 		.led_export(led_export),       //      led.export
 /*		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
 		.mac_mdio_mdio_in(ENET_MDIO),               //           .mdio_in
