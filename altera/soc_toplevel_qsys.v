@@ -322,7 +322,7 @@ wire			enet_tx_clk_phy;
 wire			enet_rx_clk_270deg;
 
 sys_pll pll1(
-    .areset(!KEY[0]),
+    .areset(1'b0),
     .inclk0(CLOCK_50),
     .c0(clk),
     //.c1(clk2x),
@@ -332,9 +332,9 @@ sys_pll pll1(
 clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
          .clk(clk),
-         .rst_in_n(locked));
+         .rst_in_n(locked & KEY[0]));
 
-naive_mips_soc soc(
+naive_mips_soc_cache soc(
 		.clk_cpu_clk(clk),                    //   clk_cpu.clk
 		//.clk_other_clk(clk2x),                  // clk_other.clk
 		.clk_uart_clk(clk_uart_pll),                   //  clk_uart.clk
@@ -348,7 +348,7 @@ naive_mips_soc soc(
 		.flash_bus_tcm_chipselect_n_out(FL_CE_N), //          .tcm_chipselect_n_out
 		.i2c_scl_pad_io(G_SENSOR_SCLK),                 //       i2c.scl_pad_io
 		.i2c_sda_pad_io(G_SENSOR_SDAT),                 //          .sda_pad_io
-		.irq_irq(G_SENSOR_INT1),                        //       irq.irq
+		.irq_irq(G_SENSOR_INT1 & SW[1]),                        //       irq.irq
 		.led_export(led_export),       //      led.export
 /*		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
 		.mac_mdio_mdio_in(ENET_MDIO),               //           .mdio_in
