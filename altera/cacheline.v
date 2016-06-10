@@ -66,39 +66,37 @@ assign rd2Hit = vaild && (tag == need2Tag);
 assign lkupData = words[ wrOff[CACHE_LINE_WIDTH-1 : 2] ];
 
 
-integer i;
+
 always @(posedge clk, negedge rst_n) begin
 
-  if(!rst_n) begin
+  if(!rst_n) begin : rst_words
+    integer i;
     vaild <= 1'b0;
     dirty <= 1'b0;
     for (i=0; i<=2**(CACHE_LINE_WIDTH-2)-1; i = i+1 ) begin
       words[i] <= 0;
     end
   end else begin
-    if(write) begin
+    if(write) begin : proc_words
       dirty <= wrDirty;
       vaild <= wrVaild;
       tag <= wrTag;
-      for (i=0; i<= 3 ; i = i+1) begin
-        if(wrByteEnable[i]) begin
-          words[wrOff[CACHE_LINE_WIDTH-1 : 2]][ i*8 + 7 : i*8] <= wrData[ i*8 + 7 : i*8];
-        end
+	   if(wrByteEnable[0]) begin
+		  words[wrOff[CACHE_LINE_WIDTH-1 : 2]][ 0*8 + 7 : 0*8] <= wrData[ 0*8 + 7 : 0*8];
+	   end
+	   if(wrByteEnable[1]) begin
+		  words[wrOff[CACHE_LINE_WIDTH-1 : 2]][ 1*8 + 7 : 1*8] <= wrData[ 1*8 + 7 : 1*8];
       end
+	   if(wrByteEnable[2]) begin
+		  words[wrOff[CACHE_LINE_WIDTH-1 : 2]][ 2*8 + 7 : 2*8] <= wrData[ 2*8 + 7 : 2*8];
+	   end
+	   if(wrByteEnable[3]) begin
+		  words[wrOff[CACHE_LINE_WIDTH-1 : 2]][ 3*8 + 7 : 3*8] <= wrData[ 3*8 + 7 : 3*8];
+	   end
     end
   end
 end
 
 
-initial begin
-
-  vaild <= 1'b1;
-  dirty <= 1'b0;
-  tag <= 0;
-  for ( i = 0; i < 2**(CACHE_LINE_WIDTH-2) ; i=i+1) begin
-    words[i] <= i;
-  end
-
-end
 
 endmodule
