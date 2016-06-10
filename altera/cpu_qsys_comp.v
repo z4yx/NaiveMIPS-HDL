@@ -48,14 +48,15 @@ wire [31:0] uni_master_readdata;    //               .readdata
 wire [31:0] uni_master_writedata;   //               .writedata
 wire        uni_master_waitrequest; //               .waitrequest
 
-wire dbus_uncached_cpu;
-wire dbus_uncached = dbus_uncached_cpu | uni_master_address[28];
+wire dbus_uncached;
 
-assign { uni_master_readdata,  uni_master_waitrequest} =  
-       {  io_master_readdata,   io_master_waitrequest};
+assign { uni_master_readdata,  uni_master_waitrequest} = dbus_uncached ? 
+       {  io_master_readdata,   io_master_waitrequest}:
+       {data_master_readdata, data_master_waitrequest};
 
-assign {  io_master_read,   io_master_write,   io_master_address,   io_master_byteenable,   io_master_writedata} = 
-       { uni_master_read,  uni_master_write,  uni_master_address,  uni_master_byteenable,  uni_master_writedata};
+assign {  io_master_read,   io_master_write,   io_master_address,   io_master_byteenable,   io_master_writedata} = dbus_uncached?
+       { uni_master_read,  uni_master_write,  uni_master_address,  uni_master_byteenable,  uni_master_writedata} :
+       {            1'b0,              1'b0,               32'b0,                   4'b0,                 32'b0};
        
 assign {data_master_read, data_master_write, data_master_address, data_master_byteenable, data_master_writedata} = dbus_uncached?
        {            1'b0,              1'b0,               32'b0,                   4'b0,                 32'b0} :
@@ -82,5 +83,5 @@ naive_mips cpu(
          .dbus_rddata(uni_master_readdata),
          .dbus_stall(uni_master_waitrequest & (uni_master_read|uni_master_write)),
          .hardware_int_in(inr_irq0_irq),
-         .dbus_uncached(dbus_uncached_cpu));
+         .dbus_uncached(dbus_uncached));
 endmodule
