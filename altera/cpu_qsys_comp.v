@@ -50,6 +50,8 @@ wire        uni_master_waitrequest; //               .waitrequest
 
 wire dbus_uncached;
 
+assign dbus_uncached = uni_master_address[28];
+
 assign { uni_master_readdata,  uni_master_waitrequest} = dbus_uncached ? 
        {  io_master_readdata,   io_master_waitrequest}:
        {data_master_readdata, data_master_waitrequest};
@@ -83,5 +85,5 @@ naive_mips cpu(
          .dbus_rddata(uni_master_readdata),
          .dbus_stall(uni_master_waitrequest & (uni_master_read|uni_master_write)),
          .hardware_int_in(inr_irq0_irq),
-         .dbus_uncached(dbus_uncached));
+         .dbus_uncached());
 endmodule
