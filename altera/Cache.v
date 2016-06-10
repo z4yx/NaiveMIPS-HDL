@@ -169,8 +169,8 @@ assign avalon_rdslave_waitrequest = slave2Miss;
 
 assign wrOffDirect = slave_addr_off;
 assign wrTagDirect = slave_addr_tag;
-assign wrVaildDirect = 1'b1;
-assign wrDirtyDirect = 1'b1;
+assign wrVaildDirect = 1'b0;
+assign wrDirtyDirect = 1'b0;
 assign wrDataDirect = avalon_slave_writedata;
 assign slave_wr_waitrequest = slaveMiss;
 assign wrByteEnableDirect = avalon_slave_byteenable;
