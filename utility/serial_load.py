@@ -16,7 +16,7 @@ from tqdm import tqdm, trange
 
 SERIAL_DELAY = 0.00001
 SERIAL_DEVICE = ""
-FLASH_BASE = 0xbe000000
+FLASH_BASE = 0xb0000000
 FLASH_BLKSIZE = 128*1024
 FLASH_SIZE = 64*FLASH_BLKSIZE
 
@@ -167,7 +167,7 @@ def read_flash(offset, size):
     # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
     # time.sleep(0.5)
 
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xf0\x00\x00\x00")
     orig = read_ram(FLASH_BASE+offset*2, size*2, True)
     result = []
     for i in xrange(0, len(orig), 4):  #only lower 16-bits of 32-bits data are valid
@@ -193,15 +193,27 @@ def write_flash(f):
     print "Flash blocks: %d" % blocks
 
     # !!! clear lock bits !!!
-    write_ram(FLASH_BASE, "\x60\x00\x00\x00")
-    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
-    wait_flash()
+    # write_ram(FLASH_BASE, "\x60\x00\x00\x00")
+    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    # wait_flash()
 
+    write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\x20\x00\x00\x00")
     for i in tqdm(range(0, blocks), desc='Erasing:', unit='Blocks'):
-        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\x20\x00\x00\x00")
-        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\xD0\x00\x00\x00")
-        wait_flash()
+        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\x80\x00\x00\x00")
+        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\x30\x00\x00\x00")
+        # wait_flash()
+        time.sleep(3.5)
+    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x00\x00\x00\x00")
+    print "Erased"
+
     content = f.read()
+
+    write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\x20\x00\x00\x00")
 
     write_uart('2')
     x = ser.read(1)
@@ -226,61 +238,77 @@ def write_flash(f):
         # while time.time()-st < 0.000175:
         #     pass
         # print time.time()-st
+    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x00\x00\x00\x00")
     time.sleep(0.01)
     print "Done"
 
 def flash_test():
-    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
 
-    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE+4, 4)
     print "Device code: %s" % binascii.hexlify(buf[0])
 
-    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
-    buf = read_ram(FLASH_BASE+8, 4)
+    write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\x40\x00\x00\x00")
+    buf = read_ram(FLASH_BASE+0x77*4, 4)
     print "Lock bits: %s" % binascii.hexlify(buf[0])
+    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x00\x00\x00\x00")
 
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xf0\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
+    print "data: %s" % binascii.hexlify(buf)
+    buf = read_ram(FLASH_BASE+4, 4)
+    print "data: %s" % binascii.hexlify(buf)
+    buf = read_ram(FLASH_BASE+8, 4)
+    print "data: %s" % binascii.hexlify(buf)
+    buf = read_ram(FLASH_BASE+12, 4)
     print "data: %s" % binascii.hexlify(buf)
 
     # !!! clear lock bits !!!
-    write_ram(FLASH_BASE, "\x60\x00\x00\x00")
-    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
-    wait_flash()
+    # write_ram(FLASH_BASE, "\x60\x00\x00\x00")
+    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    # wait_flash()
 
     # !!! erase test !!!
-    write_ram(FLASH_BASE, "\x20\x00\x00\x00")
-    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
-    wait_flash()
+    # write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    # write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    # write_ram(FLASH_BASE+0x555*4, "\x80\x00\x00\x00")
+    # write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    # write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    # write_ram(FLASH_BASE+0x555*4, "\x10\x00\x00\x00")
+    # wait_flash()
 
-    while True:
-        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
-        buf = read_ram(FLASH_BASE, 4)
-        print "Status: %s" % binascii.hexlify(buf[0])
-        if (ord(buf[0]) & 0x80)!=0:
-            break
-        print "Waiting..."
+    # while True:
+    #     write_ram(FLASH_BASE+0x55*4, "\x98\x00\x00\x00")
+    #     buf = read_ram(FLASH_BASE, 4)
+    #     print "Status: %s" % binascii.hexlify(buf[0])
+    #     if (ord(buf[0]) & 0x80)!=0:
+    #         break
+    #     print "Waiting..."
 
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xf0\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "data: %s" % binascii.hexlify(buf)
 
     # !!! program test !!!
-    write_ram(FLASH_BASE, "\x40\x00\x00\x00")
-    write_ram(FLASH_BASE, "\x55\x55\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\xAA\x00\x00\x00")
+    write_ram(FLASH_BASE+0x2AA*4, "\x55\x00\x00\x00")
+    write_ram(FLASH_BASE+0x555*4, "\xA0\x00\x00\x00")
+    write_ram(FLASH_BASE+4, "\xde\xad\x00\x00")
 
-    while True:
-        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
-        buf = read_ram(FLASH_BASE, 4)
-        print "Status: %s" % binascii.hexlify(buf[0])
-        if (ord(buf[0]) & 0x80)!=0:
-            break
-        print "Waiting..."
+    time.sleep(0.00006)
 
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xf0\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "data: %s" % binascii.hexlify(buf)
 
