@@ -316,7 +316,7 @@ wire clk2x,clk,locked,rst_n,rst_other_n;
 wire clk_uart, clk_uart_pll;
 wire clk_tick;
 wire [31:0] led_export;
-wire mdio_out, mdio_oe;
+wire mdio_out, mdio_oe_n;
 wire			enet_tx_clk_mac;
 wire			enet_tx_clk_phy;
 wire			enet_rx_clk_270deg;
@@ -359,7 +359,7 @@ naive_mips_soc soc(
 		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
 		.mac_mdio_mdio_in(ENET_MDIO),               //           .mdio_in
 		.mac_mdio_mdio_out(mdio_out),              //           .mdio_out
-		.mac_mdio_mdio_oen(mdio_oe),              //           .mdio_oen
+		.mac_mdio_mdio_oen(mdio_oe_n),              //           .mdio_oen
 		.mac_misc_ff_tx_crc_fwd(1'b0),         //   mac_misc.ff_tx_crc_fwd
 		.mac_misc_ff_tx_septy(),           //           .ff_tx_septy
 		.mac_misc_tx_ff_uflow(),           //           .tx_ff_uflow
@@ -417,7 +417,7 @@ SEG7_LUT_8 segs(HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7, led_export);
 assign DRAM_CLK = clk2x;
 assign FL_WP_N  = 1'b1;
 assign {LEDR,LEDG} = led_export;
-assign ENET_MDIO = mdio_oe ? mdio_out : 1'bz;
+assign ENET_MDIO = ~mdio_oe_n ? mdio_out : 1'bz;
 assign ENET_RST_N	= rst_n;
 
 reg[2:0] dbg_mdio;
