@@ -570,7 +570,7 @@
   <parameter name="TRP" value="20.0" />
   <parameter name="TWR" value="14.0" />
   <parameter name="casLatency" value="3" />
-  <parameter name="clockRate" value="30000000" />
+  <parameter name="clockRate" value="100000000" />
   <parameter name="columnWidth" value="10" />
   <parameter name="componentName">$${FILENAME}_main_ram</parameter>
   <parameter name="dataWidth" value="32" />
@@ -934,7 +934,7 @@
    start="clk_0.clk"
    end="tristate_conduit_bridge_0.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="uart_0.clk" />
- <connection kind="clock" version="15.1" start="clk_0.clk" end="main_ram.clk" />
+ <connection kind="clock" version="15.1" start="clk_high.clk" end="main_ram.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="bootrom.clk1" />
  <connection
    kind="clock"
@@ -1061,7 +1061,7 @@
  <connection
    kind="reset"
    version="15.1"
-   start="clk_0.clk_reset"
+   start="clk_high.clk_reset"
    end="main_ram.reset" />
  <connection
    kind="reset"

@@ -420,8 +420,5 @@ assign {LEDR,LEDG} = led_export;
 assign ENET_MDIO = ~mdio_oe_n ? mdio_out : 1'bz;
 assign ENET_RST_N	= rst_n;
 
-reg[2:0] dbg_mdio;
-always @(posedge clk) dbg_mdio <= {ENET_MDC, ENET_MDIO, mdio_oe};
-assign GPIO[5:3] = dbg_mdio;
 
 endmodule
