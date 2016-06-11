@@ -312,7 +312,7 @@ output                                             VGA_VS;
 
 
 
-wire clk2x,clk,locked,rst_n;
+wire clk2x,clk,locked,rst_n,rst_other_n;
 wire clk_uart, clk_uart_pll;
 wire clk_tick;
 wire [31:0] led_export;
@@ -333,10 +333,16 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .rst_out_n(rst_n),
          .clk(clk),
          .rst_in_n(locked & KEY[0]));
+hf_pll pll2(
+	.areset(1'b0),
+	.inclk0(CLOCK2_50),
+	.c0(clk2x),
+	.c1(),
+	.locked(rst_other_n));
 
-naive_mips_soc_cache soc(
+naive_mips_soc soc(
 		.clk_cpu_clk(clk),                    //   clk_cpu.clk
-		//.clk_other_clk(clk2x),                  // clk_other.clk
+		.clk_other_clk(clk2x),                  // clk_other.clk
 		.clk_uart_clk(clk_uart_pll),                   //  clk_uart.clk
 		.debugger_dbg_txd(GPIO[0]), // debugger.dbg_txd
 		.debugger_dbg_rxd(GPIO[1]), //         .dbg_rxd
@@ -348,9 +354,9 @@ naive_mips_soc_cache soc(
 		.flash_bus_tcm_chipselect_n_out(FL_CE_N), //          .tcm_chipselect_n_out
 		.i2c_scl_pad_io(G_SENSOR_SCLK),                 //       i2c.scl_pad_io
 		.i2c_sda_pad_io(G_SENSOR_SDAT),                 //          .sda_pad_io
-		.irq_irq(G_SENSOR_INT1 & SW[1]),                        //       irq.irq
+		//.irq_irq(G_SENSOR_INT1 & SW[1]),                        //       irq.irq
 		.led_export(led_export),       //      led.export
-/*		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
+		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
 		.mac_mdio_mdio_in(ENET_MDIO),               //           .mdio_in
 		.mac_mdio_mdio_out(mdio_out),              //           .mdio_out
 		.mac_mdio_mdio_oen(mdio_oe),              //           .mdio_oen
@@ -374,9 +380,8 @@ naive_mips_soc_cache soc(
 		.mac_status_eth_mode(),            //           .eth_mode
 		.mac_status_ena_10(),              //           .ena_10
 		.mac_txclk_clk(enet_tx_clk_mac),                  //  mac_txclk.clk
-		*/
 		.rst_cpu_reset_n(rst_n),  //  rst_cpu.reset_n
-		//.rst_other_reset_n(rst_n),              // rst_other.reset_n
+		.rst_other_reset_n(rst_other_n & KEY[0]),              // rst_other.reset_n
 		.sdram_addr(DRAM_ADDR),       //    sdram.addr
 		.sdram_ba(DRAM_BA),         //         .ba
 		.sdram_cas_n(DRAM_CAS_N),      //         .cas_n
@@ -386,7 +391,7 @@ naive_mips_soc_cache soc(
 		.sdram_dqm(DRAM_DQM),        //         .dqm
 		.sdram_ras_n(DRAM_RAS_N),      //         .ras_n
 		.sdram_we_n(DRAM_WE_N),       //         .we_n
-		.sw_export(SW),        //       sw.export
+		.sw_export({G_SENSOR_INT1,13'b0,SW}), //       sw.export
 		.uart_rxd(UART_RXD),         //     uart.rxd
 		.uart_txd(UART_TXD)          //         .txd
 	);
@@ -409,10 +414,14 @@ enet_rx_clk_pll enet_rx_clk_pll
 	
 SEG7_LUT_8 segs(HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7, led_export);
 	
-assign DRAM_CLK = clk;
+assign DRAM_CLK = clk2x;
 assign FL_WP_N  = 1'b1;
 assign {LEDR,LEDG} = led_export;
 assign ENET_MDIO = mdio_oe ? mdio_out : 1'bz;
 assign ENET_RST_N	= rst_n;
+
+reg[2:0] dbg_mdio;
+always @(posedge clk) dbg_mdio <= {ENET_MDC, ENET_MDIO, mdio_oe};
+assign GPIO[5:3] = dbg_mdio;
 
 endmodule
