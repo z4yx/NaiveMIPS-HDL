@@ -24,3 +24,5 @@ xilinx/NaiveMIPS/ipcore_dir/*/example_design/
 *.log
 *.bak
 .DS_Store
+.qsys_edit/
+*.sopcinfo

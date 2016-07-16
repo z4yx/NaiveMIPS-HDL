@@ -320,6 +320,8 @@ wire mdio_out, mdio_oe_n;
 wire			enet_tx_clk_mac;
 wire			enet_tx_clk_phy;
 wire			enet_rx_clk_270deg;
+wire [23:0] dummy24;
+wire [1:0] dummy2;
 
 sys_pll pll1(
     .areset(1'b0),
@@ -356,6 +358,7 @@ naive_mips_soc soc(
 		.i2c_sda_pad_io(G_SENSOR_SDAT),                 //          .sda_pad_io
 		//.irq_irq(G_SENSOR_INT1 & SW[1]),                        //       irq.irq
 		.led_export(led_export),       //      led.export
+/*
 		.mac_mdio_mdc(ENET_MDC),                   //   mac_mdio.mdc
 		.mac_mdio_mdio_in(ENET_MDIO),               //           .mdio_in
 		.mac_mdio_mdio_out(mdio_out),              //           .mdio_out
@@ -374,12 +377,21 @@ naive_mips_soc soc(
 		.mac_rgmii_rgmii_out(ENET_TX_DATA),            //           .rgmii_out
 		.mac_rgmii_rx_control(ENET_RX_DV),           //           .rx_control
 		.mac_rgmii_tx_control(ENET_TX_EN),           //           .tx_control
-		.mac_rxclk_clk(enet_rx_clk_270deg),                  //  mac_rxclk.clk
+		.mac_rxclk_clk(ENET_RX_CLK),                  //  mac_rxclk.clk
 		.mac_status_set_10(1'b0),              // mac_status.set_10
 		.mac_status_set_1000(1'b0),            //           .set_1000
 		.mac_status_eth_mode(),            //           .eth_mode
 		.mac_status_ena_10(),              //           .ena_10
 		.mac_txclk_clk(enet_tx_clk_mac),                  //  mac_txclk.clk
+*/
+		
+		.usb_bus_tcm_address_out({GPIO[17],dummy2}),        //   usb_bus.tcm_address_out
+		.usb_bus_tcm_read_n_out(GPIO[23]),         //          .tcm_read_n_out
+		.usb_bus_tcm_reset_n_out(GPIO[15]),        //          .tcm_reset_n_out
+		.usb_bus_tcm_write_n_out(GPIO[21]),        //          .tcm_write_n_out
+		.usb_bus_tcm_data_out({dummy24,GPIO[10],GPIO[12],GPIO[14],GPIO[16],GPIO[18],GPIO[20],GPIO[22],GPIO[24]}),           //          .tcm_data_out
+		.usb_bus_tcm_chipselect_n_out(GPIO[25]),    //          .tcm_chipselect_n_out
+		
 		.rst_cpu_reset_n(rst_n),  //  rst_cpu.reset_n
 		.rst_other_reset_n(rst_other_n & KEY[0]),              // rst_other.reset_n
 		.sdram_addr(DRAM_ADDR),       //    sdram.addr
@@ -391,34 +403,33 @@ naive_mips_soc soc(
 		.sdram_dqm(DRAM_DQM),        //         .dqm
 		.sdram_ras_n(DRAM_RAS_N),      //         .ras_n
 		.sdram_we_n(DRAM_WE_N),       //         .we_n
-		.sw_export({G_SENSOR_INT1,13'b0,SW}), //       sw.export
+		.sdram_clk_clk(DRAM_CLK),      // sdram_clk.clk
+		.sw_export({G_SENSOR_INT1,GPIO[19],12'b0,SW}), //       sw.export
 		.uart_rxd(UART_RXD),         //     uart.rxd
 		.uart_txd(UART_TXD)          //         .txd
 	);
-ddr_o phy_ckgen
-(
-		.datain_h(1'b1),
-		.datain_l(1'b0),
-		.outclock(enet_tx_clk_phy),
-		.dataout(ENET_GTX_CLK)
-);
-
+	
+wire eth_pll_locked;
 // Ethernet RX PLL
 enet_rx_clk_pll enet_rx_clk_pll
 (
 		.inclk0(ENET_RX_CLK),
 		.c0(enet_rx_clk_270deg),
 		.c1(enet_tx_clk_mac),
-		.c2(enet_tx_clk_phy)
+		.c2(enet_tx_clk_phy),
+		.locked(eth_pll_locked)
 );
+assign ENET_GTX_CLK = enet_tx_clk_mac;
 	
 SEG7_LUT_8 segs(HEX0,HEX1,HEX2,HEX3,HEX4,HEX5,HEX6,HEX7, led_export);
-	
-assign DRAM_CLK = clk2x;
+
 assign FL_WP_N  = 1'b1;
-assign {LEDR,LEDG} = led_export;
+assign {LEDR,LEDG[7:0]} = led_export;
 assign ENET_MDIO = ~mdio_oe_n ? mdio_out : 1'bz;
 assign ENET_RST_N	= rst_n;
 
+assign LEDG[8] = eth_pll_locked;
+
+assign GPIO[13] = 1'b1; //DACK not used
 
 endmodule

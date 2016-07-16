@@ -13,7 +13,7 @@
    {
       datum _sortIndex
       {
-         value = "7";
+         value = "8";
          type = "int";
       }
    }
@@ -29,8 +29,13 @@
    {
       datum _sortIndex
       {
-         value = "10";
+         value = "11";
          type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
       }
    }
    element cfi_flash.uas
@@ -66,15 +71,23 @@
       }
       datum sopceditor_expanded
       {
-         value = "0";
+         value = "1";
          type = "boolean";
+      }
+   }
+   element clock_bridge_dram
+   {
+      datum _sortIndex
+      {
+         value = "7";
+         type = "int";
       }
    }
    element eth_tse_0
    {
       datum _sortIndex
       {
-         value = "13";
+         value = "16";
          type = "int";
       }
    }
@@ -90,8 +103,13 @@
    {
       datum _sortIndex
       {
-         value = "9";
+         value = "10";
          type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
       }
    }
    element half_data_width_0.avalon_slave
@@ -114,7 +132,7 @@
    {
       datum _sortIndex
       {
-         value = "16";
+         value = "19";
          type = "int";
       }
    }
@@ -130,7 +148,7 @@
    {
       datum _sortIndex
       {
-         value = "14";
+         value = "17";
          type = "int";
       }
    }
@@ -162,7 +180,7 @@
    {
       datum _sortIndex
       {
-         value = "15";
+         value = "18";
          type = "int";
       }
    }
@@ -242,7 +260,7 @@
    {
       datum _sortIndex
       {
-         value = "12";
+         value = "13";
          type = "int";
       }
    }
@@ -291,19 +309,53 @@
          type = "String";
       }
    }
+   element sl811_ctl
+   {
+      datum _sortIndex
+      {
+         value = "14";
+         type = "int";
+      }
+   }
+   element sl811_ctl.uas
+   {
+      datum baseAddress
+      {
+         value = "469893120";
+         type = "String";
+      }
+   }
    element tristate_conduit_bridge_0
    {
       datum _sortIndex
       {
-         value = "11";
+         value = "12";
          type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
+      }
+   }
+   element tristate_conduit_sl811
+   {
+      datum _sortIndex
+      {
+         value = "15";
+         type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
       }
    }
    element uart_0
    {
       datum _sortIndex
       {
-         value = "8";
+         value = "9";
          type = "int";
       }
    }
@@ -363,36 +415,12 @@
    internal="pout.external_connection"
    type="conduit"
    dir="end" />
- <interface
-   name="mac_mdio"
-   internal="eth_tse_0.mac_mdio_connection"
-   type="conduit"
-   dir="end" />
- <interface
-   name="mac_misc"
-   internal="eth_tse_0.mac_misc_connection"
-   type="conduit"
-   dir="end" />
- <interface
-   name="mac_rgmii"
-   internal="eth_tse_0.mac_rgmii_connection"
-   type="conduit"
-   dir="end" />
- <interface
-   name="mac_rxclk"
-   internal="eth_tse_0.pcs_mac_rx_clock_connection"
-   type="clock"
-   dir="end" />
- <interface
-   name="mac_status"
-   internal="eth_tse_0.mac_status_connection"
-   type="conduit"
-   dir="end" />
- <interface
-   name="mac_txclk"
-   internal="eth_tse_0.pcs_mac_tx_clock_connection"
-   type="clock"
-   dir="end" />
+ <interface name="mac_mdio" internal="eth_tse_0.mac_mdio_connection" />
+ <interface name="mac_misc" internal="eth_tse_0.mac_misc_connection" />
+ <interface name="mac_rgmii" internal="eth_tse_0.mac_rgmii_connection" />
+ <interface name="mac_rxclk" internal="eth_tse_0.pcs_mac_rx_clock_connection" />
+ <interface name="mac_status" internal="eth_tse_0.mac_status_connection" />
+ <interface name="mac_txclk" internal="eth_tse_0.pcs_mac_tx_clock_connection" />
  <interface name="rst_cpu" internal="clk_0.clk_in_reset" type="reset" dir="end" />
  <interface
    name="rst_other"
@@ -400,10 +428,20 @@
    type="reset"
    dir="end" />
  <interface name="sdram" internal="main_ram.wire" type="conduit" dir="end" />
+ <interface
+   name="sdram_clk"
+   internal="clock_bridge_dram.out_clk"
+   type="clock"
+   dir="start" />
  <interface name="sw" internal="pin.external_connection" type="conduit" dir="end" />
  <interface
    name="uart"
    internal="uart_0.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="usb_bus"
+   internal="tristate_conduit_sl811.out"
    type="conduit"
    dir="end" />
  <module
@@ -512,7 +550,16 @@
   <parameter name="EXPLICIT_CLOCK_RATE" value="0" />
   <parameter name="NUM_CLOCK_OUTPUTS" value="1" />
  </module>
- <module name="eth_tse_0" kind="altera_eth_tse" version="15.1" enabled="1">
+ <module
+   name="clock_bridge_dram"
+   kind="altera_clock_bridge"
+   version="15.1"
+   enabled="1">
+  <parameter name="DERIVED_CLOCK_RATE" value="30000000" />
+  <parameter name="EXPLICIT_CLOCK_RATE" value="0" />
+  <parameter name="NUM_CLOCK_OUTPUTS" value="1" />
+ </module>
+ <module name="eth_tse_0" kind="altera_eth_tse" version="15.1" enabled="0">
   <parameter name="AUTO_DEVICE" value="EP4CGX150DF31C8" />
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
   <parameter name="core_variation" value="MAC_ONLY" />
@@ -570,7 +617,7 @@
   <parameter name="TRP" value="20.0" />
   <parameter name="TWR" value="14.0" />
   <parameter name="casLatency" value="3" />
-  <parameter name="clockRate" value="100000000" />
+  <parameter name="clockRate" value="30000000" />
   <parameter name="columnWidth" value="10" />
   <parameter name="componentName">$${FILENAME}_main_ram</parameter>
   <parameter name="dataWidth" value="32" />
@@ -591,7 +638,7 @@
    name="mm_clock_crossing_bridge_0"
    kind="altera_avalon_mm_clock_crossing_bridge"
    version="15.1"
-   enabled="1">
+   enabled="0">
   <parameter name="ADDRESS_UNITS" value="SYMBOLS" />
   <parameter name="ADDRESS_WIDTH" value="10" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV GX" />
@@ -604,10 +651,10 @@
   <parameter name="RESPONSE_FIFO_DEPTH" value="4" />
   <parameter name="SLAVE_SYNC_DEPTH" value="2" />
   <parameter name="SYMBOL_WIDTH" value="8" />
-  <parameter name="SYSINFO_ADDR_WIDTH" value="12" />
+  <parameter name="SYSINFO_ADDR_WIDTH" value="10" />
   <parameter name="USE_AUTO_ADDRESS_WIDTH" value="1" />
  </module>
- <module name="msgdma_eth_rx" kind="altera_msgdma" version="15.1" enabled="1">
+ <module name="msgdma_eth_rx" kind="altera_msgdma" version="15.1" enabled="0">
   <parameter name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_MAP" value="" />
   <parameter
      name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_WIDTH"
@@ -621,8 +668,8 @@
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
   <parameter name="AUTO_MM_READ_ADDRESS_MAP" value="" />
   <parameter name="AUTO_MM_READ_ADDRESS_WIDTH" value="AddressWidth = -1" />
-  <parameter name="AUTO_MM_WRITE_ADDRESS_MAP"><![CDATA[<address-map><slave name='main_ram.s1' start='0x0' end='0x8000000' /></address-map>]]></parameter>
-  <parameter name="AUTO_MM_WRITE_ADDRESS_WIDTH" value="AddressWidth = 27" />
+  <parameter name="AUTO_MM_WRITE_ADDRESS_MAP" value="" />
+  <parameter name="AUTO_MM_WRITE_ADDRESS_WIDTH" value="AddressWidth = -1" />
   <parameter name="BURST_ENABLE" value="1" />
   <parameter name="BURST_WRAPPING_SUPPORT" value="0" />
   <parameter name="CHANNEL_ENABLE" value="0" />
@@ -649,7 +696,7 @@
   <parameter name="TRANSFER_TYPE" value="Aligned Accesses" />
   <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
  </module>
- <module name="msgdma_eth_tx" kind="altera_msgdma" version="15.1" enabled="1">
+ <module name="msgdma_eth_tx" kind="altera_msgdma" version="15.1" enabled="0">
   <parameter name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_MAP" value="" />
   <parameter
      name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_WIDTH"
@@ -661,8 +708,8 @@
   <parameter name="AUTO_DEVICE" value="EP4CGX150DF31C8" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV GX" />
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
-  <parameter name="AUTO_MM_READ_ADDRESS_MAP"><![CDATA[<address-map><slave name='main_ram.s1' start='0x0' end='0x8000000' /></address-map>]]></parameter>
-  <parameter name="AUTO_MM_READ_ADDRESS_WIDTH" value="AddressWidth = 27" />
+  <parameter name="AUTO_MM_READ_ADDRESS_MAP" value="" />
+  <parameter name="AUTO_MM_READ_ADDRESS_WIDTH" value="AddressWidth = -1" />
   <parameter name="AUTO_MM_WRITE_ADDRESS_MAP" value="" />
   <parameter name="AUTO_MM_WRITE_ADDRESS_WIDTH" value="AddressWidth = -1" />
   <parameter name="BURST_ENABLE" value="1" />
@@ -696,7 +743,7 @@
    kind="naive_mips_cpu"
    version="1.0"
    enabled="1">
-  <parameter name="AUTO_INR_IRQ0_INTERRUPTS_USED" value="31" />
+  <parameter name="AUTO_INR_IRQ0_INTERRUPTS_USED" value="28" />
  </module>
  <module name="opencores_i2c_0" kind="opencores_i2c" version="9.1" enabled="1">
   <parameter name="AUTO_CLOCK_CLOCK_RATE" value="30000000" />
@@ -730,12 +777,76 @@
   <parameter name="width" value="32" />
  </module>
  <module
+   name="sl811_ctl"
+   kind="altera_generic_tristate_controller"
+   version="15.1"
+   enabled="1">
+  <parameter name="ACTIVE_LOW_BEGINTRANSFER" value="0" />
+  <parameter name="ACTIVE_LOW_BYTEENABLE" value="0" />
+  <parameter name="ACTIVE_LOW_CHIPSELECT" value="1" />
+  <parameter name="ACTIVE_LOW_IRQ" value="0" />
+  <parameter name="ACTIVE_LOW_LOCK" value="0" />
+  <parameter name="ACTIVE_LOW_OUTPUTENABLE" value="0" />
+  <parameter name="ACTIVE_LOW_READ" value="1" />
+  <parameter name="ACTIVE_LOW_RESETREQUEST" value="0" />
+  <parameter name="ACTIVE_LOW_RESET_OUTPUT" value="1" />
+  <parameter name="ACTIVE_LOW_WAITREQUEST" value="0" />
+  <parameter name="ACTIVE_LOW_WRITE" value="1" />
+  <parameter name="ACTIVE_LOW_WRITEBYTEENABLE" value="0" />
+  <parameter name="AUTO_CLK_CLOCK_DOMAIN" value="1" />
+  <parameter name="AUTO_CLK_RESET_DOMAIN" value="1" />
+  <parameter name="AUTO_DEVICE" value="EP4CGX150DF31C8" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV GX" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
+  <parameter name="CHIPSELECT_THROUGH_READLATENCY" value="0" />
+  <parameter name="INTERFACE_ASSIGNMENT_KEYS" value="" />
+  <parameter name="INTERFACE_ASSIGNMENT_VALUES" value="" />
+  <parameter name="IS_MEMORY_DEVICE" value="0" />
+  <parameter name="MODULE_ASSIGNMENT_KEYS" value="" />
+  <parameter name="MODULE_ASSIGNMENT_VALUES" value="" />
+  <parameter name="TCM_ADDRESS_W" value="3" />
+  <parameter name="TCM_BYTEENABLE_W" value="4" />
+  <parameter name="TCM_DATA_HOLD" value="1" />
+  <parameter name="TCM_DATA_W" value="32" />
+  <parameter name="TCM_MAX_PENDING_READ_TRANSACTIONS" value="1" />
+  <parameter name="TCM_READLATENCY" value="2" />
+  <parameter name="TCM_READ_WAIT" value="3" />
+  <parameter name="TCM_SETUP_WAIT" value="0" />
+  <parameter name="TCM_SYMBOLS_PER_WORD" value="4" />
+  <parameter name="TCM_TIMING_UNITS" value="1" />
+  <parameter name="TCM_TURNAROUND_TIME" value="3" />
+  <parameter name="TCM_WRITE_WAIT" value="3" />
+  <parameter name="USE_ADDRESS" value="1" />
+  <parameter name="USE_BEGINTRANSFER" value="0" />
+  <parameter name="USE_BYTEENABLE" value="0" />
+  <parameter name="USE_CHIPSELECT" value="1" />
+  <parameter name="USE_IRQ" value="0" />
+  <parameter name="USE_LOCK" value="0" />
+  <parameter name="USE_OUTPUTENABLE" value="0" />
+  <parameter name="USE_READ" value="1" />
+  <parameter name="USE_READDATA" value="1" />
+  <parameter name="USE_RESETREQUEST" value="0" />
+  <parameter name="USE_RESET_OUTPUT" value="1" />
+  <parameter name="USE_WAITREQUEST" value="0" />
+  <parameter name="USE_WRITE" value="1" />
+  <parameter name="USE_WRITEBYTEENABLE" value="0" />
+  <parameter name="USE_WRITEDATA" value="1" />
+ </module>
+ <module
    name="tristate_conduit_bridge_0"
    kind="altera_tristate_conduit_bridge"
    version="15.1"
    enabled="1">
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV GX" />
   <parameter name="INTERFACE_INFO"><![CDATA[<info><slave name="tcs"><master name="cfi_flash.tcm"><pin role="write_n" width="1" type="Output" output_name="tcm_write_n_out" output_enable_name="" input_name="" /><pin role="read_n" width="1" type="Output" output_name="tcm_read_n_out" output_enable_name="" input_name="" /><pin role="chipselect_n" width="1" type="Output" output_name="tcm_chipselect_n_out" output_enable_name="" input_name="" /><pin role="reset_n" width="1" type="Output" output_name="tcm_reset_n_out" output_enable_name="" input_name="" /><pin role="" width="1" type="Invalid" output_name="" output_enable_name="" input_name="" /><pin role="address" width="26" type="Output" output_name="tcm_address_out" output_enable_name="" input_name="" /><pin role="data" width="16" type="Bidirectional" output_name="tcm_data_out" output_enable_name="tcm_data_outen" input_name="tcm_data_in" /></master></slave></info>]]></parameter>
+ </module>
+ <module
+   name="tristate_conduit_sl811"
+   kind="altera_tristate_conduit_bridge"
+   version="15.1"
+   enabled="1">
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone IV GX" />
+  <parameter name="INTERFACE_INFO"><![CDATA[<info><slave name="tcs"><master name="sl811_ctl.tcm"><pin role="write_n" width="1" type="Output" output_name="tcm_write_n_out" output_enable_name="" input_name="" /><pin role="read_n" width="1" type="Output" output_name="tcm_read_n_out" output_enable_name="" input_name="" /><pin role="chipselect_n" width="1" type="Output" output_name="tcm_chipselect_n_out" output_enable_name="" input_name="" /><pin role="reset_n" width="1" type="Output" output_name="tcm_reset_n_out" output_enable_name="" input_name="" /><pin role="" width="1" type="Invalid" output_name="" output_enable_name="" input_name="" /><pin role="address" width="3" type="Output" output_name="tcm_address_out" output_enable_name="" input_name="" /><pin role="data" width="32" type="Bidirectional" output_name="tcm_data_out" output_enable_name="tcm_data_outen" input_name="tcm_data_in" /></master></slave></info>]]></parameter>
  </module>
  <module name="uart_0" kind="altera_avalon_uart" version="15.1" enabled="1">
   <parameter name="baud" value="115200" />
@@ -855,6 +966,15 @@
  <connection
    kind="avalon"
    version="15.1"
+   start="naive_mips_cpu_0.io_master"
+   end="sl811_ctl.uas">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x1c020000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
    start="mm_clock_crossing_bridge_0.m0"
    end="msgdma_eth_rx.csr">
   <parameter name="arbitrationPriority" value="1" />
@@ -934,7 +1054,13 @@
    start="clk_0.clk"
    end="tristate_conduit_bridge_0.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="uart_0.clk" />
- <connection kind="clock" version="15.1" start="clk_high.clk" end="main_ram.clk" />
+ <connection kind="clock" version="15.1" start="clk_0.clk" end="sl811_ctl.clk" />
+ <connection kind="clock" version="15.1" start="clk_0.clk" end="main_ram.clk" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="tristate_conduit_sl811.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="bootrom.clk1" />
  <connection
    kind="clock"
@@ -966,6 +1092,11 @@
    version="15.1"
    start="clk_0.clk"
    end="naive_mips_cpu_0.cpu_clock" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="clock_bridge_dram.in_clk" />
  <connection
    kind="clock"
    version="15.1"
@@ -1061,8 +1192,18 @@
  <connection
    kind="reset"
    version="15.1"
-   start="clk_high.clk_reset"
+   start="clk_0.clk_reset"
+   end="sl811_ctl.reset" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
    end="main_ram.reset" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="tristate_conduit_sl811.reset" />
  <connection
    kind="reset"
    version="15.1"
@@ -1098,6 +1239,11 @@
    version="15.1"
    start="cfi_flash.tcm"
    end="tristate_conduit_bridge_0.tcs" />
+ <connection
+   kind="tristate_conduit"
+   version="15.1"
+   start="sl811_ctl.tcm"
+   end="tristate_conduit_sl811.tcs" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
  <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />
