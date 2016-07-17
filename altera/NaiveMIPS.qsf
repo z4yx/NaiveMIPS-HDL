@@ -1162,55 +1162,6 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to VGA_SYNC_N
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to VGA_VS
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE mac.stp
-set_global_assignment -name QIP_FILE naive_mips_soc/synthesis/naive_mips_soc.qip
-set_global_assignment -name VERILOG_FILE SEG7_LUT.v
-set_global_assignment -name VERILOG_FILE soc_toplevel_qsys.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/div_uu.v
-set_global_assignment -name VERILOG_FILE ../src/flag_sync.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlbConverter.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlb.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/mmu_top.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/mem_map.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/debugger/dbg_uart.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/debugger/dbg_ctl.v
-set_global_assignment -name VERILOG_FILE ../src/ticker/ticker.v
-set_global_assignment -name VERILOG_FILE ../src/sram/bytes_conv.v
-set_global_assignment -name VERILOG_FILE ../src/gpu/gpu.v
-set_global_assignment -name QIP_FILE GPUMemory.qip
-set_global_assignment -name VERILOG_FILE ../src/gpio/gpio_top.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_mm/exception.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/cp0.v
-set_global_assignment -name VERILOG_FILE ../src/flash/flash_top.v
-set_global_assignment -name VERILOG_FILE ../src/bus/ibus.v
-set_global_assignment -name VERILOG_FILE ../src/bus/dbus.v
-set_global_assignment -name VERILOG_FILE ../src/uart/uart_top.v
-set_global_assignment -name VERILOG_FILE ../src/uart/uart_tx.v
-set_global_assignment -name VERILOG_FILE ../src/uart/uart_rx.v
-set_global_assignment -name VERILOG_FILE ../src/clk_ctrl.v
-set_global_assignment -name VERILOG_FILE ../src/sram/two_port.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/hilo_reg.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/regs.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/naive_mips.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_wb/wb.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_mm/mm.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_word.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_byte.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/multi_cycle.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/ex.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/reg_val_mux.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/branch.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_r.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_j.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_i.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/stage_if/pc.v
-set_global_assignment -name VERILOG_FILE ../src/cpu/defs.v
-set_global_assignment -name QIP_FILE bootrom.qip
-set_global_assignment -name SDC_FILE NaiveMIPS.sdc
-set_global_assignment -name QIP_FILE sys_pll.qip
-set_global_assignment -name MIF_FILE bootrom.mif
-set_global_assignment -name QIP_FILE divider.qip
-set_global_assignment -name QIP_FILE hf_pll.qip
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_ENTITY_NAME sld_signaltap -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_RAM_BLOCK_TYPE=AUTO" -section_id auto_signaltap_0
@@ -1230,12 +1181,10 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[26] -
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_IN_ENABLED=0" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_LEVEL_PIPELINE=1" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ENABLE_ADVANCED_TRIGGER=0" -section_id auto_signaltap_0
-set_global_assignment -name SIGNALTAP_FILE tse.stp
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_LEVEL=1" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ADVANCED_TRIGGER_ENTITY=basic,1," -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[10] -to auto_signaltap_0|gnd -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[16] -to auto_signaltap_0|gnd -section_id auto_signaltap_0
-set_global_assignment -name SIGNALTAP_FILE mac.stp
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[30] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[4] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[8] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
@@ -1302,5 +1251,45 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK=00
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK_LENGTH=44" -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[20] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[28] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
+set_global_assignment -name QIP_FILE naive_mips_soc/synthesis/naive_mips_soc.qip
+set_global_assignment -name VERILOG_FILE SEG7_LUT.v
+set_global_assignment -name VERILOG_FILE soc_toplevel_qsys.v
+set_global_assignment -name VERILOG_FILE ../src/uart/uart_tx.v
+set_global_assignment -name VERILOG_FILE ../src/uart/uart_top.v
+set_global_assignment -name VERILOG_FILE ../src/uart/uart_rx.v
+set_global_assignment -name VERILOG_FILE ../src/flag_sync.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlbConverter.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/tlb.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/mmu_top.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/mmu/mem_map.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/debugger/dbg_uart.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/debugger/dbg_ctl.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/cp0.v
+set_global_assignment -name VERILOG_FILE ../src/clk_ctrl.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/hilo_reg.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/regs.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/naive_mips.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_wb/wb.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_mm/exception.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_mm/mm.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/div_uu.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_word.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/count_bit_byte.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/multi_cycle.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_ex/ex.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/reg_val_mux.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/branch.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_r.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_j.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id_i.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_id/id.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/stage_if/pc.v
+set_global_assignment -name VERILOG_FILE ../src/cpu/defs.v
+set_global_assignment -name SDC_FILE NaiveMIPS.sdc
+set_global_assignment -name QIP_FILE sys_pll.qip
+set_global_assignment -name MIF_FILE bootrom.mif
+set_global_assignment -name QIP_FILE hf_pll.qip
+set_global_assignment -name SIGNALTAP_FILE tse.stp
+set_global_assignment -name SIGNALTAP_FILE mac.stp
 set_global_assignment -name SLD_FILE db/mac_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
