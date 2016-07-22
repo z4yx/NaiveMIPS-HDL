@@ -206,6 +206,20 @@ set_interface_property debugger SVD_ADDRESS_GROUP ""
 add_interface_port debugger dbg_txd dbg_txd Output 1
 add_interface_port debugger dbg_rxd dbg_rxd Input 1
 
+# 
+# connection point trace
+# 
+add_interface trace conduit end
+set_interface_property trace associatedClock cpu_clock
+set_interface_property trace associatedReset ""
+set_interface_property trace ENABLED true
+set_interface_property trace EXPORT_OF ""
+set_interface_property trace PORT_NAME_MAP ""
+set_interface_property trace CMSIS_SVD_VARIABLES ""
+set_interface_property trace SVD_ADDRESS_GROUP ""
+
+add_interface_port trace trace_data trace_data Output 128
+add_interface_port trace trace_en trace_en Output 2
 
 # 
 # connection point io_master
