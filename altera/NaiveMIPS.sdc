@@ -23,9 +23,14 @@
 
 # Clock constraints
 
-create_clock -name "ENET_RX_CLK" -period 8.000ns [get_ports {ENET_RX_CLK}]
+create_clock -name "ENET_RX_CLK" -period 8.000ns 
+#[get_ports {ENET_RX_CLK}]
 
-set_input_delay  -clock "ENET_RX_CLK"  -min 2.000ns [get_ports ENET_RX_CLK]
+create_clock -name "ENET_GTX_CLK" -period 8.000ns [get_ports {ENET_GTX_CLK}]
+
+create_clock -period "100.0 MHZ" -name "sdram_clk" [get_ports DRAM_CLK]
+
+create_clock -period "15.0 MHZ" -name "sdcard_clk" [get_ports SD_CLK]
 
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks
@@ -33,11 +38,33 @@ derive_pll_clocks -create_base_clocks
 # Automatically calculate clock uncertainty to jitter and other effects.
 derive_clock_uncertainty
 
+
 # tsu/th constraints
 
+set_input_delay -clock sdram_clk -max 6.4ns [get_ports DRAM_DQ*]
+set_input_delay -clock sdram_clk -min 1.0ns [get_ports DRAM_DQ*]
+
+
+set_input_delay  -clock ENET_RX_CLK  -min 1.20ns [get_ports ENET_RX_D*]
+set_input_delay  -clock ENET_RX_CLK  -max 2.80ns [get_ports ENET_RX_D*]
+set_input_delay  -clock ENET_RX_CLK -clock_fall -min 1.20ns [get_ports ENET_RX_D*] -add_delay
+set_input_delay  -clock ENET_RX_CLK -clock_fall -max 2.80ns [get_ports ENET_RX_D*] -add_delay
 
 # tco constraints
 
+set_output_delay -clock sdram_clk -max 1.5ns [get_ports DRAM_*]
+set_output_delay -clock sdram_clk -min -0.8ns [get_ports DRAM_*]
+
+#
+#set_output_delay  -clock ENET_GTX_CLK  -min -0.800ns [get_ports ENET_TX_D*]
+#set_output_delay  -clock ENET_GTX_CLK  -max 1.00ns [get_ports ENET_TX_D*]
+#set_output_delay  -clock ENET_GTX_CLK -clock_fall -min -0.800ns [get_ports ENET_TX_D*] -add_delay
+#set_output_delay  -clock ENET_GTX_CLK -clock_fall -max 1.00ns [get_ports ENET_TX_D*] -add_delay
+#
+#set_output_delay  -clock ENET_GTX_CLK  -min -0.800ns [get_ports ENET_TX_EN]
+#set_output_delay  -clock ENET_GTX_CLK  -max 1.00ns [get_ports ENET_TX_EN]
+#set_output_delay  -clock ENET_GTX_CLK -clock_fall -min -0.800ns [get_ports ENET_TX_EN] -add_delay
+#set_output_delay  -clock ENET_GTX_CLK -clock_fall -max 1.00ns [get_ports ENET_TX_EN] -add_delay
 
 # tpd constraints
 
