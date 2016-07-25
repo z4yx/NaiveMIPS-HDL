@@ -217,7 +217,7 @@ always @(posedge clk or negedge rst_n) begin
         timer_count <= 'b0;
     end
     else begin
-        cp0_regs_Count <= cp0_regs_Count+(timer_count[2:0]==3'b111);
+        cp0_regs_Count <= cp0_regs_Count+1'b1;
         timer_count <= timer_count + 'b1;
         if(cp0_regs_Compare != 32'b0 && cp0_regs_Compare==cp0_regs_Count)
             timer_int <= 1'b1;
