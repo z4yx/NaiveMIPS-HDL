@@ -91,7 +91,7 @@ naive_mips cpu(
 
 
 always @(posedge cpu_clock_clk or negedge reset_n) begin
-    if (!rst_n) begin
+    if (!reset_n) begin
         trace_en <= 2'b0;
     end
     else begin
