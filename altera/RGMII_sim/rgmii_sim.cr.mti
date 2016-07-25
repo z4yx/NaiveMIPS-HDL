@@ -1,0 +1,22 @@
+E:/Projects/NaiveMIPS-HDL/altera/enet_rx_clk_pll.v {1 {vlog -work work -stats=none E:/Projects/NaiveMIPS-HDL/altera/enet_rx_clk_pll.v
+Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+-- Compiling module enet_rx_clk_pll
+
+Top level modules:
+	enet_rx_clk_pll
+
+} {} {}} E:/Projects/NaiveMIPS-HDL/altera/RGMII_sim/tb_top.v {1 {vlog -work work -stats=none E:/Projects/NaiveMIPS-HDL/altera/RGMII_sim/tb_top.v
+Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+-- Compiling module tb_top
+
+Top level modules:
+	tb_top
+
+} {} {}} E:/Projects/NaiveMIPS-HDL/altera/ddr_o.v {1 {vlog -work work -stats=none E:/Projects/NaiveMIPS-HDL/altera/ddr_o.v
+Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+-- Compiling module ddr_o
+
+Top level modules:
+	ddr_o
+
+} {} {}}
