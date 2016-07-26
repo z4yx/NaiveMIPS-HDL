@@ -25,6 +25,22 @@
          type = "int";
       }
    }
+   element data_pattern_generator_0
+   {
+      datum _sortIndex
+      {
+         value = "7";
+         type = "int";
+      }
+   }
+   element data_pattern_generator_0.csr_slave
+   {
+      datum baseAddress
+      {
+         value = "67109632";
+         type = "String";
+      }
+   }
    element hps_0
    {
       datum _sortIndex
@@ -41,6 +57,14 @@
          type = "String";
       }
    }
+   element master_0
+   {
+      datum _sortIndex
+      {
+         value = "8";
+         type = "int";
+      }
+   }
    element msgdma_0
    {
       datum _sortIndex
@@ -53,7 +77,7 @@
    {
       datum baseAddress
       {
-         value = "1024";
+         value = "67109376";
          type = "String";
       }
    }
@@ -61,7 +85,7 @@
    {
       datum baseAddress
       {
-         value = "2048";
+         value = "67109440";
          type = "String";
       }
    }
@@ -71,6 +95,14 @@
       {
          value = "4";
          type = "int";
+      }
+   }
+   element soc_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
       }
    }
    element soc_system
@@ -93,7 +125,7 @@
    {
       datum baseAddress
       {
-         value = "135168";
+         value = "67109952";
          type = "String";
       }
    }
@@ -101,7 +133,7 @@
    {
       datum baseAddress
       {
-         value = "131072";
+         value = "67109888";
          type = "String";
       }
    }
@@ -198,7 +230,24 @@
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
-  <parameter name="resetSynchronousEdges" value="NONE" />
+  <parameter name="resetSynchronousEdges" value="DEASSERT" />
+ </module>
+ <module
+   name="data_pattern_generator_0"
+   kind="altera_avalon_data_pattern_generator"
+   version="15.1"
+   enabled="1">
+  <parameter name="AUTO_CSR_CLK_CLOCK_DOMAIN" value="1" />
+  <parameter name="AUTO_CSR_CLK_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_CSR_CLK_RESET_DOMAIN" value="1" />
+  <parameter name="AUTO_DEVICE" value="5CSEMA5F31C6" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6" />
+  <parameter name="AVALON_ENABLED" value="true" />
+  <parameter name="BYPASS_ENABLED" value="false" />
+  <parameter name="CROSS_CLK_SYNC_DEPTH" value="2" />
+  <parameter name="FREQ_CNTER_ENABLED" value="false" />
+  <parameter name="ST_DATA_W" value="128" />
  </module>
  <module name="hps_0" kind="altera_hps" version="15.1" enabled="1">
   <parameter name="ABSTRACT_REAL_COMPARE_TEST" value="false" />
@@ -728,6 +777,20 @@
   <parameter name="usb_mp_clk_div" value="0" />
   <parameter name="use_default_mpu_clk" value="false" />
  </module>
+ <module
+   name="master_0"
+   kind="altera_jtag_avalon_master"
+   version="15.1"
+   enabled="1">
+  <parameter name="AUTO_DEVICE" value="5CSEMA5F31C6" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6" />
+  <parameter name="COMPONENT_CLOCK" value="0" />
+  <parameter name="FAST_VER" value="0" />
+  <parameter name="FIFO_DEPTHS" value="2" />
+  <parameter name="PLI_PORT" value="50000" />
+  <parameter name="USE_PLI" value="0" />
+ </module>
  <module name="msgdma_0" kind="altera_msgdma" version="15.1" enabled="1">
   <parameter name="AUTO_DESCRIPTOR_READ_MASTER_ADDRESS_MAP" value="" />
   <parameter
@@ -748,14 +811,14 @@
   <parameter name="BURST_WRAPPING_SUPPORT" value="0" />
   <parameter name="CHANNEL_ENABLE" value="0" />
   <parameter name="CHANNEL_WIDTH" value="8" />
-  <parameter name="DATA_FIFO_DEPTH" value="256" />
-  <parameter name="DATA_WIDTH" value="256" />
+  <parameter name="DATA_FIFO_DEPTH" value="128" />
+  <parameter name="DATA_WIDTH" value="128" />
   <parameter name="DESCRIPTOR_FIFO_DEPTH" value="8" />
   <parameter name="ENHANCED_FEATURES" value="0" />
   <parameter name="ERROR_ENABLE" value="0" />
   <parameter name="ERROR_WIDTH" value="8" />
   <parameter name="FIX_ADDRESS_WIDTH" value="32" />
-  <parameter name="MAX_BURST_COUNT" value="64" />
+  <parameter name="MAX_BURST_COUNT" value="32" />
   <parameter name="MAX_BYTE" value="1073741824" />
   <parameter name="MAX_STRIDE" value="1" />
   <parameter name="MODE" value="2" />
@@ -771,9 +834,6 @@
   <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
  </module>
  <module name="soc_0" kind="naive_mips_soc" version="1.0" enabled="1">
-  <parameter name="AUTO_CLK50_CLOCK_DOMAIN" value="-1" />
-  <parameter name="AUTO_CLK50_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_CLK50_RESET_DOMAIN" value="-1" />
   <parameter name="AUTO_CLK_CPU_CLOCK_DOMAIN" value="2" />
   <parameter name="AUTO_CLK_CPU_CLOCK_RATE" value="0" />
   <parameter name="AUTO_CLK_CPU_RESET_DOMAIN" value="2" />
@@ -790,13 +850,16 @@
   <parameter name="AUTO_SDR_CTL_CLK_CLOCK_DOMAIN" value="1" />
   <parameter name="AUTO_SDR_CTL_CLK_CLOCK_RATE" value="50000000" />
   <parameter name="AUTO_SDR_CTL_CLK_RESET_DOMAIN" value="1" />
+  <parameter name="AUTO_TRACE_LOGGER_0_CLK_DOUT_CLOCK_DOMAIN" value="1" />
+  <parameter name="AUTO_TRACE_LOGGER_0_CLK_DOUT_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_TRACE_LOGGER_0_CLK_DOUT_RESET_DOMAIN" value="1" />
   <parameter name="AUTO_UNIQUE_ID" value="$${FILENAME}_soc_0" />
  </module>
- <module name="source_0" kind="data_source" version="15.1" enabled="1">
+ <module name="source_0" kind="data_source" version="15.1" enabled="0">
   <parameter name="dataOutBitsPerSymbol" value="8" />
   <parameter name="dataOutErrorDescriptor" value="" />
   <parameter name="dataOutErrorWidth" value="0" />
-  <parameter name="dataOutSymbolsPerBeat" value="8" />
+  <parameter name="dataOutSymbolsPerBeat" value="16" />
   <parameter name="dataOutUsePackets" value="false" />
   <parameter name="generationLanguage" value="VERILOG" />
   <parameter name="moduleName" value="" />
@@ -820,6 +883,60 @@
    kind="avalon"
    version="15.1"
    start="hps_0.h2f_axi_master"
+   end="source_0.command">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x04000440" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="hps_0.h2f_axi_master"
+   end="sysid_qsys.control_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x04000100" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="hps_0.h2f_axi_master"
+   end="msgdma_0.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x04000200" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="hps_0.h2f_axi_master"
+   end="source_0.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x04000400" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="hps_0.h2f_axi_master"
+   end="data_pattern_generator_0.csr_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x04000300" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="hps_0.h2f_axi_master"
+   end="msgdma_0.descriptor_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x04000240" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="hps_0.h2f_axi_master"
    end="soc_0.sdr_ctl_s0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
@@ -837,46 +954,10 @@
  <connection
    kind="avalon"
    version="15.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="source_0.command">
+   start="master_0.master"
+   end="hps_0.f2h_sdram0_data">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00021000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="sysid_qsys.control_slave">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00010000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="source_0.csr">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00020000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="msgdma_0.csr">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0400" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="15.1"
-   start="hps_0.h2f_lw_axi_master"
-   end="msgdma_0.descriptor_slave">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0800" />
+  <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -891,16 +972,22 @@
  <connection
    kind="avalon_streaming"
    version="15.1"
-   start="source_0.out"
+   start="data_pattern_generator_0.pattern_out"
    end="msgdma_0.st_sink" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="sysid_qsys.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="source_0.clk" />
+ <connection kind="clock" version="15.1" start="clk_0.clk" end="master_0.clk" />
  <connection
    kind="clock"
    version="15.1"
    start="clk_0.clk"
    end="address_span_extender_0.clock" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="msgdma_0.clock" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="data_pattern_generator_0.csr_clk" />
  <connection
    kind="clock"
    version="15.1"
@@ -921,7 +1008,22 @@
    version="15.1"
    start="clk_0.clk"
    end="hps_0.h2f_lw_axi_clock" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="data_pattern_generator_0.pattern_out_clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="soc_0.sdr_ctl_clk" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="soc_0.trace_logger_0_clk_dout" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="master_0.clk_reset" />
  <connection
    kind="reset"
    version="15.1"
@@ -937,6 +1039,11 @@
    version="15.1"
    start="clk_0.clk_reset"
    end="source_0.reset" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="data_pattern_generator_0.reset" />
  <connection
    kind="reset"
    version="15.1"

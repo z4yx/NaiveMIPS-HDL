@@ -2,10 +2,10 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>spl</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Jul 18, 2016 5:45:38 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1468835138685</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>.\</BspGeneratedLocation>
-        <BspSettingsFile>E:\Projects\NaiveMIPS-HDL\altera_de1_soc\software\spl_bsp\settings.bsp</BspSettingsFile>
+        <BspGeneratedTimeStamp>Jul 25, 2016 6:01:58 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1469440918237</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>..\..\</BspGeneratedLocation>
+        <BspSettingsFile>settings.bsp</BspSettingsFile>
         <HpsSettingsPath>..\..\hps_isw_handoff\soc_system_hps_0\</HpsSettingsPath>
         <JdiFile>default</JdiFile>
         <Cpu xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
@@ -170,7 +170,7 @@
                 <SettingName>spl.warm_reset_handshake.SDRAM</SettingName>
                 <Identifier>none</Identifier>
                 <Type>Boolean</Type>
-                <Value>0</Value>
+                <Value>1</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>public_mk_define</DestinationFile>
                 <Description>When enabled, Reset Manager makes a request to the SDRAM controller subsystem to put the SDRAM device into self-refresh mode before asserting warm reset signals. It will ensure the contents of SDRAM devices survive a hardware sequenced warm reset. However, if SDRAM is already in warm reset, handshake with SDRAM is not performed.</Description>

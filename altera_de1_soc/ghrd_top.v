@@ -242,9 +242,10 @@ pll_hf pll2(
     .outclk_0(clk2x),
 	 .outclk_1(clk2x_shift),
     .locked(locked2));
+	 
 soc_system u0 (      
 		  .clk_clk                               (CLOCK_50),                             //                clk.clk
-		  .reset_reset_n                         (1'b1),                                 //                reset.reset_n
+		  .reset_reset_n                         (hps_fpga_reset_n & KEY[0]),            //                reset.reset_n
 		  //HPS ddr3
 		  .memory_mem_a                          ( HPS_DDR3_ADDR),                       //                memory.mem_a
         .memory_mem_ba                         ( HPS_DDR3_BA),                         //                .mem_ba
@@ -375,7 +376,7 @@ soc_system u0 (
 		.sdram_dqm({DRAM_UDQM,DRAM_LDQM}),        //         .dqm
 		.sdram_ras_n(DRAM_RAS_N),      //         .ras_n
 		.sdram_we_n(DRAM_WE_N),       //         .we_n
-		.sdram_clk_clk(/*DRAM_CLK*/),      // sdram_clk.clk
+		//.sdram_clk_clk(DRAM_CLK),      // sdram_clk.clk
 		.sw_export({1'b0,GPIO_0[19],20'b0,SW}), //       sw.export
 		.uart_rxd(uart_rxd),         //     uart.rxd
 		.uart_txd(uart_txd),          //         .txd
@@ -393,6 +394,8 @@ soc_system u0 (
 	  	
 //		.clk_50_clk(CLOCK_50)
     );
+assign DRAM_CLK=clk2x_shift;
+	 
 	 
 	 /*
     quirk_sdram u1 (
@@ -408,15 +411,12 @@ soc_system u0 (
 		.sdram_clk_clk(DRAM_CLK),      // sdram_clk.clk
 		
         .clk_clk           (CLOCK2_50),           //        clk.clk
-        .clk_sdram_clk     (),     //  clk_sdram.clk
         .pll_locked_export (), // pll_locked.export
-        .reset_reset_n     (fpga_reset_n),     //      reset.reset_n
-//        .clk_0_clk       (clk),       //     clk_0.clk
-//        .reset_0_reset_n (fpga_reset_n)  //   reset_0.reset_n
+//        .reset_reset_n     (fpga_reset_n),     //      reset.reset_n
 
     );
-*/
-  
+	 */
+
 SEG7_LUT_6 			seg_disp	(	.oSEG0(HEX0),
 							   .oSEG1(HEX1),
 							   .oSEG2(HEX2),
@@ -427,10 +427,9 @@ SEG7_LUT_6 			seg_disp	(	.oSEG0(HEX0),
 assign LEDR = led_export;
 assign GPIO_0[13] = 1'b1; //DACK not used
 
-assign fpga_reset_n = /*hps_fpga_reset_n &*/ locked1 & KEY[0];
-assign fpga_other_reset_n = /*hps_fpga_reset_n &*/ locked2 & KEY[0];
+assign fpga_reset_n = hps_fpga_reset_n & locked1 & KEY[0];
+assign fpga_other_reset_n = hps_fpga_reset_n & locked2 & KEY[0];
 
-assign DRAM_CLK=clk2x_shift;
 
 endmodule
 

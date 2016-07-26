@@ -192,6 +192,14 @@
          type = "String";
       }
    }
+   element trace_logger_0
+   {
+      datum _sortIndex
+      {
+         value = "13";
+         type = "int";
+      }
+   }
    element tristate_conduit_sl811
    {
       datum _sortIndex
@@ -288,6 +296,16 @@
    dir="start" />
  <interface name="sw" internal="pin.external_connection" type="conduit" dir="end" />
  <interface
+   name="trace_logger_0_clk_dout"
+   internal="trace_logger_0.clk_dout"
+   type="clock"
+   dir="end" />
+ <interface
+   name="trace_logger_0_trace_out"
+   internal="trace_logger_0.trace_out"
+   type="avalon_streaming"
+   dir="start" />
+ <interface
    name="uart"
    internal="uart_0.external_connection"
    type="conduit"
@@ -303,7 +321,7 @@
    version="15.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="true" />
-  <parameter name="autoInitializationFileName">naive_mips_soc_bootrom</parameter>
+  <parameter name="autoInitializationFileName">$${FILENAME}_bootrom</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="32" />
@@ -425,7 +443,7 @@
   <parameter name="casLatency" value="3" />
   <parameter name="clockRate" value="100000000" />
   <parameter name="columnWidth" value="10" />
-  <parameter name="componentName">naive_mips_soc_sdram</parameter>
+  <parameter name="componentName" value="$${FILENAME}_sdram" />
   <parameter name="dataWidth" value="16" />
   <parameter name="generateSimulationModel" value="true" />
   <parameter name="initNOPDelay" value="0.0" />
@@ -496,6 +514,7 @@
   <parameter name="USE_WRITEBYTEENABLE" value="0" />
   <parameter name="USE_WRITEDATA" value="1" />
  </module>
+ <module name="trace_logger_0" kind="trace_logger" version="1.0" enabled="1" />
  <module
    name="tristate_conduit_sl811"
    kind="altera_tristate_conduit_bridge"
@@ -607,6 +626,11 @@
    kind="clock"
    version="15.1"
    start="clk_0.clk"
+   end="trace_logger_0.clk_din" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
    end="naive_mips_cpu_0.cpu_clock" />
  <connection
    kind="clock"
@@ -623,6 +647,17 @@
    version="15.1"
    start="clock_bridge_0.out_clk"
    end="naive_mips_cpu_0.debugger_clock" />
+ <connection
+   kind="conduit"
+   version="15.1"
+   start="trace_logger_0.trace_in"
+   end="naive_mips_cpu_0.trace">
+  <parameter name="endPort" value="" />
+  <parameter name="endPortLSB" value="0" />
+  <parameter name="startPort" value="" />
+  <parameter name="startPortLSB" value="0" />
+  <parameter name="width" value="0" />
+ </connection>
  <connection
    kind="interrupt"
    version="15.1"
@@ -669,6 +704,11 @@
    version="15.1"
    start="clk_high.clk_reset"
    end="sdram.reset" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="trace_logger_0.reset" />
  <connection
    kind="reset"
    version="15.1"

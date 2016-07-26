@@ -35,6 +35,8 @@ module cpu_qsys_comp (
 		output wire [31:0]   io_master_writedata,   //               .writedata
 		input  wire          io_master_waitrequest, //               .waitrequest
 		input  wire [4:0]  inr_irq0_irq,            //       inr_irq0.irq
+    output reg[127:0] trace_data,
+    output reg[1:0] trace_en,
       output wire        dbg_txd,                 //       debugger.dbg_txd
       input  wire        dbg_rxd                  //               .dbg_rxd
 
@@ -86,4 +88,21 @@ naive_mips cpu(
          .dbus_stall(uni_master_waitrequest & (uni_master_read|uni_master_write)),
          .hardware_int_in(inr_irq0_irq),
          .dbus_uncached());
+
+
+always @(posedge cpu_clock_clk or negedge reset_n) begin
+    if (!reset_n) begin
+        trace_en <= 2'b0;
+    end
+    else begin
+        trace_en[0] <= (inst_master_read|inst_master_write) & ~inst_master_waitrequest;
+        trace_data[31:0] <= {1'b0, inst_master_write, inst_master_address[29:0]};
+        trace_data[63:32] <= inst_master_write ? inst_master_writedata : inst_master_readdata;
+
+        trace_en[1] <= (data_master_read|data_master_write) & ~data_master_waitrequest;
+        trace_data[95:64] <= {1'b0, data_master_write, data_master_address[29:0]};
+        trace_data[127:96] <= data_master_write ? data_master_writedata : data_master_readdata;
+    end
+end
+
 endmodule

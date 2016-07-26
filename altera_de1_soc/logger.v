@@ -1,3 +1,4 @@
+
 module logger(
     input wire clk_clk,
     input wire reset_n,
@@ -16,7 +17,8 @@ module logger(
 
 wire rdack, rdempty_l, rdempty_u;
 wire wrfull_l, wrfull_u;
-reg[63:0] wrdata_l, wrdata_u, enabled_data;
+reg[63:0] wrdata_l, wrdata_u;
+wire enabled_data;
 reg wrreq_l, wrreq_u;
 reg wr_sel;
 

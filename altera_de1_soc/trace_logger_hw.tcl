@@ -26,7 +26,7 @@ set_module_property OPAQUE_ADDRESS_MAP true
 set_module_property GROUP Tsinghua
 set_module_property AUTHOR "Zhang Yuxiang"
 set_module_property DISPLAY_NAME "Trace Logger"
-set_module_property INSTANTIATE_IN_SYSTEM_MODULE false
+set_module_property INSTANTIATE_IN_SYSTEM_MODULE true
 set_module_property EDITABLE true
 set_module_property REPORT_TO_TALKBACK false
 set_module_property ALLOW_GREYBOX_GENERATION false
