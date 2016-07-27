@@ -163,21 +163,23 @@ initial begin
     @(negedge clk);
     $display("Starting cache test program");
 
-    repeat(1000) begin 
+    repeat(1000000) begin 
 
-      iaddr = $urandom_range(0, 8*1024-1);
+      iaddr = $urandom_range(0, 1024-1);
+      iaddr[1:0] = 2'b00; //4-Byte align
       do begin 
-        daddr = $urandom_range(0, 8*1024-1);
+        daddr = $urandom_range(0, 1024-1);
+        daddr[1:0] = 2'b00;
       end while(daddr == iaddr);
-      byte_en = 4'b1111;
-      daddr[1:0] = 2'b00;
+      byte_en = $urandom_range(0, 15);//4'b1111;
       d_rw = ($random & 1) ? REQ_WRITE : REQ_READ;
       dwrdata = $urandom_range(0, 32'hffffffff);
 
-      iaddr[1:0] = 2'b00; //4-Byte align
       pending_inst = 1;
       pending_data = 1;
       send_master_request_inst(iaddr);
+      repeat($urandom_range(0,5)) @(posedge clk);
+      //@(posedge clk);
       send_master_request_data(daddr, byte_en, d_rw, dwrdata);
       wait(pending_inst==0);
       wait(pending_data==0);
