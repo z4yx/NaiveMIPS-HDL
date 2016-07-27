@@ -1,5 +1,5 @@
 // Cache.v
-
+`default_nettype none
 `timescale 1 ps / 1 ps
 module Cache #(
   parameter CACHE_LINE_WIDTH = 6, 
@@ -169,6 +169,7 @@ assign avalon_rdslave_readdata = rd2Datas[rdslave_addr_idx];
 wire slaveMiss;
 wire slave2Miss;
 wire slaveForceDelay;
+wire slaveWrForceDelay;
 
 assign  slaveMiss = ! rdHits[slave_addr_idx] && (avalon_slave_read || avalon_slave_write);
 assign slave2Miss = ! rd2Hits[rdslave_addr_idx] && avalon_rdslave_read;
@@ -181,7 +182,6 @@ assign wrTagDirect = slave_addr_tag;
 assign wrVaildDirect = 1'b1;
 assign wrDirtyDirect = 1'b1;
 assign wrDataDirect = avalon_slave_writedata;
-assign slave_wr_waitrequest = slaveMiss || slaveWrForceDelay;
 assign wrByteEnableDirect = avalon_slave_byteenable;
 
 reg [1:0] state;
@@ -195,6 +195,7 @@ reg [CACHE_LINE_WIDTH-1 : 0] cacheLineWrRdOff;
 assign cacheRewrite = state == `WR || state ==`RD;
 
 assign slaveWrForceDelay = !slaveMiss && slave_addr_idx == rdslave_addr_idx && avalon_rdslave_read && state != `IDLE;
+assign slave_wr_waitrequest = slaveMiss || slaveWrForceDelay;
 
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writesDirect
