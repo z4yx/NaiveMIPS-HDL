@@ -349,7 +349,7 @@ clk_ctrl clk_ctrl2(/*autoinst*/
          .clk(clk_high),
          .rst_in_n(locked_other & KEY[0]));
 
-naive_mips_soc soc(
+naive_mips_soc_cache soc(
 		.clk_cpu_clk(clk),                    //   clk_cpu.clk
 		.clk_other_clk(clk_high),                  // clk_other.clk
 		.clk_uart_clk(clk_uart_pll),                   //  clk_uart.clk
@@ -391,14 +391,14 @@ naive_mips_soc soc(
 		.mac_status_ena_10(),              //           .ena_10
 		.mac_txclk_clk(enet_tx_clk_mac),                  //  mac_txclk.clk
 
-		
+	/*	
 		.usb_bus_tcm_address_out({GPIO[17],dummy2}),        //   usb_bus.tcm_address_out
 		.usb_bus_tcm_read_n_out(GPIO[23]),         //          .tcm_read_n_out
 		.usb_bus_tcm_reset_n_out(GPIO[15]),        //          .tcm_reset_n_out
 		.usb_bus_tcm_write_n_out(GPIO[21]),        //          .tcm_write_n_out
 		.usb_bus_tcm_data_out({dummy24,GPIO[10],GPIO[12],GPIO[14],GPIO[16],GPIO[18],GPIO[20],GPIO[22],GPIO[24]}),           //          .tcm_data_out
 		.usb_bus_tcm_chipselect_n_out(GPIO[25]),    //          .tcm_chipselect_n_out
-		
+	*/
 		.rst_cpu_reset_n(rst_n),  //  rst_cpu.reset_n
 		.rst_other_reset_n(rst_other_n & KEY[0]),              // rst_other.reset_n
 		.sdram_addr(DRAM_ADDR),       //    sdram.addr
@@ -412,11 +412,12 @@ naive_mips_soc soc(
 		.sdram_we_n(DRAM_WE_N),       //         .we_n
 //		.sdram_clk_clk(DRAM_CLK),      // sdram_clk.clk
 		.sw_export({g_sensor_int_reg&SW[1],GPIO[19],spi0_irq,11'b0,SW}), //       sw.export
+
 		.spi_MISO                       (SD_DAT[0]),                       //        spi.MISO
-      .spi_MOSI                       (SD_CMD),                       //           .MOSI
-      .spi_SCLK                       (SD_CLK),                       //           .SCLK
-      .spi_SS_n                       (SD_DAT[3]),                       //           .SS_n
-      .spi_0_irq_irq                  (spi0_irq),                   //  spi_0_irq.irq
+        .spi_MOSI                       (SD_CMD),                       //           .MOSI
+        .spi_SCLK                       (SD_CLK),                       //           .SCLK
+        .spi_SS_n                       (SD_DAT[3]),                       //           .SS_n
+        .spi_0_irq_irq                  (spi0_irq),                   //  spi_0_irq.irq
 
 		.uart_rxd(UART_RXD),         //     uart.rxd
 		.uart_txd(UART_TXD)          //         .txd
