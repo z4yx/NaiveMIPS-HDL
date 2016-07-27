@@ -505,8 +505,8 @@
  <interface name="usb_bus" internal="tristate_conduit_sl811.out" />
  <module name="Cache_0" kind="Cache" version="1.0" enabled="1">
   <parameter name="ADDR_WIDTH" value="32" />
-  <parameter name="CACHE_LINE_WIDTH" value="6" />
-  <parameter name="TAG_WIDTH" value="21" />
+  <parameter name="CACHE_LINE_WIDTH" value="4" />
+  <parameter name="TAG_WIDTH" value="24" />
  </module>
  <module
    name="bootrom"
@@ -523,7 +523,7 @@
   <parameter name="dualPort" value="false" />
   <parameter name="ecc_enabled" value="false" />
   <parameter name="initMemContent" value="true" />
-  <parameter name="initializationFileName">E:/Projects/NaiveMIPS-HDL/altera/bootrom.mif</parameter>
+  <parameter name="initializationFileName" value="bootrom.mif" />
   <parameter name="instanceID" value="BOOT" />
   <parameter name="memorySize" value="8192" />
   <parameter name="readDuringWriteMode" value="DONT_CARE" />
@@ -635,17 +635,17 @@
   <parameter name="enable_ena" value="32" />
   <parameter name="enable_gmii_loopback" value="false" />
   <parameter name="enable_hd_logic" value="true" />
-  <parameter name="enable_mac_flow_ctrl" value="false" />
-  <parameter name="enable_mac_vlan" value="false" />
+  <parameter name="enable_mac_flow_ctrl" value="true" />
+  <parameter name="enable_mac_vlan" value="true" />
   <parameter name="enable_magic_detect" value="false" />
   <parameter name="enable_ptp_1step" value="false" />
   <parameter name="enable_sgmii" value="false" />
   <parameter name="enable_shift16" value="true" />
-  <parameter name="enable_sup_addr" value="false" />
+  <parameter name="enable_sup_addr" value="true" />
   <parameter name="enable_timestamping" value="false" />
   <parameter name="enable_use_internal_fifo" value="true" />
   <parameter name="export_pwrdn" value="false" />
-  <parameter name="ext_stat_cnt_ena" value="false" />
+  <parameter name="ext_stat_cnt_ena" value="true" />
   <parameter name="ifGMII" value="RGMII" />
   <parameter name="ing_addr" value="11" />
   <parameter name="max_channels" value="1" />
@@ -718,15 +718,15 @@
   <parameter name="BURST_WRAPPING_SUPPORT" value="0" />
   <parameter name="CHANNEL_ENABLE" value="0" />
   <parameter name="CHANNEL_WIDTH" value="8" />
-  <parameter name="DATA_FIFO_DEPTH" value="256" />
+  <parameter name="DATA_FIFO_DEPTH" value="128" />
   <parameter name="DATA_WIDTH" value="32" />
-  <parameter name="DESCRIPTOR_FIFO_DEPTH" value="128" />
+  <parameter name="DESCRIPTOR_FIFO_DEPTH" value="256" />
   <parameter name="ENHANCED_FEATURES" value="1" />
   <parameter name="ERROR_ENABLE" value="1" />
   <parameter name="ERROR_WIDTH" value="6" />
   <parameter name="FIX_ADDRESS_WIDTH" value="32" />
-  <parameter name="MAX_BURST_COUNT" value="8" />
-  <parameter name="MAX_BYTE" value="8192" />
+  <parameter name="MAX_BURST_COUNT" value="4" />
+  <parameter name="MAX_BYTE" value="2048" />
   <parameter name="MAX_STRIDE" value="1" />
   <parameter name="MODE" value="2" />
   <parameter name="PACKET_ENABLE" value="1" />
@@ -737,7 +737,7 @@
   <parameter name="PROGRAMMABLE_BURST_ENABLE" value="0" />
   <parameter name="RESPONSE_PORT" value="0" />
   <parameter name="STRIDE_ENABLE" value="0" />
-  <parameter name="TRANSFER_TYPE" value="Aligned Accesses" />
+  <parameter name="TRANSFER_TYPE" value="Unaligned Accesses" />
   <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
  </module>
  <module name="msgdma_eth_tx" kind="altera_msgdma" version="15.1" enabled="1">
@@ -760,15 +760,15 @@
   <parameter name="BURST_WRAPPING_SUPPORT" value="0" />
   <parameter name="CHANNEL_ENABLE" value="0" />
   <parameter name="CHANNEL_WIDTH" value="8" />
-  <parameter name="DATA_FIFO_DEPTH" value="256" />
+  <parameter name="DATA_FIFO_DEPTH" value="128" />
   <parameter name="DATA_WIDTH" value="32" />
-  <parameter name="DESCRIPTOR_FIFO_DEPTH" value="128" />
+  <parameter name="DESCRIPTOR_FIFO_DEPTH" value="256" />
   <parameter name="ENHANCED_FEATURES" value="1" />
   <parameter name="ERROR_ENABLE" value="1" />
   <parameter name="ERROR_WIDTH" value="1" />
   <parameter name="FIX_ADDRESS_WIDTH" value="32" />
-  <parameter name="MAX_BURST_COUNT" value="8" />
-  <parameter name="MAX_BYTE" value="8192" />
+  <parameter name="MAX_BURST_COUNT" value="4" />
+  <parameter name="MAX_BYTE" value="2048" />
   <parameter name="MAX_STRIDE" value="1" />
   <parameter name="MODE" value="1" />
   <parameter name="PACKET_ENABLE" value="1" />
@@ -779,7 +779,7 @@
   <parameter name="PROGRAMMABLE_BURST_ENABLE" value="0" />
   <parameter name="RESPONSE_PORT" value="2" />
   <parameter name="STRIDE_ENABLE" value="0" />
-  <parameter name="TRANSFER_TYPE" value="Aligned Accesses" />
+  <parameter name="TRANSFER_TYPE" value="Unaligned Accesses" />
   <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
  </module>
  <module
