@@ -54,7 +54,7 @@
 # within the Quartus project, and generate a unified
 # script which supports all the Altera IP within the design.
 # ----------------------------------------
-# ACDS 15.1 185 win32 2016.06.11.00:41:20
+# ACDS 15.1 185 linux 2016.07.27.06:50:16
 
 # ----------------------------------------
 # Initialize variables
@@ -73,7 +73,7 @@ if ![info exists QSYS_SIMDIR] {
 }
 
 if ![info exists QUARTUS_INSTALL_DIR] { 
-  set QUARTUS_INSTALL_DIR "E:/software/altera/15.1/quartus/"
+  set QUARTUS_INSTALL_DIR "/home/shanker/altera/15.1/quartus/"
 }
 
 if ![info exists USER_DEFINED_COMPILE_OPTIONS] { 
@@ -227,8 +227,8 @@ alias com {
   eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/sim_cache_mm_interconnect_2.v"                                                                 -work mm_interconnect_2                       
   eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/sim_cache_mm_interconnect_1.v"                                                                 -work mm_interconnect_1                       
   eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/sim_cache_mm_interconnect_0.v"                                                                 -work mm_interconnect_0                       
-  eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/sim_cache_new_sdram_controller_0.v"                                                            -work new_sdram_controller_0                  
   eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/sim_cache_new_sdram_controller_0_test_component.v"                                             -work new_sdram_controller_0                  
+  eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/sim_cache_new_sdram_controller_0.v"                                                            -work new_sdram_controller_0                  
   eval  vlog -sv $USER_DEFINED_COMPILE_OPTIONS "$QSYS_SIMDIR/submodules/altera_avalon_mm_master_bfm.sv"                                   -L altera_common_sv_packages -work master_data                             
   eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/Cache.v"                                                                                       -work Cache_0                                 
   eval  vlog $USER_DEFINED_COMPILE_OPTIONS     "$QSYS_SIMDIR/submodules/cacheline.v"                                                                                   -work Cache_0                                 
