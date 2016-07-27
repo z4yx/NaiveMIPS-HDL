@@ -176,8 +176,6 @@ assign slave2Miss = ! rd2Hits[rdslave_addr_idx] && avalon_rdslave_read;
 assign slave_rd_waitrequest = slaveMiss;
 assign avalon_rdslave_waitrequest = slave2Miss;
 
-assign slaveWrForceDelay = !slaveMiss && slave_addr_idx == rdslave_addr_idx && avalon_rdslave_read;
-
 assign wrOffDirect = slave_addr_off;
 assign wrTagDirect = slave_addr_tag;
 assign wrVaildDirect = 1'b1;
@@ -195,6 +193,8 @@ reg [1:0] state;
 reg [CACHE_LINE_WIDTH-1 : 0] cacheLineWrRdOff;
 
 assign cacheRewrite = state == `WR || state ==`RD;
+
+assign slaveWrForceDelay = !slaveMiss && slave_addr_idx == rdslave_addr_idx && avalon_rdslave_read && state != `IDLE;
 
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writesDirect
