@@ -322,6 +322,9 @@ wire			enet_rx_clk_mac;
 wire [23:0] dummy24;
 wire [1:0] dummy2;
 wire spi0_irq;
+reg  g_sensor_int_reg;
+reg [21:0] g_sensor_int_cnt;
+reg [1:0] g_sensor_int_d;
 
 sys_pll pll1(
     .areset(1'b0),
@@ -408,8 +411,7 @@ naive_mips_soc soc(
 		.sdram_ras_n(DRAM_RAS_N),      //         .ras_n
 		.sdram_we_n(DRAM_WE_N),       //         .we_n
 //		.sdram_clk_clk(DRAM_CLK),      // sdram_clk.clk
-		.sw_export({G_SENSOR_INT1&SW[1],GPIO[19],spi0_irq,11'b0,SW}), //       sw.export
-		
+		.sw_export({g_sensor_int_reg&SW[1],GPIO[19],spi0_irq,11'b0,SW}), //       sw.export
 		.spi_MISO                       (SD_DAT[0]),                       //        spi.MISO
       .spi_MOSI                       (SD_CMD),                       //           .MOSI
       .spi_SCLK                       (SD_CLK),                       //           .SCLK
@@ -453,11 +455,14 @@ assign LEDG[8] = eth_pll_locked;
 
 assign GPIO[13] = 1'b1; //DACK not used
 
-//always@(posedge eth_sample_clk)begin
-//	TX_mac_reg <= enet_tx_clk_mac;
-//    TXC_reg <= ENET_GTX_CLK;
-//	 TXD_reg <= ENET_TX_DATA;
-//	 TXE_reg <= ENET_TX_EN;
-//end
+always@(posedge clk)begin
+    g_sensor_int_d <= {g_sensor_int_d[0], G_SENSOR_INT1 | SW[2]}; //SW[2] for debug
+    if(~g_sensor_int_d[1]) begin
+        g_sensor_int_cnt <= 0;
+    end else begin
+        g_sensor_int_cnt <= g_sensor_int_cnt+1;
+    end
+    g_sensor_int_reg <= (0 < g_sensor_int_cnt && g_sensor_int_cnt < 16384);
+end
 
 endmodule
