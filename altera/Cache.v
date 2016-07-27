@@ -72,13 +72,13 @@ wire                    rd2Dirties[`NUM_CACHE_LINES-1 : 0];
 wire                       rd2Hits[`NUM_CACHE_LINES-1 : 0];
 wire [TAG_WIDTH-1 : 0]     rd2Tags[`NUM_CACHE_LINES-1 : 0];
 
-wire                        writes[`NUM_CACHE_LINES-1 : 0];
-wire [CACHE_LINE_WIDTH-1 : 0] wrOff;
-wire [TAG_WIDTH-1 : 0]        wrTag;
-wire                        wrVaild;
-wire                        wrDirty;
-wire [31:0]                  wrData;
-wire [3:0]             wrByteEnable;
+wire                          writes[`NUM_CACHE_LINES-1 : 0];
+wire [CACHE_LINE_WIDTH-1 : 0] wrOffs[`NUM_CACHE_LINES-1 : 0];
+wire [TAG_WIDTH-1 : 0]        wrTags[`NUM_CACHE_LINES-1 : 0];
+wire                        wrVailds[`NUM_CACHE_LINES-1 : 0];
+wire                        wrDirtys[`NUM_CACHE_LINES-1 : 0];
+wire [31:0]                  wrDatas[`NUM_CACHE_LINES-1 : 0];
+wire [3:0]             wrByteEnables[`NUM_CACHE_LINES-1 : 0];
 
 wire [31:0]                  lkupDatas[`NUM_CACHE_LINES-1 : 0];
 
@@ -109,13 +109,13 @@ generate
       .rd2Hit             (   rd2Hits[cache_line_i]),
       .rd2Tag             (   rd2Tags[cache_line_i]),
       
-      .write              (    writes[cache_line_i]),
-      .wrOff              (       wrOff),
-      .wrTag              (       wrTag),
-      .wrVaild            (     wrVaild),
-      .wrDirty            (     wrDirty),
-      .wrData             (      wrData),
-      .wrByteEnable       (wrByteEnable),
+      .write              (       writes[cache_line_i]),
+      .wrOff              (       wrOffs[cache_line_i]),
+      .wrTag              (       wrTags[cache_line_i]),
+      .wrVaild            (     wrVailds[cache_line_i]),
+      .wrDirty            (     wrDirtys[cache_line_i]),
+      .wrData             (      wrDatas[cache_line_i]),
+      .wrByteEnable       (wrByteEnables[cache_line_i]),
       .lkupData           (lkupDatas[cache_line_i])
     );
   end
@@ -142,15 +142,16 @@ wire [3:0]             wrByteEnableRewrit;
 
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writes
-    assign writes[cache_line_i] = cacheRewrite ? writesRewrit[cache_line_i] : writesDirect[cache_line_i];
+    assign writes[cache_line_i]        = cacheRewrite && cache_line_i == miss_addr_idx ? writesRewrit[cache_line_i] : writesDirect[cache_line_i];
+    assign wrOffs[cache_line_i]        = cacheRewrite && cache_line_i == miss_addr_idx ? wrOffRewrit : wrOffDirect;
+    assign wrTags[cache_line_i]        = cacheRewrite && cache_line_i == miss_addr_idx ? wrTagRewrit : wrTagDirect;
+    assign wrVailds[cache_line_i]      = cacheRewrite && cache_line_i == miss_addr_idx ? wrVaildRewrit : wrVaildDirect;
+    assign wrDirtys[cache_line_i]      = cacheRewrite && cache_line_i == miss_addr_idx ? wrDirtyRewrit : wrDirtyDirect;
+    assign wrDatas[cache_line_i]       = cacheRewrite && cache_line_i == miss_addr_idx ? wrDataRewrit : wrDataDirect;
+    assign wrByteEnables[cache_line_i] = cacheRewrite && cache_line_i == miss_addr_idx ? wrByteEnableRewrit : wrByteEnableDirect;
   end
 endgenerate
-assign wrOff = cacheRewrite ? wrOffRewrit : wrOffDirect;
-assign wrTag = cacheRewrite ? wrTagRewrit : wrTagDirect;
-assign wrVaild = cacheRewrite ? wrVaildRewrit : wrVaildDirect;
-assign wrDirty = cacheRewrite ? wrDirtyRewrit : wrDirtyDirect;
-assign wrData = cacheRewrite ? wrDataRewrit : wrDataDirect;
-assign wrByteEnable = cacheRewrite ? wrByteEnableRewrit : wrByteEnableDirect;
+
 
 assign rdAddr   = avalon_slave_address;
 assign rd2Addr  = avalon_rdslave_address;
