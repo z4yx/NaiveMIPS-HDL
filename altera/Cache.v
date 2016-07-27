@@ -72,15 +72,32 @@ wire                    rd2Dirties[`NUM_CACHE_LINES-1 : 0];
 wire                       rd2Hits[`NUM_CACHE_LINES-1 : 0];
 wire [TAG_WIDTH-1 : 0]     rd2Tags[`NUM_CACHE_LINES-1 : 0];
 
-wire                        writes[`NUM_CACHE_LINES-1 : 0];
-wire [CACHE_LINE_WIDTH-1 : 0] wrOff;
-wire [TAG_WIDTH-1 : 0]        wrTag;
-wire                        wrVaild;
-wire                        wrDirty;
-wire [31:0]                  wrData;
-wire [3:0]             wrByteEnable;
+wire                          writes[`NUM_CACHE_LINES-1 : 0];
+wire [CACHE_LINE_WIDTH-1 : 0] wrOffs[`NUM_CACHE_LINES-1 : 0];
+wire [TAG_WIDTH-1 : 0]        wrTags[`NUM_CACHE_LINES-1 : 0];
+wire                        wrVailds[`NUM_CACHE_LINES-1 : 0];
+wire                        wrDirtys[`NUM_CACHE_LINES-1 : 0];
+wire [31:0]                  wrDatas[`NUM_CACHE_LINES-1 : 0];
+wire [3:0]             wrByteEnables[`NUM_CACHE_LINES-1 : 0];
 
 wire [31:0]                  lkupDatas[`NUM_CACHE_LINES-1 : 0];
+
+wire cacheRewrite;
+
+wire         writesDirect[`NUM_CACHE_LINES-1 : 0];
+wire         writesRewrit[`NUM_CACHE_LINES-1 : 0];
+wire [CACHE_LINE_WIDTH-1 : 0] wrOffDirect;
+wire [CACHE_LINE_WIDTH-1 : 0] wrOffRewrit;
+wire [TAG_WIDTH-1 : 0]        wrTagDirect;
+wire [TAG_WIDTH-1 : 0]        wrTagRewrit;
+wire                        wrVaildDirect;
+wire                        wrVaildRewrit;
+wire                        wrDirtyDirect;
+wire                        wrDirtyRewrit;
+wire [31:0]                  wrDataDirect;
+wire [31:0]                  wrDataRewrit;
+wire [3:0]             wrByteEnableDirect;
+wire [3:0]             wrByteEnableRewrit;
 
 genvar cache_line_i;
 
@@ -109,48 +126,39 @@ generate
       .rd2Hit             (   rd2Hits[cache_line_i]),
       .rd2Tag             (   rd2Tags[cache_line_i]),
       
-      .write              (    writes[cache_line_i]),
-      .wrOff              (       wrOff),
-      .wrTag              (       wrTag),
-      .wrVaild            (     wrVaild),
-      .wrDirty            (     wrDirty),
-      .wrData             (      wrData),
-      .wrByteEnable       (wrByteEnable),
+      .write              (       writes[cache_line_i]),
+      .wrOff              (       wrOffs[cache_line_i]),
+      .wrTag              (       wrTags[cache_line_i]),
+      .wrVaild            (     wrVailds[cache_line_i]),
+      .wrDirty            (     wrDirtys[cache_line_i]),
+      .wrData             (      wrDatas[cache_line_i]),
+      .wrByteEnable       (wrByteEnables[cache_line_i]),
+      .lkupOff            (                wrOffRewrit),
       .lkupData           (lkupDatas[cache_line_i])
     );
   end
 
 endgenerate
 
-wire cacheRewrite;
-
-wire         writesDirect[`NUM_CACHE_LINES-1 : 0];
-wire         writesRewrit[`NUM_CACHE_LINES-1 : 0];
-wire [CACHE_LINE_WIDTH-1 : 0] wrOffDirect;
-wire [CACHE_LINE_WIDTH-1 : 0] wrOffRewrit;
-wire [TAG_WIDTH-1 : 0]        wrTagDirect;
-wire [TAG_WIDTH-1 : 0]        wrTagRewrit;
-wire                        wrVaildDirect;
-wire                        wrVaildRewrit;
-wire                        wrDirtyDirect;
-wire                        wrDirtyRewrit;
-wire [31:0]                  wrDataDirect;
-wire [31:0]                  wrDataRewrit;
-wire [3:0]             wrByteEnableDirect;
-wire [3:0]             wrByteEnableRewrit;
-
+wire[ADDR_WIDTH-1:0] miss_address;
+reg [ADDR_WIDTH-1:0] miss_address_save;
+wire[ADDR_WIDTH-1:0] miss_address_sync;
+wire [TAG_WIDTH-1 : 0] miss_addr_tag;
+wire [`INDEX_WIDTH-1 : 0] miss_addr_idx;
+wire [CACHE_LINE_WIDTH-1 : 0] miss_addr_off;
 
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writes
-    assign writes[cache_line_i] = cacheRewrite ? writesRewrit[cache_line_i] : writesDirect[cache_line_i];
+    assign writes[cache_line_i]        = cacheRewrite && writesRewrit[cache_line_i] ? writesRewrit[cache_line_i] : writesDirect[cache_line_i];
+    assign wrOffs[cache_line_i]        = cacheRewrite && writesRewrit[cache_line_i] ? wrOffRewrit : wrOffDirect;
+    assign wrTags[cache_line_i]        = cacheRewrite && writesRewrit[cache_line_i] ? wrTagRewrit : wrTagDirect;
+    assign wrVailds[cache_line_i]      = cacheRewrite && writesRewrit[cache_line_i] ? wrVaildRewrit : wrVaildDirect;
+    assign wrDirtys[cache_line_i]      = cacheRewrite && writesRewrit[cache_line_i] ? wrDirtyRewrit : wrDirtyDirect;
+    assign wrDatas[cache_line_i]       = cacheRewrite && writesRewrit[cache_line_i] ? wrDataRewrit : wrDataDirect;
+    assign wrByteEnables[cache_line_i] = cacheRewrite && writesRewrit[cache_line_i] ? wrByteEnableRewrit : wrByteEnableDirect;
   end
 endgenerate
-assign wrOff = cacheRewrite ? wrOffRewrit : wrOffDirect;
-assign wrTag = cacheRewrite ? wrTagRewrit : wrTagDirect;
-assign wrVaild = cacheRewrite ? wrVaildRewrit : wrVaildDirect;
-assign wrDirty = cacheRewrite ? wrDirtyRewrit : wrDirtyDirect;
-assign wrData = cacheRewrite ? wrDataRewrit : wrDataDirect;
-assign wrByteEnable = cacheRewrite ? wrByteEnableRewrit : wrByteEnableDirect;
+
 
 assign rdAddr   = avalon_slave_address;
 assign rd2Addr  = avalon_rdslave_address;
@@ -160,6 +168,7 @@ assign avalon_rdslave_readdata = rd2Datas[rdslave_addr_idx];
 
 wire slaveMiss;
 wire slave2Miss;
+wire slaveForceDelay;
 
 assign  slaveMiss = ! rdHits[slave_addr_idx] && (avalon_slave_read || avalon_slave_write);
 assign slave2Miss = ! rd2Hits[rdslave_addr_idx] && avalon_rdslave_read;
@@ -167,12 +176,14 @@ assign slave2Miss = ! rd2Hits[rdslave_addr_idx] && avalon_rdslave_read;
 assign slave_rd_waitrequest = slaveMiss;
 assign avalon_rdslave_waitrequest = slave2Miss;
 
+assign slaveWrForceDelay = !slaveMiss && slave_addr_idx == rdslave_addr_idx && avalon_rdslave_read;
+
 assign wrOffDirect = slave_addr_off;
 assign wrTagDirect = slave_addr_tag;
 assign wrVaildDirect = 1'b1;
 assign wrDirtyDirect = 1'b1;
 assign wrDataDirect = avalon_slave_writedata;
-assign slave_wr_waitrequest = slaveMiss;
+assign slave_wr_waitrequest = slaveMiss || slaveWrForceDelay;
 assign wrByteEnableDirect = avalon_slave_byteenable;
 
 reg [1:0] state;
@@ -187,16 +198,10 @@ assign cacheRewrite = state == `WR || state ==`RD;
 
 generate 
   for (cache_line_i = 0; cache_line_i < `NUM_CACHE_LINES; cache_line_i = cache_line_i + 1) begin : proc_writesDirect
-    assign writesDirect[cache_line_i] = avalon_slave_write && rdHits[cache_line_i] && cache_line_i == slave_addr_idx;
+    assign writesDirect[cache_line_i] = avalon_slave_write && rdHits[cache_line_i] && cache_line_i == slave_addr_idx && !slaveWrForceDelay;
   end
 endgenerate
 
-wire[ADDR_WIDTH-1:0] miss_address;
-reg [ADDR_WIDTH-1:0] miss_address_save;
-wire[ADDR_WIDTH-1:0] miss_address_sync;
-wire [TAG_WIDTH-1 : 0] miss_addr_tag;
-wire [`INDEX_WIDTH-1 : 0] miss_addr_idx;
-wire [CACHE_LINE_WIDTH-1 : 0] miss_addr_off;
 assign {miss_addr_tag, miss_addr_idx, miss_addr_off} = miss_address;
 assign miss_address_sync = slaveMiss ? avalon_slave_address : avalon_rdslave_address;
 assign miss_address = state == `IDLE ? miss_address_sync : miss_address_save;
