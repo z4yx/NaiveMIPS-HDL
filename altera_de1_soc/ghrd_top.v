@@ -210,6 +210,7 @@ wire [1:0] dummy2;
 wire fpga_reset_n, fpga_other_reset_n;
 wire uart_rxd, uart_txd;
 wire clk2x_shift;
+wire [7:0] hps2pio;
 
 
   wire  hps_fpga_reset_n;
@@ -391,7 +392,9 @@ soc_system u0 (
 	  .hps_0_uart1_out2_n                    (),                    //                .out2_n
 	  .hps_0_uart1_rxd                       (uart_txd),                       //                .rxd
 	  .hps_0_uart1_txd                       (uart_rxd),  
-	  	
+	  	                 
+	  .hps2pio_export                        (hps2pio),
+     .logger_rst_reset_n                    (~hps2pio[0]),  
 //		.clk_50_clk(CLOCK_50)
     );
 assign DRAM_CLK=clk2x_shift;

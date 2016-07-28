@@ -29,7 +29,7 @@ create_clock -name "clock_50_3" -period 20.000ns [get_ports {CLOCK3_50}]
 create_clock -name "clock_50_4" -period 20.000ns [get_ports {CLOCK4_50}]
 create_clock -name "clock_27_1" -period 37.000ns [get_ports {TD_CLK27}]
 
-create_clock -period "100.0 MHZ" -name "sdram_clk" [get_ports DRAM_CLK]
+create_clock -period "150.0 MHZ" -name "sdram_clk" [get_ports DRAM_CLK]
 
 
 # Automatically constrain PLL and other generated clocks

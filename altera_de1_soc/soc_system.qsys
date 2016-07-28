@@ -9,14 +9,6 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element address_span_extender_0
-   {
-      datum _sortIndex
-      {
-         value = "1";
-         type = "int";
-      }
-   }
    element clk_0
    {
       datum _sortIndex
@@ -89,6 +81,22 @@
          type = "String";
       }
    }
+   element pio_0
+   {
+      datum _sortIndex
+      {
+         value = "2";
+         type = "int";
+      }
+   }
+   element pio_0.s1
+   {
+      datum baseAddress
+      {
+         value = "67110144";
+         type = "String";
+      }
+   }
    element soc_0
    {
       datum _sortIndex
@@ -141,7 +149,7 @@
    {
       datum _sortIndex
       {
-         value = "2";
+         value = "1";
          type = "int";
       }
    }
@@ -186,6 +194,11 @@
  <interface name="clk_uart" internal="soc_0.clk_uart" type="clock" dir="end" />
  <interface name="debugger" internal="soc_0.debugger" type="conduit" dir="end" />
  <interface name="flash_bus" internal="soc_0.flash_bus" />
+ <interface
+   name="hps2pio"
+   internal="pio_0.external_connection"
+   type="conduit"
+   dir="end" />
  <interface name="hps_0_f2h_cold_reset_req" internal="hps_0.f2h_cold_reset_req" />
  <interface name="hps_0_f2h_debug_reset_req" internal="hps_0.f2h_debug_reset_req" />
  <interface name="hps_0_f2h_stm_hw_events" internal="hps_0.f2h_stm_hw_events" />
@@ -201,8 +214,12 @@
    internal="hps_0.h2f_warm_reset_handshake" />
  <interface name="hps_0_hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
  <interface name="hps_0_uart1" internal="hps_0.uart1" type="conduit" dir="end" />
- <interface name="hps_master" internal="address_span_extender_0.expanded_master" />
  <interface name="led" internal="soc_0.led" type="conduit" dir="end" />
+ <interface
+   name="logger_rst"
+   internal="soc_0.logger_rst_n"
+   type="reset"
+   dir="end" />
  <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
  <interface name="rst_cpu" internal="soc_0.rst_cpu" type="reset" dir="end" />
@@ -212,20 +229,6 @@
  <interface name="sw" internal="soc_0.sw" type="conduit" dir="end" />
  <interface name="uart" internal="soc_0.uart" type="conduit" dir="end" />
  <interface name="usb_bus" internal="soc_0.usb_bus" type="conduit" dir="end" />
- <module
-   name="address_span_extender_0"
-   kind="altera_address_span_extender"
-   version="15.1"
-   enabled="0">
-  <parameter name="BURSTCOUNT_WIDTH" value="3" />
-  <parameter name="DATA_WIDTH" value="32" />
-  <parameter name="ENABLE_SLAVE_PORT" value="false" />
-  <parameter name="MASTER_ADDRESS_DEF" value="0" />
-  <parameter name="MASTER_ADDRESS_WIDTH" value="30" />
-  <parameter name="MAX_PENDING_READS" value="1" />
-  <parameter name="SLAVE_ADDRESS_WIDTH" value="26" />
-  <parameter name="SUB_WINDOW_COUNT" value="1" />
- </module>
  <module name="clk_0" kind="clock_source" version="15.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
@@ -236,7 +239,7 @@
    name="data_pattern_generator_0"
    kind="altera_avalon_data_pattern_generator"
    version="15.1"
-   enabled="1">
+   enabled="0">
   <parameter name="AUTO_CSR_CLK_CLOCK_DOMAIN" value="1" />
   <parameter name="AUTO_CSR_CLK_CLOCK_RATE" value="50000000" />
   <parameter name="AUTO_CSR_CLK_RESET_DOMAIN" value="1" />
@@ -781,7 +784,7 @@
    name="master_0"
    kind="altera_jtag_avalon_master"
    version="15.1"
-   enabled="1">
+   enabled="0">
   <parameter name="AUTO_DEVICE" value="5CSEMA5F31C6" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6" />
@@ -832,6 +835,20 @@
   <parameter name="STRIDE_ENABLE" value="0" />
   <parameter name="TRANSFER_TYPE" value="Aligned Accesses" />
   <parameter name="USE_FIX_ADDRESS_WIDTH" value="0" />
+ </module>
+ <module name="pio_0" kind="altera_avalon_pio" version="15.1" enabled="1">
+  <parameter name="bitClearingEdgeCapReg" value="false" />
+  <parameter name="bitModifyingOutReg" value="false" />
+  <parameter name="captureEdge" value="false" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="direction" value="Output" />
+  <parameter name="edgeType" value="RISING" />
+  <parameter name="generateIRQ" value="false" />
+  <parameter name="irqType" value="LEVEL" />
+  <parameter name="resetValue" value="0" />
+  <parameter name="simDoTestBenchWiring" value="false" />
+  <parameter name="simDrivenValue" value="0" />
+  <parameter name="width" value="8" />
  </module>
  <module name="soc_0" kind="naive_mips_soc" version="1.0" enabled="1">
   <parameter name="AUTO_CLK_CPU_CLOCK_DOMAIN" value="2" />
@@ -937,16 +954,16 @@
    kind="avalon"
    version="15.1"
    start="hps_0.h2f_axi_master"
-   end="soc_0.sdr_ctl_s0">
+   end="pio_0.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="baseAddress" value="0x04000500" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
    kind="avalon"
    version="15.1"
    start="hps_0.h2f_axi_master"
-   end="address_span_extender_0.windowed_slave">
+   end="soc_0.sdr_ctl_s0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
@@ -972,16 +989,12 @@
  <connection
    kind="avalon_streaming"
    version="15.1"
-   start="data_pattern_generator_0.pattern_out"
+   start="soc_0.trace_logger_0_trace_out"
    end="msgdma_0.st_sink" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="sysid_qsys.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="source_0.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="master_0.clk" />
- <connection
-   kind="clock"
-   version="15.1"
-   start="clk_0.clk"
-   end="address_span_extender_0.clock" />
+ <connection kind="clock" version="15.1" start="clk_0.clk" end="pio_0.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="msgdma_0.clock" />
  <connection
    kind="clock"
@@ -1033,17 +1046,13 @@
    kind="reset"
    version="15.1"
    start="clk_0.clk_reset"
-   end="address_span_extender_0.reset" />
- <connection
-   kind="reset"
-   version="15.1"
-   start="clk_0.clk_reset"
    end="source_0.reset" />
  <connection
    kind="reset"
    version="15.1"
    start="clk_0.clk_reset"
    end="data_pattern_generator_0.reset" />
+ <connection kind="reset" version="15.1" start="clk_0.clk_reset" end="pio_0.reset" />
  <connection
    kind="reset"
    version="15.1"

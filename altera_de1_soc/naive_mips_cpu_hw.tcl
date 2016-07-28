@@ -212,7 +212,7 @@ add_interface_port debugger dbg_rxd dbg_rxd Input 1
 # 
 add_interface trace conduit end
 set_interface_property trace associatedClock cpu_clock
-set_interface_property trace associatedReset global_reset
+set_interface_property trace associatedReset ""
 set_interface_property trace ENABLED true
 set_interface_property trace EXPORT_OF ""
 set_interface_property trace PORT_NAME_MAP ""

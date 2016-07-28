@@ -100,7 +100,7 @@ always @(posedge cpu_clock_clk or negedge reset_n) begin
         trace_data[63:32] <= inst_master_write ? inst_master_writedata : inst_master_readdata;
 
         trace_en[1] <= (data_master_read|data_master_write) & ~data_master_waitrequest;
-        trace_data[95:64] <= {1'b0, data_master_write, data_master_address[29:0]};
+        trace_data[95:64] <= {1'b1, data_master_write, data_master_address[29:0]};
         trace_data[127:96] <= data_master_write ? data_master_writedata : data_master_readdata;
     end
 end

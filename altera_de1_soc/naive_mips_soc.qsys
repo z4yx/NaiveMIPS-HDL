@@ -66,6 +66,11 @@
          value = "11";
          type = "int";
       }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
+      }
    }
    element mm_clock_crossing_bridge_0
    {
@@ -73,6 +78,11 @@
       {
          value = "12";
          type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
       }
    }
    element naive_mips_cpu_0
@@ -168,6 +178,14 @@
          type = "String";
       }
    }
+   element reset_bridge_0
+   {
+      datum _sortIndex
+      {
+         value = "14";
+         type = "int";
+      }
+   }
    element sdram
    {
       datum _sortIndex
@@ -182,6 +200,11 @@
       {
          value = "8";
          type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
       }
    }
    element sl811_ctl.uas
@@ -209,7 +232,7 @@
       }
       datum sopceditor_expanded
       {
-         value = "1";
+         value = "0";
          type = "boolean";
       }
    }
@@ -219,6 +242,11 @@
       {
          value = "7";
          type = "int";
+      }
+      datum sopceditor_expanded
+      {
+         value = "0";
+         type = "boolean";
       }
    }
    element uart_0.s1
@@ -266,6 +294,11 @@
    name="led"
    internal="pout.external_connection"
    type="conduit"
+   dir="end" />
+ <interface
+   name="logger_rst_n"
+   internal="reset_bridge_0.in_reset"
+   type="reset"
    dir="end" />
  <interface name="rst_cpu" internal="clk_0.clk_in_reset" type="reset" dir="end" />
  <interface
@@ -321,7 +354,7 @@
    version="15.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="true" />
-  <parameter name="autoInitializationFileName">$${FILENAME}_bootrom</parameter>
+  <parameter name="autoInitializationFileName">naive_mips_soc_bootrom</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="32" />
@@ -351,7 +384,7 @@
   <parameter name="resetSynchronousEdges" value="DEASSERT" />
  </module>
  <module name="clk_high" kind="clock_source" version="15.1" enabled="1">
-  <parameter name="clockFrequency" value="100000000" />
+  <parameter name="clockFrequency" value="150000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="DEASSERT" />
@@ -370,7 +403,7 @@
    kind="altera_clock_bridge"
    version="15.1"
    enabled="1">
-  <parameter name="DERIVED_CLOCK_RATE" value="100000000" />
+  <parameter name="DERIVED_CLOCK_RATE" value="150000000" />
   <parameter name="EXPLICIT_CLOCK_RATE" value="0" />
   <parameter name="NUM_CLOCK_OUTPUTS" value="1" />
  </module>
@@ -382,7 +415,7 @@
   <parameter name="ADDRESS_UNITS" value="SYMBOLS" />
   <parameter name="ADDRESS_WIDTH" value="10" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
-  <parameter name="AUTO_M0_CLK_CLOCK_RATE" value="100000000" />
+  <parameter name="AUTO_M0_CLK_CLOCK_RATE" value="150000000" />
   <parameter name="AUTO_S0_CLK_CLOCK_RATE" value="0" />
   <parameter name="COMMAND_FIFO_DEPTH" value="4" />
   <parameter name="DATA_WIDTH" value="32" />
@@ -430,6 +463,17 @@
   <parameter name="width" value="32" />
  </module>
  <module
+   name="reset_bridge_0"
+   kind="altera_reset_bridge"
+   version="15.1"
+   enabled="1">
+  <parameter name="ACTIVE_LOW_RESET" value="1" />
+  <parameter name="AUTO_CLK_CLOCK_RATE" value="30000000" />
+  <parameter name="NUM_RESET_OUTPUTS" value="1" />
+  <parameter name="SYNCHRONOUS_EDGES" value="deassert" />
+  <parameter name="USE_RESET_REQUEST" value="0" />
+ </module>
+ <module
    name="sdram"
    kind="altera_avalon_new_sdram_controller"
    version="15.1"
@@ -441,9 +485,9 @@
   <parameter name="TRP" value="15.0" />
   <parameter name="TWR" value="14.0" />
   <parameter name="casLatency" value="3" />
-  <parameter name="clockRate" value="100000000" />
+  <parameter name="clockRate" value="150000000" />
   <parameter name="columnWidth" value="10" />
-  <parameter name="componentName" value="$${FILENAME}_sdram" />
+  <parameter name="componentName">naive_mips_soc_sdram</parameter>
   <parameter name="dataWidth" value="16" />
   <parameter name="generateSimulationModel" value="true" />
   <parameter name="initNOPDelay" value="0.0" />
@@ -621,6 +665,11 @@
    start="clk_0.clk"
    end="tristate_conduit_sl811.clk" />
  <connection kind="clock" version="15.1" start="clk_high.clk" end="sdram.clk" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="reset_bridge_0.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="bootrom.clk1" />
  <connection
    kind="clock"
@@ -714,6 +763,11 @@
    version="15.1"
    start="clk_0.clk_reset"
    end="bootrom.reset1" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="reset_bridge_0.out_reset"
+   end="trace_logger_0.reset" />
  <connection
    kind="tristate_conduit"
    version="15.1"
