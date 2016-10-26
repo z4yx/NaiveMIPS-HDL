@@ -24,16 +24,18 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
-            rs232_txd,
             vga_pixel,
             vga_hsync,
             vga_vsync,
+            cpld_wrn,
+            cpld_rdn,
 //input
             rst_in_n,
             clk_in,
             clk_uart_in,
             rxd,
-            rs232_rxd);
+            cpld_tsre,
+            cpld_tready);
 
 input wire rst_in_n;
 input wire clk_in;
@@ -96,12 +98,24 @@ output wire flash_we_n;
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
 
-input wire rs232_rxd;
-output wire rs232_txd;
+// input wire rs232_rxd;
+// output wire rs232_txd;
 
 output wire[8:0] vga_pixel;
 output wire vga_hsync;
 output wire vga_vsync;
+
+output wire cpld_wrn;
+output wire cpld_rdn;
+input wire cpld_tsre;
+input wire cpld_tready;
+
+wire[7:0] cpld_data_o;
+wire [31:0]cpld_dbus_data_o;
+wire [31:0]cpld_dbus_data_i;
+wire [3:0]cpld_dbus_address;
+wire cpld_dbus_read;
+wire cpld_dbus_write;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -180,7 +194,8 @@ assign base_ram_ce_n = ram_address[22];
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
-assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : {32{1'hz}};
+assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : 
+                            ( ~cpld_wrn ? {24'b0, cpld_data_o} : {32{1'hz}});
 
 assign ext_ram_ce_n = ~ram_address[22];
 assign ext_ram_oe_n = ram_rd_n;
@@ -190,8 +205,8 @@ assign ext_ram_data  = (~ext_ram_ce_n && ~ext_ram_we_n) ? ram_data_o : {32{1'hz}
 
 assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
 
-assign debugger_uart_rxd = rs232_rxd;
-assign rs232_txd = debugger_uart_txd;
+assign debugger_uart_rxd = 1'b1;//rs232_rxd;
+// assign rs232_txd = debugger_uart_txd;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -290,6 +305,10 @@ dbus dbus0(/*autoinst*/
          .gpu_data_i(gpu_dbus_data_i),
          .gpu_rd(gpu_dbus_read),
          .gpu_wr(gpu_dbus_write),
+         .cpld_uart_rd(cpld_dbus_read),
+         .cpld_uart_wr(cpld_dbus_write),
+         .cpld_uart_data_i(cpld_dbus_data_i),
+         .cpld_uart_address(cpld_dbus_address),
          .ram_address(dbus_ram_address[23:0]),
          .ram_data_i(dbus_ram_wrdata[31:0]),
          .ram_data_enable(dbus_ram_byteenable[3:0]),
@@ -310,6 +329,7 @@ dbus dbus0(/*autoinst*/
          .gpio_data_o(gpio_dbus_data_o),
          .ticker_data_o(ticker_dbus_data_o),
          .gpu_data_o(gpu_dbus_data_o),
+         .cpld_uart_data_o(cpld_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
          .ram_stall(dbus_ram_stall),
          .flash_stall (flash_dbus_stall),
@@ -381,6 +401,22 @@ gpu gpu_inst(
         .vsync    (vga_vsync),
         .hsync    (vga_hsync),
         .pxlData  (vga_pixel)
+);
+
+uart_cpld uart_cpld_inst(/*autoinst*/
+        .clk_bus    (clk),
+        .rst_n      (rst_n),
+        .bus_read   (cpld_dbus_read),
+        .bus_write  (cpld_dbus_write),
+        .cpld_wrn   (cpld_wrn),
+        .cpld_rdn   (cpld_rdn),
+        .cpld_tsre  (cpld_tsre),
+        .cpld_tready(cpld_tready),
+        .bus_data_o (cpld_dbus_data_o),
+        .cpld_data_o (cpld_data_o),
+        .bus_data_i (cpld_dbus_data_i),
+        .cpld_data_i (base_ram_data[7:0]),
+        .bus_address (cpld_dbus_address)
 );
 
 assign irq_line = {2'b0,uart_irq,2'b0};

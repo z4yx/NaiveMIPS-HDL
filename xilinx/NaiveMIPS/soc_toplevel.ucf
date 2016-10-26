@@ -5,8 +5,12 @@ NET "clk_uart_in" LOC = U25;
 NET "rst_in_n" LOC = T1;
 NET "txd" LOC = N23;
 NET "rxd" LOC = P26;
-NET "rs232_txd" LOC = P24;
-NET "rs232_rxd" LOC = R26;
+# NET "rs232_txd" LOC = P24;
+# NET "rs232_rxd" LOC = R26;
+NET "cpld_tsre" LOC = T26; //InterConn5;
+NET "cpld_tready" LOC = P24; //InterConn0;
+NET "cpld_wrn" LOC = T24; //InterConn6;
+NET "cpld_rdn" LOC = R25; //InterConn3;
 
 #VGA
 NET "vga_pixel[8]" LOC = F24;
