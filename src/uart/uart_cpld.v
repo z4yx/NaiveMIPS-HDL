@@ -29,7 +29,7 @@ input wire bus_read;
 input wire bus_write;
 
 input wire[7:0] cpld_data_i;
-output reg[7:0] cpld_data_o;
+output wire[7:0] cpld_data_o;
 output wire cpld_wrn;
 output wire cpld_rdn;
 
