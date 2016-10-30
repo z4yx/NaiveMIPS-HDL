@@ -1,3 +1,4 @@
+`default_nettype none
 module uart_cpld(/*autoport*/
 //output
            bus_data_o,
@@ -29,24 +30,29 @@ input wire bus_read;
 input wire bus_write;
 
 input wire[7:0] cpld_data_i;
-output wire[7:0] cpld_data_o;
-output wire cpld_wrn;
-output wire cpld_rdn;
+output reg[7:0] cpld_data_o;
+output reg cpld_wrn;
+output reg cpld_rdn;
 
 input wire cpld_tsre;
 input wire cpld_tready;
 
 reg [1:0] cpld_tready_dly, cpld_tsre_dly;
-
-assign cpld_wrn = ~(bus_write && bus_address==`REG_UART_SEND);
-assign cpld_rdn = ~(bus_read && bus_address==`REG_UART_RECV);
-assign cpld_data_o = bus_data_i[7:0];
+reg [7:0] cpld_data_i_dly [0:1];
 
 always @(posedge clk_bus) begin
     cpld_tready_dly[1] <= cpld_tready_dly[0];
     cpld_tready_dly[0] <= cpld_tready;
     cpld_tsre_dly[1] <= cpld_tsre_dly[0];
     cpld_tsre_dly[0] <= cpld_tsre;
+	 cpld_data_i_dly[1] <= cpld_data_i_dly[0];
+	 cpld_data_i_dly[0] <= cpld_data_i;
+end
+
+always @(negedge clk_bus) begin
+    cpld_wrn <= ~(bus_write && bus_address==`REG_UART_SEND);
+    cpld_rdn <= ~(bus_read && bus_address==`REG_UART_RECV);
+	 cpld_data_o <= bus_data_i[7:0];
 end
 
 always @(*) begin
