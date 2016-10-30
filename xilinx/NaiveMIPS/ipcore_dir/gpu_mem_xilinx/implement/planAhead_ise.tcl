@@ -45,7 +45,7 @@
 # PART OF THIS FILE AT ALL TIMES.
 
 
-set device xc6slx100fgg676-2
+set device xc7a100tfgg676-2
 set projName gpu_mem_xilinx
 set design gpu_mem_xilinx
 set projDir [file dirname [info script]]

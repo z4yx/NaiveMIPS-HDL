@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 14.7
-# Date: Sat Jan 09 14:45:09 2016
+# Date: Sun Oct 30 14:52:10 2016
 #
 ##############################################################
 #
@@ -22,8 +22,8 @@ SET asysymbol = true
 SET busformat = BusFormatAngleBracketNotRipped
 SET createndf = false
 SET designentry = Verilog
-SET device = xc6slx100
-SET devicefamily = spartan6
+SET device = xc7a100t
+SET devicefamily = artix7
 SET flowvendor = Other
 SET formalverification = false
 SET foundationsym = false
@@ -148,24 +148,24 @@ CSET jitter_options=UI
 CSET jitter_sel=No_Jitter
 CSET locked_port=LOCKED
 CSET mmcm_bandwidth=OPTIMIZED
-CSET mmcm_clkfbout_mult_f=4.000
+CSET mmcm_clkfbout_mult_f=64.000
 CSET mmcm_clkfbout_phase=0.000
 CSET mmcm_clkfbout_use_fine_ps=false
-CSET mmcm_clkin1_period=10.000
+CSET mmcm_clkin1_period=20.000
 CSET mmcm_clkin2_period=10.000
-CSET mmcm_clkout0_divide_f=4.000
+CSET mmcm_clkout0_divide_f=80.000
 CSET mmcm_clkout0_duty_cycle=0.500
 CSET mmcm_clkout0_phase=0.000
 CSET mmcm_clkout0_use_fine_ps=false
-CSET mmcm_clkout1_divide=1
+CSET mmcm_clkout1_divide=20
 CSET mmcm_clkout1_duty_cycle=0.500
 CSET mmcm_clkout1_phase=0.000
 CSET mmcm_clkout1_use_fine_ps=false
-CSET mmcm_clkout2_divide=1
+CSET mmcm_clkout2_divide=58
 CSET mmcm_clkout2_duty_cycle=0.500
 CSET mmcm_clkout2_phase=0.000
 CSET mmcm_clkout2_use_fine_ps=false
-CSET mmcm_clkout3_divide=1
+CSET mmcm_clkout3_divide=64
 CSET mmcm_clkout3_duty_cycle=0.500
 CSET mmcm_clkout3_phase=0.000
 CSET mmcm_clkout3_use_fine_ps=false
@@ -184,7 +184,7 @@ CSET mmcm_clkout6_phase=0.000
 CSET mmcm_clkout6_use_fine_ps=false
 CSET mmcm_clock_hold=false
 CSET mmcm_compensation=ZHOLD
-CSET mmcm_divclk_divide=1
+CSET mmcm_divclk_divide=5
 CSET mmcm_notes=None
 CSET mmcm_ref_jitter1=0.010
 CSET mmcm_ref_jitter2=0.010
@@ -266,4 +266,4 @@ CSET use_status=false
 MISC pkg_timestamp=2012-05-10T12:44:55Z
 # END Extra information
 GENERATE
-# CRC: 7307ed54
+# CRC: cfdb1b3c

@@ -45,7 +45,7 @@
 # PART OF THIS FILE AT ALL TIMES.
 
 
-set device xc6slx100fgg676-2
+set device xc7a100tfgg676-2
 set projName blk_mem_gen_v7_3
 set design blk_mem_gen_v7_3
 set projDir [file dirname [info script]]

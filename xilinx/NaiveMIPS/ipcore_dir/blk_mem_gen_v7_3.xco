@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 14.7
-# Date: Sat Jan 09 10:37:18 2016
+# Date: Sun Oct 30 12:42:04 2016
 #
 ##############################################################
 #
@@ -22,8 +22,8 @@ SET asysymbol = true
 SET busformat = BusFormatAngleBracketNotRipped
 SET createndf = false
 SET designentry = Verilog
-SET device = xc6slx100
-SET devicefamily = spartan6
+SET device = xc7a100t
+SET devicefamily = artix7
 SET flowvendor = Other
 SET formalverification = false
 SET foundationsym = false
@@ -46,7 +46,7 @@ CSET axi_id_width=4
 CSET axi_slave_type=Memory_Slave
 CSET axi_type=AXI4_Full
 CSET byte_size=9
-CSET coe_file=..\bootrom.coe
+CSET coe_file=E:\Projects\NaiveMIPS-HDL\xilinx\NaiveMIPS\bootrom.coe
 CSET collision_warnings=ALL
 CSET component_name=blk_mem_gen_v7_3
 CSET disable_collision_warnings=false
@@ -105,4 +105,4 @@ CSET write_width_b=32
 MISC pkg_timestamp=2012-11-19T16:22:25Z
 # END Extra information
 GENERATE
-# CRC: 9c373e5d
+# CRC: e032aceb

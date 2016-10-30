@@ -1,7 +1,7 @@
 ##############################################################
 #
 # Xilinx Core Generator version 14.7
-# Date: Sat Jan 09 13:43:00 2016
+# Date: Sun Oct 30 13:40:01 2016
 #
 ##############################################################
 #
@@ -22,8 +22,8 @@ SET asysymbol = true
 SET busformat = BusFormatAngleBracketNotRipped
 SET createndf = false
 SET designentry = Verilog
-SET device = xc6slx100
-SET devicefamily = spartan6
+SET device = xc7a100t
+SET devicefamily = artix7
 SET flowvendor = Other
 SET formalverification = false
 SET foundationsym = false
@@ -85,9 +85,9 @@ CSET register_portb_output_of_softecc=false
 CSET remaining_memory_locations=0
 CSET reset_memory_latch_a=false
 CSET reset_memory_latch_b=false
-CSET reset_priority_a=SR
+CSET reset_priority_a=CE
 CSET reset_priority_b=SR
-CSET reset_type=ASYNC
+CSET reset_type=SYNC
 CSET softecc=false
 CSET use_axi_id=false
 CSET use_bram_block=Stand_Alone
@@ -105,4 +105,4 @@ CSET write_width_b=32
 MISC pkg_timestamp=2012-11-19T16:22:25Z
 # END Extra information
 GENERATE
-# CRC: d1c55a5e
+# CRC: 49153ca6

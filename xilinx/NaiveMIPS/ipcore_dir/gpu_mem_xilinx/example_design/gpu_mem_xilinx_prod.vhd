@@ -2,6 +2,7 @@
  
  
 
+ 
 
 
 
@@ -74,8 +75,8 @@
 -- Configured Core Parameter Values:
 -- (Refer to the SIM Parameters table in the datasheet for more information on
 -- the these parameters.)
---    C_FAMILY                    :  spartan6 
---    C_XDEVICEFAMILY             :  spartan6 
+--    C_FAMILY                    :  artix7 
+--    C_XDEVICEFAMILY             :  artix7 
 --    C_INTERFACE_TYPE            :  0 
 --    C_ENABLE_32BIT_ADDRESS      :  0 
 --    C_AXI_TYPE                  :  1 
@@ -89,9 +90,9 @@
 --    C_INIT_FILE_NAME            :  no_coe_file_loaded 
 --    C_USE_DEFAULT_DATA          :  0 
 --    C_DEFAULT_DATA              :  0 
---    C_RST_TYPE                  :  ASYNC 
+--    C_RST_TYPE                  :  SYNC 
 --    C_HAS_RSTA                  :  1 
---    C_RST_PRIORITY_A            :  SR 
+--    C_RST_PRIORITY_A            :  CE 
 --    C_RSTRAM_A                  :  0 
 --    C_INITA_VAL                 :  0 
 --    C_HAS_ENA                   :  0 

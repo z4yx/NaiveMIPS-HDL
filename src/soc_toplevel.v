@@ -347,7 +347,7 @@ flash_top flash0(/*autoinst*/
          .flash_byte_n(flash_byte_n),
          .flash_oe_n(flash_oe_n),
          .flash_rp_n(flash_rp_n),
-         .flash_ce(flash_ce[2:0]),
+         .flash_ce(flash_ce),
          .flash_vpen(flash_vpen),
          .bus_data_o(flash_dbus_data_o[31:0]),
          .clk_bus(clk),

@@ -4,7 +4,7 @@ NET "clk_in" TNM_NET = clk_in;
 TIMESPEC TS_clk_in = PERIOD "clk_in" 20 ns HIGH 50%;
 NET "clk_uart_in" TNM_NET = clk_uart_in;
 TIMESPEC TS_clk_uart_in = PERIOD "clk_uart_in" 11.0592 MHz HIGH 50%;
-PIN "pll1/clknetwork/pll_base_inst.CLKOUT1" TNM = clk_ram;
+#PIN "pll1/clknetwork/mmcm_adv_inst.CLKOUT1" TNM = clk_ram;
 #Created by Constraints Editor (xc6slx100-fgg676-2) - 2015/11/26
 INST "base_ram_addr<0>" TNM = ram_addr_ctl;
 INST "base_ram_addr<1>" TNM = ram_addr_ctl;

@@ -215,10 +215,6 @@ utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path blk_mem_gen_
 utilities_xmdf::xmdfSetData $instance FileSet $fcount type ngc
 incr fcount
 
-utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path blk_mem_gen_v7_3.sym
-utilities_xmdf::xmdfSetData $instance FileSet $fcount type symbol
-incr fcount
-
 utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path blk_mem_gen_v7_3.v
 utilities_xmdf::xmdfSetData $instance FileSet $fcount type verilog
 incr fcount
