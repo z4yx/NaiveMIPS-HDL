@@ -9,10 +9,12 @@ module soc_toplevel(/*autoport*/
             gpio1,
 //output
             base_ram_addr,
+            base_ram_be,
             base_ram_ce_n,
             base_ram_oe_n,
             base_ram_we_n,
             ext_ram_addr,
+            ext_ram_be,
             ext_ram_ce_n,
             ext_ram_oe_n,
             ext_ram_we_n,
@@ -28,6 +30,8 @@ module soc_toplevel(/*autoport*/
             vga_pixel,
             vga_hsync,
             vga_vsync,
+            vga_clk,
+            vga_de,
 //input
             rst_in_n,
             clk_in,
@@ -65,12 +69,14 @@ clk_ctrl clk_ctrl1(/*autoinst*/
 
 inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
+output wire[3:0] base_ram_be;
 output wire base_ram_ce_n;
 output wire base_ram_oe_n;
 output wire base_ram_we_n;
 
 inout wire[31:0] ext_ram_data;
 output wire[19:0] ext_ram_addr;
+output wire[3:0] ext_ram_be;
 output wire ext_ram_ce_n;
 output wire ext_ram_oe_n;
 output wire ext_ram_we_n;
@@ -89,7 +95,7 @@ output wire flash_rp_n;
 output wire flash_vpen;
 output wire flash_oe_n;
 inout wire [15:0]flash_data;
-output wire [2:0]flash_ce;
+output wire flash_ce;
 output wire flash_byte_n;
 output wire flash_we_n;
 
@@ -99,9 +105,11 @@ inout wire[31:0] gpio1;
 input wire rs232_rxd;
 output wire rs232_txd;
 
-output wire[8:0] vga_pixel;
+output wire[7:0] vga_pixel;
 output wire vga_hsync;
 output wire vga_vsync;
+output wire vga_clk;
+output wire vga_de;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -181,17 +189,21 @@ assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
 assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : {32{1'hz}};
+assign base_ram_be = 4'b0;
 
 assign ext_ram_ce_n = ~ram_address[22];
 assign ext_ram_oe_n = ram_rd_n;
 assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
 assign ext_ram_data  = (~ext_ram_ce_n && ~ext_ram_we_n) ? ram_data_o : {32{1'hz}};
+assign ext_ram_be = 4'b0;
 
 assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
 
 assign debugger_uart_rxd = rs232_rxd;
 assign rs232_txd = debugger_uart_txd;
+
+assign vga_clk = clk_in;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -377,7 +389,7 @@ gpu gpu_inst(
         .bus_data_o(gpu_dbus_data_o),
         .bus_address(gpu_dbus_address),
         .bus_data_i(gpu_dbus_data_i),
-        .de       (),
+        .de       (vga_de),
         .vsync    (vga_vsync),
         .hsync    (vga_hsync),
         .pxlData  (vga_pixel)
