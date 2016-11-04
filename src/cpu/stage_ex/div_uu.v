@@ -51,6 +51,7 @@
 //
 //
 //
+`default_nettype wire
 
 //synopsys translate_off
 `timescale 1ns / 10ps

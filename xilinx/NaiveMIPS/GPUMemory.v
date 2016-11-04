@@ -1,3 +1,4 @@
+`default_nettype wire
 module GPUMemory(/*autoport*/
 //output
            q_a,
