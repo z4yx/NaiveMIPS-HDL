@@ -5,8 +5,8 @@ set_property IOSTANDARD LVCMOS33 [get_ports clk_uart_in]
 set_property PACKAGE_PIN C18 [get_ports clk_uart_in]
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {clk_uart_in_IBUF}]
 
-set_property IOSTANDARD LVCMOS33 [get_ports rst_in_n]
-set_property PACKAGE_PIN F22 [get_ports rst_in_n] ;#BTN_IN5
+set_property IOSTANDARD LVCMOS33 [get_ports rst_in]
+set_property PACKAGE_PIN F22 [get_ports rst_in] ;#BTN_IN5
 set_property IOSTANDARD LVCMOS33 [get_ports txd]
 set_property PACKAGE_PIN R18 [get_ports txd] ;#GPIO0
 set_property IOSTANDARD LVCMOS33 [get_ports rxd]

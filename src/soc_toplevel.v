@@ -33,13 +33,13 @@ module soc_toplevel(/*autoport*/
             vga_clk,
             vga_de,
 //input
-            rst_in_n,
+            rst_in,
             clk_in,
             clk_uart_in,
             rxd,
             rs232_rxd);
 
-input wire rst_in_n;
+input wire rst_in;
 input wire clk_in;
 
 wire clk2x,clk,locked,rst_n;
@@ -54,7 +54,7 @@ assign clk_uart = clk_uart_pll;
 `endif
 
 sys_pll pll1(
-    .areset(!rst_in_n),
+    .areset(rst_in),
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
