@@ -1,5 +1,8 @@
 `timescale 1ns/1ns
 `default_nettype none
+
+// A testbench used for test cpu working with SDRAM
+
 module test_cpu();
 
 parameter IBUS_WAIT_CYCLE = 4;
@@ -78,18 +81,18 @@ naive_mips mips(/*autoinst*/
 integer wait_cycle;
 initial begin
     ibus_waitrequest = 1;
-    while(1) begin 
+    while(1) begin
         @(posedge clk);
         ibus_waitrequest = 1;
         @(negedge clk);
-        if(ibus_read & rst_n) begin 
+        if(ibus_read & rst_n) begin
             wait_cycle = 0;
             @(negedge clk);
             ibus_rddata_tmp = ibus_rddata;
-            while(wait_cycle < IBUS_WAIT_CYCLE && rst_n)begin 
+            while(wait_cycle < IBUS_WAIT_CYCLE && rst_n)begin
                 @(posedge clk);
                 @(negedge clk);
-                if(~ibus_read)begin 
+                if(~ibus_read)begin
                     $display("read transaction prematurely ended");
                     $stop;
                 end
@@ -198,6 +201,8 @@ initial begin
     unit_test("../testcase/inst_unalign");
     unit_test("../testcase/inst_div");
     unit_test("../testcase/inst_alu");
+    unit_test("../testcase/inst_logic");
+    unit_test("../testcase/inst_shift");
     unit_test("../testcase/inst_move");
     unit_test("../testcase/inst_jump");
     unit_test("../testcase/inst_branch");
