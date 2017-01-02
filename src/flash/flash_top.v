@@ -49,10 +49,10 @@ parallel_ifce #(.RW_BUS_CYCLE(2)) f_ifce(
   .bus_write  (bus_write),
   .bus_stall  (bus_stall),
   .dev_address({flash_address,2'bzz}),
-  .dev_data   ({16{1'bz},flash_data}),
+  .dev_data   ({{16{1'bz}},flash_data}),
   .dev_we_n   (flash_we_n),
   .dev_oe_n   (flash_oe_n),
-  .dev_ce_n   (),
+  .dev_ce_n   ()
 );
 
 assign flash_rp_n = rst_n;
