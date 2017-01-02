@@ -16,6 +16,24 @@ set_property PACKAGE_PIN M20 [get_ports rs232_txd] ;#GPIO2
 set_property IOSTANDARD LVCMOS33 [get_ports rs232_rxd]
 set_property PACKAGE_PIN M21 [get_ports rs232_rxd] ;#GPIO3
 
+#USB
+set_property -dict {PACKAGE_PIN K3 IOSTANDARD LVCMOS33} [get_ports sl811_a0]
+set_property -dict {PACKAGE_PIN M1 IOSTANDARD LVCMOS33} [get_ports sl811_we_n]
+set_property -dict {PACKAGE_PIN J3 IOSTANDARD LVCMOS33} [get_ports sl811_rd_n]
+set_property -dict {PACKAGE_PIN K1 IOSTANDARD LVCMOS33} [get_ports sl811_cs_n]
+set_property -dict {PACKAGE_PIN M2 IOSTANDARD LVCMOS33} [get_ports sl811_rst_n]
+set_property -dict {PACKAGE_PIN J4 IOSTANDARD LVCMOS33} [get_ports sl811_drq]
+set_property -dict {PACKAGE_PIN H3 IOSTANDARD LVCMOS33} [get_ports sl811_dack]
+set_property -dict {PACKAGE_PIN M4 IOSTANDARD LVCMOS33} [get_ports sl811_int]
+set_property -dict {PACKAGE_PIN L8 IOSTANDARD LVCMOS33} [get_ports {sl811_data[0]}]
+set_property -dict {PACKAGE_PIN M6 IOSTANDARD LVCMOS33} [get_ports {sl811_data[1]}]
+set_property -dict {PACKAGE_PIN L5 IOSTANDARD LVCMOS33} [get_ports {sl811_data[2]}]
+set_property -dict {PACKAGE_PIN L7 IOSTANDARD LVCMOS33} [get_ports {sl811_data[3]}]
+set_property -dict {PACKAGE_PIN L4 IOSTANDARD LVCMOS33} [get_ports {sl811_data[4]}]
+set_property -dict {PACKAGE_PIN L3 IOSTANDARD LVCMOS33} [get_ports {sl811_data[5]}]
+set_property -dict {PACKAGE_PIN L2 IOSTANDARD LVCMOS33} [get_ports {sl811_data[6]}]
+set_property -dict {PACKAGE_PIN R7 IOSTANDARD LVCMOS33} [get_ports {sl811_data[7]}]
+
 #VGA
 set_property IOSTANDARD LVCMOS33 [get_ports vga_clk]
 set_property PACKAGE_PIN J21 [get_ports vga_clk]
