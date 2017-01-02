@@ -17,6 +17,7 @@ from tqdm import tqdm, trange
 SERIAL_DELAY = 0.00001
 SERIAL_DEVICE = ""
 FLASH_BASE = 0xbe000000
+USB_BASE = 0xbfd00200
 FLASH_BLKSIZE = 128*1024
 FLASH_SIZE = 64*FLASH_BLKSIZE
 
@@ -229,6 +230,11 @@ def write_flash(f):
     time.sleep(0.01)
     print "Done"
 
+def usb_test():
+    write_ram(USB_BASE, "\x0e\x00\x00\x00")
+    buf = read_ram(USB_BASE+4, 4)
+    print "Rev: %s" % binascii.hexlify(buf[0])
+
 def flash_test():
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
     buf = read_ram(FLASH_BASE, 4)
@@ -431,6 +437,8 @@ if __name__ == "__main__":
             ram_test()
         elif tests == 'flash':
             flash_test()
+        elif tests == 'usb':
+            usb_test()
         else:
             print "Unknown test: '%s'" % tests
             sys.exit(1)
