@@ -5,6 +5,7 @@ module usb_sl811 (/*autoport*/
 //output
       bus_data_o,
       bus_stall,
+      bus_irq,
       sl811_a0,
       sl811_we_n,
       sl811_rd_n,
@@ -30,6 +31,7 @@ output wire[31:0] bus_data_o;
 input wire bus_read;
 input wire bus_write;
 output wire bus_stall;
+output reg bus_irq;
 
 output wire sl811_a0;
 inout wire[7:0] sl811_data;
@@ -56,6 +58,17 @@ parallel_ifce #(.RW_BUS_CYCLE(3)) u_ifce(
   .dev_oe_n   (sl811_rd_n),
   .dev_ce_n   (sl811_cs_n)
 );
+
+reg irq_sync;
+always @(posedge clk_bus or negedge rst_n) begin : proc_irq
+  if(~rst_n) begin
+    bus_irq <= 0;
+    irq_sync <= 0;
+  end else begin
+    irq_sync <= sl811_int;
+    bus_irq <= irq_sync;
+  end
+end
 
 assign bus_data_o[31:8] = 24'b0;
 

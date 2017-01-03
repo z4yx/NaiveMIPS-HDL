@@ -159,7 +159,7 @@ always @(*) begin
         gpu_rd <= master_read;
         gpu_wr <= master_write;
         master_rddata <= gpu_data_o;
-    end else if(master_address[31:4] == 28'h1fd0020) begin
+    end else if(master_address[31:4] == 28'h1c02000) begin
         usb_read <= master_read;
         usb_write <= master_write;
         master_rddata <= usb_data_o;

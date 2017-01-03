@@ -184,6 +184,7 @@ wire [2:0]usb_dbus_address;
 wire usb_dbus_read;
 wire usb_dbus_write;
 wire usb_dbus_stall;
+wire usb_irq;
 
 wire [31:0]gpio_dbus_data_o;
 wire [31:0]gpio_dbus_data_i;
@@ -388,6 +389,7 @@ usb_sl811 usbhcd0(/*autoinst*/
           .bus_data_i(usb_dbus_data_i[31:0]),
           .bus_read(usb_dbus_read),
           .bus_write(usb_dbus_write),
+          .bus_irq(usb_irq),
           .sl811_dack(sl811_dack),
           .sl811_int(sl811_int));
 
@@ -428,6 +430,6 @@ gpu gpu_inst(
         .pxlData  (vga_pixel)
 );
 
-assign irq_line = {2'b0,uart_irq,2'b0};
+assign irq_line = {1'b0,usb_irq,uart_irq,2'b0};
 
 endmodule
