@@ -37,3 +37,5 @@ set_output_delay -clock [get_clocks clk_in] -max -add_delay 2.000 [get_ports vga
 set_output_delay -clock [get_clocks clk_in] -min -add_delay -1.000 [get_ports vga_vsync]
 set_output_delay -clock [get_clocks clk_in] -max -add_delay 2.000 [get_ports vga_vsync]
 set_false_path -from [get_clocks clk_uart_in] -to [get_clocks CLK_OUT1_clk_wiz_v3_6]
+
+
