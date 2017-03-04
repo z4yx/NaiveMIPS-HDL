@@ -43,7 +43,7 @@ input wire sl811_dack;
 input wire sl811_int;
 output wire sl811_drq;
 
-parallel_ifce #(.RW_BUS_CYCLE(3)) u_ifce(
+parallel_ifce #(.RW_BUS_CYCLE(4)) u_ifce(
   .clk_bus    (clk_bus),
   .rst_n      (rst_n),
   .bus_address({21'h0,bus_address}),

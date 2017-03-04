@@ -39,7 +39,7 @@ output wire flash_rp_n;
 output wire[2:0] flash_ce;
 output wire flash_vpen;
 
-parallel_ifce #(.RW_BUS_CYCLE(2)) f_ifce(
+parallel_ifce #(.RW_BUS_CYCLE(3)) f_ifce(
   .clk_bus    (clk_bus),
   .rst_n      (rst_n),
   .bus_address(bus_address),
