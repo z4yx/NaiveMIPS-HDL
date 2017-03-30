@@ -80,14 +80,14 @@ clk_ctrl clk_ctrl1(/*autoinst*/
 
 inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
-output wire[1:0] base_ram_be = 2'b00;
+output wire[1:0] base_ram_be;
 output wire base_ram_ce_n;
 output wire base_ram_oe_n;
 output wire base_ram_we_n;
 
 inout wire[31:0] ext_ram_data;
 output wire[19:0] ext_ram_addr;
-output wire[1:0] ext_ram_be = 2'b00;
+output wire[1:0] ext_ram_be;
 output wire ext_ram_ce_n;
 output wire ext_ram_oe_n;
 output wire ext_ram_we_n;
@@ -131,8 +131,8 @@ output wire vga_hsync;
 output wire vga_vsync;
 output wire vga_clk;
 output wire vga_de;
-output wire vga_sync_n = 1'b0;
-output wire vga_psave_n = 1'b0;
+output wire vga_sync_n;
+output wire vga_psave_n;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -235,6 +235,8 @@ assign debugger_uart_rxd = rs232_rxd;
 assign rs232_txd = debugger_uart_txd;
 
 assign vga_clk = clk_in;
+assign vga_sync_n = 1'b0;
+assign vga_psave_n = 1'b0;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),

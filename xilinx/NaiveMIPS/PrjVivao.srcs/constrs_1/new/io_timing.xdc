@@ -1,4 +1,4 @@
-create_clock -period 20.000 -name clk_in -waveform {0.000 10.000} [get_ports clk_in]
+create_clock -period 10.000 -name clk_in -waveform {0.000 5.000} [get_ports clk_in]
 create_clock -period 90.422 -name clk_uart_in -waveform {0.000 45.211} [get_ports clk_uart_in]
 create_clock -period 31.250 -name VIRTUAL_CLK_OUT2_clk_wiz_v3_6 -waveform {0.000 15.625}
 create_clock -period 125.000 -name VIRTUAL_CLK_OUT1_clk_wiz_v3_6 -waveform {0.000 62.500}
