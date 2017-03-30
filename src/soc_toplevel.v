@@ -1,5 +1,5 @@
 `default_nettype none
-`define EXT_UART_CLOCK
+// `define EXT_UART_CLOCK
 module soc_toplevel(/*autoport*/
 //inout
             base_ram_data,
@@ -39,6 +39,8 @@ module soc_toplevel(/*autoport*/
             vga_vsync,
             vga_clk,
             vga_de,
+            vga_sync_n,
+            vga_psave_n,
 //input
             rst_in,
             clk_in,
@@ -78,14 +80,14 @@ clk_ctrl clk_ctrl1(/*autoinst*/
 
 inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
-output wire[3:0] base_ram_be;
+output wire[1:0] base_ram_be = 2'b00;
 output wire base_ram_ce_n;
 output wire base_ram_oe_n;
 output wire base_ram_we_n;
 
 inout wire[31:0] ext_ram_data;
 output wire[19:0] ext_ram_addr;
-output wire[3:0] ext_ram_be;
+output wire[1:0] ext_ram_be = 2'b00;
 output wire ext_ram_ce_n;
 output wire ext_ram_oe_n;
 output wire ext_ram_we_n;
@@ -104,7 +106,7 @@ output wire flash_rp_n;
 output wire flash_vpen;
 output wire flash_oe_n;
 inout wire [15:0]flash_data;
-output wire flash_ce;
+output wire [2:0]flash_ce;
 output wire flash_byte_n;
 output wire flash_we_n;
 
@@ -129,6 +131,8 @@ output wire vga_hsync;
 output wire vga_vsync;
 output wire vga_clk;
 output wire vga_de;
+output wire vga_sync_n = 1'b0;
+output wire vga_psave_n = 1'b0;
 
 wire[4:0] irq_line;
 wire uart_irq;
