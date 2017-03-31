@@ -5,7 +5,6 @@ module soc_toplevel(/*autoport*/
             base_ram_data,
             ext_ram_data,
             flash_data,
-            sl811_data,
             gpio0,
             gpio1,
 //output
@@ -27,12 +26,6 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
-            sl811_a0,
-            sl811_we_n,
-            sl811_rd_n,
-            sl811_cs_n,
-            sl811_rst_n,
-            sl811_drq,
             rs232_txd,
             vga_pixel,
             vga_hsync,
@@ -46,8 +39,6 @@ module soc_toplevel(/*autoport*/
             clk_in,
             clk_uart_in,
             rxd,
-            sl811_dack,
-            sl811_int,
             rs232_rxd);
 
 input wire rst_in;
@@ -110,15 +101,15 @@ output wire [2:0]flash_ce;
 output wire flash_byte_n;
 output wire flash_we_n;
 
-output wire sl811_a0;
-inout wire[7:0] sl811_data;
-output wire sl811_we_n;
-output wire sl811_rd_n;
-output wire sl811_cs_n;
-output wire sl811_rst_n;
-input wire sl811_dack;
-input wire sl811_int;
-output wire sl811_drq;
+wire sl811_a0;
+wire[7:0] sl811_data;
+wire sl811_we_n;
+wire sl811_rd_n;
+wire sl811_cs_n;
+wire sl811_rst_n;
+wire sl811_dack;
+wire sl811_int;
+wire sl811_drq;
 
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
