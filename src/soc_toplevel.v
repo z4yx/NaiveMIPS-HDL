@@ -5,7 +5,6 @@ module soc_toplevel(/*autoport*/
             base_ram_data,
             ext_ram_data,
             flash_data,
-            gpio0,
             gpio1,
 //output
             base_ram_addr,
@@ -26,6 +25,9 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
+            leds,
+            dpy_com,
+            dpy_seg,
             rs232_txd,
             vga_pixel,
             vga_hsync,
@@ -111,8 +113,11 @@ wire sl811_dack;
 wire sl811_int;
 wire sl811_drq;
 
-inout wire[31:0] gpio0;
+wire[31:0] gpio0;
 inout wire[31:0] gpio1;
+output wire[15:0] leds;
+output wire[7:0] dpy_com;
+output wire[7:0] dpy_seg;
 
 input wire rs232_rxd;
 output wire rs232_txd;
@@ -206,14 +211,14 @@ wire ticker_dbus_write;
 wire debugger_uart_rxd;
 wire debugger_uart_txd;
 
-assign base_ram_ce_n = ram_address[22];
+assign base_ram_ce_n = ~ram_address[22];
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
 assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : {32{1'hz}};
 assign base_ram_be = 4'b0;
 
-assign ext_ram_ce_n = ~ram_address[22];
+assign ext_ram_ce_n = ram_address[22];
 assign ext_ram_oe_n = ram_rd_n;
 assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
@@ -225,9 +230,20 @@ assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
 assign debugger_uart_rxd = rs232_rxd;
 assign rs232_txd = debugger_uart_txd;
 
-assign vga_clk = clk_in;
+//assign vga_clk = clk_in;
 assign vga_sync_n = 1'b0;
-assign vga_psave_n = 1'b0;
+assign vga_psave_n = 1'b1;
+
+//assign leds = gpio0[15:0];
+
+clk_vga clk_vga_0(.clk_in1(clk_in), .clk_out1(vga_clk));
+
+seg_disp seg7(
+    .clk(clk),
+    .din(gpio0),
+    .seg(dpy_seg),
+    .com(dpy_com)
+);
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -432,7 +448,7 @@ ticker ticker_inst(
 
 gpu gpu_inst(
         .clk_bus  (clk),
-        .clk_pixel(clk_in), //50 MHz
+        .clk_pixel(vga_clk), //50 MHz
         .rst_n    (rst_n),
         .bus_read (gpu_dbus_read),
         .bus_write(gpu_dbus_write),
