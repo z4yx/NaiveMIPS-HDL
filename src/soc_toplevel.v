@@ -5,6 +5,7 @@ module soc_toplevel(/*autoport*/
             base_ram_data,
             ext_ram_data,
             flash_data,
+            usb_data,
             gpio1,
 //output
             base_ram_addr,
@@ -25,6 +26,14 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
+            usb_a0,
+            usb_a1,
+            usb_we_n,
+            usb_rd_n,
+            usb_cs_n,
+            usb_rst_n,
+            usb_dack,
+            usb_int,
             leds,
             dpy_com,
             dpy_seg,
@@ -41,6 +50,7 @@ module soc_toplevel(/*autoport*/
             clk_in,
             clk_uart_in,
             rxd,
+            usb_drq,
             rs232_rxd);
 
 input wire rst_in;
@@ -103,15 +113,16 @@ output wire [2:0]flash_ce;
 output wire flash_byte_n;
 output wire flash_we_n;
 
-wire sl811_a0;
-wire[7:0] sl811_data;
-wire sl811_we_n;
-wire sl811_rd_n;
-wire sl811_cs_n;
-wire sl811_rst_n;
-wire sl811_dack;
-wire sl811_int;
-wire sl811_drq;
+output wire usb_a0;
+output wire usb_a1;
+inout  wire [15:0] usb_data;
+output wire usb_we_n;
+output wire usb_rd_n;
+output wire usb_cs_n;
+output wire usb_rst_n;
+output wire usb_dack;
+output wire usb_int;
+input  wire usb_drq;
 
 wire[31:0] gpio0;
 inout wire[31:0] gpio1;
@@ -404,16 +415,17 @@ flash_top flash0(/*autoinst*/
          .bus_read(flash_dbus_read),
          .bus_write(flash_dbus_write));
 
-usb_sl811 usbhcd0(/*autoinst*/
-          .sl811_data(sl811_data[7:0]),
+usb_isp1362 usbhcd0(/*autoinst*/
+          .usb_data(usb_data),
           .bus_data_o(usb_dbus_data_o[31:0]),
           .bus_stall(usb_dbus_stall),
-          .sl811_a0(sl811_a0),
-          .sl811_we_n(sl811_we_n),
-          .sl811_rd_n(sl811_rd_n),
-          .sl811_cs_n(sl811_cs_n),
-          .sl811_rst_n(sl811_rst_n),
-          .sl811_drq(sl811_drq),
+          .usb_a0(usb_a0),
+          .usb_a1(usb_a1),
+          .usb_we_n(usb_we_n),
+          .usb_rd_n(usb_rd_n),
+          .usb_cs_n(usb_cs_n),
+          .usb_rst_n(usb_rst_n),
+          .usb_drq(usb_drq),
           .clk_bus(clk),
           .rst_n(rst_n),
           .bus_address(usb_dbus_address[2:0]),
@@ -421,8 +433,8 @@ usb_sl811 usbhcd0(/*autoinst*/
           .bus_read(usb_dbus_read),
           .bus_write(usb_dbus_write),
           .bus_irq(usb_irq),
-          .sl811_dack(sl811_dack),
-          .sl811_int(sl811_int));
+          .usb_dack(usb_dack),
+          .usb_int(usb_int));
 
 gpio_top gpio_inst(/*autoinst*/
          .gpio0(gpio0[31:0]),

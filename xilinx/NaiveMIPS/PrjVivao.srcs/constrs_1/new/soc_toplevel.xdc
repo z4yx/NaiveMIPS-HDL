@@ -13,6 +13,33 @@ set_property PACKAGE_PIN U16 [get_ports rs232_txd] ;#CPLD_D0
 set_property IOSTANDARD LVCMOS33 [get_ports rs232_rxd]
 set_property PACKAGE_PIN P18 [get_ports rs232_rxd] ;#CPLD_D1
 
+#USB
+set_property -dict {PACKAGE_PIN U22 IOSTANDARD LVCMOS33} [get_ports usb_a0]
+set_property -dict {PACKAGE_PIN U21 IOSTANDARD LVCMOS33} [get_ports usb_a1]
+set_property -dict {PACKAGE_PIN Y25 IOSTANDARD LVCMOS33} [get_ports usb_we_n]
+set_property -dict {PACKAGE_PIN Y26 IOSTANDARD LVCMOS33} [get_ports usb_rd_n]
+set_property -dict {PACKAGE_PIN AC26 IOSTANDARD LVCMOS33} [get_ports usb_cs_n]
+set_property -dict {PACKAGE_PIN Y23 IOSTANDARD LVCMOS33} [get_ports usb_rst_n]
+set_property -dict {PACKAGE_PIN AA22 IOSTANDARD LVCMOS33} [get_ports usb_drq]
+set_property -dict {PACKAGE_PIN AC23 IOSTANDARD LVCMOS33} [get_ports usb_dack]
+set_property -dict {PACKAGE_PIN AA23 IOSTANDARD LVCMOS33} [get_ports usb_int]
+set_property -dict {PACKAGE_PIN AB26 IOSTANDARD LVCMOS33} [get_ports {usb_data[0]}]
+set_property -dict {PACKAGE_PIN W24 IOSTANDARD LVCMOS33} [get_ports {usb_data[1]}]
+set_property -dict {PACKAGE_PIN W23 IOSTANDARD LVCMOS33} [get_ports {usb_data[2]}]
+set_property -dict {PACKAGE_PIN AB25 IOSTANDARD LVCMOS33} [get_ports {usb_data[3]}]
+set_property -dict {PACKAGE_PIN AA25 IOSTANDARD LVCMOS33} [get_ports {usb_data[4]}]
+set_property -dict {PACKAGE_PIN W21 IOSTANDARD LVCMOS33} [get_ports {usb_data[5]}]
+set_property -dict {PACKAGE_PIN V21 IOSTANDARD LVCMOS33} [get_ports {usb_data[6]}]
+set_property -dict {PACKAGE_PIN W26 IOSTANDARD LVCMOS33} [get_ports {usb_data[7]}]
+set_property -dict {PACKAGE_PIN W25 IOSTANDARD LVCMOS33} [get_ports {usb_data[8]}]
+set_property -dict {PACKAGE_PIN V26 IOSTANDARD LVCMOS33} [get_ports {usb_data[9]}]
+set_property -dict {PACKAGE_PIN U26 IOSTANDARD LVCMOS33} [get_ports {usb_data[10]}]
+set_property -dict {PACKAGE_PIN V24 IOSTANDARD LVCMOS33} [get_ports {usb_data[11]}]
+set_property -dict {PACKAGE_PIN V23 IOSTANDARD LVCMOS33} [get_ports {usb_data[12]}]
+set_property -dict {PACKAGE_PIN U25 IOSTANDARD LVCMOS33} [get_ports {usb_data[13]}]
+set_property -dict {PACKAGE_PIN U24 IOSTANDARD LVCMOS33} [get_ports {usb_data[14]}]
+set_property -dict {PACKAGE_PIN V22 IOSTANDARD LVCMOS33} [get_ports {usb_data[15]}]
+
 #VGA
 set_property IOSTANDARD LVCMOS33 [get_ports vga_clk]
 set_property PACKAGE_PIN T22 [get_ports vga_clk]
