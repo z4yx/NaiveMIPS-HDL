@@ -2,12 +2,12 @@ create_clock -period 20.000 -name clk_in -waveform {0.000 10.000} [get_ports clk
 create_clock -period 90.422 -name clk_uart_in -waveform {0.000 45.211} [get_ports clk_uart_in]
 create_clock -period 31.250 -name VIRTUAL_CLK_OUT2_clk_wiz_v3_6 -waveform {0.000 15.625}
 create_clock -period 125.000 -name VIRTUAL_CLK_OUT1_clk_wiz_v3_6 -waveform {0.000 62.500}
-create_generated_clock -name vga_clk -source [get_clocks clk_in] -multiply_by 1 [get_ports vga_clk]
+create_generated_clock -name vga_clk -source [get_ports clk_in] -multiply_by 1 [get_ports vga_clk]
 
 set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT2_clk_wiz_v3_6] -min -add_delay 2.000 [get_ports {base_ram_data[*]}]
-set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT2_clk_wiz_v3_6] -max -add_delay 18.2 [get_ports {base_ram_data[*]}]
+set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT2_clk_wiz_v3_6] -max -add_delay 20 [get_ports {base_ram_data[*]}]
 set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT2_clk_wiz_v3_6] -min -add_delay 2.000 [get_ports {ext_ram_data[*]}]
-set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT2_clk_wiz_v3_6] -max -add_delay 18.2 [get_ports {ext_ram_data[*]}]
+set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT2_clk_wiz_v3_6] -max -add_delay 20 [get_ports {ext_ram_data[*]}]
 set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT1_clk_wiz_v3_6] -min -add_delay 2.000 [get_ports {flash_data[*]}]
 set_input_delay -clock [get_clocks VIRTUAL_CLK_OUT1_clk_wiz_v3_6] -max -add_delay 70.000 [get_ports {flash_data[*]}]
 set_output_delay -clock [get_clocks VIRTUAL_CLK_OUT2_clk_wiz_v3_6] -min -add_delay -2.000 [get_ports {base_ram_addr[*]}]
