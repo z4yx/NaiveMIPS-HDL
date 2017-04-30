@@ -231,9 +231,9 @@ def write_flash(f):
     print "Done"
 
 def usb_test():
-    write_ram(USB_BASE, "\x0e\x00\x00\x00")
-    buf = read_ram(USB_BASE+4, 4)
-    print "Rev: %s" % binascii.hexlify(buf[0])
+    write_ram(USB_BASE+4, "\x27\x00\x00\x00")
+    buf = read_ram(USB_BASE, 4)
+    print "Rev: %s" % binascii.hexlify(buf[0:2])
 
 def flash_test():
     write_ram(FLASH_BASE, "\x90\x00\x00\x00")
