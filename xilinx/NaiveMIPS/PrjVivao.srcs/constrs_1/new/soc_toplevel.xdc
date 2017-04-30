@@ -527,4 +527,6 @@ set_property PACKAGE_PIN U24 [get_ports ext_ram_oe_n]
 set_property IOSTANDARD LVCMOS33 [get_ports ext_ram_we_n]
 set_property PACKAGE_PIN U16 [get_ports ext_ram_we_n]
 
+set_property CFGBVS VCCO [current_design]
+set_property CONFIG_VOLTAGE 3.3 [current_design]
 
