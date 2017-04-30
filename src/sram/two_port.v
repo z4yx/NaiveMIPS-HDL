@@ -63,14 +63,16 @@ always @(posedge clk2x or negedge rst_n) begin
     else begin
         state <= {state[2:0], state[3]};
         if (state[0]) begin
-            ram_address <= address1;
+            if(wr1 | rd1)
+                ram_address <= address1;
             wrbuf <= wrdata1;
             ram_wr_n <= ~wr1;
             ram_rd_n <= ~rd1;
             dataenable <= dataenable1;
         end
         else if (state[1]) begin
-            ram_address <= address2;
+            if(wr2 | rd2)
+                    ram_address <= address2;
             wrbuf <= wrdata2;
             rddata1 <= ram_data_i;
             ram_wr_n <= ~wr2;

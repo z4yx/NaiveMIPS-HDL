@@ -22,3 +22,4 @@ xilinx/NaiveMIPS/ipcore_dir/*/doc/
 planAhead_run_*
 xilinx/NaiveMIPS/ipcore_dir/*/example_design/
 *.log
+._*

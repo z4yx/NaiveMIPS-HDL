@@ -121,7 +121,7 @@ output wire usb_rd_n;
 output wire usb_cs_n;
 output wire usb_rst_n;
 output wire usb_dack;
-output wire usb_int;
+input  wire usb_int;
 input  wire usb_drq;
 
 wire[31:0] gpio0;
