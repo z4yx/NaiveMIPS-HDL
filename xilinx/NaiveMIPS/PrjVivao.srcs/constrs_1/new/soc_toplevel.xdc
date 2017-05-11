@@ -8,13 +8,9 @@ set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {clk_uart_in_IBUF}]
 set_property IOSTANDARD LVCMOS33 [get_ports rst_in]
 set_property PACKAGE_PIN F22 [get_ports rst_in] ;#BTN_IN5
 set_property IOSTANDARD LVCMOS33 [get_ports txd]
-set_property PACKAGE_PIN P21 [get_ports txd] ;#GPIO0
 set_property IOSTANDARD LVCMOS33 [get_ports rxd]
-set_property PACKAGE_PIN K23 [get_ports rxd] ;#GPIO1
-set_property IOSTANDARD LVCMOS33 [get_ports rs232_txd]
-set_property PACKAGE_PIN M20 [get_ports rs232_txd] ;#GPIO2
-set_property IOSTANDARD LVCMOS33 [get_ports rs232_rxd]
-set_property PACKAGE_PIN M17 [get_ports rs232_rxd] ;#GPIO3
+set_property PACKAGE_PIN L19 [get_ports txd] ;#GPIO5
+set_property PACKAGE_PIN K21 [get_ports rxd] ;#GPIO6
 
 #USB
 set_property -dict {PACKAGE_PIN K3 IOSTANDARD LVCMOS33} [get_ports sl811_a0]

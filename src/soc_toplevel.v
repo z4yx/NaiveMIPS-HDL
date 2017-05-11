@@ -33,7 +33,6 @@ module soc_toplevel(/*autoport*/
             sl811_cs_n,
             sl811_rst_n,
             sl811_drq,
-            rs232_txd,
             vga_pixel,
             vga_hsync,
             vga_vsync,
@@ -45,8 +44,8 @@ module soc_toplevel(/*autoport*/
             clk_uart_in,
             rxd,
             sl811_dack,
-            sl811_int,
-            rs232_rxd);
+            sl811_int
+            );
 
 input wire rst_in;
 input wire clk_in;
@@ -121,8 +120,8 @@ output wire sl811_drq;
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
 
-input wire rs232_rxd;
-output wire rs232_txd;
+wire rs232_rxd=1'b1;
+wire rs232_txd=1'b1;
 
 output wire[7:0] vga_pixel;
 output wire vga_hsync;
