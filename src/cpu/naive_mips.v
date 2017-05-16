@@ -2,28 +2,33 @@
 `default_nettype none
 
 module naive_mips(/*autoport*/
-//output
+//clk
+          rst_n,
+          clk,
+//debugger
           debugger_uart_txd,
+          debugger_uart_rxd,
+          debugger_uart_clk,
+//interrupt
+          hardware_int_in,
+//ibus
           ibus_address,
           ibus_byteenable,
           ibus_read,
           ibus_write,
           ibus_wrdata,
+          ibus_rddata,
+          ibus_stall,
+//dbus
           dbus_address,
           dbus_byteenable,
           dbus_read,
           dbus_write,
           dbus_wrdata,
-//input
-          rst_n,
-          clk,
-          debugger_uart_rxd,
-          debugger_uart_clk,
-          ibus_rddata,
-          ibus_stall,
           dbus_rddata,
           dbus_stall,
-          hardware_int_in);
+          dbus_uncached
+          );
 
 input wire rst_n;
 input wire clk;
@@ -47,6 +52,7 @@ output wire dbus_write;
 output wire[31:0] dbus_wrdata;
 input wire[31:0] dbus_rddata;
 input wire dbus_stall;
+output wire dbus_uncached;
 
 input wire[4:0] hardware_int_in;
 
@@ -54,6 +60,8 @@ wire flush;
 wire exception_flush;
 wire[31:0] exception_new_pc;
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
+reg exception_flush_holding, debugger_flush_holding;
+reg ibus_read_holding;
 
 wire [31:0]if_pc;
 wire [31:0]if_inst;
@@ -271,12 +279,12 @@ regs main_regs(/*autoinst*/
 mmu_top mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(ibus_address),
-      .data_uncached(),
+      .data_uncached(dbus_uncached),
       .inst_uncached(),
       .data_exp_miss(mm_daddr_exp_miss),
       .inst_exp_miss(if_iaddr_exp_miss),
-      .data_exp_illegal(if_iaddr_exp_illegal),
-      .inst_exp_illegal(mm_daddr_exp_illegal),
+      .data_exp_illegal(mm_daddr_exp_illegal),
+      .inst_exp_illegal(if_iaddr_exp_illegal),
       .data_exp_dirty(mm_daddr_dirty),
       .inst_exp_invalid(if_iaddr_exp_invalid),
       .data_exp_invalid(mm_daddr_exp_invalid),
@@ -294,7 +302,9 @@ mmu_top mmu(/*autoinst*/
       .user_mode(cp0_user_mode));
 
 assign ibus_byteenable = 4'b1111;
-assign ibus_read = ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
+assign ibus_read = (debugger_flush_holding | exception_flush_holding) ?
+                ibus_read_holding :
+                ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
 assign if_inst = (if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid) ? 32'b0 : ibus_rddata;
@@ -302,7 +312,7 @@ assign if_in_exl = cp0_in_exl;
 assign if_asid = cp0_asid;
 
 assign dbus_byteenable = mm_mem_byte_en;
-assign dbus_read = mm_mem_rd;
+assign dbus_read = mm_mem_rd && !flush;
 assign dbus_write = mm_mem_wr && !flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
@@ -316,7 +326,21 @@ assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
 assign hardware_int[5] = timer_int;
 assign hardware_int[4:0] = hardware_int_in;
 
-assign flush = debugger_flush | exception_flush;
+assign flush = debugger_flush | debugger_flush_holding | exception_flush | exception_flush_holding;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        debugger_flush_holding <= 1'b0;
+        exception_flush_holding <= 1'b0;
+        ibus_read_holding <= 1'b0;
+    end
+    else begin
+        debugger_flush_holding <= (debugger_flush|debugger_flush_holding) & ibus_stall;
+        exception_flush_holding <= (exception_flush|exception_flush_holding) & ibus_stall;
+        if(debugger_flush|exception_flush)
+            ibus_read_holding <= ibus_read;
+    end
+end
 
 always @(*) begin
     if (!rst_n) begin
@@ -339,7 +363,7 @@ pc pc_instance(/*autoinst*/
          .pc_reg(if_pc),
          .rst_n(rst_n),
          .clk(clk),
-         .enable(en_pc),
+         .enable(en_pc & ~flush),
          .is_exception(exception_flush),
          .exception_new_pc(exception_new_pc),
          .is_debug    (debugger_flush),

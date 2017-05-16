@@ -1,0 +1,12 @@
+db/
+incremental_db/
+*.rpt
+*.summary
+*.done
+greybox_tmp/
+quirk_sdram/
+soc_system/
+*.bak
+*.dtb
+*.smsg
+
