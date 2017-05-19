@@ -438,36 +438,36 @@
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_ahblite_axi_bridge_0_1/bd_mem_ahblite_axi_bridge_0_1.xci">
-          <Proxy FileSetName="bd_mem_ahblite_axi_bridge_0_1"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_xbar_0/bd_mem_xbar_0.xci">
-          <Proxy FileSetName="bd_mem_xbar_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hdl/bd_mem.v"/>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_axi_interconnect_0_0/bd_mem_axi_interconnect_0_0.xci"/>
         <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_mig_7series_0_0/bd_mem_mig_7series_0_0.xci">
           <Proxy FileSetName="bd_mem_mig_7series_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_axi_interconnect_0_0/bd_mem_axi_interconnect_0_0.xci"/>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_proc_sys_reset_0_0/bd_mem_proc_sys_reset_0_0.xci">
-          <Proxy FileSetName="bd_mem_proc_sys_reset_0_0"/>
         </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_vio_0_0/bd_mem_vio_0_0.xci">
           <Proxy FileSetName="bd_mem_vio_0_0"/>
         </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hw_handoff/bd_mem.hwh"/>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_proc_sys_reset_0_0/bd_mem_proc_sys_reset_0_0.xci">
+          <Proxy FileSetName="bd_mem_proc_sys_reset_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="bd_mem_ooc.xdc"/>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hdl/bd_mem.hwdef"/>
         <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_ahblite_axi_bridge_0_0/bd_mem_ahblite_axi_bridge_0_0.xci">
           <Proxy FileSetName="bd_mem_ahblite_axi_bridge_0_0"/>
         </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hdl/bd_mem.v"/>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hw_handoff/bd_mem_bd.tcl"/>
         <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_auto_cc_0/bd_mem_auto_cc_0.xci">
           <Proxy FileSetName="bd_mem_auto_cc_0"/>
         </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_auto_cc_1/bd_mem_auto_cc_1.xci">
           <Proxy FileSetName="bd_mem_auto_cc_1"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="bd_mem_ooc.xdc"/>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hdl/bd_mem.hwdef"/>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hw_handoff/bd_mem_bd.tcl"/>
-        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="hw_handoff/bd_mem.hwh"/>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_xbar_0/bd_mem_xbar_0.xci">
+          <Proxy FileSetName="bd_mem_xbar_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_mem.bd" FileRelPathName="ip/bd_mem_ahblite_axi_bridge_0_1/bd_mem_ahblite_axi_bridge_0_1.xci">
+          <Proxy FileSetName="bd_mem_ahblite_axi_bridge_0_1"/>
+        </CompFileExtendedInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/bd/bd_mem/ip/bd_mem_mig_7series_0_0/mig_a.prj">
         <FileInfo>
@@ -482,6 +482,13 @@
         </FileInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/new/ahb_adapter.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../src/periph/seg_disp.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -607,22 +614,6 @@
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="mmcm_pll_drp_func_us_pll.vh"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="mmcm_pll_drp_func_7s_mmcm.vh"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="mmcm_pll_drp_func_us_mmcm.vh"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="mmcm_pll_drp_func_7s_pll.vh"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_ooc.xdc"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.xdc"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.v"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_clk_wiz.v"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_board.xdc"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="doc/clk_wiz_v5_3_changelog.txt"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.xml"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_sim_netlist.vhdl"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_sim_netlist.v"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_stub.vhdl"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0_stub.v"/>
-        <CompFileExtendedInfo CompFileName="clk_wiz_0.xci" FileRelPathName="clk_wiz_0.veo"/>
       </File>
       <Config>
         <Option Name="TopModule" Val="clk_wiz_0"/>
@@ -760,9 +751,7 @@
     </Run>
     <Run Id="clk_wiz_v3_6_synth_1" Type="Ft3:Synth" SrcSet="clk_wiz_v3_6" Part="xc7a200tfbg676-2" ConstrsSet="clk_wiz_v3_6" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/clk_wiz_v3_6_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -770,9 +759,7 @@
     </Run>
     <Run Id="clk_wiz_0_synth_1" Type="Ft3:Synth" SrcSet="clk_wiz_0" Part="xc7a200tfbg676-2" ConstrsSet="clk_wiz_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/clk_wiz_0_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -780,9 +767,7 @@
     </Run>
     <Run Id="gpu_mem_xilinx_synth_1" Type="Ft3:Synth" SrcSet="gpu_mem_xilinx" Part="xc7a200tfbg676-2" ConstrsSet="gpu_mem_xilinx" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/gpu_mem_xilinx_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -790,9 +775,7 @@
     </Run>
     <Run Id="blk_mem_gen_v7_3_synth_1" Type="Ft3:Synth" SrcSet="blk_mem_gen_v7_3" Part="xc7a200tfbg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/blk_mem_gen_v7_3_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -800,9 +783,7 @@
     </Run>
     <Run Id="bd_mem_vio_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_mem_vio_0_0" Part="xc7a200tfbg676-2" ConstrsSet="bd_mem_vio_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_mem_vio_0_0_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -810,9 +791,7 @@
     </Run>
     <Run Id="bd_mem_auto_cc_0_synth_1" Type="Ft3:Synth" SrcSet="bd_mem_auto_cc_0" Part="xc7a200tfbg676-2" ConstrsSet="bd_mem_auto_cc_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_mem_auto_cc_0_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -820,9 +799,7 @@
     </Run>
     <Run Id="bd_mem_auto_cc_1_synth_1" Type="Ft3:Synth" SrcSet="bd_mem_auto_cc_1" Part="xc7a200tfbg676-2" ConstrsSet="bd_mem_auto_cc_1" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_mem_auto_cc_1_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -921,9 +898,7 @@
     </Run>
     <Run Id="clk_wiz_v3_6_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="clk_wiz_v3_6" Description="Default settings for Implementation." SynthRun="clk_wiz_v3_6_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -938,9 +913,7 @@
     </Run>
     <Run Id="clk_wiz_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="clk_wiz_0" Description="Default settings for Implementation." SynthRun="clk_wiz_0_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -955,9 +928,7 @@
     </Run>
     <Run Id="gpu_mem_xilinx_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="gpu_mem_xilinx" Description="Default settings for Implementation." SynthRun="gpu_mem_xilinx_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -972,9 +943,7 @@
     </Run>
     <Run Id="blk_mem_gen_v7_3_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Default settings for Implementation." SynthRun="blk_mem_gen_v7_3_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -989,9 +958,7 @@
     </Run>
     <Run Id="bd_mem_vio_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="bd_mem_vio_0_0" Description="Default settings for Implementation." SynthRun="bd_mem_vio_0_0_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -1006,9 +973,7 @@
     </Run>
     <Run Id="bd_mem_auto_cc_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="bd_mem_auto_cc_0" Description="Default settings for Implementation." SynthRun="bd_mem_auto_cc_0_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -1023,9 +988,7 @@
     </Run>
     <Run Id="bd_mem_auto_cc_1_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="bd_mem_auto_cc_1" Description="Default settings for Implementation." SynthRun="bd_mem_auto_cc_1_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>

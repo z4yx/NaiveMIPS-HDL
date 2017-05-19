@@ -9,6 +9,8 @@ module soc_toplevel(/*autoport*/
       ddr3_dqs_n,
 //output
       txd,
+      NUM_CSn,
+      NUM_A_G,
       vga_pixel,
       vga_hsync,
       vga_vsync,
@@ -76,6 +78,8 @@ input wire rxd;
 
 inout wire[15:0] gpio0;
 inout wire[7:0] gpio1;
+output wire[7:0] NUM_CSn;
+output wire[7:0] NUM_A_G;
 
 wire rs232_rxd = 1'b1;
 wire rs232_txd = 1'b1;
@@ -180,10 +184,20 @@ wire ticker_dbus_write;
 wire debugger_uart_rxd;
 wire debugger_uart_txd;
 
+wire [31:0] segdisp_din;
+wire [23:0] const0 = 24'h0;
+
 assign debugger_uart_rxd = rs232_rxd;
 assign rs232_txd = debugger_uart_txd;
 
 assign vga_clk = clk_50M;
+
+seg_disp dec(
+    .clk(clk),
+    .din(segdisp_din),
+    .seg(NUM_A_G),
+    .com(NUM_CSn)
+  );
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -327,8 +341,8 @@ uart_top uart0(/*autoinst*/
          .rxd(rxd));
 
 gpio_top gpio_inst(/*autoinst*/
-         .gpio0(gpio0),
-         .gpio1(gpio1),
+         .gpio0(segdisp_din),
+         .gpio1({const0,gpio1}),
          .bus_data_o(gpio_dbus_data_o[31:0]),
          .clk_bus(clk),
          .rst_n(rst_n),

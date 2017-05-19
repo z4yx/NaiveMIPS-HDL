@@ -52,6 +52,27 @@ set_property PACKAGE_PIN A3  [get_ports {gpio0[2]}]
 set_property PACKAGE_PIN D5  [get_ports {gpio0[1]}]
 set_property PACKAGE_PIN H7  [get_ports {gpio0[0]}]
 
+#NUM
+set_property PACKAGE_PIN D3 [get_ports {NUM_CSn[7]}]
+set_property PACKAGE_PIN D25 [get_ports {NUM_CSn[6]}]
+set_property PACKAGE_PIN D26 [get_ports {NUM_CSn[5]}]
+set_property PACKAGE_PIN E25 [get_ports {NUM_CSn[4]}]
+set_property PACKAGE_PIN E26 [get_ports {NUM_CSn[3]}]
+set_property PACKAGE_PIN G25 [get_ports {NUM_CSn[2]}]
+set_property PACKAGE_PIN G26 [get_ports {NUM_CSn[1]}]
+set_property PACKAGE_PIN H26 [get_ports {NUM_CSn[0]}]
+
+set_property PACKAGE_PIN C4 [get_ports {NUM_A_G[7]}]
+set_property PACKAGE_PIN C3 [get_ports {NUM_A_G[6]}]
+set_property PACKAGE_PIN E6 [get_ports {NUM_A_G[5]}]
+set_property PACKAGE_PIN B2 [get_ports {NUM_A_G[4]}]
+set_property PACKAGE_PIN B4 [get_ports {NUM_A_G[3]}]
+set_property PACKAGE_PIN E5 [get_ports {NUM_A_G[2]}]
+set_property PACKAGE_PIN D4 [get_ports {NUM_A_G[1]}]
+set_property PACKAGE_PIN A2 [get_ports {NUM_A_G[0]}]
+
+set_property IOSTANDARD LVCMOS33 [get_ports {NUM_CSn[*]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {NUM_A_G[*]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {gpio0[*]}]
 
 #DIP_SW
