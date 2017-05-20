@@ -21,7 +21,9 @@ initial begin
     #1 rst_n = 1;
     repeat(5) @(posedge clk);
 
+
     #1;
+    dataenable1 = 4'hf;
     address1 = 'h4;
     rd1 = 0;
     wr1 = 1;
@@ -52,25 +54,37 @@ initial begin
 
     #1;
     address1 = 'h4;
+    dataenable1 = 4'b1100;
+    rd1 = 0;
+    wr1 = 1;
+    wrdata1 = 'hface0000;
+    @(posedge clk);
+    while(stall1 == 1)
+        @(posedge clk);
+
+
+    #1;
+    address1 = 'h0;
+    dataenable1 = 4'b0010;
+    rd1 = 0;
+    wr1 = 1;
+    wrdata1 = 'h02ff;
+    @(posedge clk);
+    while(stall1 == 1)
+        @(posedge clk);
+
+
+    #1;
+    dataenable1 = 4'hf;
+    address1 = 'h0;
     rd1 = 1;
     wr1 = 0;
     @(posedge clk);
     while(stall1 == 1)
         @(posedge clk);
 
-
     #1;
-    address1 = 'h0;
-    rd1 = 0;
-    wr1 = 1;
-    wrdata1 = 'haaff0202;
-    @(posedge clk);
-    while(stall1 == 1)
-        @(posedge clk);
-
-
-    #1;
-    address1 = 'h0;
+    address1 = 'h4;
     rd1 = 1;
     wr1 = 0;
     @(posedge clk);
