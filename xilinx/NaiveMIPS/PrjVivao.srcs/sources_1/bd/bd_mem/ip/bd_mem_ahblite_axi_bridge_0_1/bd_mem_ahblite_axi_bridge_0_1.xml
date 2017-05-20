@@ -380,7 +380,7 @@
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>SUPPORTS_NARROW_BURST</spirit:name>
-          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.M_AXI.SUPPORTS_NARROW_BURST">0</spirit:value>
+          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.M_AXI.SUPPORTS_NARROW_BURST">1</spirit:value>
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>NUM_READ_OUTSTANDING</spirit:name>
@@ -637,11 +637,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri May 19 03:24:36 UTC 2017</spirit:value>
+            <spirit:value>Sat May 20 16:16:28 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
-            <spirit:value>1d5840c4</spirit:value>
+            <spirit:value>758fa2e4</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRCversion</spirit:name>
@@ -649,7 +649,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRC</spirit:name>
-            <spirit:value>1a83baa1</spirit:value>
+            <spirit:value>d8576212</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRCversion</spirit:name>
@@ -668,11 +668,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri May 19 03:24:36 UTC 2017</spirit:value>
+            <spirit:value>Sat May 20 16:16:28 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
-            <spirit:value>1d5840c4</spirit:value>
+            <spirit:value>758fa2e4</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRCversion</spirit:name>
@@ -680,7 +680,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRC</spirit:name>
-            <spirit:value>1a83baa1</spirit:value>
+            <spirit:value>d8576212</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRCversion</spirit:name>
@@ -703,7 +703,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
-            <spirit:value>1d5840c4</spirit:value>
+            <spirit:value>758fa2e4</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRCversion</spirit:name>
@@ -711,7 +711,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRC</spirit:name>
-            <spirit:value>9af98de6</spirit:value>
+            <spirit:value>1261ee55</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRCversion</spirit:name>
@@ -730,11 +730,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri May 19 03:24:36 UTC 2017</spirit:value>
+            <spirit:value>Sat May 20 16:16:28 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
-            <spirit:value>1d5840c4</spirit:value>
+            <spirit:value>758fa2e4</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRCversion</spirit:name>
@@ -742,7 +742,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRC</spirit:name>
-            <spirit:value>9af98de6</spirit:value>
+            <spirit:value>1261ee55</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRCversion</spirit:name>
@@ -760,11 +760,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri May 19 03:25:25 UTC 2017</spirit:value>
+            <spirit:value>Sat May 20 16:17:20 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
-            <spirit:value>1d5840c4</spirit:value>
+            <spirit:value>758fa2e4</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRCversion</spirit:name>
@@ -772,7 +772,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRC</spirit:name>
-            <spirit:value>1a83baa1</spirit:value>
+            <spirit:value>d8576212</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRCversion</spirit:name>
@@ -1636,7 +1636,7 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_M_AXI_SUPPORTS_NARROW_BURST</spirit:name>
         <spirit:displayName>Narrow burst support</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_SUPPORTS_NARROW_BURST" spirit:minimum="0" spirit:maximum="1" spirit:rangeType="long">0</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_SUPPORTS_NARROW_BURST" spirit:minimum="0" spirit:maximum="1" spirit:rangeType="long">1</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_M_AXI_NON_SECURE</spirit:name>
@@ -1824,7 +1824,7 @@
       <spirit:name>C_M_AXI_SUPPORTS_NARROW_BURST</spirit:name>
       <spirit:displayName>Narrow burst support</spirit:displayName>
       <spirit:description>Bridge support for narrow burst</spirit:description>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_M_AXI_SUPPORTS_NARROW_BURST" spirit:choiceRef="choice_pairs_4873554b" spirit:order="1300">0</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_M_AXI_SUPPORTS_NARROW_BURST" spirit:choiceRef="choice_pairs_4873554b" spirit:order="1300">1</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -1922,6 +1922,7 @@
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.M_AXI.RUSER_WIDTH" xilinx:valueSource="constant"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.M_AXI.SUPPORTS_NARROW_BURST" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.M_AXI.WUSER_WIDTH" xilinx:valueSource="constant"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_M_AXI_SUPPORTS_NARROW_BURST" xilinx:valueSource="user"/>
       </xilinx:configElementInfos>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>

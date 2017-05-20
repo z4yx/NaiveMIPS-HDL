@@ -181,7 +181,7 @@ ARCHITECTURE bd_mem_ahblite_axi_bridge_0_0_arch OF bd_mem_ahblite_axi_bridge_0_0
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
   ATTRIBUTE CHECK_LICENSE_TYPE OF bd_mem_ahblite_axi_bridge_0_0_arch : ARCHITECTURE IS "bd_mem_ahblite_axi_bridge_0_0,ahblite_axi_bridge,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF bd_mem_ahblite_axi_bridge_0_0_arch: ARCHITECTURE IS "bd_mem_ahblite_axi_bridge_0_0,ahblite_axi_bridge,{x_ipProduct=Vivado 2016.4,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=ahblite_axi_bridge,x_ipVersion=3.0,x_ipCoreRevision=9,x_ipLanguage=VERILOG,x_ipSimLanguage=MIXED,C_FAMILY=artix7,C_INSTANCE=bd_mem_ahblite_axi_bridge_0_0,C_M_AXI_SUPPORTS_NARROW_BURST=0,C_M_AXI_NON_SECURE=1,C_S_AHB_ADDR_WIDTH=32,C_M_AXI_ADDR_WIDTH=32,C_S_AHB_DATA_WIDTH=32,C_M_AXI_DATA_WIDTH=32,C_M_AXI_PROTOCOL=AXI4,C_M_AXI_THREAD_ID_WIDTH=4,C_AHB_AXI_TIMEOUT=0}";
+  ATTRIBUTE CORE_GENERATION_INFO OF bd_mem_ahblite_axi_bridge_0_0_arch: ARCHITECTURE IS "bd_mem_ahblite_axi_bridge_0_0,ahblite_axi_bridge,{x_ipProduct=Vivado 2016.4,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=ahblite_axi_bridge,x_ipVersion=3.0,x_ipCoreRevision=9,x_ipLanguage=VERILOG,x_ipSimLanguage=MIXED,C_FAMILY=artix7,C_INSTANCE=bd_mem_ahblite_axi_bridge_0_0,C_M_AXI_SUPPORTS_NARROW_BURST=1,C_M_AXI_NON_SECURE=1,C_S_AHB_ADDR_WIDTH=32,C_M_AXI_ADDR_WIDTH=32,C_S_AHB_DATA_WIDTH=32,C_M_AXI_DATA_WIDTH=32,C_M_AXI_PROTOCOL=AXI4,C_M_AXI_THREAD_ID_WIDTH=4,C_AHB_AXI_TIMEOUT=0}";
   ATTRIBUTE X_INTERFACE_INFO : STRING;
   ATTRIBUTE X_INTERFACE_INFO OF s_ahb_hclk: SIGNAL IS "xilinx.com:signal:clock:1.0 AHB_CLK CLK";
   ATTRIBUTE X_INTERFACE_INFO OF s_ahb_hresetn: SIGNAL IS "xilinx.com:signal:reset:1.0 AHB_RESETN RST";
@@ -237,7 +237,7 @@ BEGIN
     GENERIC MAP (
       C_FAMILY => "artix7",
       C_INSTANCE => "bd_mem_ahblite_axi_bridge_0_0",
-      C_M_AXI_SUPPORTS_NARROW_BURST => 0,
+      C_M_AXI_SUPPORTS_NARROW_BURST => 1,
       C_M_AXI_NON_SECURE => 1,
       C_S_AHB_ADDR_WIDTH => 32,
       C_M_AXI_ADDR_WIDTH => 32,

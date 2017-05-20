@@ -1,7 +1,7 @@
 // Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2016.4 (lin64) Build 1733598 Wed Dec 14 22:35:42 MST 2016
-// Date        : Fri May 19 13:03:23 2017
+// Date        : Sun May 21 00:19:09 2017
 // Host        : skyworks running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode synth_stub
 //               /home/skyworks/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_mem/ip/bd_mem_mig_7series_0_0/bd_mem_mig_7series_0_0_stub.v
@@ -23,7 +23,7 @@ module bd_mem_mig_7series_0_0(ddr3_dq, ddr3_dqs_n, ddr3_dqs_p, ddr3_addr,
   s_axi_arsize, s_axi_arburst, s_axi_arlock, s_axi_arcache, s_axi_arprot, s_axi_arqos, 
   s_axi_arvalid, s_axi_arready, s_axi_rready, s_axi_rid, s_axi_rdata, s_axi_rresp, s_axi_rlast, 
   s_axi_rvalid, init_calib_complete, device_temp, sys_rst)
-/* synthesis syn_black_box black_box_pad_pin="ddr3_dq[15:0],ddr3_dqs_n[1:0],ddr3_dqs_p[1:0],ddr3_addr[12:0],ddr3_ba[2:0],ddr3_ras_n,ddr3_cas_n,ddr3_we_n,ddr3_reset_n,ddr3_ck_p[0:0],ddr3_ck_n[0:0],ddr3_cke[0:0],ddr3_dm[1:0],ddr3_odt[0:0],sys_clk_i,clk_ref_i,ui_clk,ui_clk_sync_rst,mmcm_locked,aresetn,app_sr_active,app_ref_ack,app_zq_ack,s_axi_awid[4:0],s_axi_awaddr[26:0],s_axi_awlen[7:0],s_axi_awsize[2:0],s_axi_awburst[1:0],s_axi_awlock[0:0],s_axi_awcache[3:0],s_axi_awprot[2:0],s_axi_awqos[3:0],s_axi_awvalid,s_axi_awready,s_axi_wdata[31:0],s_axi_wstrb[3:0],s_axi_wlast,s_axi_wvalid,s_axi_wready,s_axi_bready,s_axi_bid[4:0],s_axi_bresp[1:0],s_axi_bvalid,s_axi_arid[4:0],s_axi_araddr[26:0],s_axi_arlen[7:0],s_axi_arsize[2:0],s_axi_arburst[1:0],s_axi_arlock[0:0],s_axi_arcache[3:0],s_axi_arprot[2:0],s_axi_arqos[3:0],s_axi_arvalid,s_axi_arready,s_axi_rready,s_axi_rid[4:0],s_axi_rdata[31:0],s_axi_rresp[1:0],s_axi_rlast,s_axi_rvalid,init_calib_complete,device_temp[11:0],sys_rst" */;
+/* synthesis syn_black_box black_box_pad_pin="ddr3_dq[15:0],ddr3_dqs_n[1:0],ddr3_dqs_p[1:0],ddr3_addr[12:0],ddr3_ba[2:0],ddr3_ras_n,ddr3_cas_n,ddr3_we_n,ddr3_reset_n,ddr3_ck_p[0:0],ddr3_ck_n[0:0],ddr3_cke[0:0],ddr3_dm[1:0],ddr3_odt[0:0],sys_clk_i,clk_ref_i,ui_clk,ui_clk_sync_rst,mmcm_locked,aresetn,app_sr_active,app_ref_ack,app_zq_ack,s_axi_awid[5:0],s_axi_awaddr[26:0],s_axi_awlen[7:0],s_axi_awsize[2:0],s_axi_awburst[1:0],s_axi_awlock[0:0],s_axi_awcache[3:0],s_axi_awprot[2:0],s_axi_awqos[3:0],s_axi_awvalid,s_axi_awready,s_axi_wdata[31:0],s_axi_wstrb[3:0],s_axi_wlast,s_axi_wvalid,s_axi_wready,s_axi_bready,s_axi_bid[5:0],s_axi_bresp[1:0],s_axi_bvalid,s_axi_arid[5:0],s_axi_araddr[26:0],s_axi_arlen[7:0],s_axi_arsize[2:0],s_axi_arburst[1:0],s_axi_arlock[0:0],s_axi_arcache[3:0],s_axi_arprot[2:0],s_axi_arqos[3:0],s_axi_arvalid,s_axi_arready,s_axi_rready,s_axi_rid[5:0],s_axi_rdata[31:0],s_axi_rresp[1:0],s_axi_rlast,s_axi_rvalid,init_calib_complete,device_temp[11:0],sys_rst" */;
   inout [15:0]ddr3_dq;
   inout [1:0]ddr3_dqs_n;
   inout [1:0]ddr3_dqs_p;
@@ -47,7 +47,7 @@ module bd_mem_mig_7series_0_0(ddr3_dq, ddr3_dqs_n, ddr3_dqs_p, ddr3_addr,
   output app_sr_active;
   output app_ref_ack;
   output app_zq_ack;
-  input [4:0]s_axi_awid;
+  input [5:0]s_axi_awid;
   input [26:0]s_axi_awaddr;
   input [7:0]s_axi_awlen;
   input [2:0]s_axi_awsize;
@@ -64,10 +64,10 @@ module bd_mem_mig_7series_0_0(ddr3_dq, ddr3_dqs_n, ddr3_dqs_p, ddr3_addr,
   input s_axi_wvalid;
   output s_axi_wready;
   input s_axi_bready;
-  output [4:0]s_axi_bid;
+  output [5:0]s_axi_bid;
   output [1:0]s_axi_bresp;
   output s_axi_bvalid;
-  input [4:0]s_axi_arid;
+  input [5:0]s_axi_arid;
   input [26:0]s_axi_araddr;
   input [7:0]s_axi_arlen;
   input [2:0]s_axi_arsize;
@@ -79,7 +79,7 @@ module bd_mem_mig_7series_0_0(ddr3_dq, ddr3_dqs_n, ddr3_dqs_p, ddr3_addr,
   input s_axi_arvalid;
   output s_axi_arready;
   input s_axi_rready;
-  output [4:0]s_axi_rid;
+  output [5:0]s_axi_rid;
   output [31:0]s_axi_rdata;
   output [1:0]s_axi_rresp;
   output s_axi_rlast;

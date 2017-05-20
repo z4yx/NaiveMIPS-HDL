@@ -191,7 +191,7 @@ module example_top #
    //***************************************************************************
    // AXI4 Shim parameters
    //***************************************************************************
-   parameter C_S_AXI_ID_WIDTH              = 5,
+   parameter C_S_AXI_ID_WIDTH              = 6,
                                              // Width of all master and slave ID signals.
                                              // # = >= 1.
    parameter C_S_AXI_ADDR_WIDTH            = 27,
@@ -202,7 +202,7 @@ module example_top #
                                              // Width of WDATA and RDATA on SI slot.
                                              // Must be <= APP_DATA_WIDTH.
                                              // # = 32, 64, 128, 256.
-   parameter C_S_AXI_SUPPORTS_NARROW_BURST = 0,
+   parameter C_S_AXI_SUPPORTS_NARROW_BURST = 1,
                                              // Indicates whether to instatiate upsizer
                                              // Range: 0, 1
       

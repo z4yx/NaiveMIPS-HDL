@@ -1,7 +1,7 @@
 // Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2016.4 (lin64) Build 1733598 Wed Dec 14 22:35:42 MST 2016
-// Date        : Fri May 19 11:25:25 2017
+// Date        : Sun May 21 00:17:20 2017
 // Host        : skyworks running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode funcsim
 //               /home/skyworks/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_mem/ip/bd_mem_ahblite_axi_bridge_0_0/bd_mem_ahblite_axi_bridge_0_0_sim_netlist.v
@@ -171,7 +171,7 @@ module bd_mem_ahblite_axi_bridge_0_0
   (* C_M_AXI_DATA_WIDTH = "32" *) 
   (* C_M_AXI_NON_SECURE = "1" *) 
   (* C_M_AXI_PROTOCOL = "AXI4" *) 
-  (* C_M_AXI_SUPPORTS_NARROW_BURST = "0" *) 
+  (* C_M_AXI_SUPPORTS_NARROW_BURST = "1" *) 
   (* C_M_AXI_THREAD_ID_WIDTH = "4" *) 
   (* C_S_AHB_ADDR_WIDTH = "32" *) 
   (* C_S_AHB_DATA_WIDTH = "32" *) 
@@ -232,7 +232,7 @@ endmodule
 module bd_mem_ahblite_axi_bridge_0_0_ahb_data_counter
    (ahb_penult_beat_reg,
     Q,
-    valid_cnt_required,
+    D,
     s_ahb_htrans,
     s_ahb_hready_in,
     s_ahb_hsel,
@@ -242,7 +242,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_data_counter
     s_ahb_hclk);
   output ahb_penult_beat_reg;
   output [4:0]Q;
-  input [2:0]valid_cnt_required;
+  input [2:0]D;
   input [1:0]s_ahb_htrans;
   input s_ahb_hready_in;
   input s_ahb_hsel;
@@ -251,6 +251,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_data_counter
   input [0:0]E;
   input s_ahb_hclk;
 
+  wire [2:0]D;
   wire [0:0]E;
   wire [4:0]Q;
   wire [0:0]SR;
@@ -260,10 +261,10 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_data_counter
   wire s_ahb_hready_in;
   wire s_ahb_hsel;
   wire [1:0]s_ahb_htrans;
-  wire [2:0]valid_cnt_required;
 
   bd_mem_ahblite_axi_bridge_0_0_counter_f_0 AHB_SAMPLE_CNT_MODULE
-       (.E(E),
+       (.D(D),
+        .E(E),
         .Q(Q),
         .SR(SR),
         .ahb_penult_beat_reg(ahb_penult_beat_reg),
@@ -271,15 +272,14 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_data_counter
         .s_ahb_hclk(s_ahb_hclk),
         .s_ahb_hready_in(s_ahb_hready_in),
         .s_ahb_hsel(s_ahb_hsel),
-        .s_ahb_htrans(s_ahb_htrans),
-        .valid_cnt_required(valid_cnt_required));
+        .s_ahb_htrans(s_ahb_htrans));
 endmodule
 
 (* ORIG_REF_NAME = "ahb_if" *) 
 module bd_mem_ahblite_axi_bridge_0_0_ahb_if
-   (idle_txfer_pending,
-    ahb_hburst_single,
+   (ahb_hburst_single,
     SR,
+    idle_txfer_pending,
     ahb_penult_beat_reg_0,
     ahb_done_axi_in_progress,
     nonseq_txfer_pending,
@@ -305,28 +305,34 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
     reset_hready010_out,
     M_AXI_WLAST_i110_out,
     reset_hready2__0,
+    busy_detected,
     E,
     p_27_in,
     M_AXI_WVALID_i3__0,
     dummy_on_axi_progress_reg,
     Q,
     eqOp6_out,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ,
+    \next_wr_strobe_reg[1] ,
+    \m_axi_araddr[31] ,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ,
     S_AHB_HREADY_OUT_i_reg_1,
     ahb_data_valid_burst_term_reg,
     D,
     M_AXI_AWVALID_i_reg,
     M_AXI_ARVALID_i_reg,
-    valid_cnt_required,
+    \burst_term_txer_cnt_i_reg[3]_0 ,
     s_ahb_hrdata,
     m_axi_arlen,
     m_axi_arsize,
     m_axi_arburst,
     m_axi_arcache,
-    m_axi_araddr,
     m_axi_arprot,
     axi_last_beat_reg,
-    idle_txfer_pending_reg_1,
     s_ahb_hclk,
+    idle_txfer_pending_reg_1,
     nonseq_txfer_pending_i_reg_0,
     S_AHB_HREADY_OUT_i_reg_2,
     S_AHB_HRESP_i_reg_1,
@@ -370,9 +376,9 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
     s_ahb_hsize,
     s_ahb_haddr,
     \INFERRED_GEN.icount_out_reg[4]_0 );
-  output idle_txfer_pending;
   output ahb_hburst_single;
   output [0:0]SR;
+  output idle_txfer_pending;
   output ahb_penult_beat_reg_0;
   output ahb_done_axi_in_progress;
   output nonseq_txfer_pending;
@@ -398,28 +404,34 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   output reset_hready010_out;
   output M_AXI_WLAST_i110_out;
   output reset_hready2__0;
+  output busy_detected;
   output [0:0]E;
   output p_27_in;
   output M_AXI_WVALID_i3__0;
   output dummy_on_axi_progress_reg;
   output [4:0]Q;
   output eqOp6_out;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ;
+  output [1:0]\next_wr_strobe_reg[1] ;
+  output [31:0]\m_axi_araddr[31] ;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ;
   output S_AHB_HREADY_OUT_i_reg_1;
   output ahb_data_valid_burst_term_reg;
   output [0:0]D;
   output M_AXI_AWVALID_i_reg;
   output M_AXI_ARVALID_i_reg;
-  output [2:0]valid_cnt_required;
+  output [2:0]\burst_term_txer_cnt_i_reg[3]_0 ;
   output [31:0]s_ahb_hrdata;
   output [2:0]m_axi_arlen;
   output [2:0]m_axi_arsize;
   output [1:0]m_axi_arburst;
   output [1:0]m_axi_arcache;
-  output [31:0]m_axi_araddr;
   output [2:0]m_axi_arprot;
   output [2:0]axi_last_beat_reg;
-  input idle_txfer_pending_reg_1;
   input s_ahb_hclk;
+  input idle_txfer_pending_reg_1;
   input nonseq_txfer_pending_i_reg_0;
   input S_AHB_HREADY_OUT_i_reg_2;
   input S_AHB_HRESP_i_reg_1;
@@ -487,6 +499,10 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   wire M_AXI_WLAST_i110_out;
   wire M_AXI_WLAST_i_reg;
   wire M_AXI_WVALID_i3__0;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ;
   wire [4:0]Q;
   wire [0:0]SR;
   wire S_AHB_HREADY_OUT_i116_out;
@@ -496,6 +512,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   wire S_AHB_HREADY_OUT_i_reg_2;
   wire S_AHB_HRESP_i_reg_0;
   wire S_AHB_HRESP_i_reg_1;
+  wire S_AHB_HSIZE_i0;
   wire ahb_burst_done;
   wire ahb_data_valid;
   wire ahb_data_valid_burst_term;
@@ -503,9 +520,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   wire ahb_done_axi_in_progress;
   wire ahb_done_axi_in_progress_i_1_n_0;
   wire ahb_hburst_incr;
-  wire ahb_hburst_incr_i_i_1_n_0;
   wire ahb_hburst_single;
-  wire ahb_hburst_single_i_i_1_n_0;
   wire ahb_penult_beat_i_1_n_0;
   wire ahb_penult_beat_reg_0;
   wire ahb_rd_txer_pending_reg;
@@ -520,7 +535,9 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   wire burst_term_single_incr;
   wire burst_term_single_incr_reg_0;
   wire burst_term_txer_cnt_i0;
+  wire [2:0]\burst_term_txer_cnt_i_reg[3]_0 ;
   wire burst_term_with_nonseq;
+  wire busy_detected;
   wire core_is_idle;
   wire ctl_sm_ns033_out;
   wire ctl_sm_ns1;
@@ -539,7 +556,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   wire init_pending_txfer;
   wire local_en;
   wire local_en_reg;
-  wire [31:0]m_axi_araddr;
+  wire [31:0]\m_axi_araddr[31] ;
   wire [1:0]m_axi_arburst;
   wire [1:0]m_axi_arcache;
   wire [2:0]m_axi_arlen;
@@ -552,6 +569,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   wire m_axi_bvalid;
   wire [31:0]m_axi_rdata;
   wire m_axi_wready;
+  wire [1:0]\next_wr_strobe_reg[1] ;
   wire nonseq_detected;
   wire nonseq_txfer_pending;
   wire nonseq_txfer_pending_i_reg_0;
@@ -577,7 +595,6 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   wire seq_detected;
   wire set_axi_raddr;
   wire set_axi_waddr;
-  wire [2:0]valid_cnt_required;
   wire \valid_cnt_required_i[1]_i_1_n_0 ;
   wire \valid_cnt_required_i[2]_i_1_n_0 ;
   wire \valid_cnt_required_i[3]_i_1_n_0 ;
@@ -586,193 +603,193 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[0]),
-        .Q(m_axi_araddr[0]),
+        .Q(\m_axi_araddr[31] [0]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[10] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[10]),
-        .Q(m_axi_araddr[10]),
+        .Q(\m_axi_araddr[31] [10]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[11] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[11]),
-        .Q(m_axi_araddr[11]),
+        .Q(\m_axi_araddr[31] [11]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[12] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[12]),
-        .Q(m_axi_araddr[12]),
+        .Q(\m_axi_araddr[31] [12]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[13] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[13]),
-        .Q(m_axi_araddr[13]),
+        .Q(\m_axi_araddr[31] [13]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[14] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[14]),
-        .Q(m_axi_araddr[14]),
+        .Q(\m_axi_araddr[31] [14]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[15] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[15]),
-        .Q(m_axi_araddr[15]),
+        .Q(\m_axi_araddr[31] [15]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[16] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[16]),
-        .Q(m_axi_araddr[16]),
+        .Q(\m_axi_araddr[31] [16]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[17] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[17]),
-        .Q(m_axi_araddr[17]),
+        .Q(\m_axi_araddr[31] [17]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[18] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[18]),
-        .Q(m_axi_araddr[18]),
+        .Q(\m_axi_araddr[31] [18]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[19] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[19]),
-        .Q(m_axi_araddr[19]),
+        .Q(\m_axi_araddr[31] [19]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[1] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[1]),
-        .Q(m_axi_araddr[1]),
+        .Q(\m_axi_araddr[31] [1]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[20] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[20]),
-        .Q(m_axi_araddr[20]),
+        .Q(\m_axi_araddr[31] [20]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[21] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[21]),
-        .Q(m_axi_araddr[21]),
+        .Q(\m_axi_araddr[31] [21]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[22] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[22]),
-        .Q(m_axi_araddr[22]),
+        .Q(\m_axi_araddr[31] [22]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[23] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[23]),
-        .Q(m_axi_araddr[23]),
+        .Q(\m_axi_araddr[31] [23]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[24] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[24]),
-        .Q(m_axi_araddr[24]),
+        .Q(\m_axi_araddr[31] [24]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[25] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[25]),
-        .Q(m_axi_araddr[25]),
+        .Q(\m_axi_araddr[31] [25]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[26] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[26]),
-        .Q(m_axi_araddr[26]),
+        .Q(\m_axi_araddr[31] [26]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[27] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[27]),
-        .Q(m_axi_araddr[27]),
+        .Q(\m_axi_araddr[31] [27]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[28] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[28]),
-        .Q(m_axi_araddr[28]),
+        .Q(\m_axi_araddr[31] [28]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[29] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[29]),
-        .Q(m_axi_araddr[29]),
+        .Q(\m_axi_araddr[31] [29]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[2] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[2]),
-        .Q(m_axi_araddr[2]),
+        .Q(\m_axi_araddr[31] [2]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[30] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[30]),
-        .Q(m_axi_araddr[30]),
+        .Q(\m_axi_araddr[31] [30]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[31] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[31]),
-        .Q(m_axi_araddr[31]),
+        .Q(\m_axi_araddr[31] [31]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[3] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[3]),
-        .Q(m_axi_araddr[3]),
+        .Q(\m_axi_araddr[31] [3]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[4] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[4]),
-        .Q(m_axi_araddr[4]),
+        .Q(\m_axi_araddr[31] [4]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[5] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[5]),
-        .Q(m_axi_araddr[5]),
+        .Q(\m_axi_araddr[31] [5]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[6] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[6]),
-        .Q(m_axi_araddr[6]),
+        .Q(\m_axi_araddr[31] [6]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[7] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[7]),
-        .Q(m_axi_araddr[7]),
+        .Q(\m_axi_araddr[31] [7]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[8] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[8]),
-        .Q(m_axi_araddr[8]),
+        .Q(\m_axi_araddr[31] [8]),
         .R(SR));
   FDRE \AXI_AADDR_i_reg[9] 
        (.C(s_ahb_hclk),
         .CE(AXI_ALEN_i0),
         .D(s_ahb_haddr[9]),
-        .Q(m_axi_araddr[9]),
+        .Q(\m_axi_araddr[31] [9]),
         .R(SR));
   LUT6 #(
     .INIT(64'hF1FF0000F1000000)) 
@@ -806,7 +823,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .D(\AXI_ABURST_i[1]_i_1_n_0 ),
         .Q(m_axi_arburst[1]),
         .R(1'b0));
-  (* SOFT_HLUTNM = "soft_lutpair7" *) 
+  (* SOFT_HLUTNM = "soft_lutpair8" *) 
   LUT2 #(
     .INIT(4'hE)) 
     \AXI_ALEN_i[1]_i_1 
@@ -893,7 +910,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I2(idle_txfer_pending),
         .I3(ctl_sm_ns1),
         .O(\FSM_sequential_ctl_sm_cs_reg[2] ));
-  (* SOFT_HLUTNM = "soft_lutpair6" *) 
+  (* SOFT_HLUTNM = "soft_lutpair7" *) 
   LUT5 #(
     .INIT(32'h01000000)) 
     \FSM_sequential_ctl_sm_cs[2]_i_6 
@@ -955,7 +972,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .D(p_1_out),
         .Q(m_axi_arprot[2]),
         .R(SR));
-  (* SOFT_HLUTNM = "soft_lutpair10" *) 
+  (* SOFT_HLUTNM = "soft_lutpair13" *) 
   LUT2 #(
     .INIT(4'h1)) 
     \INFERRED_GEN.icount_out[0]_i_1 
@@ -999,7 +1016,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I4(s_ahb_hwrite),
         .I5(core_is_idle),
         .O(M_AXI_ARVALID_i_i_3_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair10" *) 
+  (* SOFT_HLUTNM = "soft_lutpair13" *) 
   LUT3 #(
     .INIT(8'hBA)) 
     M_AXI_AWVALID_i_i_1
@@ -1007,7 +1024,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I1(m_axi_awready),
         .I2(m_axi_awvalid),
         .O(M_AXI_AWVALID_i_reg));
-  (* SOFT_HLUTNM = "soft_lutpair9" *) 
+  (* SOFT_HLUTNM = "soft_lutpair14" *) 
   LUT3 #(
     .INIT(8'hA8)) 
     M_AXI_WLAST_i_i_3
@@ -1015,7 +1032,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I1(ahb_hburst_incr),
         .I2(ahb_hburst_single),
         .O(M_AXI_WLAST_i110_out));
-  (* SOFT_HLUTNM = "soft_lutpair9" *) 
+  (* SOFT_HLUTNM = "soft_lutpair14" *) 
   LUT2 #(
     .INIT(4'hE)) 
     M_AXI_WVALID_i_i_3
@@ -1028,6 +1045,42 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
        (.I0(ahb_data_valid),
         .I1(local_en),
         .O(M_AXI_WVALID_i3__0));
+  (* SOFT_HLUTNM = "soft_lutpair10" *) 
+  LUT4 #(
+    .INIT(16'hFBAB)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[0]_i_2 
+       (.I0(\next_wr_strobe_reg[1] [1]),
+        .I1(\m_axi_araddr[31] [1]),
+        .I2(\m_axi_araddr[31] [0]),
+        .I3(\next_wr_strobe_reg[1] [0]),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ));
+  (* SOFT_HLUTNM = "soft_lutpair11" *) 
+  LUT4 #(
+    .INIT(16'hEFAE)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[1]_i_2 
+       (.I0(\next_wr_strobe_reg[1] [1]),
+        .I1(\next_wr_strobe_reg[1] [0]),
+        .I2(\m_axi_araddr[31] [1]),
+        .I3(\m_axi_araddr[31] [0]),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ));
+  (* SOFT_HLUTNM = "soft_lutpair11" *) 
+  LUT4 #(
+    .INIT(16'hFEAE)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[2]_i_2 
+       (.I0(\next_wr_strobe_reg[1] [1]),
+        .I1(\m_axi_araddr[31] [1]),
+        .I2(\m_axi_araddr[31] [0]),
+        .I3(\next_wr_strobe_reg[1] [0]),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ));
+  (* SOFT_HLUTNM = "soft_lutpair10" *) 
+  LUT4 #(
+    .INIT(16'hFEEA)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_4 
+       (.I0(\next_wr_strobe_reg[1] [1]),
+        .I1(\next_wr_strobe_reg[1] [0]),
+        .I2(\m_axi_araddr[31] [1]),
+        .I3(\m_axi_araddr[31] [0]),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ));
   FDRE \S_AHB_HRDATA_i_reg[0] 
        (.C(s_ahb_hclk),
         .CE(rd_load_timeout_cntr),
@@ -1235,6 +1288,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I3(s_ahb_htrans[0]),
         .I4(ahb_hburst_incr),
         .O(S_AHB_HREADY_OUT_i_i_13_n_0));
+  (* SOFT_HLUTNM = "soft_lutpair6" *) 
   LUT5 #(
     .INIT(32'h80000000)) 
     S_AHB_HREADY_OUT_i_i_14
@@ -1244,7 +1298,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I3(s_ahb_hready_in),
         .I4(s_ahb_htrans[0]),
         .O(ahb_burst_done));
-  (* SOFT_HLUTNM = "soft_lutpair7" *) 
+  (* SOFT_HLUTNM = "soft_lutpair8" *) 
   LUT4 #(
     .INIT(16'h222A)) 
     S_AHB_HREADY_OUT_i_i_16
@@ -1273,6 +1327,15 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I3(burst_term_hwrite),
         .I4(s_ahb_hwrite),
         .O(reset_hready010_out));
+  (* SOFT_HLUTNM = "soft_lutpair3" *) 
+  LUT4 #(
+    .INIT(16'h4000)) 
+    S_AHB_HREADY_OUT_i_i_3
+       (.I0(s_ahb_htrans[1]),
+        .I1(s_ahb_hready_in),
+        .I2(s_ahb_hsel),
+        .I3(s_ahb_htrans[0]),
+        .O(busy_detected));
   LUT6 #(
     .INIT(64'hFFFFFFFEFEFEFFFE)) 
     S_AHB_HREADY_OUT_i_i_6
@@ -1305,6 +1368,18 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .D(S_AHB_HRESP_i_reg_1),
         .Q(s_ahb_hresp),
         .R(1'b0));
+  FDRE \S_AHB_HSIZE_i_reg[0] 
+       (.C(s_ahb_hclk),
+        .CE(S_AHB_HSIZE_i0),
+        .D(s_ahb_hsize[0]),
+        .Q(\next_wr_strobe_reg[1] [0]),
+        .R(SR));
+  FDRE \S_AHB_HSIZE_i_reg[1] 
+       (.C(s_ahb_hclk),
+        .CE(S_AHB_HSIZE_i0),
+        .D(s_ahb_hsize[1]),
+        .Q(\next_wr_strobe_reg[1] [1]),
+        .R(SR));
   LUT3 #(
     .INIT(8'hBA)) 
     ahb_data_valid_burst_term_i_1
@@ -1333,39 +1408,28 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .D(ahb_done_axi_in_progress_i_1_n_0),
         .Q(ahb_done_axi_in_progress),
         .R(SR));
-  LUT5 #(
-    .INIT(32'hEFFF2000)) 
-    ahb_hburst_incr_i_i_1
-       (.I0(eqOp),
-        .I1(s_ahb_htrans[0]),
-        .I2(s_ahb_htrans[1]),
-        .I3(s_ahb_hready_out),
-        .I4(ahb_hburst_incr),
-        .O(ahb_hburst_incr_i_i_1_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair11" *) 
+  (* SOFT_HLUTNM = "soft_lutpair12" *) 
   LUT3 #(
     .INIT(8'h04)) 
-    ahb_hburst_incr_i_i_2
+    ahb_hburst_incr_i_i_1
        (.I0(s_ahb_hburst[2]),
         .I1(s_ahb_hburst[0]),
         .I2(s_ahb_hburst[1]),
         .O(eqOp));
   FDRE ahb_hburst_incr_i_reg
        (.C(s_ahb_hclk),
-        .CE(1'b1),
-        .D(ahb_hburst_incr_i_i_1_n_0),
+        .CE(S_AHB_HSIZE_i0),
+        .D(eqOp),
         .Q(ahb_hburst_incr),
         .R(SR));
-  LUT5 #(
-    .INIT(32'hEFFF2000)) 
+  LUT3 #(
+    .INIT(8'h40)) 
     ahb_hburst_single_i_i_1
-       (.I0(eqOp0_in),
-        .I1(s_ahb_htrans[0]),
-        .I2(s_ahb_htrans[1]),
-        .I3(s_ahb_hready_out),
-        .I4(ahb_hburst_single),
-        .O(ahb_hburst_single_i_i_1_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair11" *) 
+       (.I0(s_ahb_htrans[0]),
+        .I1(s_ahb_htrans[1]),
+        .I2(s_ahb_hready_out),
+        .O(S_AHB_HSIZE_i0));
+  (* SOFT_HLUTNM = "soft_lutpair12" *) 
   LUT3 #(
     .INIT(8'h01)) 
     ahb_hburst_single_i_i_2
@@ -1375,8 +1439,8 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .O(eqOp0_in));
   FDRE ahb_hburst_single_i_reg
        (.C(s_ahb_hclk),
-        .CE(1'b1),
-        .D(ahb_hburst_single_i_i_1_n_0),
+        .CE(S_AHB_HSIZE_i0),
+        .D(eqOp0_in),
         .Q(ahb_hburst_single),
         .R(SR));
   LUT6 #(
@@ -1389,7 +1453,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I4(s_ahb_htrans[1]),
         .I5(s_ahb_htrans[0]),
         .O(ahb_penult_beat_i_1_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair5" *) 
+  (* SOFT_HLUTNM = "soft_lutpair6" *) 
   LUT2 #(
     .INIT(4'h8)) 
     ahb_penult_beat_i_3
@@ -1492,19 +1556,19 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
   FDRE \burst_term_txer_cnt_i_reg[1] 
        (.C(s_ahb_hclk),
         .CE(burst_term_txer_cnt_i0),
-        .D(valid_cnt_required[0]),
+        .D(\burst_term_txer_cnt_i_reg[3]_0 [0]),
         .Q(axi_last_beat_reg[0]),
         .R(SR));
   FDRE \burst_term_txer_cnt_i_reg[2] 
        (.C(s_ahb_hclk),
         .CE(burst_term_txer_cnt_i0),
-        .D(valid_cnt_required[1]),
+        .D(\burst_term_txer_cnt_i_reg[3]_0 [1]),
         .Q(axi_last_beat_reg[1]),
         .R(SR));
   FDRE \burst_term_txer_cnt_i_reg[3] 
        (.C(s_ahb_hclk),
         .CE(burst_term_txer_cnt_i0),
-        .D(valid_cnt_required[2]),
+        .D(\burst_term_txer_cnt_i_reg[3]_0 [2]),
         .Q(axi_last_beat_reg[2]),
         .R(SR));
   LUT5 #(
@@ -1549,7 +1613,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .D(dummy_txfer_in_progress_i_1_n_0),
         .Q(dummy_txfer_in_progress_reg_n_0),
         .R(1'b0));
-  (* SOFT_HLUTNM = "soft_lutpair6" *) 
+  (* SOFT_HLUTNM = "soft_lutpair7" *) 
   LUT4 #(
     .INIT(16'hFE00)) 
     idle_txfer_pending_i_3
@@ -1570,14 +1634,14 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .D(nonseq_txfer_pending_i_reg_0),
         .Q(nonseq_txfer_pending),
         .R(SR));
-  (* SOFT_HLUTNM = "soft_lutpair8" *) 
+  (* SOFT_HLUTNM = "soft_lutpair9" *) 
   LUT4 #(
     .INIT(16'hEFE0)) 
     \valid_cnt_required_i[1]_i_1 
        (.I0(s_ahb_hburst[1]),
         .I1(s_ahb_hburst[2]),
         .I2(nonseq_detected),
-        .I3(valid_cnt_required[0]),
+        .I3(\burst_term_txer_cnt_i_reg[3]_0 [0]),
         .O(\valid_cnt_required_i[1]_i_1_n_0 ));
   LUT6 #(
     .INIT(64'hFFBFFFFF00800000)) 
@@ -1587,18 +1651,18 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
         .I2(s_ahb_hready_in),
         .I3(s_ahb_htrans[0]),
         .I4(s_ahb_htrans[1]),
-        .I5(valid_cnt_required[1]),
+        .I5(\burst_term_txer_cnt_i_reg[3]_0 [1]),
         .O(\valid_cnt_required_i[2]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair8" *) 
+  (* SOFT_HLUTNM = "soft_lutpair9" *) 
   LUT4 #(
     .INIT(16'h8F80)) 
     \valid_cnt_required_i[3]_i_1 
        (.I0(s_ahb_hburst[1]),
         .I1(s_ahb_hburst[2]),
         .I2(nonseq_detected),
-        .I3(valid_cnt_required[2]),
+        .I3(\burst_term_txer_cnt_i_reg[3]_0 [2]),
         .O(\valid_cnt_required_i[3]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair3" *) 
+  (* SOFT_HLUTNM = "soft_lutpair5" *) 
   LUT4 #(
     .INIT(16'h0800)) 
     \valid_cnt_required_i[3]_i_2 
@@ -1611,25 +1675,25 @@ module bd_mem_ahblite_axi_bridge_0_0_ahb_if
        (.C(s_ahb_hclk),
         .CE(1'b1),
         .D(\valid_cnt_required_i[1]_i_1_n_0 ),
-        .Q(valid_cnt_required[0]),
+        .Q(\burst_term_txer_cnt_i_reg[3]_0 [0]),
         .R(SR));
   FDRE \valid_cnt_required_i_reg[2] 
        (.C(s_ahb_hclk),
         .CE(1'b1),
         .D(\valid_cnt_required_i[2]_i_1_n_0 ),
-        .Q(valid_cnt_required[1]),
+        .Q(\burst_term_txer_cnt_i_reg[3]_0 [1]),
         .R(SR));
   FDRE \valid_cnt_required_i_reg[3] 
        (.C(s_ahb_hclk),
         .CE(1'b1),
         .D(\valid_cnt_required_i[3]_i_1_n_0 ),
-        .Q(valid_cnt_required[2]),
+        .Q(\burst_term_txer_cnt_i_reg[3]_0 [2]),
         .R(SR));
 endmodule
 
 (* C_AHB_AXI_TIMEOUT = "0" *) (* C_FAMILY = "artix7" *) (* C_INSTANCE = "bd_mem_ahblite_axi_bridge_0_0" *) 
 (* C_M_AXI_ADDR_WIDTH = "32" *) (* C_M_AXI_DATA_WIDTH = "32" *) (* C_M_AXI_NON_SECURE = "1" *) 
-(* C_M_AXI_PROTOCOL = "AXI4" *) (* C_M_AXI_SUPPORTS_NARROW_BURST = "0" *) (* C_M_AXI_THREAD_ID_WIDTH = "4" *) 
+(* C_M_AXI_PROTOCOL = "AXI4" *) (* C_M_AXI_SUPPORTS_NARROW_BURST = "1" *) (* C_M_AXI_THREAD_ID_WIDTH = "4" *) 
 (* C_S_AHB_ADDR_WIDTH = "32" *) (* C_S_AHB_DATA_WIDTH = "32" *) (* ORIG_REF_NAME = "ahblite_axi_bridge" *) 
 (* downgradeipidentifiedwarnings = "yes" *) 
 module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
@@ -1756,28 +1820,33 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
   wire AHB_IF_n_22;
   wire AHB_IF_n_23;
   wire AHB_IF_n_24;
-  wire AHB_IF_n_28;
+  wire AHB_IF_n_29;
   wire AHB_IF_n_3;
-  wire AHB_IF_n_31;
-  wire AHB_IF_n_38;
+  wire AHB_IF_n_32;
   wire AHB_IF_n_39;
-  wire AHB_IF_n_40;
-  wire AHB_IF_n_41;
-  wire AHB_IF_n_42;
+  wire AHB_IF_n_74;
+  wire AHB_IF_n_75;
+  wire AHB_IF_n_76;
+  wire AHB_IF_n_77;
+  wire AHB_IF_n_78;
+  wire AHB_IF_n_79;
+  wire AHB_IF_n_80;
+  wire AHB_IF_n_81;
   wire AXI_ALEN_i0;
-  wire AXI_RCHANNEL_n_10;
+  wire AXI_RCHANNEL_n_4;
   wire AXI_RCHANNEL_n_5;
-  wire AXI_RCHANNEL_n_6;
+  wire AXI_RCHANNEL_n_9;
   wire AXI_WCHANNEL_n_10;
   wire AXI_WCHANNEL_n_11;
-  wire AXI_WCHANNEL_n_12;
-  wire AXI_WCHANNEL_n_13;
-  wire AXI_WCHANNEL_n_14;
+  wire AXI_WCHANNEL_n_16;
+  wire AXI_WCHANNEL_n_17;
+  wire AXI_WCHANNEL_n_7;
   wire AXI_WCHANNEL_n_8;
   wire AXI_WCHANNEL_n_9;
   wire M_AXI_WLAST_i110_out;
   wire M_AXI_WVALID_i3__0;
   wire S_AHB_HREADY_OUT_i116_out;
+  wire [1:0]S_AHB_HSIZE_i;
   wire ahb_burst_done;
   wire ahb_data_valid;
   wire ahb_data_valid_burst_term;
@@ -1825,7 +1894,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
   wire [31:0]m_axi_wdata;
   wire m_axi_wlast;
   wire m_axi_wready;
-  wire [2:2]\^m_axi_wstrb ;
+  wire [3:0]m_axi_wstrb;
   wire m_axi_wvalid;
   wire nonseq_detected;
   wire nonseq_txfer_pending;
@@ -1887,10 +1956,6 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
   assign m_axi_awlock = \<const0> ;
   assign m_axi_awprot[2:0] = m_axi_arprot;
   assign m_axi_awsize[2:0] = m_axi_arsize;
-  assign m_axi_wstrb[3] = \^m_axi_wstrb [2];
-  assign m_axi_wstrb[2] = \^m_axi_wstrb [2];
-  assign m_axi_wstrb[1] = \^m_axi_wstrb [2];
-  assign m_axi_wstrb[0] = \^m_axi_wstrb [2];
   bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_control AHBLITE_AXI_CONTROL
        (.AXI_ALEN_i0(AXI_ALEN_i0),
         .\FSM_sequential_ctl_sm_cs_reg[0]_0 (AHBLITE_AXI_CONTROL_n_4),
@@ -1898,15 +1963,14 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .M_AXI_WLAST_i_reg(m_axi_wlast),
         .M_AXI_WVALID_i3__0(M_AXI_WVALID_i3__0),
         .M_AXI_WVALID_i_reg(AHBLITE_AXI_CONTROL_n_8),
-        .M_AXI_WVALID_i_reg_0(AXI_WCHANNEL_n_13),
+        .M_AXI_WVALID_i_reg_0(AXI_WCHANNEL_n_16),
         .S_AHB_HREADY_OUT_i116_out(S_AHB_HREADY_OUT_i116_out),
         .S_AHB_HREADY_OUT_i_reg(AHBLITE_AXI_CONTROL_n_10),
-        .S_AHB_HREADY_OUT_i_reg_0(s_ahb_hready_out),
         .S_AHB_HRESP_i_reg(AHBLITE_AXI_CONTROL_n_11),
         .ahb_burst_done(ahb_burst_done),
         .ahb_data_valid_burst_term(ahb_data_valid_burst_term),
         .ahb_done_axi_in_progress(ahb_done_axi_in_progress),
-        .ahb_hburst_incr_i_reg(AHB_IF_n_38),
+        .ahb_hburst_incr_i_reg(AHB_IF_n_77),
         .ahb_hburst_single(ahb_hburst_single),
         .ahb_penult_beat_reg(AHB_IF_n_3),
         .ahb_wnr_i_reg_0(AHBLITE_AXI_CONTROL_n_5),
@@ -1926,8 +1990,8 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .ctl_sm_ns14_out(ctl_sm_ns14_out),
         .idle_txfer_pending(idle_txfer_pending),
         .idle_txfer_pending_reg(AHBLITE_AXI_CONTROL_n_12),
-        .idle_txfer_pending_reg_0(AXI_RCHANNEL_n_10),
-        .idle_txfer_pending_reg_1(AXI_RCHANNEL_n_6),
+        .idle_txfer_pending_reg_0(AXI_RCHANNEL_n_9),
+        .idle_txfer_pending_reg_1(AXI_RCHANNEL_n_5),
         .init_pending_txfer(init_pending_txfer),
         .last_axi_rd_sample(last_axi_rd_sample),
         .m_axi_bready(m_axi_bready),
@@ -1948,6 +2012,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .s_ahb_hburst(s_ahb_hburst[2:1]),
         .s_ahb_hclk(s_ahb_hclk),
         .s_ahb_hready_in(s_ahb_hready_in),
+        .s_ahb_hready_out(s_ahb_hready_out),
         .s_ahb_hresetn(s_ahb_hresetn),
         .s_ahb_hresp(s_ahb_hresp),
         .s_ahb_hsel(s_ahb_hsel),
@@ -1957,7 +2022,8 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .set_axi_waddr(set_axi_waddr),
         .set_hresp_err(set_hresp_err));
   bd_mem_ahblite_axi_bridge_0_0_ahb_data_counter AHB_DATA_COUNTER
-       (.E(AHB_IF_n_28),
+       (.D(valid_cnt_required),
+        .E(AHB_IF_n_29),
         .Q({AHB_DATA_COUNTER_n_1,AHB_DATA_COUNTER_n_2,AHB_DATA_COUNTER_n_3,AHB_DATA_COUNTER_n_4,AHB_DATA_COUNTER_n_5}),
         .SR(cntr_rst),
         .ahb_penult_beat_reg(AHB_DATA_COUNTER_n_0),
@@ -1965,12 +2031,11 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .s_ahb_hclk(s_ahb_hclk),
         .s_ahb_hready_in(s_ahb_hready_in),
         .s_ahb_hsel(s_ahb_hsel),
-        .s_ahb_htrans(s_ahb_htrans),
-        .valid_cnt_required(valid_cnt_required));
+        .s_ahb_htrans(s_ahb_htrans));
   bd_mem_ahblite_axi_bridge_0_0_ahb_if AHB_IF
        (.AXI_ALEN_i0(AXI_ALEN_i0),
-        .D(AHB_IF_n_40),
-        .E(AHB_IF_n_28),
+        .D(AHB_IF_n_79),
+        .E(AHB_IF_n_29),
         .\FSM_sequential_ctl_sm_cs_reg[0] (AHB_IF_n_22),
         .\FSM_sequential_ctl_sm_cs_reg[0]_0 (AHBLITE_AXI_CONTROL_n_9),
         .\FSM_sequential_ctl_sm_cs_reg[1] (AHBLITE_AXI_CONTROL_n_4),
@@ -1978,30 +2043,34 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .\FSM_sequential_ctl_sm_cs_reg[2]_0 (AHB_IF_n_19),
         .\FSM_sequential_ctl_sm_cs_reg[2]_1 (AHBLITE_AXI_CONTROL_n_5),
         .\INFERRED_GEN.icount_out_reg[3] (AHB_DATA_COUNTER_n_0),
-        .\INFERRED_GEN.icount_out_reg[4] ({AXI_WCHANNEL_n_8,AXI_WCHANNEL_n_9,AXI_WCHANNEL_n_10,AXI_WCHANNEL_n_11,AXI_WCHANNEL_n_12}),
+        .\INFERRED_GEN.icount_out_reg[4] ({AXI_WCHANNEL_n_7,AXI_WCHANNEL_n_8,AXI_WCHANNEL_n_9,AXI_WCHANNEL_n_10,AXI_WCHANNEL_n_11}),
         .\INFERRED_GEN.icount_out_reg[4]_0 ({AHB_DATA_COUNTER_n_1,AHB_DATA_COUNTER_n_2,AHB_DATA_COUNTER_n_3,AHB_DATA_COUNTER_n_4,AHB_DATA_COUNTER_n_5}),
-        .M_AXI_ARVALID_i_reg(AHB_IF_n_42),
+        .M_AXI_ARVALID_i_reg(AHB_IF_n_81),
         .M_AXI_ARVALID_i_reg_0(m_axi_arvalid),
-        .M_AXI_AWVALID_i_reg(AHB_IF_n_41),
+        .M_AXI_AWVALID_i_reg(AHB_IF_n_80),
         .M_AXI_WLAST_i110_out(M_AXI_WLAST_i110_out),
         .M_AXI_WLAST_i_reg(m_axi_wlast),
         .M_AXI_WVALID_i3__0(M_AXI_WVALID_i3__0),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] (AHB_IF_n_39),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] (AHB_IF_n_74),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] (AHB_IF_n_75),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] (AHB_IF_n_76),
         .Q(burst_term_cur_cnt),
         .SR(cntr_rst),
         .S_AHB_HREADY_OUT_i116_out(S_AHB_HREADY_OUT_i116_out),
         .S_AHB_HREADY_OUT_i_reg_0(AHB_IF_n_24),
-        .S_AHB_HREADY_OUT_i_reg_1(AHB_IF_n_38),
+        .S_AHB_HREADY_OUT_i_reg_1(AHB_IF_n_77),
         .S_AHB_HREADY_OUT_i_reg_2(AHBLITE_AXI_CONTROL_n_10),
         .S_AHB_HRESP_i_reg_0(AHB_IF_n_16),
         .S_AHB_HRESP_i_reg_1(AHBLITE_AXI_CONTROL_n_11),
         .ahb_burst_done(ahb_burst_done),
         .ahb_data_valid(ahb_data_valid),
         .ahb_data_valid_burst_term(ahb_data_valid_burst_term),
-        .ahb_data_valid_burst_term_reg(AHB_IF_n_39),
+        .ahb_data_valid_burst_term_reg(AHB_IF_n_78),
         .ahb_done_axi_in_progress(ahb_done_axi_in_progress),
         .ahb_hburst_single(ahb_hburst_single),
         .ahb_penult_beat_reg_0(AHB_IF_n_3),
-        .ahb_rd_txer_pending_reg(AXI_RCHANNEL_n_5),
+        .ahb_rd_txer_pending_reg(AXI_RCHANNEL_n_4),
         .axi_last_beat_reg(burst_term_txer_cnt),
         .axi_waddr_done_i(axi_waddr_done_i),
         .axi_wdata_done_i0(axi_wdata_done_i0),
@@ -2010,21 +2079,23 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .burst_term_hwrite_reg_0(AHBLITE_AXI_CONTROL_n_14),
         .burst_term_single_incr(burst_term_single_incr),
         .burst_term_single_incr_reg_0(AHBLITE_AXI_CONTROL_n_16),
+        .\burst_term_txer_cnt_i_reg[3]_0 (valid_cnt_required),
         .burst_term_with_nonseq(burst_term_with_nonseq),
+        .busy_detected(busy_detected),
         .core_is_idle(core_is_idle),
         .ctl_sm_ns033_out(ctl_sm_ns033_out),
         .ctl_sm_ns1(ctl_sm_ns1),
         .ctl_sm_ns132_out(ctl_sm_ns132_out),
         .ctl_sm_ns14_out(ctl_sm_ns14_out),
-        .dummy_on_axi_progress_reg(AHB_IF_n_31),
+        .dummy_on_axi_progress_reg(AHB_IF_n_32),
         .eqOp6_out(eqOp6_out),
         .idle_txfer_pending(idle_txfer_pending),
         .idle_txfer_pending_reg_0(AHB_IF_n_23),
         .idle_txfer_pending_reg_1(AHBLITE_AXI_CONTROL_n_12),
         .init_pending_txfer(init_pending_txfer),
         .local_en(local_en),
-        .local_en_reg(AXI_WCHANNEL_n_14),
-        .m_axi_araddr(m_axi_araddr),
+        .local_en_reg(AXI_WCHANNEL_n_17),
+        .\m_axi_araddr[31] (m_axi_araddr),
         .m_axi_arburst(m_axi_arburst),
         .m_axi_arcache(\^m_axi_arcache ),
         .m_axi_arlen({\^m_axi_arlen ,\^m_axi_awlen }),
@@ -2037,6 +2108,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .m_axi_bvalid(m_axi_bvalid),
         .m_axi_rdata(m_axi_rdata),
         .m_axi_wready(m_axi_wready),
+        .\next_wr_strobe_reg[1] (S_AHB_HSIZE_i),
         .nonseq_detected(nonseq_detected),
         .nonseq_txfer_pending(nonseq_txfer_pending),
         .nonseq_txfer_pending_i_reg_0(AHBLITE_AXI_CONTROL_n_13),
@@ -2059,15 +2131,14 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .s_ahb_htrans(s_ahb_htrans),
         .s_ahb_hwrite(s_ahb_hwrite),
         .seq_detected(seq_detected),
-        .set_axi_waddr(set_axi_waddr),
-        .valid_cnt_required(valid_cnt_required));
+        .set_axi_waddr(set_axi_waddr));
   bd_mem_ahblite_axi_bridge_0_0_axi_rchannel AXI_RCHANNEL
-       (.M_AXI_ARVALID_i_reg_0(AHB_IF_n_42),
+       (.M_AXI_ARVALID_i_reg_0(AHB_IF_n_81),
         .SR(cntr_rst),
-        .S_AHB_HREADY_OUT_i_reg(AXI_RCHANNEL_n_6),
-        .S_AHB_HREADY_OUT_i_reg_0(AXI_RCHANNEL_n_10),
+        .S_AHB_HREADY_OUT_i_reg(AXI_RCHANNEL_n_5),
+        .S_AHB_HREADY_OUT_i_reg_0(AXI_RCHANNEL_n_9),
         .burst_term(burst_term),
-        .burst_term_i_reg(AXI_RCHANNEL_n_5),
+        .burst_term_i_reg(AXI_RCHANNEL_n_4),
         .busy_detected(busy_detected),
         .ctl_sm_ns033_out(ctl_sm_ns033_out),
         .ctl_sm_ns1(ctl_sm_ns1),
@@ -2093,21 +2164,26 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .seq_detected(seq_detected),
         .set_hresp_err(set_hresp_err));
   bd_mem_ahblite_axi_bridge_0_0_axi_wchannel AXI_WCHANNEL
-       (.D(AHB_IF_n_40),
+       (.D(AHB_IF_n_79),
         .\FSM_sequential_ctl_sm_cs_reg[0] (AHBLITE_AXI_CONTROL_n_8),
-        .M_AXI_AWVALID_i_reg_0(AHB_IF_n_41),
+        .M_AXI_AWVALID_i_reg_0(AHB_IF_n_80),
         .M_AXI_WLAST_i110_out(M_AXI_WLAST_i110_out),
-        .Q({AXI_WCHANNEL_n_8,AXI_WCHANNEL_n_9,AXI_WCHANNEL_n_10,AXI_WCHANNEL_n_11,AXI_WCHANNEL_n_12}),
+        .Q({AXI_WCHANNEL_n_7,AXI_WCHANNEL_n_8,AXI_WCHANNEL_n_9,AXI_WCHANNEL_n_10,AXI_WCHANNEL_n_11}),
         .SR(cntr_rst),
+        .\S_AHB_HSIZE_i_reg[1] (AHB_IF_n_39),
+        .\S_AHB_HSIZE_i_reg[1]_0 (AHB_IF_n_74),
+        .\S_AHB_HSIZE_i_reg[1]_1 (AHB_IF_n_75),
+        .\S_AHB_HSIZE_i_reg[1]_2 (AHB_IF_n_76),
+        .\S_AHB_HSIZE_i_reg[1]_3 (S_AHB_HSIZE_i),
         .ahb_data_valid(ahb_data_valid),
         .ahb_data_valid_burst_term(ahb_data_valid_burst_term),
-        .ahb_data_valid_i_reg(AXI_WCHANNEL_n_13),
-        .ahb_data_valid_i_reg_0(AXI_WCHANNEL_n_14),
+        .ahb_data_valid_i_reg(AXI_WCHANNEL_n_16),
+        .ahb_data_valid_i_reg_0(AXI_WCHANNEL_n_17),
         .ahb_wnr_i_reg(AHBLITE_AXI_CONTROL_n_15),
         .axi_waddr_done_i(axi_waddr_done_i),
         .axi_wdata_done_i0(axi_wdata_done_i0),
         .burst_term(burst_term),
-        .\burst_term_cur_cnt_i_reg[1] (AHB_IF_n_31),
+        .\burst_term_cur_cnt_i_reg[1] (AHB_IF_n_32),
         .\burst_term_cur_cnt_i_reg[4] (burst_term_cur_cnt),
         .\burst_term_txer_cnt_i_reg[3] (burst_term_txer_cnt),
         .eqOp6_out(eqOp6_out),
@@ -2117,16 +2193,16 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_bridge
         .m_axi_wdata(m_axi_wdata),
         .m_axi_wlast(m_axi_wlast),
         .m_axi_wready(m_axi_wready),
-        .m_axi_wstrb(\^m_axi_wstrb ),
+        .m_axi_wstrb(m_axi_wstrb),
         .m_axi_wvalid(m_axi_wvalid),
-        .nonseq_txfer_pending_i_reg(AHB_IF_n_39),
+        .nonseq_txfer_pending_i_reg(AHB_IF_n_78),
         .p_27_in(p_27_in),
         .s_ahb_hclk(s_ahb_hclk),
         .s_ahb_hresetn(s_ahb_hresetn),
         .s_ahb_htrans(s_ahb_htrans[1]),
         .s_ahb_hwdata(s_ahb_hwdata),
         .set_axi_waddr(set_axi_waddr),
-        .valid_cnt_required(valid_cnt_required));
+        .\valid_cnt_required_i_reg[3] (valid_cnt_required));
   GND GND
        (.G(\<const0> ));
 endmodule
@@ -2189,7 +2265,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_control
     M_AXI_WVALID_i3__0,
     busy_detected,
     S_AHB_HREADY_OUT_i116_out,
-    S_AHB_HREADY_OUT_i_reg_0,
+    s_ahb_hready_out,
     s_ahb_hresp,
     s_ahb_hresetn,
     nonseq_txfer_pending_i_reg_5,
@@ -2253,7 +2329,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_control
   input M_AXI_WVALID_i3__0;
   input busy_detected;
   input S_AHB_HREADY_OUT_i116_out;
-  input S_AHB_HREADY_OUT_i_reg_0;
+  input s_ahb_hready_out;
   input s_ahb_hresp;
   input s_ahb_hresetn;
   input nonseq_txfer_pending_i_reg_5;
@@ -2287,7 +2363,6 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_control
   wire S_AHB_HREADY_OUT_i_i_11_n_0;
   wire S_AHB_HREADY_OUT_i_i_8_n_0;
   wire S_AHB_HREADY_OUT_i_reg;
-  wire S_AHB_HREADY_OUT_i_reg_0;
   wire S_AHB_HRESP_i_i_4_n_0;
   wire S_AHB_HRESP_i_i_6_n_0;
   wire S_AHB_HRESP_i_i_8_n_0;
@@ -2340,6 +2415,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_control
   wire [1:0]s_ahb_hburst;
   wire s_ahb_hclk;
   wire s_ahb_hready_in;
+  wire s_ahb_hready_out;
   wire s_ahb_hresetn;
   wire s_ahb_hresp;
   wire s_ahb_hsel;
@@ -2527,7 +2603,7 @@ module bd_mem_ahblite_axi_bridge_0_0_ahblite_axi_control
         .I2(reset_hready),
         .I3(S_AHB_HREADY_OUT_i116_out),
         .I4(\AHB_IF/p_9_in ),
-        .I5(S_AHB_HREADY_OUT_i_reg_0),
+        .I5(s_ahb_hready_out),
         .O(S_AHB_HREADY_OUT_i_reg));
   LUT6 #(
     .INIT(64'hBBBABABAABAAAAAA)) 
@@ -2720,7 +2796,6 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
     m_axi_arvalid,
     m_axi_rready,
     rd_load_timeout_cntr,
-    busy_detected,
     burst_term_i_reg,
     S_AHB_HREADY_OUT_i_reg,
     ctl_sm_ns033_out,
@@ -2730,6 +2805,7 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
     SR,
     s_ahb_hclk,
     M_AXI_ARVALID_i_reg_0,
+    busy_detected,
     set_hresp_err,
     m_axi_rvalid,
     m_axi_rlast,
@@ -2750,7 +2826,6 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
   output m_axi_arvalid;
   output m_axi_rready;
   output rd_load_timeout_cntr;
-  output busy_detected;
   output burst_term_i_reg;
   output S_AHB_HREADY_OUT_i_reg;
   output ctl_sm_ns033_out;
@@ -2760,6 +2835,7 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
   input [0:0]SR;
   input s_ahb_hclk;
   input M_AXI_ARVALID_i_reg_0;
+  input busy_detected;
   input set_hresp_err;
   input m_axi_rvalid;
   input m_axi_rlast;
@@ -2790,13 +2866,12 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
   wire ahb_rd_txer_pending07_out__0;
   wire ahb_rd_txer_pending_i_1_n_0;
   wire axi_last_avlbl_i_1_n_0;
-  wire axi_last_avlbl_i_2_n_0;
   wire axi_last_avlbl_reg_n_0;
   wire axi_rd_avlbl;
   wire axi_rd_avlbl_i_1_n_0;
+  wire axi_rd_avlbl_i_2_n_0;
   wire [1:1]axi_rresp_avlbl;
   wire \axi_rresp_avlbl[1]_i_1_n_0 ;
-  wire \axi_rresp_avlbl[1]_i_2_n_0 ;
   wire bridge_rd_in_progress;
   wire bridge_rd_in_progress_i_1_n_0;
   wire burst_term;
@@ -2834,7 +2909,6 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
         .D(M_AXI_ARVALID_i_reg_0),
         .Q(m_axi_arvalid),
         .R(SR));
-  (* SOFT_HLUTNM = "soft_lutpair13" *) 
   LUT4 #(
     .INIT(16'hBAAA)) 
     M_AXI_RLAST_reg_i_1
@@ -2863,7 +2937,7 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
         .I4(busy_detected),
         .I5(set_hresp_err),
         .O(M_AXI_RREADY_i_i_2_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair12" *) 
+  (* SOFT_HLUTNM = "soft_lutpair16" *) 
   LUT3 #(
     .INIT(8'h80)) 
     M_AXI_RREADY_i_i_3
@@ -2877,7 +2951,7 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
         .D(M_AXI_RREADY_i_i_1_n_0),
         .Q(m_axi_rready),
         .R(SR));
-  (* SOFT_HLUTNM = "soft_lutpair13" *) 
+  (* SOFT_HLUTNM = "soft_lutpair15" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \S_AHB_HRDATA_i[31]_i_1 
@@ -2904,15 +2978,6 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
         .I4(m_axi_rvalid),
         .I5(busy_detected),
         .O(rvalid_rready));
-  (* SOFT_HLUTNM = "soft_lutpair14" *) 
-  LUT4 #(
-    .INIT(16'h4000)) 
-    S_AHB_HREADY_OUT_i_i_3
-       (.I0(s_ahb_htrans[1]),
-        .I1(s_ahb_hready_in),
-        .I2(s_ahb_hsel),
-        .I3(s_ahb_htrans[0]),
-        .O(busy_detected));
   LUT6 #(
     .INIT(64'h000000000000F404)) 
     S_AHB_HREADY_OUT_i_i_9
@@ -2956,21 +3021,21 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
         .Q(ahb_rd_req),
         .R(1'b0));
   LUT6 #(
-    .INIT(64'h0000EA00EA00EA00)) 
+    .INIT(64'hFFFFFFFF40000000)) 
     ahb_rd_txer_pending_i_1
-       (.I0(ahb_rd_txer_pending),
-        .I1(bridge_rd_in_progress),
-        .I2(busy_detected),
-        .I3(s_ahb_hresetn),
-        .I4(ahb_rd_req),
-        .I5(axi_rd_avlbl),
+       (.I0(s_ahb_htrans[1]),
+        .I1(s_ahb_hready_in),
+        .I2(s_ahb_hsel),
+        .I3(s_ahb_htrans[0]),
+        .I4(bridge_rd_in_progress),
+        .I5(ahb_rd_txer_pending),
         .O(ahb_rd_txer_pending_i_1_n_0));
   FDRE ahb_rd_txer_pending_reg
        (.C(s_ahb_hclk),
         .CE(1'b1),
         .D(ahb_rd_txer_pending_i_1_n_0),
         .Q(ahb_rd_txer_pending),
-        .R(1'b0));
+        .R(axi_rd_avlbl_i_1_n_0));
   LUT6 #(
     .INIT(64'hFF04040400000000)) 
     ahb_wnr_i_i_3
@@ -2981,72 +3046,62 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
         .I4(axi_rd_avlbl),
         .I5(last_axi_rd_sample),
         .O(ctl_sm_ns033_out));
-  LUT3 #(
-    .INIT(8'h8F)) 
-    axi_last_avlbl_i_1
-       (.I0(axi_rd_avlbl),
-        .I1(ahb_rd_req),
-        .I2(s_ahb_hresetn),
-        .O(axi_last_avlbl_i_1_n_0));
   LUT6 #(
     .INIT(64'hBFBFBFFF80808000)) 
-    axi_last_avlbl_i_2
+    axi_last_avlbl_i_1
        (.I0(m_axi_rlast),
         .I1(m_axi_rready),
         .I2(m_axi_rvalid),
         .I3(ahb_rd_txer_pending),
         .I4(busy_detected),
         .I5(axi_last_avlbl_reg_n_0),
-        .O(axi_last_avlbl_i_2_n_0));
+        .O(axi_last_avlbl_i_1_n_0));
   FDRE axi_last_avlbl_reg
        (.C(s_ahb_hclk),
         .CE(1'b1),
-        .D(axi_last_avlbl_i_2_n_0),
+        .D(axi_last_avlbl_i_1_n_0),
         .Q(axi_last_avlbl_reg_n_0),
-        .R(axi_last_avlbl_i_1_n_0));
-  LUT6 #(
-    .INIT(64'h0000FF00A800A800)) 
+        .R(axi_rd_avlbl_i_1_n_0));
+  LUT3 #(
+    .INIT(8'h8F)) 
     axi_rd_avlbl_i_1
-       (.I0(rd_load_timeout_cntr),
-        .I1(ahb_rd_txer_pending),
-        .I2(busy_detected),
-        .I3(s_ahb_hresetn),
-        .I4(ahb_rd_req),
-        .I5(axi_rd_avlbl),
+       (.I0(axi_rd_avlbl),
+        .I1(ahb_rd_req),
+        .I2(s_ahb_hresetn),
         .O(axi_rd_avlbl_i_1_n_0));
+  (* SOFT_HLUTNM = "soft_lutpair15" *) 
+  LUT5 #(
+    .INIT(32'hFFFFE000)) 
+    axi_rd_avlbl_i_2
+       (.I0(busy_detected),
+        .I1(ahb_rd_txer_pending),
+        .I2(m_axi_rvalid),
+        .I3(m_axi_rready),
+        .I4(axi_rd_avlbl),
+        .O(axi_rd_avlbl_i_2_n_0));
   FDRE axi_rd_avlbl_reg
        (.C(s_ahb_hclk),
         .CE(1'b1),
-        .D(axi_rd_avlbl_i_1_n_0),
+        .D(axi_rd_avlbl_i_2_n_0),
         .Q(axi_rd_avlbl),
-        .R(1'b0));
+        .R(axi_rd_avlbl_i_1_n_0));
   LUT6 #(
-    .INIT(64'h0000E200E200E200)) 
+    .INIT(64'hBFBFBFFF80808000)) 
     \axi_rresp_avlbl[1]_i_1 
-       (.I0(axi_rresp_avlbl),
-        .I1(\axi_rresp_avlbl[1]_i_2_n_0 ),
-        .I2(m_axi_rresp),
-        .I3(s_ahb_hresetn),
-        .I4(ahb_rd_req),
-        .I5(axi_rd_avlbl),
+       (.I0(m_axi_rresp),
+        .I1(m_axi_rready),
+        .I2(m_axi_rvalid),
+        .I3(ahb_rd_txer_pending),
+        .I4(busy_detected),
+        .I5(axi_rresp_avlbl),
         .O(\axi_rresp_avlbl[1]_i_1_n_0 ));
-  LUT6 #(
-    .INIT(64'h8A88888888888888)) 
-    \axi_rresp_avlbl[1]_i_2 
-       (.I0(rd_load_timeout_cntr),
-        .I1(ahb_rd_txer_pending),
-        .I2(s_ahb_htrans[1]),
-        .I3(s_ahb_hready_in),
-        .I4(s_ahb_hsel),
-        .I5(s_ahb_htrans[0]),
-        .O(\axi_rresp_avlbl[1]_i_2_n_0 ));
   FDRE \axi_rresp_avlbl_reg[1] 
        (.C(s_ahb_hclk),
         .CE(1'b1),
         .D(\axi_rresp_avlbl[1]_i_1_n_0 ),
         .Q(axi_rresp_avlbl),
-        .R(1'b0));
-  (* SOFT_HLUTNM = "soft_lutpair12" *) 
+        .R(axi_rd_avlbl_i_1_n_0));
+  (* SOFT_HLUTNM = "soft_lutpair16" *) 
   LUT5 #(
     .INIT(32'hBFFFAAAA)) 
     bridge_rd_in_progress_i_1
@@ -3072,7 +3127,6 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_rchannel
         .I4(burst_term),
         .I5(init_pending_txfer),
         .O(burst_term_i_reg));
-  (* SOFT_HLUTNM = "soft_lutpair14" *) 
   LUT4 #(
     .INIT(16'h8000)) 
     seq_detected_d1_i_1
@@ -3091,8 +3145,7 @@ endmodule
 
 (* ORIG_REF_NAME = "axi_wchannel" *) 
 module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
-   (m_axi_wstrb,
-    m_axi_awvalid,
+   (m_axi_awvalid,
     local_en,
     m_axi_wlast,
     ahb_data_valid_burst_term,
@@ -3100,12 +3153,13 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
     m_axi_wvalid,
     axi_wdata_done_i0,
     Q,
+    m_axi_wstrb,
     ahb_data_valid_i_reg,
     ahb_data_valid_i_reg_0,
     m_axi_wdata,
     SR,
-    s_ahb_hclk,
     M_AXI_AWVALID_i_reg_0,
+    s_ahb_hclk,
     nonseq_txfer_pending_i_reg,
     ahb_wnr_i_reg,
     m_axi_wready,
@@ -3119,13 +3173,17 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
     \burst_term_cur_cnt_i_reg[1] ,
     s_ahb_hresetn,
     M_AXI_WLAST_i110_out,
+    axi_waddr_done_i,
+    \S_AHB_HSIZE_i_reg[1] ,
+    \S_AHB_HSIZE_i_reg[1]_0 ,
+    \S_AHB_HSIZE_i_reg[1]_1 ,
+    \S_AHB_HSIZE_i_reg[1]_2 ,
     p_27_in,
     s_ahb_htrans,
     D,
-    valid_cnt_required,
-    axi_waddr_done_i,
-    \FSM_sequential_ctl_sm_cs_reg[0] );
-  output [0:0]m_axi_wstrb;
+    \valid_cnt_required_i_reg[3] ,
+    \FSM_sequential_ctl_sm_cs_reg[0] ,
+    \S_AHB_HSIZE_i_reg[1]_3 );
   output m_axi_awvalid;
   output local_en;
   output m_axi_wlast;
@@ -3134,12 +3192,13 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
   output m_axi_wvalid;
   output axi_wdata_done_i0;
   output [4:0]Q;
+  output [3:0]m_axi_wstrb;
   output ahb_data_valid_i_reg;
   output ahb_data_valid_i_reg_0;
   output [31:0]m_axi_wdata;
   input [0:0]SR;
-  input s_ahb_hclk;
   input M_AXI_AWVALID_i_reg_0;
+  input s_ahb_hclk;
   input nonseq_txfer_pending_i_reg;
   input ahb_wnr_i_reg;
   input m_axi_wready;
@@ -3153,14 +3212,22 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
   input \burst_term_cur_cnt_i_reg[1] ;
   input s_ahb_hresetn;
   input M_AXI_WLAST_i110_out;
+  input axi_waddr_done_i;
+  input \S_AHB_HSIZE_i_reg[1] ;
+  input \S_AHB_HSIZE_i_reg[1]_0 ;
+  input \S_AHB_HSIZE_i_reg[1]_1 ;
+  input \S_AHB_HSIZE_i_reg[1]_2 ;
   input p_27_in;
   input [0:0]s_ahb_htrans;
   input [0:0]D;
-  input [2:0]valid_cnt_required;
-  input axi_waddr_done_i;
+  input [2:0]\valid_cnt_required_i_reg[3] ;
   input \FSM_sequential_ctl_sm_cs_reg[0] ;
+  input [1:0]\S_AHB_HSIZE_i_reg[1]_3 ;
 
-  wire AXI_WRITE_CNT_MODULE_n_0;
+  wire AXI_WRITE_CNT_MODULE_n_10;
+  wire AXI_WRITE_CNT_MODULE_n_11;
+  wire AXI_WRITE_CNT_MODULE_n_12;
+  wire AXI_WRITE_CNT_MODULE_n_6;
   wire AXI_WRITE_CNT_MODULE_n_7;
   wire AXI_WRITE_CNT_MODULE_n_8;
   wire AXI_WRITE_CNT_MODULE_n_9;
@@ -3172,17 +3239,20 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
   wire M_AXI_WLAST_i__2;
   wire M_AXI_WLAST_i_i_1_n_0;
   wire M_AXI_WVALID_i_i_1_n_0;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_1_n_0 ;
   wire [4:0]Q;
   wire [0:0]SR;
+  wire \S_AHB_HSIZE_i_reg[1] ;
+  wire \S_AHB_HSIZE_i_reg[1]_0 ;
+  wire \S_AHB_HSIZE_i_reg[1]_1 ;
+  wire \S_AHB_HSIZE_i_reg[1]_2 ;
+  wire [1:0]\S_AHB_HSIZE_i_reg[1]_3 ;
   wire ahb_data_valid;
   wire ahb_data_valid_burst_term;
   wire ahb_data_valid_i_reg;
   wire ahb_data_valid_i_reg_0;
   wire ahb_wnr_i_reg;
   wire [3:1]axi_cnt_required;
-  wire \axi_cnt_required[1]_i_1_n_0 ;
-  wire \axi_cnt_required[2]_i_1_n_0 ;
-  wire \axi_cnt_required[3]_i_1_n_0 ;
   wire axi_last_beat_reg_n_0;
   wire axi_penult_beat_reg_n_0;
   wire axi_waddr_done_i;
@@ -3191,7 +3261,7 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
   wire \burst_term_cur_cnt_i_reg[1] ;
   wire [4:0]\burst_term_cur_cnt_i_reg[4] ;
   wire [2:0]\burst_term_txer_cnt_i_reg[3] ;
-  wire dummy_on_axi__0;
+  wire dummy_on_axi;
   wire dummy_on_axi_progress;
   wire eqOp6_out;
   wire local_en;
@@ -3203,8 +3273,9 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
   wire [31:0]m_axi_wdata;
   wire m_axi_wlast;
   wire m_axi_wready;
-  wire [0:0]m_axi_wstrb;
+  wire [3:0]m_axi_wstrb;
   wire m_axi_wvalid;
+  wire [1:0]next_wr_strobe;
   wire nonseq_txfer_pending_i_reg;
   wire [31:0]p_1_in;
   wire p_27_in;
@@ -3213,29 +3284,39 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
   wire [0:0]s_ahb_htrans;
   wire [31:0]s_ahb_hwdata;
   wire set_axi_waddr;
-  wire [2:0]valid_cnt_required;
+  wire [2:0]\valid_cnt_required_i_reg[3] ;
 
   bd_mem_ahblite_axi_bridge_0_0_counter_f AXI_WRITE_CNT_MODULE
        (.D(D),
         .M_AXI_WLAST_i_reg(m_axi_wlast),
         .M_AXI_WVALID_i_reg(m_axi_wvalid),
-        .\NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3] (AXI_WRITE_CNT_MODULE_n_0),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] (AXI_WRITE_CNT_MODULE_n_9),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] (AXI_WRITE_CNT_MODULE_n_10),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] (AXI_WRITE_CNT_MODULE_n_11),
+        .\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] (AXI_WRITE_CNT_MODULE_n_12),
         .Q(Q),
         .SR(SR),
-        .axi_cnt_required(axi_cnt_required),
-        .axi_last_beat_reg(AXI_WRITE_CNT_MODULE_n_8),
+        .\S_AHB_HSIZE_i_reg[1] (\S_AHB_HSIZE_i_reg[1] ),
+        .\S_AHB_HSIZE_i_reg[1]_0 (\S_AHB_HSIZE_i_reg[1]_0 ),
+        .\S_AHB_HSIZE_i_reg[1]_1 (\S_AHB_HSIZE_i_reg[1]_1 ),
+        .\S_AHB_HSIZE_i_reg[1]_2 (\S_AHB_HSIZE_i_reg[1]_2 ),
+        .\axi_cnt_required_reg[3] (axi_cnt_required),
+        .axi_last_beat_reg(AXI_WRITE_CNT_MODULE_n_7),
         .axi_last_beat_reg_0(axi_last_beat_reg_n_0),
-        .axi_penult_beat_reg(AXI_WRITE_CNT_MODULE_n_7),
+        .axi_penult_beat_reg(AXI_WRITE_CNT_MODULE_n_6),
         .axi_penult_beat_reg_0(axi_penult_beat_reg_n_0),
+        .axi_waddr_done_i(axi_waddr_done_i),
         .burst_term(burst_term),
         .\burst_term_cur_cnt_i_reg[1] (\burst_term_cur_cnt_i_reg[1] ),
         .\burst_term_cur_cnt_i_reg[4] (\burst_term_cur_cnt_i_reg[4] ),
         .\burst_term_txer_cnt_i_reg[3] (\burst_term_txer_cnt_i_reg[3] ),
-        .dummy_on_axi__0(dummy_on_axi__0),
+        .dummy_on_axi(dummy_on_axi),
         .dummy_on_axi_progress(dummy_on_axi_progress),
-        .dummy_on_axi_progress_reg(AXI_WRITE_CNT_MODULE_n_9),
+        .dummy_on_axi_progress_reg(AXI_WRITE_CNT_MODULE_n_8),
         .eqOp6_out(eqOp6_out),
         .m_axi_wready(m_axi_wready),
+        .m_axi_wstrb(m_axi_wstrb),
+        .\next_wr_strobe_reg[0] (next_wr_strobe[0]),
         .s_ahb_hclk(s_ahb_hclk),
         .s_ahb_hresetn(s_ahb_hresetn),
         .set_axi_waddr(set_axi_waddr));
@@ -3287,6 +3368,7 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
         .I3(m_axi_wvalid),
         .I4(m_axi_wready),
         .O(p_1_in[12]));
+  (* SOFT_HLUTNM = "soft_lutpair22" *) 
   LUT5 #(
     .INIT(32'hACACCCAC)) 
     \M_AXI_WDATA_i[13]_i_1 
@@ -3305,7 +3387,6 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
         .I3(m_axi_wvalid),
         .I4(m_axi_wready),
         .O(p_1_in[14]));
-  (* SOFT_HLUTNM = "soft_lutpair20" *) 
   LUT5 #(
     .INIT(32'hACACCCAC)) 
     \M_AXI_WDATA_i[15]_i_1 
@@ -3768,7 +3849,7 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
     .INIT(64'h0000FE00FC00FE00)) 
     M_AXI_WVALID_i_i_1
        (.I0(m_axi_wvalid),
-        .I1(dummy_on_axi__0),
+        .I1(dummy_on_axi),
         .I2(\FSM_sequential_ctl_sm_cs_reg[0] ),
         .I3(s_ahb_hresetn),
         .I4(m_axi_wready),
@@ -3780,11 +3861,38 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
         .D(M_AXI_WVALID_i_i_1_n_0),
         .Q(m_axi_wvalid),
         .R(1'b0));
-  FDSE \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3] 
+  LUT5 #(
+    .INIT(32'hFFFFFF08)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_1 
+       (.I0(m_axi_wready),
+        .I1(m_axi_wvalid),
+        .I2(next_wr_strobe[1]),
+        .I3(axi_waddr_done_i),
+        .I4(dummy_on_axi),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_1_n_0 ));
+  FDSE \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] 
        (.C(s_ahb_hclk),
-        .CE(1'b1),
-        .D(AXI_WRITE_CNT_MODULE_n_0),
-        .Q(m_axi_wstrb),
+        .CE(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_1_n_0 ),
+        .D(AXI_WRITE_CNT_MODULE_n_9),
+        .Q(m_axi_wstrb[0]),
+        .S(SR));
+  FDSE \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] 
+       (.C(s_ahb_hclk),
+        .CE(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_1_n_0 ),
+        .D(AXI_WRITE_CNT_MODULE_n_10),
+        .Q(m_axi_wstrb[1]),
+        .S(SR));
+  FDSE \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] 
+       (.C(s_ahb_hclk),
+        .CE(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_1_n_0 ),
+        .D(AXI_WRITE_CNT_MODULE_n_11),
+        .Q(m_axi_wstrb[2]),
+        .S(SR));
+  FDSE \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] 
+       (.C(s_ahb_hclk),
+        .CE(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_1_n_0 ),
+        .D(AXI_WRITE_CNT_MODULE_n_12),
+        .Q(m_axi_wstrb[3]),
         .S(SR));
   FDRE ahb_data_valid_burst_term_reg
        (.C(s_ahb_hclk),
@@ -3801,67 +3909,44 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
         .I3(p_27_in),
         .I4(s_ahb_htrans),
         .O(ahb_data_valid_i_reg_0));
-  (* SOFT_HLUTNM = "soft_lutpair20" *) 
+  (* SOFT_HLUTNM = "soft_lutpair22" *) 
   LUT2 #(
     .INIT(4'hB)) 
     ahb_data_valid_i_i_2
        (.I0(m_axi_wready),
         .I1(m_axi_wvalid),
         .O(ahb_data_valid_i_reg));
-  (* SOFT_HLUTNM = "soft_lutpair22" *) 
-  LUT3 #(
-    .INIT(8'hB8)) 
-    \axi_cnt_required[1]_i_1 
-       (.I0(valid_cnt_required[0]),
-        .I1(axi_waddr_done_i),
-        .I2(axi_cnt_required[1]),
-        .O(\axi_cnt_required[1]_i_1_n_0 ));
-  LUT3 #(
-    .INIT(8'hB8)) 
-    \axi_cnt_required[2]_i_1 
-       (.I0(valid_cnt_required[1]),
-        .I1(axi_waddr_done_i),
-        .I2(axi_cnt_required[2]),
-        .O(\axi_cnt_required[2]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair22" *) 
-  LUT3 #(
-    .INIT(8'hB8)) 
-    \axi_cnt_required[3]_i_1 
-       (.I0(valid_cnt_required[2]),
-        .I1(axi_waddr_done_i),
-        .I2(axi_cnt_required[3]),
-        .O(\axi_cnt_required[3]_i_1_n_0 ));
   FDRE \axi_cnt_required_reg[1] 
        (.C(s_ahb_hclk),
-        .CE(1'b1),
-        .D(\axi_cnt_required[1]_i_1_n_0 ),
+        .CE(axi_waddr_done_i),
+        .D(\valid_cnt_required_i_reg[3] [0]),
         .Q(axi_cnt_required[1]),
         .R(SR));
   FDRE \axi_cnt_required_reg[2] 
        (.C(s_ahb_hclk),
-        .CE(1'b1),
-        .D(\axi_cnt_required[2]_i_1_n_0 ),
+        .CE(axi_waddr_done_i),
+        .D(\valid_cnt_required_i_reg[3] [1]),
         .Q(axi_cnt_required[2]),
         .R(SR));
   FDRE \axi_cnt_required_reg[3] 
        (.C(s_ahb_hclk),
-        .CE(1'b1),
-        .D(\axi_cnt_required[3]_i_1_n_0 ),
+        .CE(axi_waddr_done_i),
+        .D(\valid_cnt_required_i_reg[3] [2]),
         .Q(axi_cnt_required[3]),
         .R(SR));
   FDRE axi_last_beat_reg
        (.C(s_ahb_hclk),
         .CE(1'b1),
-        .D(AXI_WRITE_CNT_MODULE_n_8),
+        .D(AXI_WRITE_CNT_MODULE_n_7),
         .Q(axi_last_beat_reg_n_0),
         .R(1'b0));
   FDRE axi_penult_beat_reg
        (.C(s_ahb_hclk),
         .CE(1'b1),
-        .D(AXI_WRITE_CNT_MODULE_n_7),
+        .D(AXI_WRITE_CNT_MODULE_n_6),
         .Q(axi_penult_beat_reg_n_0),
         .R(1'b0));
-  (* SOFT_HLUTNM = "soft_lutpair21" *) 
+  (* SOFT_HLUTNM = "soft_lutpair23" *) 
   LUT2 #(
     .INIT(4'h8)) 
     burst_term_i_i_3
@@ -3871,10 +3956,10 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
   FDRE dummy_on_axi_progress_reg
        (.C(s_ahb_hclk),
         .CE(1'b1),
-        .D(AXI_WRITE_CNT_MODULE_n_9),
+        .D(AXI_WRITE_CNT_MODULE_n_8),
         .Q(dummy_on_axi_progress),
         .R(SR));
-  (* SOFT_HLUTNM = "soft_lutpair21" *) 
+  (* SOFT_HLUTNM = "soft_lutpair23" *) 
   LUT4 #(
     .INIT(16'h80F8)) 
     local_en_i_1
@@ -4089,16 +4174,31 @@ module bd_mem_ahblite_axi_bridge_0_0_axi_wchannel
         .D(s_ahb_hwdata[9]),
         .Q(local_wdata[9]),
         .R(SR));
+  FDRE \next_wr_strobe_reg[0] 
+       (.C(s_ahb_hclk),
+        .CE(axi_waddr_done_i),
+        .D(\S_AHB_HSIZE_i_reg[1]_3 [0]),
+        .Q(next_wr_strobe[0]),
+        .R(SR));
+  FDRE \next_wr_strobe_reg[1] 
+       (.C(s_ahb_hclk),
+        .CE(axi_waddr_done_i),
+        .D(\S_AHB_HSIZE_i_reg[1]_3 [1]),
+        .Q(next_wr_strobe[1]),
+        .R(SR));
 endmodule
 
 (* ORIG_REF_NAME = "counter_f" *) 
 module bd_mem_ahblite_axi_bridge_0_0_counter_f
-   (\NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3] ,
-    dummy_on_axi__0,
+   (dummy_on_axi,
     Q,
     axi_penult_beat_reg,
     axi_last_beat_reg,
     dummy_on_axi_progress_reg,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ,
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ,
     m_axi_wready,
     M_AXI_WVALID_i_reg,
     set_axi_waddr,
@@ -4106,22 +4206,32 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
     dummy_on_axi_progress,
     eqOp6_out,
     \burst_term_txer_cnt_i_reg[3] ,
-    axi_cnt_required,
+    \axi_cnt_required_reg[3] ,
     \burst_term_cur_cnt_i_reg[4] ,
     \burst_term_cur_cnt_i_reg[1] ,
     axi_penult_beat_reg_0,
     s_ahb_hresetn,
     axi_last_beat_reg_0,
     M_AXI_WLAST_i_reg,
+    m_axi_wstrb,
+    \next_wr_strobe_reg[0] ,
+    axi_waddr_done_i,
+    \S_AHB_HSIZE_i_reg[1] ,
+    \S_AHB_HSIZE_i_reg[1]_0 ,
+    \S_AHB_HSIZE_i_reg[1]_1 ,
+    \S_AHB_HSIZE_i_reg[1]_2 ,
     SR,
     s_ahb_hclk,
     D);
-  output \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3] ;
-  output dummy_on_axi__0;
+  output dummy_on_axi;
   output [4:0]Q;
   output axi_penult_beat_reg;
   output axi_last_beat_reg;
   output dummy_on_axi_progress_reg;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ;
+  output \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ;
   input m_axi_wready;
   input M_AXI_WVALID_i_reg;
   input set_axi_waddr;
@@ -4129,13 +4239,20 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
   input dummy_on_axi_progress;
   input eqOp6_out;
   input [2:0]\burst_term_txer_cnt_i_reg[3] ;
-  input [2:0]axi_cnt_required;
+  input [2:0]\axi_cnt_required_reg[3] ;
   input [4:0]\burst_term_cur_cnt_i_reg[4] ;
   input \burst_term_cur_cnt_i_reg[1] ;
   input axi_penult_beat_reg_0;
   input s_ahb_hresetn;
   input axi_last_beat_reg_0;
   input M_AXI_WLAST_i_reg;
+  input [3:0]m_axi_wstrb;
+  input [0:0]\next_wr_strobe_reg[0] ;
+  input axi_waddr_done_i;
+  input \S_AHB_HSIZE_i_reg[1] ;
+  input \S_AHB_HSIZE_i_reg[1]_0 ;
+  input \S_AHB_HSIZE_i_reg[1]_1 ;
+  input \S_AHB_HSIZE_i_reg[1]_2 ;
   input [0:0]SR;
   input s_ahb_hclk;
   input [0:0]D;
@@ -4148,10 +4265,17 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
   wire \INFERRED_GEN.icount_out[4]_i_2_n_0 ;
   wire M_AXI_WLAST_i_reg;
   wire M_AXI_WVALID_i_reg;
-  wire \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3] ;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ;
+  wire \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ;
   wire [4:0]Q;
   wire [0:0]SR;
-  wire [2:0]axi_cnt_required;
+  wire \S_AHB_HSIZE_i_reg[1] ;
+  wire \S_AHB_HSIZE_i_reg[1]_0 ;
+  wire \S_AHB_HSIZE_i_reg[1]_1 ;
+  wire \S_AHB_HSIZE_i_reg[1]_2 ;
+  wire [2:0]\axi_cnt_required_reg[3] ;
   wire axi_last_beat_i_2_n_0;
   wire axi_last_beat_i_5_n_0;
   wire axi_last_beat_i_6_n_0;
@@ -4162,11 +4286,12 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
   wire axi_penult_beat_i_6_n_0;
   wire axi_penult_beat_reg;
   wire axi_penult_beat_reg_0;
+  wire axi_waddr_done_i;
   wire burst_term;
   wire \burst_term_cur_cnt_i_reg[1] ;
   wire [4:0]\burst_term_cur_cnt_i_reg[4] ;
   wire [2:0]\burst_term_txer_cnt_i_reg[3] ;
-  wire dummy_on_axi__0;
+  wire dummy_on_axi;
   wire dummy_on_axi_init;
   wire dummy_on_axi_progress;
   wire dummy_on_axi_progress_i_6_n_0;
@@ -4178,6 +4303,8 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
   wire eqOp8_out;
   wire eqOp__5;
   wire m_axi_wready;
+  wire [3:0]m_axi_wstrb;
+  wire [0:0]\next_wr_strobe_reg[0] ;
   wire s_ahb_hclk;
   wire s_ahb_hresetn;
   wire set_axi_waddr;
@@ -4255,18 +4382,53 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
         .D(\INFERRED_GEN.icount_out[4]_i_2_n_0 ),
         .Q(Q[4]),
         .R(SR));
-  LUT1 #(
-    .INIT(2'h1)) 
-    \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i[3]_i_1 
-       (.I0(dummy_on_axi__0),
-        .O(\NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3] ));
-  (* SOFT_HLUTNM = "soft_lutpair18" *) 
+  LUT6 #(
+    .INIT(64'h00000000FFE200E2)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[0]_i_1 
+       (.I0(m_axi_wstrb[3]),
+        .I1(\next_wr_strobe_reg[0] ),
+        .I2(m_axi_wstrb[2]),
+        .I3(axi_waddr_done_i),
+        .I4(\S_AHB_HSIZE_i_reg[1] ),
+        .I5(dummy_on_axi),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[0] ));
+  LUT6 #(
+    .INIT(64'h00000000FFE200E2)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[1]_i_1 
+       (.I0(m_axi_wstrb[0]),
+        .I1(\next_wr_strobe_reg[0] ),
+        .I2(m_axi_wstrb[3]),
+        .I3(axi_waddr_done_i),
+        .I4(\S_AHB_HSIZE_i_reg[1]_0 ),
+        .I5(dummy_on_axi),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[1] ));
+  LUT6 #(
+    .INIT(64'h00000000FFE200E2)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[2]_i_1 
+       (.I0(m_axi_wstrb[1]),
+        .I1(\next_wr_strobe_reg[0] ),
+        .I2(m_axi_wstrb[0]),
+        .I3(axi_waddr_done_i),
+        .I4(\S_AHB_HSIZE_i_reg[1]_1 ),
+        .I5(dummy_on_axi),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[2] ));
+  LUT6 #(
+    .INIT(64'h00000000FFE200E2)) 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_2 
+       (.I0(m_axi_wstrb[2]),
+        .I1(\next_wr_strobe_reg[0] ),
+        .I2(m_axi_wstrb[1]),
+        .I3(axi_waddr_done_i),
+        .I4(\S_AHB_HSIZE_i_reg[1]_2 ),
+        .I5(dummy_on_axi),
+        .O(\NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i_reg[3] ));
+  (* SOFT_HLUTNM = "soft_lutpair20" *) 
   LUT2 #(
     .INIT(4'hE)) 
-    \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i[3]_i_2 
+    \NARROW_TRANSFER_ON_DATA_WIDTH_32.M_AXI_WSTRB_i[3]_i_3 
        (.I0(dummy_on_axi_init),
         .I1(dummy_on_axi_progress),
-        .O(dummy_on_axi__0));
+        .O(dummy_on_axi));
   LUT5 #(
     .INIT(32'h0888C000)) 
     axi_last_beat_i_1
@@ -4276,7 +4438,7 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
         .I3(M_AXI_WVALID_i_reg),
         .I4(axi_last_beat_i_2_n_0),
         .O(axi_last_beat_reg));
-  (* SOFT_HLUTNM = "soft_lutpair19" *) 
+  (* SOFT_HLUTNM = "soft_lutpair21" *) 
   LUT3 #(
     .INIT(8'h15)) 
     axi_last_beat_i_2
@@ -4289,9 +4451,9 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
     axi_last_beat_i_3
        (.I0(Q[3]),
         .I1(axi_last_beat_i_5_n_0),
-        .I2(axi_cnt_required[2]),
-        .I3(axi_cnt_required[0]),
-        .I4(axi_cnt_required[1]),
+        .I2(\axi_cnt_required_reg[3] [2]),
+        .I3(\axi_cnt_required_reg[3] [0]),
+        .I4(\axi_cnt_required_reg[3] [1]),
         .I5(Q[4]),
         .O(eqOp__5));
   LUT6 #(
@@ -4304,17 +4466,17 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
         .I4(\burst_term_txer_cnt_i_reg[3] [1]),
         .I5(Q[4]),
         .O(eqOp1_out));
-  (* SOFT_HLUTNM = "soft_lutpair15" *) 
+  (* SOFT_HLUTNM = "soft_lutpair19" *) 
   LUT5 #(
     .INIT(32'h42180000)) 
     axi_last_beat_i_5
        (.I0(Q[0]),
-        .I1(axi_cnt_required[1]),
-        .I2(axi_cnt_required[0]),
+        .I1(\axi_cnt_required_reg[3] [1]),
+        .I2(\axi_cnt_required_reg[3] [0]),
         .I3(Q[2]),
         .I4(Q[1]),
         .O(axi_last_beat_i_5_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair16" *) 
+  (* SOFT_HLUTNM = "soft_lutpair18" *) 
   LUT5 #(
     .INIT(32'h42180000)) 
     axi_last_beat_i_6
@@ -4333,7 +4495,7 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
         .I3(M_AXI_WVALID_i_reg),
         .I4(axi_penult_beat_i_2_n_0),
         .O(axi_penult_beat_reg));
-  (* SOFT_HLUTNM = "soft_lutpair19" *) 
+  (* SOFT_HLUTNM = "soft_lutpair21" *) 
   LUT3 #(
     .INIT(8'h15)) 
     axi_penult_beat_i_2
@@ -4346,9 +4508,9 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
     axi_penult_beat_i_3
        (.I0(Q[3]),
         .I1(axi_penult_beat_i_5_n_0),
-        .I2(axi_cnt_required[2]),
-        .I3(axi_cnt_required[0]),
-        .I4(axi_cnt_required[1]),
+        .I2(\axi_cnt_required_reg[3] [2]),
+        .I3(\axi_cnt_required_reg[3] [0]),
+        .I4(\axi_cnt_required_reg[3] [1]),
         .I5(Q[4]),
         .O(eqOp3_out));
   LUT6 #(
@@ -4361,17 +4523,17 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
         .I4(\burst_term_txer_cnt_i_reg[3] [1]),
         .I5(Q[4]),
         .O(eqOp5_out));
-  (* SOFT_HLUTNM = "soft_lutpair15" *) 
+  (* SOFT_HLUTNM = "soft_lutpair19" *) 
   LUT5 #(
     .INIT(32'h01048020)) 
     axi_penult_beat_i_5
        (.I0(Q[0]),
-        .I1(axi_cnt_required[1]),
-        .I2(axi_cnt_required[0]),
+        .I1(\axi_cnt_required_reg[3] [1]),
+        .I2(\axi_cnt_required_reg[3] [0]),
         .I3(Q[2]),
         .I4(Q[1]),
         .O(axi_penult_beat_i_5_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair16" *) 
+  (* SOFT_HLUTNM = "soft_lutpair18" *) 
   LUT5 #(
     .INIT(32'h01048020)) 
     axi_penult_beat_i_6
@@ -4381,7 +4543,7 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f
         .I3(Q[2]),
         .I4(Q[1]),
         .O(axi_penult_beat_i_6_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair18" *) 
+  (* SOFT_HLUTNM = "soft_lutpair20" *) 
   LUT4 #(
     .INIT(16'hBFAA)) 
     dummy_on_axi_progress_i_1
@@ -4426,7 +4588,7 @@ endmodule
 module bd_mem_ahblite_axi_bridge_0_0_counter_f_0
    (ahb_penult_beat_reg,
     Q,
-    valid_cnt_required,
+    D,
     s_ahb_htrans,
     s_ahb_hready_in,
     s_ahb_hsel,
@@ -4436,7 +4598,7 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f_0
     s_ahb_hclk);
   output ahb_penult_beat_reg;
   output [4:0]Q;
-  input [2:0]valid_cnt_required;
+  input [2:0]D;
   input [1:0]s_ahb_htrans;
   input s_ahb_hready_in;
   input s_ahb_hsel;
@@ -4445,6 +4607,7 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f_0
   input [0:0]E;
   input s_ahb_hclk;
 
+  wire [2:0]D;
   wire [0:0]E;
   wire \INFERRED_GEN.icount_out[0]_i_1__0_n_0 ;
   wire \INFERRED_GEN.icount_out[1]_i_1__0_n_0 ;
@@ -4460,7 +4623,6 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f_0
   wire s_ahb_hready_in;
   wire s_ahb_hsel;
   wire [1:0]s_ahb_htrans;
-  wire [2:0]valid_cnt_required;
 
   LUT5 #(
     .INIT(32'h2000FFFF)) 
@@ -4545,17 +4707,17 @@ module bd_mem_ahblite_axi_bridge_0_0_counter_f_0
     ahb_penult_beat_i_2
        (.I0(Q[3]),
         .I1(ahb_penult_beat_i_4_n_0),
-        .I2(valid_cnt_required[2]),
-        .I3(valid_cnt_required[0]),
-        .I4(valid_cnt_required[1]),
+        .I2(D[2]),
+        .I3(D[0]),
+        .I4(D[1]),
         .I5(Q[4]),
         .O(ahb_penult_beat_reg));
   LUT5 #(
     .INIT(32'h42180000)) 
     ahb_penult_beat_i_4
        (.I0(Q[0]),
-        .I1(valid_cnt_required[1]),
-        .I2(valid_cnt_required[0]),
+        .I1(D[1]),
+        .I2(D[0]),
         .I3(Q[2]),
         .I4(Q[1]),
         .O(ahb_penult_beat_i_4_n_0));

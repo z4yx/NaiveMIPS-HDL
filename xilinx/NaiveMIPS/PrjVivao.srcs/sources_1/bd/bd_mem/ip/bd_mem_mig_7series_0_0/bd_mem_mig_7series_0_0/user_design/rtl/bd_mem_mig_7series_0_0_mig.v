@@ -476,7 +476,7 @@ module bd_mem_mig_7series_0_0_mig #
                                      // 1/2, 1/4 and 1/8 of fabrick clock.
                                      // Valid for DDR2/DDR3 AXI interfaces
                                      // based on GUI selection
-   parameter C_S_AXI_ID_WIDTH              = 5,
+   parameter C_S_AXI_ID_WIDTH              = 6,
                                              // Width of all master and slave ID signals.
                                              // # = >= 1.
    parameter C_S_AXI_MEM_SIZE              = "134217728",
@@ -492,7 +492,7 @@ module bd_mem_mig_7series_0_0_mig #
    parameter C_MC_nCK_PER_CLK              = 4,
                                              // Indicates whether to instatiate upsizer
                                              // Range: 0, 1
-   parameter C_S_AXI_SUPPORTS_NARROW_BURST = 0,
+   parameter C_S_AXI_SUPPORTS_NARROW_BURST = 1,
                                              // Indicates whether to instatiate upsizer
                                              // Range: 0, 1
    parameter C_RD_WR_ARB_ALGORITHM          = "RD_PRI_REG",

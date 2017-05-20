@@ -234,7 +234,7 @@ BEGIN
     GENERIC MAP (
       C_FAMILY => "artix7",
       C_INSTANCE => "bd_mem_ahblite_axi_bridge_0_0",
-      C_M_AXI_SUPPORTS_NARROW_BURST => 0,
+      C_M_AXI_SUPPORTS_NARROW_BURST => 1,
       C_M_AXI_NON_SECURE => 1,
       C_S_AHB_ADDR_WIDTH => 32,
       C_M_AXI_ADDR_WIDTH => 32,

@@ -1,7 +1,7 @@
 // Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2016.4 (lin64) Build 1733598 Wed Dec 14 22:35:42 MST 2016
-// Date        : Fri May 19 13:01:39 2017
+// Date        : Sun May 21 00:17:33 2017
 // Host        : skyworks running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode funcsim
 //               /home/skyworks/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_mem/ip/bd_mem_auto_cc_0/bd_mem_auto_cc_0_sim_netlist.v

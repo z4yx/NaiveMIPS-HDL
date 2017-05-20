@@ -53,7 +53,7 @@
     <spirit:parameter>
       <spirit:name>NUM_SI</spirit:name>
       <spirit:displayName>Number of Slave Interfaces</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.NUM_SI" spirit:order="2" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">2</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.NUM_SI" spirit:order="2" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">3</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>NUM_MI</spirit:name>
