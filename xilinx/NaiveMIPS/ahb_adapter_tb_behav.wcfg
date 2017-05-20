@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="ahb_adapter_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="ahb_adapter_tb" />
+            <top_module name="ahblite_axi_bridge_pkg" />
+            <top_module name="emc_pkg" />
+            <top_module name="glbl" />
+            <top_module name="lib_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="306300000fs"></ZoomStartTime>
+      <ZoomEndTime time="507912259fs"></ZoomEndTime>
+      <Cursor1Time time="299702000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="149"></NameColumnWidth>
+      <ValueColumnWidth column_width="57"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="41" />
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/rst_n">
+      <obj_property name="ElementShortName">rst_n</obj_property>
+      <obj_property name="ObjectShortName">rst_n</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/address1">
+      <obj_property name="ElementShortName">address1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">address1[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/wrdata1">
+      <obj_property name="ElementShortName">wrdata1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wrdata1[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/rddata1">
+      <obj_property name="ElementShortName">rddata1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">rddata1[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/dataenable1">
+      <obj_property name="ElementShortName">dataenable1[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dataenable1[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/rd1">
+      <obj_property name="ElementShortName">rd1</obj_property>
+      <obj_property name="ObjectShortName">rd1</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/wr1">
+      <obj_property name="ElementShortName">wr1</obj_property>
+      <obj_property name="ObjectShortName">wr1</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/stall1">
+      <obj_property name="ElementShortName">stall1</obj_property>
+      <obj_property name="ObjectShortName">stall1</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/AHB1_haddr">
+      <obj_property name="ElementShortName">AHB1_haddr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AHB1_haddr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/AHB1_hburst">
+      <obj_property name="ElementShortName">AHB1_hburst[2:0]</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hburst[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/AHB1_hprot">
+      <obj_property name="ElementShortName">AHB1_hprot[3:0]</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hprot[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/AHB1_hrdata">
+      <obj_property name="ElementShortName">AHB1_hrdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hrdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/AHB1_hready_in">
+      <obj_property name="ElementShortName">AHB1_hready_in</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hready_in</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/AHB1_hready_out">
+      <obj_property name="ElementShortName">AHB1_hready_out</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hready_out</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/AHB1_hresp">
+      <obj_property name="ElementShortName">AHB1_hresp</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hresp</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/AHB1_hsize">
+      <obj_property name="ElementShortName">AHB1_hsize[2:0]</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hsize[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/AHB1_htrans">
+      <obj_property name="ElementShortName">AHB1_htrans[1:0]</obj_property>
+      <obj_property name="ObjectShortName">AHB1_htrans[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/AHB1_hwdata">
+      <obj_property name="ElementShortName">AHB1_hwdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hwdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/AHB1_hwrite">
+      <obj_property name="ElementShortName">AHB1_hwrite</obj_property>
+      <obj_property name="ObjectShortName">AHB1_hwrite</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/AHB1_sel">
+      <obj_property name="ElementShortName">AHB1_sel</obj_property>
+      <obj_property name="ObjectShortName">AHB1_sel</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awid">
+      <obj_property name="ElementShortName">m_axi_awid[3:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awid[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awlen">
+      <obj_property name="ElementShortName">m_axi_awlen[7:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awlen[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awsize">
+      <obj_property name="ElementShortName">m_axi_awsize[2:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awsize[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awburst">
+      <obj_property name="ElementShortName">m_axi_awburst[1:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awburst[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awcache">
+      <obj_property name="ElementShortName">m_axi_awcache[3:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awcache[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awaddr">
+      <obj_property name="ElementShortName">m_axi_awaddr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awaddr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awprot">
+      <obj_property name="ElementShortName">m_axi_awprot[2:0]</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awprot[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awvalid">
+      <obj_property name="ElementShortName">m_axi_awvalid</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awvalid</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awready">
+      <obj_property name="ElementShortName">m_axi_awready</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awready</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/slave/ahblite_axi_bridge_0/m_axi_awlock">
+      <obj_property name="ElementShortName">m_axi_awlock</obj_property>
+      <obj_property name="ObjectShortName">m_axi_awlock</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/emc_addr">
+      <obj_property name="ElementShortName">emc_addr[17:0]</obj_property>
+      <obj_property name="ObjectShortName">emc_addr[17:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/emc_data">
+      <obj_property name="ElementShortName">emc_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">emc_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/EMC_INTF_dq_i">
+      <obj_property name="ElementShortName">EMC_INTF_dq_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">EMC_INTF_dq_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/EMC_INTF_dq_o">
+      <obj_property name="ElementShortName">EMC_INTF_dq_o[15:0]</obj_property>
+      <obj_property name="ObjectShortName">EMC_INTF_dq_o[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ahb_adapter_tb/EMC_INTF_dq_t">
+      <obj_property name="ElementShortName">EMC_INTF_dq_t[15:0]</obj_property>
+      <obj_property name="ObjectShortName">EMC_INTF_dq_t[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/emc_oen">
+      <obj_property name="ElementShortName">emc_oen</obj_property>
+      <obj_property name="ObjectShortName">emc_oen</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/emc_wen">
+      <obj_property name="ElementShortName">emc_wen</obj_property>
+      <obj_property name="ObjectShortName">emc_wen</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/emc_cen">
+      <obj_property name="ElementShortName">emc_cen</obj_property>
+      <obj_property name="ObjectShortName">emc_cen</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/emc_lbn">
+      <obj_property name="ElementShortName">emc_lbn</obj_property>
+      <obj_property name="ObjectShortName">emc_lbn</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ahb_adapter_tb/emc_ubn">
+      <obj_property name="ElementShortName">emc_ubn</obj_property>
+      <obj_property name="ObjectShortName">emc_ubn</obj_property>
+   </wvobject>
+</wave_config>
