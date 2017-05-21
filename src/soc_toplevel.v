@@ -82,7 +82,7 @@ output wire[7:0] NUM_CSn;
 output wire[7:0] NUM_A_G;
 
 wire rs232_rxd = 1'b1;
-wire rs232_txd = 1'b1;
+wire rs232_txd;
 
 output wire[7:0] vga_pixel;
 output wire vga_hsync;
@@ -109,19 +109,20 @@ output wire       ddr3_ck_n;
 wire[4:0] irq_line;
 wire uart_irq;
 
-wire dbus_write;
-wire [31:0]dbus_rddata;
+(* MARK_DEBUG = "TRUE" *) wire dbus_write;
+(* MARK_DEBUG = "TRUE" *) wire [31:0]dbus_rddata;
 wire ibus_read;
 wire [3:0]ibus_byteenable;
-wire [3:0]dbus_byteenable;
-wire [31:0]dbus_wrdata;
+(* MARK_DEBUG = "TRUE" *) wire [3:0]dbus_byteenable;
+(* MARK_DEBUG = "TRUE" *) wire [31:0]dbus_wrdata;
 wire [31:0]ibus_wrdata;
 wire ibus_write;
-wire dbus_read;
-wire [31:0]ibus_rddata;
-wire [31:0]dbus_address;
-wire [31:0]ibus_address;
-wire dbus_stall;
+(* MARK_DEBUG = "TRUE" *) wire dbus_read;
+(* MARK_DEBUG = "TRUE" *) wire [31:0]ibus_rddata;
+(* MARK_DEBUG = "TRUE" *) wire [31:0]dbus_address;
+(* MARK_DEBUG = "TRUE" *) wire [31:0]ibus_address;
+(* MARK_DEBUG = "TRUE" *) wire dbus_stall;
+(* MARK_DEBUG = "TRUE" *) wire ibus_stall;
 
 wire [31:0]rom_data;
 wire [12:0]rom_address;
@@ -132,6 +133,7 @@ wire [31:0]ibus_ram_wrdata;
 wire [3:0]ibus_ram_byteenable;
 wire ibus_ram_read;
 wire ibus_ram_write;
+wire ibus_ram_stall;
 
 wire [23:0]dbus_ram_address;
 wire [31:0]dbus_ram_rddata;
@@ -185,7 +187,7 @@ wire debugger_uart_rxd;
 wire debugger_uart_txd;
 
 wire [31:0] segdisp_din;
-wire [23:0] const0 = 24'h0;
+wire [23:0] gpio1_high;
 
 assign debugger_uart_rxd = rs232_rxd;
 assign rs232_txd = debugger_uart_txd;
@@ -212,6 +214,8 @@ ibus ibus0(/*autoinst*/
          .master_read(ibus_read),
          .master_write(ibus_write),
          .master_wrdata(ibus_wrdata),
+         .master_stall(ibus_stall),
+         .ram_stall(ibus_ram_stall),
          .bootrom_data_o(rom_data),
          .ram_data_o(ibus_ram_rddata));
 
@@ -237,7 +241,7 @@ naive_mips cpu(/*autoinst*/
          .debugger_uart_rxd(debugger_uart_rxd),
          .debugger_uart_txd(debugger_uart_txd),
          .ibus_rddata(ibus_rddata[31:0]),
-         .ibus_stall(1'b0),
+         .ibus_stall(ibus_stall),
          .dbus_rddata(dbus_rddata[31:0]),
          .dbus_stall(dbus_stall),
          .hardware_int_in(irq_line));
@@ -269,7 +273,7 @@ dram_adapter mainram(/*autoinst*/
            .wrdata1(ibus_ram_wrdata),
            .rd1(ibus_ram_read),
            .wr1(ibus_ram_write),
-           .stall1      (),
+           .stall1(ibus_ram_stall),
            .dataenable1(ibus_ram_byteenable),
            .address2(dbus_ram_address),
            .wrdata2(dbus_ram_wrdata),
@@ -342,7 +346,7 @@ uart_top uart0(/*autoinst*/
 
 gpio_top gpio_inst(/*autoinst*/
          .gpio0(segdisp_din),
-         .gpio1({const0,gpio1}),
+         .gpio1({gpio1_high,gpio1}),
          .bus_data_o(gpio_dbus_data_o[31:0]),
          .clk_bus(clk),
          .rst_n(rst_n),
