@@ -42,7 +42,7 @@ input wire [31:0]AHB_hrdata;
 input wire AHB_hready_out;
 input wire AHB_hresp;
 
-output reg [31:0]AHB_haddr;
+output wire [31:0]AHB_haddr;
 output wire [2:0]AHB_hburst;
 output wire [3:0]AHB_hprot;
 output wire AHB_hready_in;
@@ -55,6 +55,7 @@ output wire AHB_sel;
 
 reg first_cycle;
 
+assign AHB_haddr = address;
 assign AHB_hburst = 3'b000;
 assign AHB_hprot = 4'b0011;
 assign AHB_hready_in = AHB_hready_out;
@@ -63,22 +64,6 @@ assign AHB_hwrite = wr;
 assign AHB_sel = issue;
 assign rddata = AHB_hrdata;
 
-always @(*) begin
-      case (dataenable)
-      4'b0010: begin 
-            AHB_haddr = address + 32'h1;
-      end
-      4'b1100,
-      4'b0100: begin 
-            AHB_haddr = address + 32'h2;
-      end
-      4'b1000: begin 
-            AHB_haddr = address + 32'h3;
-      end
-      default: AHB_haddr = address;
-      endcase
-
-end
 always @(*) begin
       case (dataenable)
       4'b1000,
@@ -112,6 +97,6 @@ always @(posedge clk or negedge rst_n) begin : proc_bridge
       end
 end
 
-assign stall = first_cycle|~AHB_hready_out;
+assign stall = issue & (first_cycle|~AHB_hready_out);
 
 endmodule

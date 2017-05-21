@@ -53,7 +53,7 @@ initial begin
 
 
     #1;
-    address1 = 'h4;
+    address1 = 'h6;
     dataenable1 = 4'b1100;
     rd1 = 0;
     wr1 = 1;
@@ -64,7 +64,7 @@ initial begin
 
 
     #1;
-    address1 = 'h0;
+    address1 = 'h1;
     dataenable1 = 4'b0010;
     rd1 = 0;
     wr1 = 1;
