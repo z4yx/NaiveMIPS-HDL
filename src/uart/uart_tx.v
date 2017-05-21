@@ -40,18 +40,28 @@ reg[3:0] state;
 reg[3:0] remain_bit;
 reg[14:0] baud_cnt;
 
+wire clk_uart_rst_n;
+
+clk_ctrl rst(
+    .clk      (clk_uart),
+    .rst_in_n (rst_n),
+    .rst_out_n(clk_uart_rst_n)
+);
+
 flag_sync sync_tx_req(/*autoinst*/
          .FlagOut_clkB(tx_request_sync),
-         .rst_n(rst_n),
+         .a_rst_n(rst_n),
          .clkA(clk_bus),
          .FlagIn_clkA(tx_request_reg),
+         .b_rst_n(clk_uart_rst_n),
          .clkB(clk_uart));
 
 flag_sync sync_tx_done(/*autoinst*/
          .FlagOut_clkB(tx_done_sync),
-         .rst_n(rst_n),
+         .a_rst_n(rst_n),
          .clkA(clk_uart),
          .FlagIn_clkA(tx_done),
+         .b_rst_n(clk_uart_rst_n),
          .clkB(clk_bus));
 
 always @(posedge clk_bus or negedge rst_n) begin
@@ -73,8 +83,8 @@ always @(posedge clk_bus or negedge rst_n) begin
     end
 end
 
-always @(posedge clk_uart or negedge rst_n) begin
-    if (!rst_n) begin
+always @(posedge clk_uart or negedge clk_uart_rst_n) begin
+    if (!clk_uart_rst_n) begin
         state <= 4'h0;
         txd <= 1'b1;
         tx_done <= 1'b0;

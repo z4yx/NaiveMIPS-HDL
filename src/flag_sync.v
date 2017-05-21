@@ -3,12 +3,14 @@ module flag_sync(/*autoport*/
 //output
            FlagOut_clkB,
 //input
-           rst_n,
+           a_rst_n,
+           b_rst_n,
            clkA,
            FlagIn_clkA,
            clkB);
 
-input wire rst_n;
+input wire a_rst_n;
+input wire b_rst_n;
 input wire clkA;
 input wire FlagIn_clkA;
 input wire clkB;
@@ -16,9 +18,9 @@ output wire FlagOut_clkB;
 
 // this changes level when the FlagIn_clkA is seen in clkA
 reg FlagToggle_clkA;
-always @(posedge clkA or negedge rst_n)
+always @(posedge clkA or negedge a_rst_n)
 begin
-    if(!rst_n)
+    if(!a_rst_n)
         FlagToggle_clkA <= 1'b0;
     else
         FlagToggle_clkA <= FlagToggle_clkA ^ FlagIn_clkA;
@@ -26,9 +28,9 @@ end
 
 // which can then be sync-ed to clkB
 reg [2:0] SyncA_clkB;
-always @(posedge clkB or negedge rst_n)
+always @(posedge clkB or negedge b_rst_n)
 begin
-    if(!rst_n)
+    if(!b_rst_n)
         SyncA_clkB <= 3'b0;
     else
         SyncA_clkB <= {SyncA_clkB[1:0], FlagToggle_clkA};

@@ -40,11 +40,20 @@ reg[2:0] samples;
 wire sample_value;
 reg rxd_buf, rxd;
 
+wire clk_uart_rst_n;
+
+clk_ctrl rst(
+    .clk      (clk_uart),
+    .rst_in_n (rst_n),
+    .rst_out_n(clk_uart_rst_n)
+);
+
 flag_sync sync_rx_avai(/*autoinst*/
          .FlagOut_clkB(rx_available_sync),
-         .rst_n(rst_n),
+         .a_rst_n(clk_uart_rst_n),
          .clkA(clk_uart),
          .FlagIn_clkA(rx_available),
+         .b_rst_n(rst_n),
          .clkB(clk_bus));
 
 assign sample_value = (samples[0] && samples[1] ||
@@ -73,8 +82,8 @@ always @(posedge clk_bus or negedge rst_n) begin
     end
 end
 
-always @(posedge clk_uart or negedge rst_n) begin
-    if (!rst_n) begin
+always @(posedge clk_uart or negedge clk_uart_rst_n) begin
+    if (!clk_uart_rst_n) begin
         state <= 4'h0;
         next_state <= 4'h0;
         rx_available <= 1'b0;
