@@ -62,7 +62,7 @@ assign clk_uart = clk_uart_pll;
 `endif
 
 sys_pll pll1(
-    .areset(~rst_in),
+    .areset(rst_in),
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
