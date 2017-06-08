@@ -1,13 +1,14 @@
 module uart_tx(/*autoport*/
 //output
-            idle,
-            txd,
+         idle,
+         txd,
 //input
-            clk_bus,
-            clk_uart,
-            rst_n,
-            tx_request,
-            data);
+         clk_bus,
+         clk_uart,
+         rst_n,
+         rst_uart_n,
+         tx_request,
+         data);
 
 parameter ignore_for_sim = 1'b0;
 
@@ -21,6 +22,7 @@ parameter COUNTER_PERIOD = UART_CLK/BAUD-1;
 input wire clk_bus;
 input wire clk_uart;
 input wire rst_n;
+input wire rst_uart_n;
 
 input wire tx_request;
 input wire[7:0] data;
@@ -73,8 +75,8 @@ always @(posedge clk_bus or negedge rst_n) begin
     end
 end
 
-always @(posedge clk_uart or negedge rst_n) begin
-    if (!rst_n) begin
+always @(posedge clk_uart or negedge rst_uart_n) begin
+    if (!rst_uart_n) begin
         state <= 4'h0;
         txd <= 1'b1;
         tx_done <= 1'b0;

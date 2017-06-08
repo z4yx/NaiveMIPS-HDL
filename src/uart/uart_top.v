@@ -32,6 +32,8 @@ output wire uart_irq;
 input wire rxd;
 output wire txd;
 
+wire rst_uart_n;
+
 wire tx_idle;
 wire tx_request;
 
@@ -84,6 +86,7 @@ uart_tx tx1(/*autoinst*/
             .clk_bus(clk_bus),
             .clk_uart(clk_uart),
             .rst_n(rst_n),
+            .rst_uart_n(rst_uart_n),
             .tx_request(tx_request),
             .data(bus_data_i[7:0]));
 
@@ -93,7 +96,14 @@ uart_rx rx1(/*autoinst*/
             .clk_bus(clk_bus),
             .clk_uart(clk_uart),
             .rst_n(rst_n),
+            .rst_uart_n(rst_uart_n),
             .clear(rx_clear),
             .rxd_in(rxd));
+
+clk_ctrl uart_reset(
+    .clk      (clk_uart),
+    .rst_in_n (rst_n),
+    .rst_out_n(rst_uart_n)
+);
 
 endmodule
