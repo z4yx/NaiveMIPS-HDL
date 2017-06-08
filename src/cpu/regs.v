@@ -3,6 +3,7 @@ module regs(/*autoport*/
             rdata1,
             rdata2,
             rdata3,
+            register_dump,
 //input
             clk,
             rst_n,
@@ -30,6 +31,9 @@ input wire[4:0] raddr3;
 output reg[31:0] rdata3;
 
 reg[31:0] registers[0:31];
+
+output wire[127:0] register_dump;
+assign register_dump = {registers[5],registers[4],registers[3],registers[2]};
 
 always @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin

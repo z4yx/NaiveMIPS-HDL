@@ -5,8 +5,26 @@ set_property IOSTANDARD LVCMOS33 [get_ports clk_uart_in]
 set_property PACKAGE_PIN C18 [get_ports clk_uart_in]
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {clk_uart_in_IBUF}]
 
-set_property IOSTANDARD LVCMOS33 [get_ports rst_in]
-set_property PACKAGE_PIN F22 [get_ports rst_in] ;#BTN_IN5
+set_property IOSTANDARD LVCMOS33 [get_ports touch_btn[*]]
+set_property PACKAGE_PIN J19 [get_ports touch_btn[0]] ;#BTN_IN0
+set_property PACKAGE_PIN E25 [get_ports touch_btn[1]] ;#BTN_IN1
+set_property PACKAGE_PIN F23 [get_ports touch_btn[2]] ;#BTN_IN2
+set_property PACKAGE_PIN E23 [get_ports touch_btn[3]] ;#BTN_IN3
+set_property PACKAGE_PIN H19 [get_ports touch_btn[4]] ;#BTN_IN4
+set_property PACKAGE_PIN F22 [get_ports touch_btn[5]] ;#BTN_IN5
+
+set_property -dict {PACKAGE_PIN P20 IOSTANDARD TMDS_33} [get_ports clkout1_p]
+set_property -dict {PACKAGE_PIN P21 IOSTANDARD TMDS_33} [get_ports clkout1_n]
+set_property -dict {PACKAGE_PIN K22 IOSTANDARD TMDS_33} [get_ports {dataout1_p[0]}]
+set_property -dict {PACKAGE_PIN K23 IOSTANDARD TMDS_33} [get_ports {dataout1_n[0]}]
+set_property -dict {PACKAGE_PIN M20 IOSTANDARD TMDS_33} [get_ports {dataout1_p[1]}]
+set_property -dict {PACKAGE_PIN L20 IOSTANDARD TMDS_33} [get_ports {dataout1_n[1]}]
+set_property -dict {PACKAGE_PIN M16 IOSTANDARD TMDS_33} [get_ports {dataout1_p[2]}]
+set_property -dict {PACKAGE_PIN M17 IOSTANDARD TMDS_33} [get_ports {dataout1_n[2]}]
+set_property -dict {PACKAGE_PIN J24 IOSTANDARD TMDS_33} [get_ports {dataout1_p[3]}]
+set_property -dict {PACKAGE_PIN H24 IOSTANDARD TMDS_33} [get_ports {dataout1_n[3]}]
+
+
 set_property IOSTANDARD LVCMOS33 [get_ports txd]
 set_property IOSTANDARD LVCMOS33 [get_ports rxd]
 set_property PACKAGE_PIN L19 [get_ports txd] ;#GPIO5

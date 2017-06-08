@@ -20,6 +20,8 @@
     <Option Name="SourceMgmtMode" Val="DisplayOnly"/>
     <Option Name="ActiveSimSet" Val="sim_1"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../../../ThinpadNG_Zynq7/ip_repo/sample_receiver_1.0"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../../../ArtixHwTest"/>
     <Option Name="IPCachePermission" Val="disable"/>
     <Option Name="EnableCoreContainer" Val="TRUE"/>
     <Option Name="CreateRefXciForCoreContainers" Val="FALSE"/>
@@ -34,13 +36,13 @@
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
     <Option Name="WTActivehdlLaunchSim" Val="0"/>
-    <Option Name="WTXSimExportSim" Val="6"/>
-    <Option Name="WTModelSimExportSim" Val="6"/>
-    <Option Name="WTQuestaExportSim" Val="6"/>
-    <Option Name="WTIesExportSim" Val="6"/>
-    <Option Name="WTVcsExportSim" Val="6"/>
-    <Option Name="WTRivieraExportSim" Val="6"/>
-    <Option Name="WTActivehdlExportSim" Val="6"/>
+    <Option Name="WTXSimExportSim" Val="7"/>
+    <Option Name="WTModelSimExportSim" Val="7"/>
+    <Option Name="WTQuestaExportSim" Val="7"/>
+    <Option Name="WTIesExportSim" Val="7"/>
+    <Option Name="WTVcsExportSim" Val="7"/>
+    <Option Name="WTRivieraExportSim" Val="7"/>
+    <Option Name="WTActivehdlExportSim" Val="7"/>
     <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
     <Option Name="XSimRadix" Val="hex"/>
     <Option Name="XSimTimeUnit" Val="ns"/>
@@ -540,6 +542,45 @@
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
+    <FileSet Name="sampler_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/sampler_0">
+      <File Path="$PSRCDIR/sources_1/ip/sampler_0.xcix">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/ip/sampler_0/sampler_0.xci">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/io.xdc"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/serdes_7_to_1_diff_ddr.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/n_x_serdes_7_to_1_diff_ddr.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/clock_generator_pll_7_to_1_diff_ddr.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/rstctrl.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/serdes_7to1_ddr_tx_top.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/sample_compress.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/packetizer.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/sample_fifo_0/sample_fifo_0.xci"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/txmit_fifo/txmit_fifo.xci"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="sampler_0.veo"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="sampler_0.vho"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="sampler_0_sim_netlist.vhdl"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="sampler_0_sim_netlist.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="sampler_0_stub.vhdl"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="sampler_0_stub.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="synth/sampler_0.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="src/sampler.v"/>
+        <CompFileExtendedInfo CompFileName="sampler_0.xci" FileRelPathName="sampler_0.xml"/>
+      </File>
+      <Config>
+        <Option Name="TopModule" Val="sampler_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
   </FileSets>
   <Simulators>
     <Simulator Name="XSim">
@@ -595,6 +636,16 @@
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
+    <Run Id="sampler_0_synth_1" Type="Ft3:Synth" SrcSet="sampler_0" Part="xc7a100tfgg676-2" ConstrsSet="sampler_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/sampler_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
     <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7a100tfgg676-2" ConstrsSet="constrs_1" Description="Vivado Implementation Defaults" State="current" Dir="$PRUNDIR/impl_1" SynthRun="synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2015"/>
@@ -644,6 +695,23 @@
     <Run Id="gpu_mem_xilinx_impl_1" Type="Ft2:EntireDesign" Part="xc7a100tfgg676-2" ConstrsSet="gpu_mem_xilinx" Description="Default settings for Implementation." SynthRun="gpu_mem_xilinx_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="sampler_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a100tfgg676-2" ConstrsSet="sampler_0" Description="Default settings for Implementation." SynthRun="sampler_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>

@@ -9,6 +9,10 @@ module soc_toplevel(/*autoport*/
             gpio0,
             gpio1,
 //output
+            clkout1_p,
+            clkout1_n,
+            dataout1_p,
+            dataout1_n,
             base_ram_addr,
             base_ram_be,
             base_ram_ce_n,
@@ -39,15 +43,16 @@ module soc_toplevel(/*autoport*/
             vga_clk,
             vga_de,
 //input
-            rst_in,
             clk_in,
             clk_uart_in,
             rxd,
             sl811_dack,
-            sl811_int
-            );
+            sl811_int,
+            touch_btn);
 
-input wire rst_in;
+wire[127:0] register_dump;
+wire[31:0] pc_dump;
+
 input wire clk_in;
 
 wire clk2x,clk,locked,rst_n;
@@ -62,7 +67,7 @@ assign clk_uart = clk_uart_pll;
 `endif
 
 sys_pll pll1(
-    .areset(rst_in),
+    .areset(touch_btn[5]),
     .inclk0(clk_in),
     .c0(clk),
     .c1(clk2x),
@@ -74,6 +79,8 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .clk(clk),
          .rst_in_n(locked));
 
+output  wire       clkout1_p,  clkout1_n;          // lvds channel 1 clock output
+output  wire[3:0]   dataout1_p, dataout1_n;         // lvds channel 1 data outputs
 
 inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
@@ -119,6 +126,8 @@ output wire sl811_drq;
 
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
+
+input wire[5:0] touch_btn;
 
 wire rs232_rxd=1'b1;
 wire rs232_txd=1'b1;
@@ -259,6 +268,8 @@ naive_mips cpu(/*autoinst*/
          .dbus_read(dbus_read),
          .dbus_write(dbus_write),
          .dbus_wrdata(dbus_wrdata[31:0]),
+         .register_dump    (register_dump),
+         .pc_dump          (pc_dump),
          .rst_n(rst_n),
          .clk(clk),
          .debugger_uart_clk(clk_uart),
@@ -430,5 +441,26 @@ gpu gpu_inst(
 );
 
 assign irq_line = {1'b0,usb_irq,uart_irq,2'b0};
+
+wire [255:0] testdata_in;
+assign testdata_in = {
+    dbus_address,
+    dbus_wrdata,
+    {16'h0},
+    {8'h0,uart_irq,dbus_read,dbus_write,dbus_stall,dbus_ram_byteenable},
+    pc_dump,
+    register_dump
+};
+sampler_0 la(
+    .sample_clk    (clk),
+    .txmit_ref_clk(clk_in),
+    .clkout1_p (clkout1_p),
+    .clkout1_n (clkout1_n),
+    .dataout1_p(dataout1_p),
+    .dataout1_n(dataout1_n),
+    .start_sample  (touch_btn[0]),
+    .stop_sample  (touch_btn[1]),
+    .data_in       (testdata_in)
+);
 
 endmodule

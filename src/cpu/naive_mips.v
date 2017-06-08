@@ -3,27 +3,32 @@
 
 module naive_mips(/*autoport*/
 //output
-          debugger_uart_txd,
-          ibus_address,
-          ibus_byteenable,
-          ibus_read,
-          ibus_write,
-          ibus_wrdata,
-          dbus_address,
-          dbus_byteenable,
-          dbus_read,
-          dbus_write,
-          dbus_wrdata,
+      register_dump,
+      pc_dump,
+      debugger_uart_txd,
+      ibus_address,
+      ibus_byteenable,
+      ibus_read,
+      ibus_write,
+      ibus_wrdata,
+      dbus_address,
+      dbus_byteenable,
+      dbus_read,
+      dbus_write,
+      dbus_wrdata,
 //input
-          rst_n,
-          clk,
-          debugger_uart_rxd,
-          debugger_uart_clk,
-          ibus_rddata,
-          ibus_stall,
-          dbus_rddata,
-          dbus_stall,
-          hardware_int_in);
+      rst_n,
+      clk,
+      debugger_uart_rxd,
+      debugger_uart_clk,
+      ibus_rddata,
+      ibus_stall,
+      dbus_rddata,
+      dbus_stall,
+      hardware_int_in);
+
+output wire[127:0] register_dump;
+output wire[31:0] pc_dump;
 
 input wire rst_n;
 input wire clk;
@@ -221,6 +226,8 @@ wire[31:0] debugger_host_param;
 wire[31:0] debugger_host_result;
 wire debugger_host_cmd_en;
 
+assign pc_dump = if_pc;
+
 dbg_uart dbg_host(/*autoinst*/
           .host_cmd(debugger_host_cmd),
           .host_param(debugger_host_param),
@@ -264,6 +271,7 @@ regs main_regs(/*autoinst*/
          .we(wb_reg_we),
          .waddr(wb_reg_addr_i),
          .wdata(wb_data_i),
+         .register_dump(register_dump),
          .raddr1(id_reg_s),
          .raddr2(id_reg_t),
          .raddr3(debugger_reg_addr));
