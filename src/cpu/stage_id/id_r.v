@@ -47,6 +47,7 @@ always @(*) begin
         6'h0a: op <= `OP_MOVZ;
         6'h0b: op <= `OP_MOVN;
         6'h0c: op <= `OP_SYSCALL;
+        6'h0d: op <= `OP_BREAK;
         6'h0f: op <= `OP_SYNC;
         6'h10: op <= `OP_MFHI;
         6'h11: op <= `OP_MTHI;
