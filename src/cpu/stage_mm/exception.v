@@ -1,46 +1,47 @@
 `default_nettype none
 module exception(/*autoport*/
 //output
-           flush,
-           cp0_wr_exp,
-           cp0_clean_exl,
-           exp_epc,
-           exp_code,
-           exp_bad_vaddr,
-           cp0_badv_we,
-           exception_new_pc,
-           exp_asid,
-           cp0_exp_asid_we,
+     flush,
+     cp0_wr_exp,
+     cp0_clean_exl,
+     exp_epc,
+     exp_code,
+     exp_bad_vaddr,
+     cp0_badv_we,
+     exception_new_pc,
+     exp_asid,
+     cp0_exp_asid_we,
 //input
-           iaddr_exp_miss,
-           daddr_exp_miss,
-           iaddr_exp_invalid,
-           daddr_exp_invalid,
-           iaddr_exp_illegal,
-           daddr_exp_illegal,
-           daddr_exp_dirty,
-           data_we,
-           invalid_inst,
-           syscall,
-           eret,
-           pc_value,
-           mem_access_vaddr,
-           in_delayslot,
-           overflow,
-           hardware_int,
-           software_int,
-           allow_int,
-           ebase_in,
-           epc_in,
-           restrict_priv_inst,
-           interrupt_mask,
-           special_int_vec,
-           boot_exp_vec,
-           if_asid,
-           mm_asid,
-           if_exl,
-           mm_exl,
-           is_real_inst);
+     iaddr_exp_miss,
+     daddr_exp_miss,
+     iaddr_exp_invalid,
+     daddr_exp_invalid,
+     iaddr_exp_illegal,
+     daddr_exp_illegal,
+     daddr_exp_dirty,
+     data_we,
+     invalid_inst,
+     syscall,
+     break_inst,
+     eret,
+     pc_value,
+     mem_access_vaddr,
+     in_delayslot,
+     overflow,
+     hardware_int,
+     software_int,
+     allow_int,
+     ebase_in,
+     epc_in,
+     restrict_priv_inst,
+     interrupt_mask,
+     special_int_vec,
+     boot_exp_vec,
+     if_asid,
+     mm_asid,
+     if_exl,
+     mm_exl,
+     is_real_inst);
 
 input wire iaddr_exp_miss;
 input wire daddr_exp_miss;
@@ -52,6 +53,7 @@ input wire daddr_exp_dirty;
 input wire data_we;
 input wire invalid_inst;
 input wire syscall;
+input wire break_inst;
 input wire eret;
 input wire [31:0]pc_value;
 input wire [31:0]mem_access_vaddr;
@@ -133,6 +135,10 @@ always @(*) begin
     else if(syscall) begin
         exp_code <= 5'h08;
         $display("Exception: Syscall");
+    end
+    else if(break_inst) begin
+        exp_code <= 5'h09;
+        $display("Exception: Breakpoint");
     end
     else if(invalid_inst) begin
         exp_code <= 5'h0a;
