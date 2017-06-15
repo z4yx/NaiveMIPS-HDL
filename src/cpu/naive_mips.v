@@ -106,6 +106,7 @@ wire [63:0]ex_reg_hilo_o;
 wire [63:0]ex_reg_hilo_value;
 wire ex_overflow;
 wire ex_syscall;
+wire ex_break;
 wire ex_eret;
 wire ex_we_hilo;
 wire ex_stall;
@@ -130,6 +131,7 @@ wire mm_mem_wr;
 reg mm_in_delayslot;
 reg mm_overflow;
 reg mm_syscall;
+reg mm_break;
 reg mm_eret;
 reg mm_invalid_inst;
 wire [31:0]mm_mem_data_o;
@@ -550,6 +552,7 @@ ex stage_ex(/*autoinst*/
             .flag_unsigned(ex_flag_unsigned),
             .overflow(ex_overflow),
             .syscall(ex_syscall),
+            .break_inst(ex_break),
             .eret(ex_eret),
             .reg_hilo_o(ex_reg_hilo_o),
             .we_hilo(ex_we_hilo),
@@ -592,6 +595,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_real_inst <= 1'b0;
         mm_eret <= 1'b0;
         mm_syscall <= 1'b0;
+        mm_break <= 1'b0;
         mm_invalid_inst <= 1'b0;
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
@@ -620,6 +624,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_real_inst <= ex_real_inst;
         mm_eret <= ex_eret;
         mm_syscall <= ex_syscall;
+        mm_break <= ex_break;
         mm_invalid_inst <= ex_op == `OP_INVAILD;
         mm_iaddr_exp_miss <= ex_iaddr_exp_miss;
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
@@ -647,6 +652,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_real_inst <= 1'b0;
         mm_eret <= 1'b0;
         mm_syscall <= 1'b0;
+        mm_break <= 1'b0;
         mm_invalid_inst <= 1'b0;
         mm_iaddr_exp_miss <= 1'b0;
         mm_iaddr_exp_illegal <= 1'b0;
@@ -701,6 +707,7 @@ exception exception_detect(/*autoinst*/
      .data_we(mm_mem_wr),
      .invalid_inst(mm_invalid_inst),
      .syscall(mm_syscall),
+     .break_inst(mm_break),
      .eret(mm_eret),
      .restrict_priv_inst(mm_is_priv_inst && cp0_user_mode),
      .pc_value(mm_pc_value),

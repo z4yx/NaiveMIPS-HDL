@@ -16,6 +16,7 @@ module ex(/*autoport*/
           cp0_rd_addr,
           cp0_sel,
           syscall,
+          break_inst,
           eret,
           we_tlb,
           is_priv_inst,
@@ -68,6 +69,7 @@ output reg[4:0] cp0_wr_addr;
 output reg[4:0] cp0_rd_addr;
 output reg[2:0] cp0_sel;
 output wire syscall;
+output wire break_inst;
 output wire eret;
 output wire we_tlb;
 output reg is_priv_inst;
@@ -95,6 +97,7 @@ assign tmp_add = reg_s_value + tmp_sign_operand;
 assign tmp_sub = reg_s_value - tmp_sign_operand; //used by SLT/SLTI and SUB
 
 assign syscall = op == `OP_SYSCALL;
+assign break_inst = op == `OP_BREAK;
 assign eret = op == `OP_ERET;
 assign we_tlb = op == `OP_TLBWI;
 assign probe_tlb = op == `OP_TLBP;
