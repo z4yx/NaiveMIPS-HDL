@@ -6,6 +6,7 @@ module soc_toplevel(/*autoport*/
             ext_ram_data,
             flash_data,
             sl811_data,
+            dm9k_data,
             gpio0,
             gpio1,
 //output
@@ -37,6 +38,11 @@ module soc_toplevel(/*autoport*/
             sl811_cs_n,
             sl811_rst_n,
             sl811_drq,
+            dm9k_cmd,
+            dm9k_we_n,
+            dm9k_rd_n,
+            dm9k_cs_n,
+            dm9k_rst_n,
             vga_pixel,
             vga_hsync,
             vga_vsync,
@@ -48,6 +54,7 @@ module soc_toplevel(/*autoport*/
             rxd,
             sl811_dack,
             sl811_int,
+            dm9k_int,
             touch_btn);
 
 wire[127:0] register_dump;
@@ -124,6 +131,15 @@ input wire sl811_dack;
 input wire sl811_int;
 output wire sl811_drq;
 
+//DM9000 Ethernet controller signals
+output wire dm9k_cmd;
+inout wire[15:0] dm9k_data;
+output wire dm9k_we_n;
+output wire dm9k_rd_n;
+output wire dm9k_cs_n;
+output wire dm9k_rst_n;
+input wire dm9k_int;
+
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
 
@@ -193,6 +209,14 @@ wire usb_dbus_read;
 wire usb_dbus_write;
 wire usb_dbus_stall;
 wire usb_irq;
+
+wire [31:0]net_dbus_data_o;
+wire [31:0]net_dbus_data_i;
+wire [2:0]net_dbus_address;
+wire net_dbus_read;
+wire net_dbus_write;
+wire net_dbus_stall;
+wire net_irq;
 
 wire [31:0]gpio_dbus_data_o;
 wire [31:0]gpio_dbus_data_i;
@@ -337,6 +361,12 @@ dbus dbus0(/*autoinst*/
          .usb_read         (usb_dbus_read),
          .usb_write        (usb_dbus_write),
          .usb_stall        (usb_dbus_stall),
+         .net_address      (net_dbus_address),
+         .net_data_o       (net_dbus_data_o),
+         .net_data_i       (net_dbus_data_i),
+         .net_read         (net_dbus_read),
+         .net_write        (net_dbus_write),
+         .net_stall        (net_dbus_stall),
          .master_address(dbus_address[31:0]),
          .master_byteenable(dbus_byteenable[3:0]),
          .master_read(dbus_read),
@@ -402,6 +432,24 @@ usb_sl811 usbhcd0(/*autoinst*/
           .bus_irq(usb_irq),
           .sl811_dack(sl811_dack),
           .sl811_int(sl811_int));
+
+net_dm9k eth0(/*autoinst*/
+          .dm9k_data(dm9k_data),
+          .bus_data_o(net_dbus_data_o[31:0]),
+          .bus_stall(net_dbus_stall),
+          .dm9k_cmd(dm9k_cmd),
+          .dm9k_we_n(dm9k_we_n),
+          .dm9k_rd_n(dm9k_rd_n),
+          .dm9k_cs_n(dm9k_cs_n),
+          .dm9k_rst_n(dm9k_rst_n),
+          .clk_bus(clk),
+          .rst_n(rst_n),
+          .bus_address(net_dbus_address[2:0]),
+          .bus_data_i(net_dbus_data_i[31:0]),
+          .bus_read(net_dbus_read),
+          .bus_write(net_dbus_write),
+          .bus_irq(),
+          .dm9k_int(dm9k_int));
 
 gpio_top gpio_inst(/*autoinst*/
          .gpio0(gpio0[31:0]),
