@@ -71,9 +71,9 @@ def write_ram(start, content, progress=False):
     if progress:
         print "%d bytes written"%cnt
 
-def read_ram(start, length, progress=False):
+def read_ram(start, length, progress=False, cmd='1'):
     time.sleep(0.01)
-    write_uart('1')
+    write_uart(cmd)
     x = ser.read(1)
     if not x:
         print "ack timed out"
@@ -164,23 +164,12 @@ def ram_test():
         offset &= 0x803fffff
 
 def read_flash(offset, size):
-    # write_ram(FLASH_BASE, "\x20\x00\x00\x00")
-    # write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
-    # time.sleep(0.5)
-
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
-    orig = read_ram(FLASH_BASE+offset*2, size*2, True)
-    result = []
-    for i in xrange(0, len(orig), 4):  #only lower 16-bits of 32-bits data are valid
-        result.append(orig[i])
-        result.append(orig[i+1])
-    if size%2:
-        result.pop()
-    return ''.join(result)
+    orig = read_ram(FLASH_BASE+offset, size, True, '3')
+    return orig[:size]
 
 def wait_flash():
     while True:
-        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
+        write_ram(FLASH_BASE, "\x70\x00\x70\x00")
         buf = read_ram(FLASH_BASE, 4)
         # print "Status: %s" % binascii.hexlify(buf[0])
         if (ord(buf[0]) & 0x80)!=0:
@@ -194,13 +183,13 @@ def write_flash(f):
     print "Flash blocks: %d" % blocks
 
     # !!! clear lock bits !!!
-    write_ram(FLASH_BASE, "\x60\x00\x00\x00")
-    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x60\x00\x60\x00")
+    write_ram(FLASH_BASE, "\xD0\x00\xD0\x00")
     wait_flash()
 
     for i in tqdm(range(0, blocks), desc='Erasing:', unit='Blocks'):
-        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\x20\x00\x00\x00")
-        write_ram(FLASH_BASE+i*FLASH_BLKSIZE*2, "\xD0\x00\x00\x00")
+        write_ram(FLASH_BASE+i*FLASH_BLKSIZE, "\x20\x00\x20\x00")
+        write_ram(FLASH_BASE+i*FLASH_BLKSIZE, "\xD0\x00\xD0\x00")
         wait_flash()
     content = f.read()
 
@@ -236,59 +225,35 @@ def usb_test():
     print "Rev: %s" % binascii.hexlify(buf[0:2])
 
 def flash_test():
-    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
+
+    write_ram(FLASH_BASE, "\x90\x00\x90\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
 
-    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
-    buf = read_ram(FLASH_BASE+4, 4)
-    print "Device code: %s" % binascii.hexlify(buf[0])
-
-    write_ram(FLASH_BASE, "\x90\x00\x00\x00")
-    buf = read_ram(FLASH_BASE+8, 4)
-    print "Lock bits: %s" % binascii.hexlify(buf[0])
-
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
-    buf = read_ram(FLASH_BASE, 4)
-    print "data: %s" % binascii.hexlify(buf)
-
     # !!! clear lock bits !!!
-    write_ram(FLASH_BASE, "\x60\x00\x00\x00")
-    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x60\x00\x60\x00")
+    write_ram(FLASH_BASE, "\xD0\x00\xD0\x00")
     wait_flash()
 
     # !!! erase test !!!
-    write_ram(FLASH_BASE, "\x20\x00\x00\x00")
-    write_ram(FLASH_BASE, "\xD0\x00\x00\x00")
+    write_ram(FLASH_BASE, "\x20\x00\x20\x00")
+    write_ram(FLASH_BASE, "\xD0\x00\xD0\x00")
     wait_flash()
+    print "erased"
 
-    while True:
-        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
-        buf = read_ram(FLASH_BASE, 4)
-        print "Status: %s" % binascii.hexlify(buf[0])
-        if (ord(buf[0]) & 0x80)!=0:
-            break
-        print "Waiting..."
-
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xff\x00\xff\x00")
     buf = read_ram(FLASH_BASE, 4)
-    print "data: %s" % binascii.hexlify(buf)
+    print "data: %s" % binascii.hexlify(buf[:2])
 
     # !!! program test !!!
-    write_ram(FLASH_BASE, "\x40\x00\x00\x00")
-    write_ram(FLASH_BASE, "\x55\x55\x00\x00")
+    write_ram(FLASH_BASE, "\x40\x00\x40\x00")
+    write_ram(FLASH_BASE, "\x55\xaa\x55\xaa")
+    wait_flash()
+    print "programmed"
 
-    while True:
-        write_ram(FLASH_BASE, "\x70\x00\x00\x00")
-        buf = read_ram(FLASH_BASE, 4)
-        print "Status: %s" % binascii.hexlify(buf[0])
-        if (ord(buf[0]) & 0x80)!=0:
-            break
-        print "Waiting..."
-
-    write_ram(FLASH_BASE, "\xff\x00\x00\x00")
+    write_ram(FLASH_BASE, "\xff\x00\xff\x00")
     buf = read_ram(FLASH_BASE, 4)
-    print "data: %s" % binascii.hexlify(buf)
+    print "data: %s" % binascii.hexlify(buf[:2])
 
 def load_binary_file(f, addr):
     size = os.fstat(f.fileno()).st_size
