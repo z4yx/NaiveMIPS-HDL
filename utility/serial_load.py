@@ -20,6 +20,7 @@ FLASH_BASE = 0xbe000000
 USB_BASE = 0xbc020000
 FLASH_BLKSIZE = 128*1024
 FLASH_SIZE = 64*FLASH_BLKSIZE
+RAM_SIZE = 0x800000
 
 class ProgressPH(object):
     class fake_tqdm():
@@ -81,6 +82,7 @@ def read_ram(start, length, progress=False, cmd='1'):
         return
     assert x=='~'
 
+    assert start%4==0
     length = (length+3)/4*4 #round up
 
     write_uart(struct.pack('<I',start))
@@ -142,6 +144,20 @@ def uart_loopback_test():
 def ram_test():
 
     offset = 0x80000000
+    scan_bit = 0x4
+    testdata1 = 0xdeadbeef
+    write_ram(offset, struct.pack('I',testdata1), False)
+    while scan_bit < RAM_SIZE:
+        testdata1 += 1
+        write_ram(offset+scan_bit, struct.pack('I',testdata1), False)
+        scan_bit <<= 1
+    scan_bit = 0x4
+    testdata1 = 0xdeadbeef
+    while scan_bit < RAM_SIZE:
+        testdata1 += 1
+        if struct.pack('I',testdata1) != read_ram(offset+scan_bit, 4) :
+            print "problem with address 0x%x" % scan_bit
+        scan_bit <<= 1
     while True:
         size = 64*1024
         data = ''.join(chr(random.randint(0,255)) for _ in range(size))
@@ -161,7 +177,7 @@ def ram_test():
                     print "%x!=%x @ 0x%x" % (ord(data[x]),ord(recv[x]),x)
             break
         offset += size
-        offset &= 0x803fffff
+        offset &= 0x80000000+RAM_SIZE-1
 
 def read_flash(offset, size):
     orig = read_ram(FLASH_BASE+offset, size, True, '3')
