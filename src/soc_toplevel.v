@@ -410,6 +410,7 @@ flash_top flash0(/*autoinst*/
          .bus_stall(flash_dbus_stall),
          .bus_address(flash_dbus_address[23:0]),
          .bus_data_i(flash_dbus_data_i[31:0]),
+         .bus_be(flash_dbus_data_enable),
          .bus_read(flash_dbus_read),
          .bus_write(flash_dbus_write));
 
