@@ -213,7 +213,8 @@ wire[31:0] cp0_epc;
 wire[83:0] cp0_tlb_config;
 wire cp0_user_mode;
 wire timer_int;
-wire[5:0] hardware_int;
+reg[5:0] hardware_int;
+reg[5:0] hardware_int_in_sync;
 wire[7:0] cp0_interrupt_mask;
 wire cp0_special_int_vec;
 wire cp0_boot_exp_vec;
@@ -334,8 +335,10 @@ assign debugger_mem_data = if_inst;
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
 
-assign hardware_int[5] = timer_int;
-assign hardware_int[4:0] = hardware_int_in;
+always @(posedge clk) begin : proc_hardware_int_in_sync
+  hardware_int_in_sync <= {timer_int,hardware_int_in};
+  hardware_int <= hardware_int_in_sync;
+end
 
 assign flush = debugger_flush | debugger_flush_holding | exception_flush | exception_flush_holding;
 
