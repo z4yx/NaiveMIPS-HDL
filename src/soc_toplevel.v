@@ -7,6 +7,7 @@ module soc_toplevel(/*autoport*/
             flash_data,
             usb_data,
             gpio1,
+            mdio,
 //output
             base_ram_addr,
             base_ram_be,
@@ -33,7 +34,6 @@ module soc_toplevel(/*autoport*/
             usb_cs_n,
             usb_rst_n,
             usb_dack,
-            usb_int,
             leds,
             dpy_com,
             dpy_seg,
@@ -45,13 +45,25 @@ module soc_toplevel(/*autoport*/
             vga_de,
             vga_sync_n,
             vga_psave_n,
+            mdc,
+            MII_rst_n,
+            MII_tx_en,
+            MII_txd,
 //input
             rst_in,
             clk_in,
             clk_uart_in,
             rxd,
+            usb_int,
             usb_drq,
-            rs232_rxd);
+            rs232_rxd,
+            MII_col,
+            MII_crs,
+            MII_rx_clk,
+            MII_rx_dv,
+            MII_rx_er,
+            MII_rxd,
+            MII_tx_clk);
 
 input wire rst_in;
 input wire clk_in;
@@ -141,6 +153,23 @@ output wire vga_de;
 output wire vga_sync_n;
 output wire vga_psave_n;
 
+output wire mdc;
+inout wire mdio;
+input wire MII_col;
+input wire MII_crs;
+output wire MII_rst_n;
+input wire MII_rx_clk;
+input wire MII_rx_dv;
+input wire MII_rx_er;
+input wire [3:0]MII_rxd;
+input wire MII_tx_clk;
+output wire MII_tx_en;
+output wire [3:0]MII_txd;
+
+wire mdio_o;
+wire mdio_t;
+wire mdio_i;
+
 wire[4:0] irq_line;
 wire uart_irq;
 
@@ -208,6 +237,14 @@ wire [31:0]gpu_dbus_data_i;
 wire [23:0]gpu_dbus_address;
 wire gpu_dbus_read;
 wire gpu_dbus_write;
+
+wire [31:0]net_dbus_data_o;
+wire [31:0]net_dbus_data_i;
+wire [15:0]net_dbus_address;
+wire net_dbus_read;
+wire net_dbus_write;
+wire net_dbus_stall;
+wire net_irq;
 
 wire [31:0]ticker_dbus_data_o;
 wire [31:0]ticker_dbus_data_i;
@@ -350,7 +387,13 @@ dbus dbus0(/*autoinst*/
          .usb_data_i       (usb_dbus_data_i),
          .usb_read         (usb_dbus_read),
          .usb_write        (usb_dbus_write),
-         .usb_stall        (usb_dbus_stall),
+         .usb_stall        (usb_dbus_stall),         
+         .net_address      (net_dbus_address),
+         .net_data_o       (net_dbus_data_o),
+         .net_data_i       (net_dbus_data_i),
+         .net_read         (net_dbus_read),
+         .net_write        (net_dbus_write),
+         .net_stall        (net_dbus_stall),
          .master_address(dbus_address[31:0]),
          .master_byteenable(dbus_byteenable[3:0]),
          .master_read(dbus_read),
@@ -418,6 +461,41 @@ usb_isp1362 usbhcd0(/*autoinst*/
           .bus_irq(usb_irq),
           .usb_dack(usb_dack),
           .usb_int(usb_int));
+
+ethlite eth0(
+        .clk        (clk),
+        .sysclk100M (clk_in),
+        .address1   (net_dbus_address),
+        .wrdata1    (net_dbus_data_i),
+        .rddata1    (net_dbus_data_o),
+        .dataenable1(4'b1111),
+        .rd1        (net_dbus_read),
+        .wr1        (net_dbus_write),
+        .stall1     (net_dbus_stall),
+        .irq        (net_irq),
+        .rst_n      (rst_n),
+        .mdc(mdc),
+        .mdio_i(mdio_i),
+        .mdio_o(mdio_o),
+        .mdio_t(mdio_t),
+        .MII_col(MII_col),
+        .MII_crs(MII_crs),
+        .MII_rst_n(MII_rst_n),
+        .MII_rx_clk(MII_rx_clk),
+        .MII_rx_dv(MII_rx_dv),
+        .MII_rx_er(MII_rx_er),
+        .MII_rxd(MII_rxd),
+        .MII_tx_clk(MII_tx_clk),
+        .MII_tx_en(MII_tx_en),
+        .MII_txd(MII_txd)
+    );
+
+IOBUF mdio_buf(
+    .IO(mdio),
+    .I(mdio_o),
+    .O(mdio_i),
+    .T(mdio_t)
+);
 
 gpio_top gpio_inst(/*autoinst*/
          .gpio0(gpio0[31:0]),

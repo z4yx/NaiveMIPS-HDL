@@ -40,6 +40,26 @@ set_property -dict {PACKAGE_PIN U25 IOSTANDARD LVCMOS33} [get_ports {usb_data[13
 set_property -dict {PACKAGE_PIN U24 IOSTANDARD LVCMOS33} [get_ports {usb_data[14]}]
 set_property -dict {PACKAGE_PIN V22 IOSTANDARD LVCMOS33} [get_ports {usb_data[15]}]
 
+#ETH Phy
+set_property -dict {PACKAGE_PIN A17 IOSTANDARD LVCMOS25} [get_ports mdc]
+set_property -dict {PACKAGE_PIN C19 IOSTANDARD LVCMOS25} [get_ports mdio]
+set_property -dict {PACKAGE_PIN B17 IOSTANDARD LVCMOS25} [get_ports MII_col]
+set_property -dict {PACKAGE_PIN B19 IOSTANDARD LVCMOS25} [get_ports MII_crs]
+set_property -dict {PACKAGE_PIN F18 IOSTANDARD LVCMOS25} [get_ports MII_rst_n]
+set_property -dict {PACKAGE_PIN F17 IOSTANDARD LVCMOS25} [get_ports MII_rx_clk]
+set_property -dict {PACKAGE_PIN C17 IOSTANDARD LVCMOS25} [get_ports MII_rx_dv]
+set_property -dict {PACKAGE_PIN C18 IOSTANDARD LVCMOS25} [get_ports MII_rx_er]
+set_property -dict {PACKAGE_PIN H16 IOSTANDARD LVCMOS25} [get_ports MII_rxd[0]]
+set_property -dict {PACKAGE_PIN G16 IOSTANDARD LVCMOS25} [get_ports MII_rxd[1]]
+set_property -dict {PACKAGE_PIN G15 IOSTANDARD LVCMOS25} [get_ports MII_rxd[2]]
+set_property -dict {PACKAGE_PIN F15 IOSTANDARD LVCMOS25} [get_ports MII_rxd[3]]
+set_property -dict {PACKAGE_PIN H17 IOSTANDARD LVCMOS25} [get_ports MII_tx_clk]
+set_property -dict {PACKAGE_PIN D15 IOSTANDARD LVCMOS25} [get_ports MII_tx_en]
+set_property -dict {PACKAGE_PIN D19 IOSTANDARD LVCMOS25} [get_ports MII_txd[0]]
+set_property -dict {PACKAGE_PIN D20 IOSTANDARD LVCMOS25} [get_ports MII_txd[1]]
+set_property -dict {PACKAGE_PIN G19 IOSTANDARD LVCMOS25} [get_ports MII_txd[2]]
+set_property -dict {PACKAGE_PIN F20 IOSTANDARD LVCMOS25} [get_ports MII_txd[3]]
+
 #VGA
 set_property IOSTANDARD LVCMOS33 [get_ports vga_clk]
 set_property PACKAGE_PIN T22 [get_ports vga_clk]

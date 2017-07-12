@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="17" Path="/home/skyworks/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.xpr">
+<Project Version="7" Minor="17" Path="C:/Users/zz/Documents/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="09738fe3e739469abd9e380d4eef4e6b"/>
@@ -34,13 +34,13 @@
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
     <Option Name="WTActivehdlLaunchSim" Val="0"/>
-    <Option Name="WTXSimExportSim" Val="12"/>
-    <Option Name="WTModelSimExportSim" Val="12"/>
-    <Option Name="WTQuestaExportSim" Val="12"/>
-    <Option Name="WTIesExportSim" Val="12"/>
-    <Option Name="WTVcsExportSim" Val="12"/>
-    <Option Name="WTRivieraExportSim" Val="12"/>
-    <Option Name="WTActivehdlExportSim" Val="12"/>
+    <Option Name="WTXSimExportSim" Val="16"/>
+    <Option Name="WTModelSimExportSim" Val="16"/>
+    <Option Name="WTQuestaExportSim" Val="16"/>
+    <Option Name="WTIesExportSim" Val="16"/>
+    <Option Name="WTVcsExportSim" Val="16"/>
+    <Option Name="WTRivieraExportSim" Val="16"/>
+    <Option Name="WTActivehdlExportSim" Val="16"/>
     <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
     <Option Name="XSimRadix" Val="hex"/>
     <Option Name="XSimTimeUnit" Val="ns"/>
@@ -439,6 +439,45 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/bd/eth_bd/eth_bd.bd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_ahblite_axi_bridge_0_0/eth_bd_ahblite_axi_bridge_0_0.xci">
+          <Proxy FileSetName="eth_bd_ahblite_axi_bridge_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_axi_ethernetlite_0_0/eth_bd_axi_ethernetlite_0_0.xci">
+          <Proxy FileSetName="eth_bd_axi_ethernetlite_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_axi_interconnect_0_0/eth_bd_axi_interconnect_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_proc_sys_reset_0_0/eth_bd_proc_sys_reset_0_0.xci">
+          <Proxy FileSetName="eth_bd_proc_sys_reset_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_auto_cc_0/eth_bd_auto_cc_0.xci">
+          <Proxy FileSetName="eth_bd_auto_cc_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="eth_bd_ooc.xdc"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hdl/eth_bd.v"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hdl/eth_bd.hwdef"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hw_handoff/eth_bd_bd.tcl"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hw_handoff/eth_bd.hwh"/>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/ahb_adapter.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/ethlite.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="soc_toplevel"/>
@@ -575,6 +614,30 @@
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
+    <FileSet Name="eth_bd_axi_ethernetlite_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/eth_bd_axi_ethernetlite_0_0">
+      <Config>
+        <Option Name="TopModule" Val="eth_bd_axi_ethernetlite_0_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="eth_bd_ahblite_axi_bridge_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/eth_bd_ahblite_axi_bridge_0_0">
+      <Config>
+        <Option Name="TopModule" Val="eth_bd_ahblite_axi_bridge_0_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="eth_bd_proc_sys_reset_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/eth_bd_proc_sys_reset_0_0">
+      <Config>
+        <Option Name="TopModule" Val="eth_bd_proc_sys_reset_0_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="eth_bd_auto_cc_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/eth_bd_auto_cc_0">
+      <Config>
+        <Option Name="TopModule" Val="eth_bd_auto_cc_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
   </FileSets>
   <Simulators>
     <Simulator Name="XSim">
@@ -587,14 +650,11 @@
     <Simulator Name="Questa">
       <Option Name="Description" Val="Questa Advanced Simulator"/>
     </Simulator>
-    <Simulator Name="IES">
-      <Option Name="Description" Val="Incisive Enterprise Simulator (IES)"/>
-    </Simulator>
-    <Simulator Name="VCS">
-      <Option Name="Description" Val="Verilog Compiler Simulator (VCS)"/>
-    </Simulator>
     <Simulator Name="Riviera">
       <Option Name="Description" Val="Riviera-PRO Simulator"/>
+    </Simulator>
+    <Simulator Name="ActiveHDL">
+      <Option Name="Description" Val="Active-HDL Simulator"/>
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="10">
@@ -633,6 +693,46 @@
     <Run Id="blk_mem_gen_v7_3_synth_1" Type="Ft3:Synth" SrcSet="blk_mem_gen_v7_3" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/blk_mem_gen_v7_3_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_axi_ethernetlite_0_0_synth_1" Type="Ft3:Synth" SrcSet="eth_bd_axi_ethernetlite_0_0" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_axi_ethernetlite_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/eth_bd_axi_ethernetlite_0_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_ahblite_axi_bridge_0_0_synth_1" Type="Ft3:Synth" SrcSet="eth_bd_ahblite_axi_bridge_0_0" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_ahblite_axi_bridge_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/eth_bd_ahblite_axi_bridge_0_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_proc_sys_reset_0_0_synth_1" Type="Ft3:Synth" SrcSet="eth_bd_proc_sys_reset_0_0" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_proc_sys_reset_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/eth_bd_proc_sys_reset_0_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_auto_cc_0_synth_1" Type="Ft3:Synth" SrcSet="eth_bd_auto_cc_0" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_auto_cc_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/eth_bd_auto_cc_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -702,6 +802,74 @@
     <Run Id="blk_mem_gen_v7_3_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Default settings for Implementation." SynthRun="blk_mem_gen_v7_3_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_axi_ethernetlite_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_axi_ethernetlite_0_0" Description="Default settings for Implementation." SynthRun="eth_bd_axi_ethernetlite_0_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_ahblite_axi_bridge_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_ahblite_axi_bridge_0_0" Description="Default settings for Implementation." SynthRun="eth_bd_ahblite_axi_bridge_0_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_proc_sys_reset_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_proc_sys_reset_0_0" Description="Default settings for Implementation." SynthRun="eth_bd_proc_sys_reset_0_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="eth_bd_auto_cc_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_auto_cc_0" Description="Default settings for Implementation." SynthRun="eth_bd_auto_cc_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
