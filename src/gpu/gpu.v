@@ -74,6 +74,12 @@ wire [13:0] rdaddr;
 
 wire [26:0] offsetTemp;
 
+wire pix_rst_n;
+clk_ctrl pixclk_rst(
+         .rst_out_n(pix_rst_n),
+         .clk(clk_pixel),
+         .rst_in_n(rst_n));
+
 GPUMemory mem(
   .data_a(wrdata),
   .address_a(wraddr),
@@ -86,7 +92,7 @@ GPUMemory mem(
   .address_b(rdaddr),
   .wren_b   (1'b0),
   .clock_b(clk_pixel),
-  .aclr_b(~rst_n),
+  .aclr_b(~pix_rst_n),
   .q_b(rddata)
 );
 
@@ -110,8 +116,8 @@ always @(posedge clk_bus or negedge rst_n) begin
   end
 end
 
-always @(posedge clk_pixel or negedge rst_n) begin
-  if(~rst_n) begin
+always @(posedge clk_pixel or negedge pix_rst_n) begin
+  if(~pix_rst_n) begin
     pixelOffset <= 0;
     pixelOffsetReg[1] <= 0;
   end else begin
@@ -120,8 +126,8 @@ always @(posedge clk_pixel or negedge rst_n) begin
   end
 end
 
-always @(posedge clk_pixel or negedge rst_n) begin
-  if(!rst_n)begin
+always @(posedge clk_pixel or negedge pix_rst_n) begin
+  if(!pix_rst_n)begin
     nowWord <= 32'd0;
   end else begin
   
@@ -135,9 +141,9 @@ always @(posedge clk_pixel or negedge rst_n) begin
 
 end
 
-always @(posedge clk_pixel or negedge rst_n) begin
+always @(posedge clk_pixel or negedge pix_rst_n) begin
 
-  if(!rst_n)begin
+  if(!pix_rst_n)begin
     x      <= 0;
     y      <= 0;
   end else begin
@@ -155,9 +161,9 @@ always @(posedge clk_pixel or negedge rst_n) begin
 
 end
 
-always @(posedge clk_pixel or negedge rst_n) begin
+always @(posedge clk_pixel or negedge pix_rst_n) begin
 
-  if(!rst_n)begin
+  if(!pix_rst_n)begin
     hsync  <= `HSYNC_POL;
   end else begin
     if(x == `HTOL_TIME - 1) begin
@@ -168,9 +174,9 @@ always @(posedge clk_pixel or negedge rst_n) begin
   end
 end
 
-always @(posedge clk_pixel or negedge rst_n) begin
+always @(posedge clk_pixel or negedge pix_rst_n) begin
 
-  if(!rst_n)begin
+  if(!pix_rst_n)begin
     vsync  <= `VSYNC_POL;
   end else begin
     if(y == `VTOL_TIME - 1 && x == `HTOL_TIME - 1) begin
@@ -187,9 +193,9 @@ assign graphY = y >= `VPXL_BEGIN ? (y - `VPXL_BEGIN < `VER_PXL ? y - `VPXL_BEGIN
 assign de = x >= `HPXL_BEIGN && x - `HPXL_BEIGN < `HOR_PXL && y >= `VPXL_BEGIN && y - `VPXL_BEGIN < `VER_PXL;
 
 
-always @(posedge clk_pixel or negedge rst_n) begin
+always @(posedge clk_pixel or negedge pix_rst_n) begin
 
-  if(!rst_n)begin
+  if(!pix_rst_n)begin
     pxlCnt <= 0;
   end else begin
     if(de) begin
