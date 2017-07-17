@@ -41,5 +41,7 @@ set_output_delay -clock [get_clocks vga_clk] -max -add_delay 2.000 [get_ports vg
 set_output_delay -clock [get_clocks vga_clk] -min -add_delay -1.000 [get_ports vga_vsync]
 set_output_delay -clock [get_clocks vga_clk] -max -add_delay 2.000 [get_ports vga_vsync]
 set_false_path -from [get_clocks CLK_OUT3_clk_wiz_v3_6] -to [get_clocks CLK_OUT1_clk_wiz_v3_6]
-set_false_path -from [get_pins {clk_ctrl1/shifter_reg[2]/C}] -to [get_clocks *]
+set_false_path -to [get_pins -hier *_sync_reg/D]
+set_false_path -to [get_pins -hier *_sync_reg[0]*/D]
+set_false_path -to [get_pins -hier *rst_shifter_reg[*]/CLR]
 set_false_path -from [get_pins {gpu_inst/pixelOffsetReg_reg[0][*]/C}] -to [get_pins {gpu_inst/pixelOffsetReg_reg[1][*]/D}]
