@@ -44,14 +44,16 @@ reg[14:0] baud_cnt;
 
 flag_sync sync_tx_req(/*autoinst*/
          .FlagOut_clkB(tx_request_sync),
-         .rst_n(rst_n),
+         .a_rst_n(rst_n),
+         .b_rst_n(rst_uart_n),
          .clkA(clk_bus),
          .FlagIn_clkA(tx_request_reg),
          .clkB(clk_uart));
 
 flag_sync sync_tx_done(/*autoinst*/
          .FlagOut_clkB(tx_done_sync),
-         .rst_n(rst_n),
+         .b_rst_n(rst_n),
+         .a_rst_n(rst_uart_n),
          .clkA(clk_uart),
          .FlagIn_clkA(tx_done),
          .clkB(clk_bus));

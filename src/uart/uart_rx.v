@@ -44,7 +44,8 @@ reg rxd_buf, rxd;
 
 flag_sync sync_rx_avai(/*autoinst*/
          .FlagOut_clkB(rx_available_sync),
-         .rst_n(rst_n),
+         .b_rst_n(rst_n),
+         .a_rst_n(rst_uart_n),
          .clkA(clk_uart),
          .FlagIn_clkA(rx_available),
          .clkB(clk_bus));
