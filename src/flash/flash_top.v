@@ -43,10 +43,32 @@ output wire flash_vpen;
 
 wire [15:0] bus_d16_i, bus_d16_o;
 wire upper_half;
+wire ifce_stall;
+reg[1:0] wait_state;
+reg[15:0] lower_buf;
 
-assign upper_half = ~(|bus_be[1:0]);
+assign upper_half = wait_state[1] | ~(|bus_be[1:0]);
 assign bus_d16_i = upper_half ? bus_data_i[31:16] : bus_data_i[16:0];
-assign bus_data_o = {2{bus_d16_o}};
+assign bus_data_o = wait_state[1] ? {bus_d16_o, lower_buf} : {2{bus_d16_o}};
+assign bus_stall = ifce_stall | wait_state[0];
+
+always @(posedge clk_bus or negedge rst_n) begin : proc_wait_state
+  if(~rst_n) begin
+    wait_state <= 2'h0;
+  end else begin
+    case (wait_state)
+      2'h0: if(bus_read & (&bus_be)) //word read, begin with lower half
+              wait_state <= 2'b01;
+      2'h1: if(!ifce_stall) begin // lower half done, read upper half
+              wait_state <= 2'b10;
+              lower_buf <= bus_d16_o;
+            end
+      2'h2: if(!ifce_stall)
+              wait_state <= 2'b00;
+      default : wait_state <= 2'h0;
+    endcase
+  end
+end
 
 parallel_ifce #(.RW_BUS_CYCLE(3)) f_ifce(
   .clk_bus    (clk_bus),
@@ -56,7 +78,7 @@ parallel_ifce #(.RW_BUS_CYCLE(3)) f_ifce(
   .bus_data_o (bus_d16_o),
   .bus_read   (bus_read),
   .bus_write  (bus_write),
-  .bus_stall  (bus_stall),
+  .bus_stall  (ifce_stall),
   .dev_address(flash_address),
   .dev_data   (flash_data),
   .dev_we_n   (flash_we_n),
