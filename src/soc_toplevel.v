@@ -263,14 +263,14 @@ assign base_ram_ce_n = ~ram_address[22];
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
-assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : {32{1'hz}};
+assign base_ram_data = (~base_ram_we_n) ? ram_data_o : {32{1'hz}};
 assign base_ram_be = 4'b0;
 
 assign ext_ram_ce_n = ram_address[22];
 assign ext_ram_oe_n = ram_rd_n;
 assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
-assign ext_ram_data  = (~ext_ram_ce_n && ~ext_ram_we_n) ? ram_data_o : {32{1'hz}};
+assign ext_ram_data  = (~ext_ram_we_n) ? ram_data_o : {32{1'hz}};
 assign ext_ram_be = 4'b0;
 
 assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
