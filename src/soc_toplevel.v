@@ -104,9 +104,10 @@ output wire ext_ram_oe_n;
 output wire ext_ram_we_n;
 
 wire[29:0] ram_address;
+wire ram_ext_ce_n;
 wire ram_wr_n;
 wire ram_rd_n;
-wire[3:0] ram_dataenable;
+wire[3:0] ram_dataenable_n;
 wire[31:0] ram_data_i, ram_data_o;
 
 output wire txd;
@@ -243,15 +244,15 @@ assign base_ram_ce_n = ram_address[22];
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
-assign base_ram_data = (~base_ram_ce_n && ~base_ram_we_n) ? ram_data_o : {32{1'hz}};
-assign base_ram_be = ~ram_dataenable;
+assign base_ram_data =  ~base_ram_we_n ? ram_data_o : {32{1'hz}};
+assign base_ram_be = ram_dataenable_n;
 
-assign ext_ram_ce_n = ~ram_address[22];
+assign ext_ram_ce_n = ram_ext_ce_n;
 assign ext_ram_oe_n = ram_rd_n;
 assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
-assign ext_ram_data  = (~ext_ram_ce_n && ~ext_ram_we_n) ? ram_data_o : {32{1'hz}};
-assign ext_ram_be = ~ram_dataenable;
+assign ext_ram_data  = ~ext_ram_we_n ? ram_data_o : {32{1'hz}};
+assign ext_ram_be = ram_dataenable_n;
 
 assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
 
@@ -311,9 +312,10 @@ two_port mainram(/*autoinst*/
            .rddata1(ibus_ram_rddata),
            .rddata2(dbus_ram_rddata),
            .ram_address(ram_address),
+           .ram_ext_ce_n(ram_ext_ce_n),
            .ram_wr_n(ram_wr_n),
            .ram_rd_n(ram_rd_n),
-           .dataenable(ram_dataenable),
+           .dataenable_n(ram_dataenable_n),
            .rst_n(rst_n),
            .clk2x(clk2x),
            .address1(ibus_ram_address),

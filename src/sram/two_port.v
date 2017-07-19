@@ -7,7 +7,8 @@ module two_port(/*autoport*/
             ram_data_o,
             ram_wr_n,
             ram_rd_n,
-            dataenable,
+            ram_ext_ce_n,
+            dataenable_n,
 //input
             rst_n,
             clk2x,
@@ -45,7 +46,8 @@ input wire[31:0] ram_data_i;
 output wire[31:0] ram_data_o;
 output reg ram_wr_n;
 output reg ram_rd_n;
-output reg[3:0] dataenable;
+output reg[3:0] dataenable_n;
+output reg ram_ext_ce_n;
 
 reg[3:0] state;
 reg[31:0] wrbuf;
@@ -64,18 +66,20 @@ always @(posedge clk2x or negedge rst_n) begin
         state <= {state[2:0], state[3]};
         if (state[0]) begin
             ram_address <= address1;
+            ram_ext_ce_n <= ~address1[22];
             wrbuf <= wrdata1;
             ram_wr_n <= ~wr1;
             ram_rd_n <= ~rd1;
-            dataenable <= dataenable1;
+            dataenable_n <= ~dataenable1;
         end
         else if (state[1]) begin
             ram_address <= address2;
+            ram_ext_ce_n <= ~address2[22];
             wrbuf <= wrdata2;
             rddata1 <= ram_data_i;
             ram_wr_n <= ~wr2;
             ram_rd_n <= ~rd2;
-            dataenable <= dataenable2;
+            dataenable_n <= ~dataenable2;
         end
         else begin
             ram_wr_n <= 1'b1;
