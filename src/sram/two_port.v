@@ -4,6 +4,7 @@ module two_port(/*autoport*/
             rddata1,
             rddata2,
             ram_address,
+            ram_high_addr_n,
             ram_data_o,
             ram_wr_n,
             ram_rd_n,
@@ -46,6 +47,7 @@ output wire[31:0] ram_data_o;
 output reg ram_wr_n;
 output reg ram_rd_n;
 output reg[3:0] dataenable;
+output reg ram_high_addr_n;
 
 reg[3:0] state;
 reg[31:0] wrbuf;
@@ -63,16 +65,16 @@ always @(posedge clk2x or negedge rst_n) begin
     else begin
         state <= {state[2:0], state[3]};
         if (state[0]) begin
-            if(wr1 | rd1)
-                ram_address <= address1;
+            ram_address <= address1;
+            ram_high_addr_n <= ~address1[22];
             wrbuf <= wrdata1;
             ram_wr_n <= ~wr1;
             ram_rd_n <= ~rd1;
             dataenable <= dataenable1;
         end
         else if (state[1]) begin
-            if(wr2 | rd2)
-                    ram_address <= address2;
+            ram_address <= address2;
+            ram_high_addr_n <= ~address2[22];
             wrbuf <= wrdata2;
             rddata1 <= ram_data_i;
             ram_wr_n <= ~wr2;

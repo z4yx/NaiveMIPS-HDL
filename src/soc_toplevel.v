@@ -108,6 +108,7 @@ output wire ext_ram_oe_n;
 output wire ext_ram_we_n;
 
 wire[29:0] ram_address;
+wire ram_high_addr_n;
 wire ram_wr_n;
 wire ram_rd_n;
 wire[3:0] ram_dataenable;
@@ -259,7 +260,7 @@ wire ticker_dbus_write;
 wire debugger_uart_rxd;
 wire debugger_uart_txd;
 
-assign base_ram_ce_n = ~ram_address[22];
+assign base_ram_ce_n = ram_high_addr_n; 
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
@@ -342,6 +343,7 @@ two_port mainram(/*autoinst*/
            .rddata1(ibus_ram_rddata),
            .rddata2(dbus_ram_rddata),
            .ram_address(ram_address),
+           .ram_high_addr_n(ram_high_addr_n),
            .ram_wr_n(ram_wr_n),
            .ram_rd_n(ram_rd_n),
            .dataenable(ram_dataenable),
