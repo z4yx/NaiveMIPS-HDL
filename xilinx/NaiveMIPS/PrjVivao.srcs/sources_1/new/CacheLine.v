@@ -1,4 +1,3 @@
-`default_nettype none
 module CacheLine #(parameter
 	CACHE_LINE_WIDTH = 6,
 	TAG_WIDTH = 20

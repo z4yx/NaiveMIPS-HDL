@@ -1,4 +1,3 @@
-`default_nettype none
 `define NAIVE_DCACHE_FSM_IDLE				3'd0
 `define NAIVE_DCACHE_FSM_WRITEBACK_FIRST	3'd1
 `define NAIVE_DCACHE_FSM_WRITEBACK			3'd2
