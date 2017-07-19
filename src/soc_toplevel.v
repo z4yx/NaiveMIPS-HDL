@@ -256,7 +256,7 @@ wire ticker_dbus_write;
 wire debugger_uart_rxd;
 wire debugger_uart_txd;
 
-assign base_ram_ce_n = ~ram_address[22];
+assign base_ram_ce_n = ram_address[22];
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
