@@ -37,6 +37,10 @@ module dbus(/*autoport*/
             net_address,
             net_read,
             net_write,
+            cfg_flash_data_i,
+            cfg_flash_address,
+            cfg_flash_read,
+            cfg_flash_write,
 //input
             master_address,
             master_byteenable,
@@ -54,7 +58,9 @@ module dbus(/*autoport*/
             usb_data_o,
             usb_stall,
             net_data_o,
-            net_stall);
+            net_stall,
+            cfg_flash_data_o,
+            cfg_flash_stall);
 
 input wire[31:0] master_address;
 input wire[3:0] master_byteenable;
@@ -118,6 +124,13 @@ output reg net_read;
 output reg net_write;
 input wire net_stall;
 
+input wire [31:0]cfg_flash_data_o;
+output wire [31:0]cfg_flash_data_i;
+output wire [23:0]cfg_flash_address;
+output reg cfg_flash_read;
+output reg cfg_flash_write;
+input wire cfg_flash_stall;
+
 assign ram_data_enable = master_byteenable;
 assign ram_data_i = master_wrdata;
 assign ram_address = master_address[23:0];
@@ -131,6 +144,9 @@ assign usb_address = master_address[2:0];
 
 assign net_data_i = master_wrdata;
 assign net_address = master_address[15:0];
+
+assign cfg_flash_data_i = master_wrdata;
+assign cfg_flash_address = master_address[23:0];
 
 assign uart_data_i = master_wrdata;
 assign uart_address = master_address[3:0];
@@ -161,6 +177,8 @@ always @(*) begin
     usb_write <= 1'b0;
     net_read <= 1'b0;
     net_write <= 1'b0;
+    cfg_flash_read <= 1'b0;
+    cfg_flash_write <= 1'b0;
     master_rddata <= 32'h0;
     master_stall <= 1'b0;
     if(master_address[31:24] == 8'h00) begin
@@ -173,6 +191,11 @@ always @(*) begin
         flash_wr <= master_write;
         master_rddata <= flash_data_o;
         master_stall <= flash_stall;
+    end else if(master_address[31:24] == 8'h1a) begin
+        cfg_flash_read <= master_read;
+        cfg_flash_write <= master_write;
+        master_rddata <= cfg_flash_data_o;
+        master_stall <= cfg_flash_stall;
     end else if(master_address[31:24] == 8'h1b) begin
         gpu_rd <= master_read;
         gpu_wr <= master_write;

@@ -8,6 +8,9 @@ module soc_toplevel(/*autoport*/
             usb_data,
             gpio1,
             mdio,
+            cfg_flash_mosi,
+            cfg_flash_miso,
+            cfg_flash_ss,
 //output
             base_ram_addr,
             base_ram_be,
@@ -171,6 +174,20 @@ wire mdio_o;
 wire mdio_t;
 wire mdio_i;
 
+inout wire cfg_flash_mosi;
+inout wire cfg_flash_miso;
+inout wire cfg_flash_ss;
+
+wire mosi_i;
+wire mosi_o;
+wire mosi_t;
+wire miso_i;
+wire miso_o;
+wire miso_t;
+wire ss_i;
+wire ss_o;
+wire ss_t;
+
 wire[4:0] irq_line;
 wire uart_irq;
 
@@ -246,6 +263,13 @@ wire net_dbus_read;
 wire net_dbus_write;
 wire net_dbus_stall;
 wire net_irq;
+
+wire [31:0]cfg_flash_dbus_data_o;
+wire [31:0]cfg_flash_dbus_data_i;
+wire [23:0]cfg_flash_dbus_address;
+wire cfg_flash_dbus_read;
+wire cfg_flash_dbus_write;
+wire cfg_flash_dbus_stall;
 
 wire [31:0]ticker_dbus_data_o;
 wire [31:0]ticker_dbus_data_i;
@@ -384,6 +408,12 @@ dbus dbus0(/*autoinst*/
          .flash_data_enable(flash_dbus_data_enable[3:0]),
          .flash_rd(flash_dbus_read),
          .flash_wr(flash_dbus_write),
+         .cfg_flash_data_o (cfg_flash_dbus_data_o),
+         .cfg_flash_data_i (cfg_flash_dbus_data_i),
+         .cfg_flash_address(cfg_flash_dbus_address),
+         .cfg_flash_read   (cfg_flash_dbus_read),
+         .cfg_flash_write  (cfg_flash_dbus_write),
+         .cfg_flash_stall  (cfg_flash_dbus_stall),
          .usb_address      (usb_dbus_address),
          .usb_data_o       (usb_dbus_data_o),
          .usb_data_i       (usb_dbus_data_i),
@@ -497,6 +527,50 @@ IOBUF mdio_buf(
     .I(mdio_o),
     .O(mdio_i),
     .T(mdio_t)
+);
+
+spi_flash spi_flash_cfg(
+        .clk        (clk),
+        .spiclk     (clk2x),
+        .axiclk     (clk_in),
+        .address1   (cfg_flash_dbus_address),
+        .wrdata1    (cfg_flash_dbus_data_i),
+        .rddata1    (cfg_flash_dbus_data_o),
+        .dataenable1(4'b1111),
+        .rd1        (cfg_flash_dbus_read),
+        .wr1        (cfg_flash_dbus_write),
+        .stall1     (cfg_flash_dbus_stall),
+        .rst_n      (rst_n),
+        .miso_i     (miso_i),
+        .miso_o     (miso_o),
+        .miso_t     (miso_t),
+        .ss_i       (ss_i),
+        .ss_o       (ss_o),
+        .ss_t       (ss_t),
+        .mosi_t     (mosi_t),
+        .mosi_i     (mosi_i),
+        .mosi_o     (mosi_o)
+    );
+
+IOBUF ss_buf(
+    .IO(cfg_flash_ss),
+    .I(ss_o),
+    .O(ss_i),
+    .T(ss_t)
+);
+
+IOBUF miso_buf(
+    .IO(cfg_flash_miso),
+    .I(miso_o),
+    .O(miso_i),
+    .T(miso_t)
+);
+
+IOBUF mosi_buf(
+    .IO(cfg_flash_mosi),
+    .I(mosi_o),
+    .O(mosi_i),
+    .T(mosi_t)
 );
 
 gpio_top gpio_inst(/*autoinst*/

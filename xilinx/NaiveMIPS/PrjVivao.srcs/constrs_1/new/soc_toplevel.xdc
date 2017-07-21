@@ -560,6 +560,10 @@ set_property PACKAGE_PIN AF13 [get_ports ext_ram_oe_n]
 set_property IOSTANDARD LVCMOS18 [get_ports ext_ram_we_n]
 set_property PACKAGE_PIN AF9 [get_ports ext_ram_we_n]
 
+set_property -dict {PACKAGE_PIN C23 IOSTANDARD LVCMOS33} [get_ports {cfg_flash_ss}]
+set_property -dict {PACKAGE_PIN B24 IOSTANDARD LVCMOS33} [get_ports {cfg_flash_mosi}]
+set_property -dict {PACKAGE_PIN A25 IOSTANDARD LVCMOS33} [get_ports {cfg_flash_miso}]
+
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
 

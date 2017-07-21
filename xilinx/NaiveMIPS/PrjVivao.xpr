@@ -34,13 +34,13 @@
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
     <Option Name="WTActivehdlLaunchSim" Val="0"/>
-    <Option Name="WTXSimExportSim" Val="16"/>
-    <Option Name="WTModelSimExportSim" Val="16"/>
-    <Option Name="WTQuestaExportSim" Val="16"/>
-    <Option Name="WTIesExportSim" Val="16"/>
-    <Option Name="WTVcsExportSim" Val="16"/>
-    <Option Name="WTRivieraExportSim" Val="16"/>
-    <Option Name="WTActivehdlExportSim" Val="16"/>
+    <Option Name="WTXSimExportSim" Val="18"/>
+    <Option Name="WTModelSimExportSim" Val="18"/>
+    <Option Name="WTQuestaExportSim" Val="18"/>
+    <Option Name="WTIesExportSim" Val="18"/>
+    <Option Name="WTVcsExportSim" Val="18"/>
+    <Option Name="WTRivieraExportSim" Val="18"/>
+    <Option Name="WTActivehdlExportSim" Val="18"/>
     <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
     <Option Name="XSimRadix" Val="hex"/>
     <Option Name="XSimTimeUnit" Val="ns"/>
@@ -439,38 +439,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/bd/eth_bd/eth_bd.bd">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="eth_bd_ooc.xdc"/>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hdl/eth_bd.v"/>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_auto_cc_0/eth_bd_auto_cc_0.xci">
-          <Proxy FileSetName="eth_bd_auto_cc_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_proc_sys_reset_0_0/eth_bd_proc_sys_reset_0_0.xci">
-          <Proxy FileSetName="eth_bd_proc_sys_reset_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_axi_interconnect_0_0/eth_bd_axi_interconnect_0_0.xci"/>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_ahblite_axi_bridge_0_0/eth_bd_ahblite_axi_bridge_0_0.xci">
-          <Proxy FileSetName="eth_bd_ahblite_axi_bridge_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_axi_ethernetlite_0_0/eth_bd_axi_ethernetlite_0_0.xci">
-          <Proxy FileSetName="eth_bd_axi_ethernetlite_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hdl/eth_bd.hwdef"/>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hw_handoff/eth_bd_bd.tcl"/>
-        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hw_handoff/eth_bd.hwh"/>
-      </File>
-      <File Path="$PSRCDIR/sources_1/new/ahb_adapter.v">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/new/ethlite.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -483,6 +451,66 @@
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/spi_flash.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/ahb_adapter.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/bd/bd_qspi/bd_qspi.bd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="hdl/bd_qspi.v"/>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="ip/bd_qspi_ahblite_axi_bridge_0_0/bd_qspi_ahblite_axi_bridge_0_0.xci">
+          <Proxy FileSetName="bd_qspi_ahblite_axi_bridge_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="ip/bd_qspi_axi_quad_spi_0_0/bd_qspi_axi_quad_spi_0_0.xci">
+          <Proxy FileSetName="bd_qspi_axi_quad_spi_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="hdl/bd_qspi.hwdef"/>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="hw_handoff/bd_qspi_bd.tcl"/>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="hw_handoff/bd_qspi.hwh"/>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="bd_qspi_ooc.xdc"/>
+        <CompFileExtendedInfo CompFileName="bd_qspi.bd" FileRelPathName="ip/bd_qspi_axi_clock_converter_0_0/bd_qspi_axi_clock_converter_0_0.xci">
+          <Proxy FileSetName="bd_qspi_axi_clock_converter_0_0"/>
+        </CompFileExtendedInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/bd/eth_bd/eth_bd.bd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hdl/eth_bd.hwdef"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hw_handoff/eth_bd_bd.tcl"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hw_handoff/eth_bd.hwh"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_proc_sys_reset_0_0/eth_bd_proc_sys_reset_0_0.xci">
+          <Proxy FileSetName="eth_bd_proc_sys_reset_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="eth_bd_ooc.xdc"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="hdl/eth_bd.v"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_auto_cc_0/eth_bd_auto_cc_0.xci">
+          <Proxy FileSetName="eth_bd_auto_cc_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_axi_interconnect_0_0/eth_bd_axi_interconnect_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_ahblite_axi_bridge_0_0/eth_bd_ahblite_axi_bridge_0_0.xci">
+          <Proxy FileSetName="eth_bd_ahblite_axi_bridge_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="eth_bd.bd" FileRelPathName="ip/eth_bd_axi_ethernetlite_0_0/eth_bd_axi_ethernetlite_0_0.xci">
+          <Proxy FileSetName="eth_bd_axi_ethernetlite_0_0"/>
+        </CompFileExtendedInfo>
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
@@ -498,6 +526,12 @@
         </FileInfo>
       </File>
       <File Path="$PSRCDIR/constrs_1/new/io_timing.xdc">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/constrs_1/new/cfg_flash_qspi.xdc">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -580,26 +614,6 @@
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
-    <FileSet Name="blk_mem_gen_v7_3" Type="BlockSrcs" RelSrcDir="$PSRCDIR/blk_mem_gen_v7_3">
-      <File Path="$PSRCDIR/sources_1/ip/blk_mem_gen_v7_3.xcix">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/ip/blk_mem_gen_v7_3/blk_mem_gen_v7_3.xci">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <Config>
-        <Option Name="TopModule" Val="blk_mem_gen_v7_3"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
     <FileSet Name="eth_bd_axi_ethernetlite_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/eth_bd_axi_ethernetlite_0_0">
       <Config>
         <Option Name="TopModule" Val="eth_bd_axi_ethernetlite_0_0"/>
@@ -641,6 +655,44 @@
       </File>
       <Config>
         <Option Name="TopModule" Val="clk_wiz_v3_6"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="bd_qspi_axi_quad_spi_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/bd_qspi_axi_quad_spi_0_0">
+      <Config>
+        <Option Name="TopModule" Val="bd_qspi_axi_quad_spi_0_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="bd_qspi_ahblite_axi_bridge_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/bd_qspi_ahblite_axi_bridge_0_0">
+      <Config>
+        <Option Name="TopModule" Val="bd_qspi_ahblite_axi_bridge_0_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="bd_qspi_axi_clock_converter_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/bd_qspi_axi_clock_converter_0_0">
+      <Config>
+        <Option Name="TopModule" Val="bd_qspi_axi_clock_converter_0_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="blk_mem_gen_v7_3" Type="BlockSrcs" RelSrcDir="$PSRCDIR/blk_mem_gen_v7_3">
+      <File Path="$PSRCDIR/sources_1/ip/blk_mem_gen_v7_3.xcix">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/ip/blk_mem_gen_v7_3/blk_mem_gen_v7_3.xci">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <Config>
+        <Option Name="TopModule" Val="blk_mem_gen_v7_3"/>
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
@@ -688,14 +740,6 @@
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
-    <Run Id="blk_mem_gen_v7_3_synth_1" Type="Ft3:Synth" SrcSet="blk_mem_gen_v7_3" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/blk_mem_gen_v7_3_synth_1" IncludeInArchive="true">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-    </Run>
     <Run Id="eth_bd_axi_ethernetlite_0_0_synth_1" Type="Ft3:Synth" SrcSet="eth_bd_axi_ethernetlite_0_0" Part="xc7k160tffg676-2" ConstrsSet="eth_bd_axi_ethernetlite_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/eth_bd_axi_ethernetlite_0_0_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
@@ -736,6 +780,40 @@
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
+    <Run Id="bd_qspi_axi_quad_spi_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_qspi_axi_quad_spi_0_0" Part="xc7k160tffg676-2" ConstrsSet="bd_qspi_axi_quad_spi_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_qspi_axi_quad_spi_0_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="bd_qspi_ahblite_axi_bridge_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_qspi_ahblite_axi_bridge_0_0" Part="xc7k160tffg676-2" ConstrsSet="bd_qspi_ahblite_axi_bridge_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_qspi_ahblite_axi_bridge_0_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="bd_qspi_axi_clock_converter_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_qspi_axi_clock_converter_0_0" Part="xc7k160tffg676-2" ConstrsSet="bd_qspi_axi_clock_converter_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_qspi_axi_clock_converter_0_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="blk_mem_gen_v7_3_synth_1" Type="Ft3:Synth" SrcSet="blk_mem_gen_v7_3" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/blk_mem_gen_v7_3_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016">
+          <Desc>Vivado Synthesis Defaults</Desc>
+        </StratHandle>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
     <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="constrs_1" Description="Default settings for Implementation." State="current" Dir="$PRUNDIR/impl_1" SynthRun="synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
@@ -768,21 +846,6 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
     <Run Id="gpu_mem_xilinx_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="gpu_mem_xilinx" Description="Default settings for Implementation." SynthRun="gpu_mem_xilinx_synth_1" IncludeInArchive="false">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-    </Run>
-    <Run Id="blk_mem_gen_v7_3_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Default settings for Implementation." SynthRun="blk_mem_gen_v7_3_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
         <Step Id="init_design"/>
@@ -860,6 +923,68 @@
     <Run Id="clk_wiz_v3_6_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="clk_wiz_v3_6" Description="Default settings for Implementation." SynthRun="clk_wiz_v3_6_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="bd_qspi_axi_quad_spi_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="bd_qspi_axi_quad_spi_0_0" Description="Default settings for Implementation." SynthRun="bd_qspi_axi_quad_spi_0_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="bd_qspi_ahblite_axi_bridge_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="bd_qspi_ahblite_axi_bridge_0_0" Description="Default settings for Implementation." SynthRun="bd_qspi_ahblite_axi_bridge_0_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="bd_qspi_axi_clock_converter_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="bd_qspi_axi_clock_converter_0_0" Description="Default settings for Implementation." SynthRun="bd_qspi_axi_clock_converter_0_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="blk_mem_gen_v7_3_impl_1" Type="Ft2:EntireDesign" Part="xc7k160tffg676-2" ConstrsSet="blk_mem_gen_v7_3" Description="Default settings for Implementation." SynthRun="blk_mem_gen_v7_3_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+          <Desc>Default settings for Implementation.</Desc>
+        </StratHandle>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
