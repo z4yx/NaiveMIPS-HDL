@@ -301,22 +301,22 @@ always begin
 end
 
 initial begin
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_mem");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/mem_endian");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_unalign");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_div");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_alu");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_logic");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_shift");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_move");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_jump");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_branch");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/overflow_exp");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_syscall");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/timer_int");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/mem_exp");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/tlb");
-    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/usermode");
+    unit_test("../../../../../testbench/testcase/inst_mem");
+    unit_test("../../../../../testbench/testcase/mem_endian");
+    unit_test("../../../../../testbench/testcase/inst_unalign");
+    unit_test("../../../../../testbench/testcase/inst_div");
+    unit_test("../../../../../testbench/testcase/inst_alu");
+    unit_test("../../../../../testbench/testcase/inst_logic");
+    unit_test("../../../../../testbench/testcase/inst_shift");
+    unit_test("../../../../../testbench/testcase/inst_move");
+    unit_test("../../../../../testbench/testcase/inst_jump");
+    unit_test("../../../../../testbench/testcase/inst_branch");
+    unit_test("../../../../../testbench/testcase/overflow_exp");
+    unit_test("../../../../../testbench/testcase/inst_syscall");
+    unit_test("../../../../../testbench/testcase/timer_int");
+    unit_test("../../../../../testbench/testcase/mem_exp");
+    unit_test("../../../../../testbench/testcase/tlb");
+    unit_test("../../../../../testbench/testcase/usermode");
     $display("Unit test succeeded!");
     $stop;
 end
