@@ -82,6 +82,7 @@ generate
 endgenerate
 
 DCache #(
+    .CACHE_LINE_WIDTH (6),
     .TAG_WIDTH        (22)
 ) cache (
     .nrst          (rst_n),
@@ -164,6 +165,8 @@ always @(posedge clk) begin
     if(!rst_n) begin
         // for(clr_addr=0; clr_addr<'h200000/4; clr_addr=clr_addr+1)
         //     cache_ground_truth[clr_addr] = 32'h0;
+    end else if (dbus_dcache_inv_wb && !dbus_stall) begin 
+      $display("Dbus Inv&Wb: [%h]", {dbus_address[31:2],2'h0});
     end else if (dbus_write && !dbus_stall) begin 
       if (dbus_byteenable[0]) cache_ground_truth[dbus_address[31:2]][7:0] = dbus_wrdata[7:0];
       if (dbus_byteenable[1]) cache_ground_truth[dbus_address[31:2]][15:8] = dbus_wrdata[15:8];
@@ -317,6 +320,7 @@ initial begin
     unit_test("../../../../../testbench/testcase/mem_exp");
     unit_test("../../../../../testbench/testcase/tlb");
     unit_test("../../../../../testbench/testcase/usermode");
+    unit_test("../../../../../testbench/testcase/inst_cache");
     $display("Unit test succeeded!");
     $stop;
 end
