@@ -15,9 +15,12 @@ __start:
    b    entry
    nop
 
-   .org 0x100
+   .org 0xf4
 entry:
    lui $1, 0x8000    # $1 = 0x80000000
+   sw  $0, 0x0($1)
+   sw  $0, 0x4($1)
+   sw  $0, 0x8($1)
    sw  $1, 0x0100($1)
    sw  $2, 0x0101($1)  #AdES
    lw  $2, 0x0103($1)  #AdEL
