@@ -53,6 +53,8 @@ output wire[31:0] dbus_wrdata;
 input wire[31:0] dbus_rddata;
 input wire dbus_stall;
 output wire dbus_uncached;
+output wire dbus_dcache_inv_wb;
+output wire dbus_icache_inv;
 
 input wire[4:0] hardware_int_in;
 
@@ -133,6 +135,8 @@ wire ex_is_priv_inst;
 wire ex_probe_tlb;
 reg [7:0]ex_iaddr_exp_asid;
 reg ex_iaddr_exp_exl;
+wire ex_inv_wb_dcache;
+wire ex_inv_icache;
 
 wire mm_mem_wr;
 reg mm_in_delayslot;
@@ -174,6 +178,9 @@ reg mm_probe_tlb;
 wire[31:0] mm_probe_result;
 reg [7:0]mm_iaddr_exp_asid;
 reg mm_iaddr_exp_exl;
+wire mm_inv_wb_dcache;
+wire mm_inv_icache;
+
 
 wire wb_reg_we;
 reg [31:0]wb_data_i;
@@ -292,7 +299,7 @@ mmu_top mmu(/*autoinst*/
       .clk(clk),
       .data_address_i(mm_mem_address),
       .inst_address_i(debugger_mem_read ? debugger_mem_addr : if_pc),
-      .data_en(mm_mem_rd || mm_mem_wr),
+      .data_en(mm_mem_rd | mm_mem_wr | mm_inv_wb_dcache | mm_inv_icache),
       .inst_en(1'b1 | debugger_mem_read),
       .tlb_config(cp0_tlb_config),
       .tlbwi(wb_we_tlb),
@@ -314,6 +321,8 @@ assign if_asid = cp0_asid;
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd && !flush;
 assign dbus_write = mm_mem_wr && !flush;
+assign dbus_dcache_inv_wb = mm_inv_wb_dcache && !flush;
+assign dbus_icache_inv = mm_inv_icache && !flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_rddata;
 assign mm_stall = dbus_stall;
@@ -586,6 +595,8 @@ ex stage_ex(/*autoinst*/
             .we_cp0(ex_we_cp0),
             .probe_tlb(ex_probe_tlb),
             .is_priv_inst(ex_is_priv_inst),
+            .inv_wb_dcache(ex_inv_wb_dcache),
+            .inv_icache(ex_inv_icache),
             .cp0_wr_addr(ex_cp0_wraddr),
             .cp0_rd_addr(ex_cp0_rdaddr),
             .cp0_sel(ex_cp0_sel),
@@ -626,6 +637,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_probe_tlb <= 1'b0;
         mm_iaddr_exp_asid <= 8'b0;
         mm_iaddr_exp_exl <= 1'b0;
+        mm_inv_icache <= 1'b0;
+        mm_inv_wb_dcache <= 1'b0;
     end
     else if(en_exmm && !flush) begin
         mm_mem_access_op <= ex_mem_access_op;
@@ -654,6 +667,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_probe_tlb <= ex_probe_tlb;
         mm_iaddr_exp_asid <= ex_iaddr_exp_asid;
         mm_iaddr_exp_exl <= ex_iaddr_exp_exl;
+        mm_inv_icache <= ex_inv_icache;
+        mm_inv_wb_dcache <= ex_inv_wb_dcache;
     end else if(en_mmwb || flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -681,6 +696,8 @@ always @(posedge clk or negedge rst_n) begin
         mm_probe_tlb <= 1'b0;
         mm_iaddr_exp_asid <= 8'b0;
         mm_iaddr_exp_exl <= 1'b0;
+        mm_inv_icache <= 1'b0;
+        mm_inv_wb_dcache <= 1'b0;
     end
 end
 

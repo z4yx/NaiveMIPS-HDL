@@ -20,6 +20,8 @@ module ex(/*autoport*/
           we_tlb,
           is_priv_inst,
           probe_tlb,
+          inv_wb_dcache,
+          inv_icache,
 //input
           clk,
           rst_n,
@@ -72,6 +74,8 @@ output wire eret;
 output wire we_tlb;
 output reg is_priv_inst;
 output wire probe_tlb;
+output reg inv_wb_dcache;
+output reg inv_icache;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -304,6 +308,10 @@ end
 
 always @(*) begin
     case (op)
+    `OP_CACHE: begin 
+        mem_addr <= reg_s_value+signExtImm;
+        mem_access_op <= `ACCESS_OP_D2R;
+    end
     `OP_LB,
     `OP_LH,
     `OP_LWL,
@@ -361,6 +369,16 @@ always @(*) begin
     default:
         is_priv_inst <= 1'b0;
     endcase
+end
+
+always @(*) begin
+    if(op == `OP_CACHE) begin 
+        inv_icache <= (reg_t == 5'b00000 || reg_t == 5'b10000);
+        inv_wb_dcache <= (reg_t == 5'b00001 || reg_t == 5'b10101);
+    end else begin 
+        inv_icache <= 1'b0;
+        inv_wb_dcache <= 1'b0;
+    end
 end
 
 endmodule
