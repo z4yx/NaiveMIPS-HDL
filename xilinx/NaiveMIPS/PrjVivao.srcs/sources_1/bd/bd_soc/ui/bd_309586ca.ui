@@ -1,0 +1,84 @@
+{
+   guistr: "# # String gsaved with Nlview 6.6.8  2016-12-21 bk=1.3817 VDI=40 GEI=35 GUI=JA:1.6
+#  -string -flagsOSRD
+preplace port SPI_FLASH -pg 1 -y 560 -defaultsOSRD
+preplace port ext_spi_clk -pg 1 -y -30 -defaultsOSRD
+preplace port ddr_ref_clk -pg 1 -y 300 -defaultsOSRD
+preplace port UART -pg 1 -y 800 -defaultsOSRD
+preplace port MII -pg 1 -y 920 -defaultsOSRD
+preplace port sys_rst -pg 1 -y 270 -defaultsOSRD
+preplace port AHB_I -pg 1 -y 50 -defaultsOSRD
+preplace port cpu_rstn -pg 1 -y 240 -defaultsOSRD
+preplace port cpu_clk -pg 1 -y 210 -defaultsOSRD
+preplace port ddr_sys_clk -pg 1 -y 330 -defaultsOSRD
+preplace port MDIO -pg 1 -y 950 -defaultsOSRD
+preplace port LED -pg 1 -y 420 -defaultsOSRD
+preplace port CFG_FLASH -pg 1 -y 20 -defaultsOSRD
+preplace port SW -pg 1 -y 450 -defaultsOSRD
+preplace port AHB_D -pg 1 -y 180 -defaultsOSRD
+preplace port ddr3 -pg 1 -y 180 -defaultsOSRD
+preplace portBus irq -pg 1 -y 710 -defaultsOSRD
+preplace inst axi_spi_flash -pg 1 -lvl 4 -y 560 -defaultsOSRD
+preplace inst perph_bus -pg 1 -lvl 3 -y 520 -defaultsOSRD
+preplace inst xlconstant_0 -pg 1 -lvl 3 -y 1000 -defaultsOSRD
+preplace inst mig_7series_0 -pg 1 -lvl 4 -y 250 -defaultsOSRD
+preplace inst jtag_axi_0 -pg 1 -lvl 1 -y 580 -defaultsOSRD
+preplace inst axi_cfg_spi_0 -pg 1 -lvl 4 -y 40 -defaultsOSRD
+preplace inst xlconcat_0 -pg 1 -lvl 5 -y 710 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 4 -y 420 -defaultsOSRD
+preplace inst proc_sys_reset_0 -pg 1 -lvl 1 -y 430 -defaultsOSRD
+preplace inst blk_mem_gen_0 -pg 1 -lvl 4 -y 750 -defaultsOSRD
+preplace inst ahblite_axi_bridge_0 -pg 1 -lvl 1 -y 200 -defaultsOSRD
+preplace inst axi_ethernetlite_0 -pg 1 -lvl 4 -y 1090 -defaultsOSRD
+preplace inst ahblite_axi_bridge_1 -pg 1 -lvl 1 -y 70 -defaultsOSRD
+preplace inst sys_bus -pg 1 -lvl 2 -y 360 -defaultsOSRD
+preplace inst axi_uart16550_0 -pg 1 -lvl 4 -y 950 -defaultsOSRD
+preplace inst axi_bram_ctrl_0 -pg 1 -lvl 3 -y 840 -defaultsOSRD
+preplace netloc axi_spi_flash_SPI_0 1 4 2 NJ 550 1800J
+preplace netloc axi_bram_ctrl_0_bram_clk_a 1 3 1 1220
+preplace netloc axi_bram_ctrl_0_bram_addr_a 1 3 1 1210
+preplace netloc sys_rst_1 1 0 4 0J -10 NJ -10 NJ -10 1280J
+preplace netloc axi_ethernetlite_0_MDIO 1 4 2 1590J 950 NJ
+preplace netloc sys_clk_i_1 1 0 4 10J 0 440J 110 NJ 110 1170J
+preplace netloc mig_7series_0_DDR3 1 4 2 1580J 180 NJ
+preplace netloc AHB_INTERFACE_1_1 1 0 1 NJ
+preplace netloc mig_7series_0_init_calib_complete 1 0 5 50 520 410J 590 830J 320 1170J 340 1550
+preplace netloc sys_bus_M01_AXI 1 2 1 800
+preplace netloc axi_spi_flash_ip2intc_irpt 1 4 1 1550
+preplace netloc axi_interconnect_0_M02_AXI 1 3 1 1190
+preplace netloc axi_uart16550_0_ip2intc_irpt 1 4 1 1550
+preplace netloc clk_ref_i_1 1 0 4 -10J -20 NJ -20 NJ -20 1290
+preplace netloc ARESETN_1 1 1 2 470 580 810J
+preplace netloc AHB_INTERFACE_1 1 0 1 NJ
+preplace netloc jtag_axi_0_M_AXI 1 1 1 420
+preplace netloc S00_ACLK_1 1 0 2 20 300 450
+preplace netloc perph_bus_M00_AXI 1 3 1 1160
+preplace netloc axi_uart16550_0_UART 1 4 2 1560J 800 NJ
+preplace netloc axi_interconnect_1_M02_AXI 1 2 1 N
+preplace netloc mig_7series_0_ui_clk 1 0 5 50 340 440 600 840 300 1240 160 1550
+preplace netloc ahblite_axi_bridge_1_M_AXI 1 1 1 420
+preplace netloc axi_interconnect_0_M04_AXI 1 3 1 1170
+preplace netloc xlconstant_0_dout 1 3 1 1290
+preplace netloc xlconcat_0_dout 1 5 1 NJ
+preplace netloc axi_gpio_0_GPIO2 1 4 2 NJ 430 1800J
+preplace netloc ahblite_axi_bridge_0_M_AXI 1 1 1 N
+preplace netloc axi_bram_ctrl_0_bram_rst_a 1 3 1 1280
+preplace netloc axi_bram_ctrl_0_bram_wrdata_a 1 3 1 1230
+preplace netloc axi_gpio_0_GPIO 1 4 2 NJ 410 1800J
+preplace netloc ext_spi_clk_1 1 0 4 -10J -40 NJ -40 NJ -40 1260J
+preplace netloc axi_bram_ctrl_0_bram_we_a 1 3 1 1290
+preplace netloc blk_mem_gen_0_douta 1 3 1 1260
+preplace netloc axi_ethernetlite_0_ip2intc_irpt 1 4 1 1570
+preplace netloc proc_sys_reset_0_peripheral_aresetn 1 1 3 460 610 820 280 1250
+preplace netloc mig_7series_0_ui_clk_sync_rst 1 0 5 40 270 410J 140 NJ 140 1270J 150 1570
+preplace netloc axi_cfg_spi_0_SPI_0 1 4 2 NJ 20 NJ
+preplace netloc axi_interconnect_0_M01_AXI 1 3 1 1200
+preplace netloc axi_ethernetlite_0_MII 1 4 2 1580J 920 NJ
+preplace netloc axi_interconnect_1_M00_AXI 1 2 2 800 210 NJ
+preplace netloc axi_bram_ctrl_0_bram_en_a 1 3 1 1270
+preplace netloc axi_interconnect_0_M03_AXI 1 3 1 1180
+preplace netloc S00_ARESETN_1 1 0 2 30 320 430
+levelinfo -pg 1 -30 240 660 1010 1420 1700 1850 -top -70 -bot 1310
+",
+}
+0
