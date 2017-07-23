@@ -20,44 +20,17 @@ wire [31:0]dbus_wrdata;
 wire [31:0]dbus_rddata;
 wire [31:0]ibus_address;
 wire [3:0]dbus_byteenable;
+wire dbus_dcache_inv_wb;
+wire dbus_stall;
 reg [31:0]ibus_rddata_ff, ibus_rddata_tmp;
 reg ibus_waitrequest;
 reg[4:0] hardware_int;
 reg rst_n;
 reg clk;
 
-// tri [31:0]ram_data_io;
-// assign ram_data_io = (dbus_write ? dbus_wrdata : {32{1'bz}});
-// assign dbus_rddata = ram_data_io;
-
 prog_rom fake_rom(/*autoinst*/
           .data(ibus_rddata),
           .address({19'b0, ibus_address[12:0]}));
-
-mem fake_ram(/*autoinst*/
-           .data_o(dbus_rddata),
-           .address(dbus_address[31:2]),
-           .data_i(dbus_wrdata),
-           .rd(dbus_read),
-           .wr(dbus_write),
-           .byte_enable(dbus_byteenable));
-
-// AS7C34098A base1(/*autoinst*/
-//             .DataIO(ram_data_io[15:0]),
-//             .Address(dbus_address[19:2]),
-//             .OE_n(~dbus_read),
-//             .CE_n(1'b0),
-//             .WE_n(~dbus_write),
-//             .LB_n(~dbus_byteenable[0]),
-//             .UB_n(~dbus_byteenable[1]));
-// AS7C34098A base2(/*autoinst*/
-//             .DataIO(ram_data_io[31:16]),
-//             .Address(dbus_address[19:2]),
-//             .OE_n(~dbus_read),
-//             .CE_n(1'b0),
-//             .WE_n(~dbus_write),
-//             .LB_n(~dbus_byteenable[2]),
-//             .UB_n(~dbus_byteenable[3]));
 
 naive_mips mips(/*autoinst*/
             .ibus_address(ibus_address[31:0]),
@@ -70,13 +43,142 @@ naive_mips mips(/*autoinst*/
             .dbus_read(dbus_read),
             .dbus_write(dbus_write),
             .dbus_wrdata(dbus_wrdata[31:0]),
+            .dbus_uncached     (),
+            .dbus_dcache_inv_wb(dbus_dcache_inv_wb),
+            .dbus_icache_inv   (),
             .rst_n(rst_n),
             .clk(clk),
             .ibus_rddata(ibus_rddata_ff),
             .dbus_rddata(dbus_rddata[31:0]),
-            .dbus_stall(1'b0),
+            .dbus_stall(dbus_stall),
             .ibus_stall((ibus_read|ibus_write)&ibus_waitrequest),
             .hardware_int_in(hardware_int));
+
+wire [31:0]AHB1_haddr;
+wire [2:0]AHB1_hburst;
+wire [3:0]AHB1_hprot;
+wire [31:0]AHB1_hrdata;
+wire AHB1_hready_in;
+wire AHB1_hready_out;
+wire AHB1_hresp;
+wire [2:0]AHB1_hsize;
+wire [1:0]AHB1_htrans;
+wire [31:0]AHB1_hwdata;
+wire AHB1_hwrite;
+wire AHB1_sel;
+
+wire[17:0] emc_addr;
+wire[15:0] emc_data;
+wire[15:0] EMC_INTF_dq_i,EMC_INTF_dq_o,EMC_INTF_dq_t;
+wire emc_oen,emc_wen,emc_cen,emc_lbn,emc_ubn;
+
+assign EMC_INTF_dq_i = emc_data;
+
+genvar i;
+generate
+    for(i=0;i<16;i=i+1)begin 
+        assign emc_data[i] = EMC_INTF_dq_t[i]?1'bz:EMC_INTF_dq_o[i];
+    end
+endgenerate
+
+DCache #(
+    .TAG_WIDTH        (22)
+) cache (
+    .nrst          (rst_n),
+    .clk           (clk),
+    .AHB_haddr     (AHB1_haddr),
+    .AHB_hburst    (AHB1_hburst),
+    .AHB_hprot     (AHB1_hprot),
+    .AHB_hrdata    (AHB1_hrdata),
+    .AHB_hready_in (AHB1_hready_in),
+    .AHB_hready_out(AHB1_hready_out),
+    .AHB_hresp     (AHB1_hresp),
+    .AHB_hsize     (AHB1_hsize),
+    .AHB_htrans    (AHB1_htrans),
+    .AHB_hwdata    (AHB1_hwdata),
+    .AHB_hwrite    (AHB1_hwrite),
+    .AHB_sel       (AHB1_sel),
+    .dbus_addr     (dbus_address),
+    .dbus_wrdata   (dbus_wrdata),
+    .dbus_rddata   (dbus_rddata),
+    .dbus_byteenable   (dbus_byteenable),
+    .dbus_read     (dbus_read),
+    .dbus_write    (dbus_write),
+    .dbus_stall    (dbus_stall),
+    .dbus_hitwriteback (1'b0),
+    .dbus_hitinvalidate(dbus_dcache_inv_wb)
+);
+
+sim_ahb_slave slave(
+    .AHB_haddr     (AHB1_haddr),
+    .AHB_hburst    (AHB1_hburst),
+    .AHB_hprot     (AHB1_hprot),
+    .AHB_hrdata    (AHB1_hrdata),
+    .AHB_hready_in (AHB1_hready_in),
+    .AHB_hready_out(AHB1_hready_out),
+    .AHB_hresp     (AHB1_hresp),
+    .AHB_hsize     (AHB1_hsize),
+    .AHB_htrans    (AHB1_htrans),
+    .AHB_hwdata    (AHB1_hwdata),
+    .AHB_hwrite    (AHB1_hwrite),
+    .AHB_sel       (AHB1_sel),
+
+    .EMC_INTF_addr   (emc_addr),
+    .EMC_INTF_ce_n   (emc_cen),
+    .EMC_INTF_oen    (emc_oen),
+    .EMC_INTF_wen    (emc_wen),
+    .EMC_INTF_dq_i   (EMC_INTF_dq_i),
+    .EMC_INTF_dq_o   (EMC_INTF_dq_o),
+    .EMC_INTF_dq_t   (EMC_INTF_dq_t),
+    .EMC_INTF_ben    ({emc_ubn,emc_lbn}),
+    .EMC_INTF_wait   (0),
+
+    .s_ahb_hclk(clk),
+    .s_ahb_hresetn(rst_n)
+
+    );
+AS7C34098A ram(
+    .Address(emc_addr), 
+    .DataIO(emc_data), 
+    .OE_n(emc_oen), 
+    .CE_n(emc_cen),
+    .WE_n(emc_wen), 
+    .LB_n(emc_lbn), 
+    .UB_n(emc_ubn)
+    );
+
+reg [31:0] cache_ground_truth[0:'h200000/4-1];
+
+integer clr_addr;
+wire [31:0] byte_mask;
+genvar byte_mask_gen_i;
+generate
+    for(byte_mask_gen_i=0;byte_mask_gen_i<8;byte_mask_gen_i=byte_mask_gen_i+1)begin 
+        assign byte_mask[byte_mask_gen_i] = dbus_byteenable[0];
+        assign byte_mask[byte_mask_gen_i+8] = dbus_byteenable[1];
+        assign byte_mask[byte_mask_gen_i+16] = dbus_byteenable[2];
+        assign byte_mask[byte_mask_gen_i+24] = dbus_byteenable[3];
+    end
+endgenerate
+always @(posedge clk) begin
+    if(!rst_n) begin
+        // for(clr_addr=0; clr_addr<'h200000/4; clr_addr=clr_addr+1)
+        //     cache_ground_truth[clr_addr] = 32'h0;
+    end else if (dbus_write && !dbus_stall) begin 
+      if (dbus_byteenable[0]) cache_ground_truth[dbus_address[31:2]][7:0] = dbus_wrdata[7:0];
+      if (dbus_byteenable[1]) cache_ground_truth[dbus_address[31:2]][15:8] = dbus_wrdata[15:8];
+      if (dbus_byteenable[2]) cache_ground_truth[dbus_address[31:2]][23:16] = dbus_wrdata[23:16];
+      if (dbus_byteenable[3]) cache_ground_truth[dbus_address[31:2]][31:24] = dbus_wrdata[31:24];
+      $display("Dbus Write: [%h]=%h BE=%b", {dbus_address[31:2],2'h0}, dbus_wrdata, dbus_byteenable);
+    end else if (dbus_read && !dbus_stall) begin 
+      if ((cache_ground_truth[dbus_address[31:2]] & byte_mask) !== (dbus_rddata & byte_mask)) begin
+          $display("Dbus Read Failed: [%h]=%h v.s %h BE=%b", 
+            {dbus_address[31:2],2'h0}, dbus_rddata,
+            cache_ground_truth[dbus_address[31:2]], dbus_byteenable);
+          $stop;
+      end
+    end
+end
 
 integer wait_cycle;
 initial begin
@@ -132,24 +234,25 @@ begin
         return;
     end
 
-    $display("Running test %0s", test_name);
+    $display("-----------   Running test %0s -------------", test_name);
 
     registers_last = registers;
     hilo_last = hilo;
     ret = $fscanf(fd, "%s%x", next_event, next_value);
     while(ret == 2) begin
         @ (negedge clk);
-        if(registers != registers_last) begin
+        if(registers !== registers_last) begin
 
             for(j=0; j<32; j++) begin
-                if(registers[j] != registers_last[j]) begin
+                if(registers[j] !== registers_last[j]) begin
                     string tmp;
                     $display("$%0d=%x",j, registers[j]);
                     $sformat(tmp, "$%0d", j);
                     if(next_event.compare(tmp)==0 &&
-                        next_value == registers[j]) begin
+                        next_value === registers[j]) begin
                         $display("correct");
                     end else begin
+                        $display("[%0s]",test_name);
                         $display("error, should be %s=%x", next_event, next_value);
                         $stop;
                     end
@@ -158,24 +261,26 @@ begin
             registers_last = registers;
             ret = $fscanf(fd, "%s%x", next_event, next_value);
         end
-        if(hilo != hilo_last) begin
-            if(hilo[63:32] != hilo_last[63:32]) begin
+        if(hilo !== hilo_last) begin
+            if(hilo[63:32] !== hilo_last[63:32]) begin
                 $display("hi=%x", hilo[63:32]);
                 if(next_event.compare("hi")==0 &&
-                    next_value == hilo[63:32]) begin
+                    next_value === hilo[63:32]) begin
                     $display("correct");
                 end else begin
+                    $display("[%0s]",test_name);
                     $display("error, should be %s=%x", next_event, next_value);
                     $stop;
                 end
                 ret = $fscanf(fd, "%s%x", next_event, next_value);
             end
-            if(hilo[31:0] != hilo_last[31:0]) begin
+            if(hilo[31:0] !== hilo_last[31:0]) begin
                 $display("lo=%x", hilo[31:0]);
                 if(next_event.compare("lo")==0 &&
-                    next_value == hilo[31:0]) begin
+                    next_value === hilo[31:0]) begin
                     $display("correct");
                 end else begin
+                    $display("[%0s]",test_name);
                     $display("error, should be %s=%x", next_event, next_value);
                     $stop;
                 end
@@ -196,22 +301,22 @@ always begin
 end
 
 initial begin
-    unit_test("../testcase/inst_mem");
-    unit_test("../testcase/mem_endian");
-    unit_test("../testcase/inst_unalign");
-    unit_test("../testcase/inst_div");
-    unit_test("../testcase/inst_alu");
-    unit_test("../testcase/inst_logic");
-    unit_test("../testcase/inst_shift");
-    unit_test("../testcase/inst_move");
-    unit_test("../testcase/inst_jump");
-    unit_test("../testcase/inst_branch");
-    unit_test("../testcase/overflow_exp");
-    unit_test("../testcase/inst_syscall");
-    unit_test("../testcase/timer_int");
-    unit_test("../testcase/mem_exp");
-    unit_test("../testcase/tlb");
-    unit_test("../testcase/usermode");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_mem");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/mem_endian");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_unalign");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_div");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_alu");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_logic");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_shift");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_move");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_jump");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_branch");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/overflow_exp");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/inst_syscall");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/timer_int");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/mem_exp");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/tlb");
+    unit_test("/home/zhang/NaiveMIPS-HDL/testbench/testcase/usermode");
     $display("Unit test succeeded!");
     $stop;
 end
