@@ -27,7 +27,9 @@ module naive_mips(/*autoport*/
           dbus_wrdata,
           dbus_rddata,
           dbus_stall,
-          dbus_uncached
+          dbus_uncached,
+          dbus_icache_inv,
+          dbus_dcache_inv_wb
           );
 
 input wire rst_n;
@@ -180,8 +182,8 @@ reg mm_probe_tlb;
 wire[31:0] mm_probe_result;
 reg [7:0]mm_iaddr_exp_asid;
 reg mm_iaddr_exp_exl;
-wire mm_inv_wb_dcache;
-wire mm_inv_icache;
+reg mm_inv_wb_dcache;
+reg mm_inv_icache;
 
 
 wire wb_reg_we;
