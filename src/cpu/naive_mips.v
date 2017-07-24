@@ -2,35 +2,35 @@
 `default_nettype none
 
 module naive_mips(/*autoport*/
-//clk
-          rst_n,
-          clk,
-//debugger
-          debugger_uart_txd,
-          debugger_uart_rxd,
-          debugger_uart_clk,
-//interrupt
-          hardware_int_in,
-//ibus
-          ibus_address,
-          ibus_byteenable,
-          ibus_read,
-          ibus_write,
-          ibus_wrdata,
-          ibus_rddata,
-          ibus_stall,
-//dbus
-          dbus_address,
-          dbus_byteenable,
-          dbus_read,
-          dbus_write,
-          dbus_wrdata,
-          dbus_rddata,
-          dbus_stall,
-          dbus_uncached,
-          dbus_icache_inv,
-          dbus_dcache_inv_wb
-          );
+//output
+      debugger_uart_txd,
+      ibus_address,
+      ibus_byteenable,
+      ibus_read,
+      ibus_write,
+      ibus_wrdata,
+      dbus_address,
+      dbus_byteenable,
+      dbus_read,
+      dbus_write,
+      dbus_uncached_read,
+      dbus_uncached_write,
+      dbus_wrdata,
+      dbus_uncached_stall,
+      dbus_uncached,
+      dbus_dcache_inv_wb,
+      dbus_icache_inv,
+//input
+      rst_n,
+      clk,
+      debugger_uart_rxd,
+      debugger_uart_clk,
+      ibus_rddata,
+      ibus_stall,
+      dbus_rddata,
+      dbus_rddata_uncached,
+      dbus_stall,
+      hardware_int_in);
 
 input wire rst_n;
 input wire clk;
@@ -51,8 +51,12 @@ output wire[31:0] dbus_address;
 output wire[3:0] dbus_byteenable;
 output wire dbus_read;
 output wire dbus_write;
+output wire dbus_uncached_read;
+output wire dbus_uncached_write;
 output wire[31:0] dbus_wrdata;
 input wire[31:0] dbus_rddata;
+input wire[31:0] dbus_rddata_uncached;
+input wire dbus_uncached_stall;
 input wire dbus_stall;
 output wire dbus_uncached;
 output wire dbus_dcache_inv_wb;
@@ -324,13 +328,15 @@ assign if_in_exl = cp0_in_exl;
 assign if_asid = cp0_asid;
 
 assign dbus_byteenable = mm_mem_byte_en;
-assign dbus_read = mm_mem_rd && !flush;
-assign dbus_write = mm_mem_wr && !flush;
-assign dbus_dcache_inv_wb = mm_inv_wb_dcache && !flush;
-assign dbus_icache_inv = mm_inv_icache && !flush;
+assign dbus_read = mm_mem_rd & ~dbus_uncached & ~flush;
+assign dbus_write = mm_mem_wr & ~dbus_uncached & ~flush;
+assign dbus_uncached_read = mm_mem_rd & dbus_uncached & ~flush;
+assign dbus_uncached_write = mm_mem_wr & dbus_uncached & ~flush;
+assign dbus_dcache_inv_wb = mm_inv_wb_dcache & ~flush;
+assign dbus_icache_inv = mm_inv_icache & ~flush;
 assign dbus_wrdata= mm_mem_data_o;
-assign mm_mem_data_i = dbus_rddata;
-assign mm_stall = dbus_stall;
+assign mm_mem_data_i = dbus_uncached ? dbus_rddata_uncached : dbus_rddata;
+assign mm_stall = dbus_stall | dbus_uncached_stall;
 
 assign debugger_mem_data = if_inst;
 
@@ -650,6 +656,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_inv_wb_dcache <= 1'b0;
     end
     else if(en_exmm && !flush) begin
+        // $display("mm_pc_value<=%x", ex_pc_value);
         mm_mem_access_op <= ex_mem_access_op;
         mm_mem_access_sz <= ex_mem_access_sz;
         mm_data_i <= ex_data_o;

@@ -3,13 +3,24 @@ set_property IOSTANDARD LVCMOS33 [get_ports clk_in]
 set_property PACKAGE_PIN AC19 [get_ports clk_in]
 set_property CLOCK_DEDICATED_ROUTE BACKBONE [get_nets clk_in]
 
-set_property IOSTANDARD LVCMOS33 [get_ports rst_in]
-set_property PACKAGE_PIN Y3 [get_ports rst_in]
+set_property IOSTANDARD LVCMOS33 [get_ports rst_in_n]
+set_property PACKAGE_PIN Y3 [get_ports rst_in_n]
 
 set_property IOSTANDARD LVCMOS33 [get_ports txd]
 set_property PACKAGE_PIN H19 [get_ports txd]
 set_property IOSTANDARD LVCMOS33 [get_ports rxd]
 set_property PACKAGE_PIN F23 [get_ports rxd]
+
+#SPI flash
+set_property -dict { PACKAGE_PIN P20 IOSTANDARD LVCMOS33 } [get_ports spi_flash_sck]
+set_property -dict { PACKAGE_PIN R20 IOSTANDARD LVCMOS33 } [get_ports spi_flash_ss]
+set_property -dict { PACKAGE_PIN P19 IOSTANDARD LVCMOS33 } [get_ports spi_flash_miso]
+set_property -dict { PACKAGE_PIN N18 IOSTANDARD LVCMOS33 } [get_ports spi_flash_mosi]
+
+#cfg flash
+set_property -dict { PACKAGE_PIN P18 IOSTANDARD LVCMOS33 } [get_ports cfg_flash_ss]
+set_property -dict { PACKAGE_PIN R15 IOSTANDARD LVCMOS33 } [get_ports cfg_flash_miso]
+set_property -dict { PACKAGE_PIN R14 IOSTANDARD LVCMOS33 } [get_ports cfg_flash_mosi]
 
 #VGA
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[7]}]
@@ -87,6 +98,33 @@ set_property PACKAGE_PIN Y6   [get_ports {gpio1[7]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {gpio1[*]}]
 
 
+#mac phy connect
+set_property -dict {PACKAGE_PIN AB21 IOSTANDARD LVCMOS33} [get_ports MII_tx_clk]
+set_property -dict {PACKAGE_PIN AA19 IOSTANDARD LVCMOS33} [get_ports MII_rx_clk]
+set_property -dict {PACKAGE_PIN AA15 IOSTANDARD LVCMOS33} [get_ports MII_tx_en]
+set_property -dict {PACKAGE_PIN AF18 IOSTANDARD LVCMOS33} [get_ports {MII_txd[0]}]
+set_property -dict {PACKAGE_PIN AE18 IOSTANDARD LVCMOS33} [get_ports {MII_txd[1]}]
+set_property -dict {PACKAGE_PIN W15 IOSTANDARD LVCMOS33} [get_ports {MII_txd[2]}]
+set_property -dict {PACKAGE_PIN W14 IOSTANDARD LVCMOS33} [get_ports {MII_txd[3]}]
+set_property -dict {PACKAGE_PIN AB20 IOSTANDARD LVCMOS33} [get_ports MII_tx_er]
+set_property -dict {PACKAGE_PIN AE22 IOSTANDARD LVCMOS33} [get_ports MII_rx_dv]
+set_property -dict {PACKAGE_PIN V1 IOSTANDARD LVCMOS33} [get_ports {MII_rxd[0]}]
+set_property -dict {PACKAGE_PIN V4 IOSTANDARD LVCMOS33} [get_ports {MII_rxd[1]}]
+set_property -dict {PACKAGE_PIN V2 IOSTANDARD LVCMOS33} [get_ports {MII_rxd[2]}]
+set_property -dict {PACKAGE_PIN V3 IOSTANDARD LVCMOS33} [get_ports {MII_rxd[3]}]
+set_property -dict {PACKAGE_PIN W16 IOSTANDARD LVCMOS33} [get_ports MII_rx_er]
+set_property -dict {PACKAGE_PIN Y15 IOSTANDARD LVCMOS33} [get_ports MII_col]
+set_property -dict {PACKAGE_PIN AF20 IOSTANDARD LVCMOS33} [get_ports MII_crs]
+set_property -dict {PACKAGE_PIN W3 IOSTANDARD LVCMOS33} [get_ports mdc]
+set_property -dict {PACKAGE_PIN W1 IOSTANDARD LVCMOS33} [get_ports mdio]
+set_property -dict {PACKAGE_PIN AE26 IOSTANDARD LVCMOS33} [get_ports MII_rst_n]
+
+
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
+
+#set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
+set_property BITSTREAM.CONFIG.CONFIGRATE 50 [current_design]
+#set_property BITSTREAM.CONFIG.SPI_FALL_EDGE Yes [current_design]
+#set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 
