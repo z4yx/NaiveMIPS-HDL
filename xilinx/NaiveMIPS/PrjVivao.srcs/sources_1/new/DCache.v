@@ -133,6 +133,7 @@ module DCache #(parameter
 	assign AHB_hwdata = cl_data;
 
 	// Logic
+	wire need_invalidate = cl_valid && cl_hit && dbus_hitinvalidate;
 	wire need_writeback = cl_valid && cl_dirty && (
 		(dbus_read  && ~cl_hit) || // rd
 		(dbus_write && ~cl_hit) || // wr
@@ -200,7 +201,7 @@ module DCache #(parameter
 						wr_data  <= dbus_wrdata;
 						state <= `NAIVE_DCACHE_FSM_WAIT_WRITE;
 						
-					end else if (dbus_hitinvalidate) begin
+					end else if (need_invalidate) begin
 						write_cache <= 1'b1;
 						cache_addr_access_off <= cache_addr_cpu_off;
 						wr_valid <= 1'b0;
