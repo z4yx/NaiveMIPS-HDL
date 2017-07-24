@@ -33,12 +33,15 @@ initial begin : tb_block
 
     for (i = 0; i < 1024*1024; i = i + 1) begin
         answer[i] = 8'b0;
+        ram.mem_array0[i] = 0;
+        ram.mem_array1[i] = 0;
     end
+
     $display("Starting cache test program");
 
     repeat (1000000) begin 
 
-      daddr = $urandom_range(0, 1024-1) << 6;
+      daddr = ($urandom_range(0, 1024-1) << 6) + 32'b10111;
       byte_en = 4'b1111; //$urandom_range(0, 15); //4'b1111;
       d_rw = ($random & 1) ? 0 : 1;
       dwrdata = $urandom;
