@@ -123,7 +123,7 @@ module DCache #(parameter
 	assign AHB_hburst = 3'b111;  // 16-beat incrementing burst
 	assign AHB_hprot  = 4'b0011; // copied from ahb_adapter.v
 	assign AHB_hready_in = AHB_hready_out;
-	assign AHB_hsize  = 3'b010;  // 32 bits
+	assign AHB_hsize  = 3'b010;  // 32 bits x 16 = 512 bits i.e. 2^6 = 64 bytes
 	
 	// AHB access address
 	assign AHB_haddr = {
