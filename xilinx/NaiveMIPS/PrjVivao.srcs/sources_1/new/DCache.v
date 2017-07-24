@@ -90,7 +90,7 @@ module DCache #(parameter
 	wire [`INDEX_WIDTH-1:0]  cache_addr_idx;
 	wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_off;
 	reg  [`OFFSET_WIDTH-1:0] cache_addr_access_off;
-	wire [`OFFSET_WIDTH-1:0] cache_addr_mem_off = cache_addr_access_off + 4;
+	wire [`OFFSET_WIDTH-1:0] cache_addr_mem_off = cache_addr_access_off + 1;
 	wire [1:0]               cache_addr_dropoff;
 	assign {
 		cache_addr_cpu_tag,  cache_addr_idx,
@@ -102,7 +102,7 @@ module DCache #(parameter
 		cache_addr_cpu_off : cache_addr_access_off
 	);
 	
-	wire [`OFFSET_WIDTH-1:0] cache_end_off = 0 - 4;
+	wire [`OFFSET_WIDTH-1:0] cache_end_off = 0 - 1;
 	
 	assign rd_off = cache_addr_off;
 
@@ -176,7 +176,7 @@ module DCache #(parameter
 					if (need_writeback) begin
 						state <= `NAIVE_DCACHE_FSM_WRITEBACK_FIRST;
 						cache_addr_mem_tag <= cl_tag;
-						cache_addr_access_off <= 0 - 4;
+						cache_addr_access_off <= 0 - 1;
 						AHB_htrans <= `AHB_NONSEQ;
 						AHB_hwrite <= 1'b1;
 						AHB_sel <= 1'b1;
@@ -184,7 +184,7 @@ module DCache #(parameter
 					end else if (need_memread) begin
 						state <= `NAIVE_DCACHE_FSM_MEMREAD_FIRST;
 						cache_addr_mem_tag <= cache_addr_cpu_tag;
-						cache_addr_access_off <= 0 - 4;
+						cache_addr_access_off <= 0 - 1;
 						AHB_htrans <= `AHB_NONSEQ;
 						AHB_hwrite <= 1'b0;
 						AHB_sel <= 1'b1;
@@ -220,7 +220,7 @@ module DCache #(parameter
 
 				`NAIVE_DCACHE_FSM_WRITEBACK_FIRST: begin
 					if (AHB_hready_out == 1'b1) begin
-						cache_addr_access_off <= cache_addr_access_off + 4;
+						cache_addr_access_off <= cache_addr_access_off + 1;
 						AHB_htrans <= `AHB_SEQ;
 						state <= `NAIVE_DCACHE_FSM_WRITEBACK;
 					end
@@ -247,14 +247,14 @@ module DCache #(parameter
 								AHB_htrans <= `AHB_IDLE;
 								AHB_hwrite <= 1'b0;
 							end
-							cache_addr_access_off <= cache_addr_access_off + 4;
+							cache_addr_access_off <= cache_addr_access_off + 1;
 						end
 					end
 				end
 
 				`NAIVE_DCACHE_FSM_MEMREAD_FIRST: begin
 					if (AHB_hready_out == 1'b1) begin
-						cache_addr_access_off <= cache_addr_access_off + 4;
+						cache_addr_access_off <= cache_addr_access_off + 1;
 						AHB_htrans <= `AHB_SEQ;
 						// ignore first hrdata
 						state <= `NAIVE_DCACHE_FSM_MEMREAD;
@@ -284,7 +284,7 @@ module DCache #(parameter
 								AHB_htrans <= `AHB_IDLE;
 							end
 							wr_valid <= 1'b0;
-							cache_addr_access_off <= cache_addr_access_off + 4;
+							cache_addr_access_off <= cache_addr_access_off + 1;
 						end
 
 					end else begin
