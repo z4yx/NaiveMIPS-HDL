@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0xAA4A9144F594F835" bd:device="xc7a200tfbg676-2" bd:synthFlowMode="Hierarchical" bd:tool_version="2017.1" bd:top="bd_soc" bd:version="1.00.a">
+<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0xCD3C16A5840DEBBC" bd:device="xc7a200tfbg676-2" bd:synthFlowMode="Hierarchical" bd:tool_version="2017.1" bd:top="bd_soc" bd:version="1.00.a">
 
   <spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
     <spirit:vendor>xilinx.com</spirit:vendor>
@@ -13,18 +13,6 @@
       </spirit:parameter>
     </spirit:parameters>
     <spirit:busInterfaces>
-      <spirit:busInterface>
-        <spirit:name>AHB_D</spirit:name>
-        <spirit:slave/>
-        <spirit:busType spirit:library="interface" spirit:name="ahblite" spirit:vendor="xilinx.com" spirit:version="2.0"/>
-        <spirit:abstractionType spirit:library="interface" spirit:name="ahblite_rtl" spirit:vendor="xilinx.com" spirit:version="2.0"/>
-      </spirit:busInterface>
-      <spirit:busInterface>
-        <spirit:name>AHB_I</spirit:name>
-        <spirit:slave/>
-        <spirit:busType spirit:library="interface" spirit:name="ahblite" spirit:vendor="xilinx.com" spirit:version="2.0"/>
-        <spirit:abstractionType spirit:library="interface" spirit:name="ahblite_rtl" spirit:vendor="xilinx.com" spirit:version="2.0"/>
-      </spirit:busInterface>
       <spirit:busInterface>
         <spirit:name>ddr3</spirit:name>
         <spirit:master/>
@@ -92,26 +80,12 @@
             </spirit:physicalPort>
           </spirit:portMap>
         </spirit:portMaps>
-        <spirit:parameters/>
-      </spirit:busInterface>
-      <spirit:busInterface>
-        <spirit:name>RST.CPU_RSTN</spirit:name>
-        <spirit:displayName>Reset</spirit:displayName>
-        <spirit:description>Reset</spirit:description>
-        <spirit:busType spirit:library="signal" spirit:name="reset" spirit:vendor="xilinx.com" spirit:version="1.0"/>
-        <spirit:abstractionType spirit:library="signal" spirit:name="reset_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
-        <spirit:slave/>
-        <spirit:portMaps>
-          <spirit:portMap>
-            <spirit:logicalPort>
-              <spirit:name>RST</spirit:name>
-            </spirit:logicalPort>
-            <spirit:physicalPort>
-              <spirit:name>cpu_rstn</spirit:name>
-            </spirit:physicalPort>
-          </spirit:portMap>
-        </spirit:portMaps>
-        <spirit:parameters/>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>FREQ_HZ</spirit:name>
+            <spirit:value>10000000</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
       </spirit:busInterface>
       <spirit:busInterface>
         <spirit:name>CLK.DDR_REF_CLK</spirit:name>
@@ -200,13 +174,32 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>FREQ_HZ</spirit:name>
-            <spirit:value>80000000</spirit:value>
+            <spirit:value>60000000</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>CLK_DOMAIN</spirit:name>
             <spirit:value>bd_soc_clk_ref_i</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>RST.AUX_RESET_N</spirit:name>
+        <spirit:displayName>Reset</spirit:displayName>
+        <spirit:description>Reset</spirit:description>
+        <spirit:busType spirit:library="signal" spirit:name="reset" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="signal" spirit:name="reset_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:slave/>
+        <spirit:portMaps>
+          <spirit:portMap>
+            <spirit:logicalPort>
+              <spirit:name>RST</spirit:name>
+            </spirit:logicalPort>
+            <spirit:physicalPort>
+              <spirit:name>aux_reset_n</spirit:name>
+            </spirit:physicalPort>
+          </spirit:portMap>
+        </spirit:portMaps>
+        <spirit:parameters/>
       </spirit:busInterface>
     </spirit:busInterfaces>
     <spirit:model>
@@ -220,12 +213,6 @@
       <spirit:ports>
         <spirit:port>
           <spirit:name>cpu_clk</spirit:name>
-          <spirit:wire>
-            <spirit:direction>in</spirit:direction>
-          </spirit:wire>
-        </spirit:port>
-        <spirit:port>
-          <spirit:name>cpu_rstn</spirit:name>
           <spirit:wire>
             <spirit:direction>in</spirit:direction>
           </spirit:wire>
@@ -249,123 +236,19 @@
           </spirit:wire>
         </spirit:port>
         <spirit:port>
-          <spirit:name>irq</spirit:name>
+          <spirit:name>ext_spi_clk</spirit:name>
           <spirit:wire>
-            <spirit:direction>out</spirit:direction>
-            <spirit:vector>
-              <spirit:left>4</spirit:left>
-              <spirit:right>0</spirit:right>
-            </spirit:vector>
+            <spirit:direction>in</spirit:direction>
           </spirit:wire>
         </spirit:port>
         <spirit:port>
-          <spirit:name>ext_spi_clk</spirit:name>
+          <spirit:name>aux_reset_n</spirit:name>
           <spirit:wire>
             <spirit:direction>in</spirit:direction>
           </spirit:wire>
         </spirit:port>
       </spirit:ports>
     </spirit:model>
-    <spirit:addressSpaces>
-      <spirit:addressSpace>
-        <spirit:name>AHB_D</spirit:name>
-        <spirit:range>4G</spirit:range>
-        <spirit:width>32</spirit:width>
-        <spirit:segments>
-          <spirit:segment>
-            <spirit:name>SEG_axi_bram_ctrl_0_Mem0</spirit:name>
-            <spirit:displayName>/axi_bram_ctrl_0/S_AXI/Mem0</spirit:displayName>
-            <spirit:addressOffset>0x1FC00000</spirit:addressOffset>
-            <spirit:range>4K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_cfg_spi_0_MEM0</spirit:name>
-            <spirit:displayName>/axi_cfg_spi_0/aximm/MEM0</spirit:displayName>
-            <spirit:addressOffset>0x1A000000</spirit:addressOffset>
-            <spirit:range>16M</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_ethernetlite_0_Reg</spirit:name>
-            <spirit:displayName>/axi_ethernetlite_0/S_AXI/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1C020000</spirit:addressOffset>
-            <spirit:range>64K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_gpio_0_Reg</spirit:name>
-            <spirit:displayName>/axi_gpio_0/S_AXI/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1FD01000</spirit:addressOffset>
-            <spirit:range>4K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_spi_flash_Reg</spirit:name>
-            <spirit:displayName>/axi_spi_flash/AXI_LITE/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1E000000</spirit:addressOffset>
-            <spirit:range>8M</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_uart16550_0_Reg</spirit:name>
-            <spirit:displayName>/axi_uart16550_0/S_AXI/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1FD00000</spirit:addressOffset>
-            <spirit:range>4K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_mig_7series_0_memaddr</spirit:name>
-            <spirit:displayName>/mig_7series_0/memmap/memaddr</spirit:displayName>
-            <spirit:addressOffset>0x00000000</spirit:addressOffset>
-            <spirit:range>128M</spirit:range>
-          </spirit:segment>
-        </spirit:segments>
-      </spirit:addressSpace>
-      <spirit:addressSpace>
-        <spirit:name>AHB_I</spirit:name>
-        <spirit:range>4G</spirit:range>
-        <spirit:width>32</spirit:width>
-        <spirit:segments>
-          <spirit:segment>
-            <spirit:name>SEG_axi_bram_ctrl_0_Mem0</spirit:name>
-            <spirit:displayName>/axi_bram_ctrl_0/S_AXI/Mem0</spirit:displayName>
-            <spirit:addressOffset>0x1FC00000</spirit:addressOffset>
-            <spirit:range>4K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_cfg_spi_0_MEM0</spirit:name>
-            <spirit:displayName>/axi_cfg_spi_0/aximm/MEM0</spirit:displayName>
-            <spirit:addressOffset>0x1A000000</spirit:addressOffset>
-            <spirit:range>16M</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_ethernetlite_0_Reg</spirit:name>
-            <spirit:displayName>/axi_ethernetlite_0/S_AXI/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1C020000</spirit:addressOffset>
-            <spirit:range>64K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_gpio_0_Reg</spirit:name>
-            <spirit:displayName>/axi_gpio_0/S_AXI/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1FD01000</spirit:addressOffset>
-            <spirit:range>4K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_spi_flash_Reg</spirit:name>
-            <spirit:displayName>/axi_spi_flash/AXI_LITE/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1E000000</spirit:addressOffset>
-            <spirit:range>8M</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_axi_uart16550_0_Reg</spirit:name>
-            <spirit:displayName>/axi_uart16550_0/S_AXI/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1FD00000</spirit:addressOffset>
-            <spirit:range>4K</spirit:range>
-          </spirit:segment>
-          <spirit:segment>
-            <spirit:name>SEG_mig_7series_0_memaddr</spirit:name>
-            <spirit:displayName>/mig_7series_0/memmap/memaddr</spirit:displayName>
-            <spirit:addressOffset>0x00000000</spirit:addressOffset>
-            <spirit:range>128M</spirit:range>
-          </spirit:segment>
-        </spirit:segments>
-      </spirit:addressSpace>
-    </spirit:addressSpaces>
   </spirit:component>
 
   <spirit:design xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
@@ -427,13 +310,6 @@
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
-        <spirit:instanceName>axi_uart16550_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="ip" spirit:name="axi_uart16550" spirit:vendor="xilinx.com" spirit:version="2.0"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_axi_uart16550_0_0</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
         <spirit:instanceName>axi_ethernetlite_0</spirit:instanceName>
         <spirit:componentRef spirit:library="ip" spirit:name="axi_ethernetlite" spirit:vendor="xilinx.com" spirit:version="3.0"/>
         <spirit:configurableElementValues>
@@ -472,12 +348,13 @@
         <spirit:componentRef spirit:library="BlockDiagram/bd_soc_imp" spirit:name="sys_bus" spirit:vendor="xilinx.com" spirit:version="1.00.a"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_axi_interconnect_1_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="NUM_SI">3</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="NUM_SI">4</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="NUM_MI">3</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="STRATEGY">2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="S00_HAS_DATA_FIFO">2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="S01_HAS_DATA_FIFO">2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="S02_HAS_DATA_FIFO">2</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="S03_HAS_DATA_FIFO">2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="appcore">xilinx.com:ip:axi_interconnect:2.1</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
@@ -491,10 +368,10 @@
           <spirit:configurableElementValue spirit:referenceId="Byte_Size">8</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Write_Width_A">32</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Read_Width_A">32</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="Register_PortA_Output_of_Memory_Primitives">true</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Register_PortA_Output_of_Memory_Primitives">false</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Load_Init_File">true</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Coe_File">../../../../../../bootrom.coe</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="Fill_Remaining_Memory_Locations">false</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Fill_Remaining_Memory_Locations">true</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Use_RSTA_Pin">true</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="use_bram_block">Stand_Alone</spirit:configurableElementValue>
         </spirit:configurableElementValues>
@@ -508,20 +385,118 @@
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
-        <spirit:instanceName>xlconstant_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="ip" spirit:name="xlconstant" spirit:vendor="xilinx.com" spirit:version="1.1"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xlconstant_0_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="CONST_VAL">0</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
         <spirit:instanceName>axi_cfg_spi_0</spirit:instanceName>
         <spirit:componentRef spirit:library="ip" spirit:name="axi_quad_spi" spirit:vendor="xilinx.com" spirit:version="3.2"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_axi_quad_spi_0_1</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_SPI_MEMORY">3</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="C_XIP_MODE">1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="C_TYPE_OF_AXI4_INTERFACE">1</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>ahb_adapter_I</spirit:instanceName>
+        <spirit:componentRef spirit:library="module_ref" spirit:name="ahb_adapter" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_ahb_adapter_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">ahb_adapter</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>xlconstant_1</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="xlconstant" spirit:vendor="xilinx.com" spirit:version="1.1"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xlconstant_1_0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>clk_ctrl_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="module_ref" spirit:name="clk_ctrl" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_clk_ctrl_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">clk_ctrl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>ahblite_axi_bridge_2</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="ahblite_axi_bridge" spirit:vendor="xilinx.com" spirit:version="3.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_ahblite_axi_bridge_2_0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>ahb_adapter_uncached</spirit:instanceName>
+        <spirit:componentRef spirit:library="module_ref" spirit:name="ahb_adapter" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_ahb_adapter_0_1</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">ahb_adapter</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>naive_mips_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="module_ref" spirit:name="naive_mips" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_naive_mips_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">naive_mips</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>xlconstant_2</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="xlconstant" spirit:vendor="xilinx.com" spirit:version="1.1"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xlconstant_2_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="CONST_VAL">0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>xlconstant_3</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="xlconstant" spirit:vendor="xilinx.com" spirit:version="1.1"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xlconstant_3_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="CONST_VAL">0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>axi_uartlite_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="axi_uartlite" spirit:vendor="xilinx.com" spirit:version="2.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_axi_uartlite_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_BAUDRATE">115200</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>xlslice_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="xlslice" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xlslice_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DIN_TO">2</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DIN_FROM">11</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DIN_WIDTH">12</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DOUT_WIDTH">10</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>DCache_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="module_ref" spirit:name="DCache" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_DCache_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="TAG_WIDTH">22</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">DCache</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
     </spirit:componentInstances>
@@ -530,11 +505,6 @@
         <spirit:name>axi_interconnect_0_M01_AXI</spirit:name>
         <spirit:activeInterface spirit:busRef="M01_AXI" spirit:componentRef="perph_bus"/>
         <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="axi_ethernetlite_0"/>
-      </spirit:interconnection>
-      <spirit:interconnection>
-        <spirit:name>axi_interconnect_0_M02_AXI</spirit:name>
-        <spirit:activeInterface spirit:busRef="M02_AXI" spirit:componentRef="perph_bus"/>
-        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="axi_uart16550_0"/>
       </spirit:interconnection>
       <spirit:interconnection>
         <spirit:name>axi_interconnect_0_M03_AXI</spirit:name>
@@ -567,11 +537,6 @@
         <spirit:activeInterface spirit:busRef="S01_AXI" spirit:componentRef="sys_bus"/>
       </spirit:interconnection>
       <spirit:interconnection>
-        <spirit:name>jtag_axi_0_M_AXI</spirit:name>
-        <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="jtag_axi_0"/>
-        <spirit:activeInterface spirit:busRef="S02_AXI" spirit:componentRef="sys_bus"/>
-      </spirit:interconnection>
-      <spirit:interconnection>
         <spirit:name>sys_bus_M01_AXI</spirit:name>
         <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="axi_bram_ctrl_0"/>
         <spirit:activeInterface spirit:busRef="M01_AXI" spirit:componentRef="sys_bus"/>
@@ -580,6 +545,21 @@
         <spirit:name>perph_bus_M00_AXI</spirit:name>
         <spirit:activeInterface spirit:busRef="AXI_FULL" spirit:componentRef="axi_cfg_spi_0"/>
         <spirit:activeInterface spirit:busRef="M00_AXI" spirit:componentRef="perph_bus"/>
+      </spirit:interconnection>
+      <spirit:interconnection>
+        <spirit:name>ahblite_axi_bridge_2_M_AXI</spirit:name>
+        <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="ahblite_axi_bridge_2"/>
+        <spirit:activeInterface spirit:busRef="S02_AXI" spirit:componentRef="sys_bus"/>
+      </spirit:interconnection>
+      <spirit:interconnection>
+        <spirit:name>jtag_axi_0_M_AXI</spirit:name>
+        <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="jtag_axi_0"/>
+        <spirit:activeInterface spirit:busRef="S03_AXI" spirit:componentRef="sys_bus"/>
+      </spirit:interconnection>
+      <spirit:interconnection>
+        <spirit:name>perph_bus_M02_AXI</spirit:name>
+        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="axi_uartlite_0"/>
+        <spirit:activeInterface spirit:busRef="M02_AXI" spirit:componentRef="perph_bus"/>
       </spirit:interconnection>
     </spirit:interconnections>
     <spirit:adHocConnections>
@@ -595,20 +575,33 @@
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aclk"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="clk_ctrl_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="debugger_uart_clk"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="clk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>S00_ARESETN_1</spirit:name>
-        <spirit:externalPortReference spirit:portRef="cpu_rstn"/>
+        <spirit:internalPortReference spirit:componentRef="clk_ctrl_0" spirit:portRef="rst_out_n"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="rst_n"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="rst_n"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="rst_n"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="proc_sys_reset_0" spirit:portRef="aux_reset_in"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="nrst"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>clk_ref_i_1</spirit:name>
@@ -625,10 +618,12 @@
         <spirit:internalPortReference spirit:componentRef="mig_7series_0" spirit:portRef="ui_clk"/>
         <spirit:internalPortReference spirit:componentRef="proc_sys_reset_0" spirit:portRef="slowest_sync_clk"/>
         <spirit:internalPortReference spirit:componentRef="axi_ethernetlite_0" spirit:portRef="s_axi_aclk"/>
-        <spirit:internalPortReference spirit:componentRef="axi_uart16550_0" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="axi_spi_flash" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="axi_gpio_0" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="s_axi_aclk"/>
+        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi_aclk"/>
+        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi4_aclk"/>
+        <spirit:internalPortReference spirit:componentRef="axi_uartlite_0" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M00_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M01_ACLK"/>
@@ -640,8 +635,6 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M01_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M02_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="S00_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi_aclk"/>
-        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi4_aclk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>mig_7series_0_ui_clk_sync_rst</spirit:name>
@@ -653,10 +646,13 @@
         <spirit:internalPortReference spirit:componentRef="proc_sys_reset_0" spirit:portRef="peripheral_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="mig_7series_0" spirit:portRef="aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_ethernetlite_0" spirit:portRef="s_axi_aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="axi_uart16550_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_spi_flash" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_gpio_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="s_axi_aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi_aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi4_aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="clk_ctrl_0" spirit:portRef="rst_in_n"/>
+        <spirit:internalPortReference spirit:componentRef="axi_uartlite_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M00_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M01_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M02_ARESETN"/>
@@ -666,8 +662,6 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M01_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M00_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="S00_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi_aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="s_axi4_aresetn"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>sys_clk_i_1</spirit:name>
@@ -680,16 +674,6 @@
         <spirit:internalPortReference spirit:componentRef="mig_7series_0" spirit:portRef="sys_rst"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
-        <spirit:name>xlconcat_0_dout</spirit:name>
-        <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="dout"/>
-        <spirit:externalPortReference spirit:portRef="irq"/>
-      </spirit:adHocConnection>
-      <spirit:adHocConnection>
-        <spirit:name>axi_uart16550_0_ip2intc_irpt</spirit:name>
-        <spirit:internalPortReference spirit:componentRef="axi_uart16550_0" spirit:portRef="ip2intc_irpt"/>
-        <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="In2"/>
-      </spirit:adHocConnection>
-      <spirit:adHocConnection>
         <spirit:name>axi_ethernetlite_0_ip2intc_irpt</spirit:name>
         <spirit:internalPortReference spirit:componentRef="axi_ethernetlite_0" spirit:portRef="ip2intc_irpt"/>
         <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="In0"/>
@@ -698,16 +682,6 @@
         <spirit:name>axi_spi_flash_ip2intc_irpt</spirit:name>
         <spirit:internalPortReference spirit:componentRef="axi_spi_flash" spirit:portRef="ip2intc_irpt"/>
         <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="In1"/>
-      </spirit:adHocConnection>
-      <spirit:adHocConnection>
-        <spirit:name>xlconstant_0_dout</spirit:name>
-        <spirit:internalPortReference spirit:componentRef="xlconstant_0" spirit:portRef="dout"/>
-        <spirit:internalPortReference spirit:componentRef="axi_uart16550_0" spirit:portRef="freeze"/>
-      </spirit:adHocConnection>
-      <spirit:adHocConnection>
-        <spirit:name>axi_bram_ctrl_0_bram_addr_a</spirit:name>
-        <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="bram_addr_a"/>
-        <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="addra"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>axi_bram_ctrl_0_bram_clk_a</spirit:name>
@@ -745,14 +719,327 @@
         <spirit:internalPortReference spirit:componentRef="axi_spi_flash" spirit:portRef="ext_spi_clk"/>
         <spirit:internalPortReference spirit:componentRef="axi_cfg_spi_0" spirit:portRef="ext_spi_clk"/>
       </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_haddr</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_haddr"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_haddr"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_hburst</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hburst"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hburst"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_hprot</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hprot"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hprot"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_hready_in</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hready_in"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hready_in"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_hwdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hwdata"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hwdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_hwrite</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hwrite"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hwrite"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_sel</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_sel"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hsel"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_hsize</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hsize"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hsize"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_AHB_htrans</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_htrans"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_htrans"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_1_s_ahb_hrdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hrdata"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hrdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_1_s_ahb_hready_out</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hready_out"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hready_out"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_1_s_ahb_hresp</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hresp"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="AHB_hresp"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_haddr</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_haddr"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_haddr"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_hburst</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hburst"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hburst"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_hprot</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hprot"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hprot"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_hready_in</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hready_in"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hready_in"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_hsize</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hsize"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hsize"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_htrans</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_htrans"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_htrans"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_hwdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hwdata"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hwdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_hwrite</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hwrite"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hwrite"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_AHB_sel</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_sel"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hsel"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_0_s_ahb_hrdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hrdata"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hrdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_0_s_ahb_hready_out</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hready_out"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hready_out"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_0_s_ahb_hresp</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hresp"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="AHB_hresp"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_ibus_address</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="ibus_address"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="address"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_ibus_read</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="ibus_read"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="rd"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_ibus_write</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="ibus_write"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="wr"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_ibus_byteenable</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="ibus_byteenable"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="dataenable"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_ibus_wrdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="ibus_wrdata"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="wrdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_rddata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="rddata"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="ibus_rddata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_I_stall</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_I" spirit:portRef="stall"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="ibus_stall"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_read</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_read"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_read"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_write</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_write"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_write"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_wrdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_wrdata"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="wrdata"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_wrdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_dcache_inv_wb</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_dcache_inv_wb"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_hitinvalidate"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_byteenable</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_byteenable"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="dataenable"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_byteenable"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_address</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_address"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="address"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_addr"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_dbus_stall</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_stall"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_stall"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>DCache_0_dbus_rddata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_rddata"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_rddata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>xlconcat_0_dout</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="dout"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="hardware_int_in"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>xlconstant_1_dout</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="xlconstant_1" spirit:portRef="dout"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="debugger_uart_rxd"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>aux_reset_in_1</spirit:name>
+        <spirit:externalPortReference spirit:portRef="aux_reset_n"/>
+        <spirit:internalPortReference spirit:componentRef="proc_sys_reset_0" spirit:portRef="aux_reset_in"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_uncached_read</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_uncached_read"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="rd"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>naive_mips_0_dbus_uncached_write</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_uncached_write"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="wr"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_rddata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="rddata"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_rddata_uncached"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_stall</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="stall"/>
+        <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="dbus_uncached_stall"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_haddr</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_haddr"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_haddr"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_hburst</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hburst"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hburst"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_hprot</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hprot"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hprot"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_hready_in</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hready_in"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hready_in"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_2_s_ahb_hready_out</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hready_out"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hready_out"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_2_s_ahb_hresp</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hresp"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hresp"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahblite_axi_bridge_2_s_ahb_hrdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hrdata"/>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hrdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_hsize</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hsize"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hsize"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_htrans</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_htrans"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_htrans"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_hwdata</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hwdata"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hwdata"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_hwrite</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_hwrite"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hwrite"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ahb_adapter_uncached_AHB_sel</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ahb_adapter_uncached" spirit:portRef="AHB_sel"/>
+        <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hsel"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>xlconstant_2_dout</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="xlconstant_2" spirit:portRef="dout"/>
+        <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="dbus_hitwriteback"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>xlconstant_3_dout</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="xlconstant_3" spirit:portRef="dout"/>
+        <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="In3"/>
+        <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="In4"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>axi_uartlite_0_interrupt</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="axi_uartlite_0" spirit:portRef="interrupt"/>
+        <spirit:internalPortReference spirit:componentRef="xlconcat_0" spirit:portRef="In2"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>axi_bram_ctrl_0_bram_addr_a</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="bram_addr_a"/>
+        <spirit:internalPortReference spirit:componentRef="xlslice_0" spirit:portRef="Din"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>xlslice_0_Dout</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="xlslice_0" spirit:portRef="Dout"/>
+        <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="addra"/>
+      </spirit:adHocConnection>
     </spirit:adHocConnections>
     <spirit:hierConnections>
-      <spirit:hierConnection spirit:interfaceRef="AHB_D/AHB_INTERFACE_1">
-        <spirit:activeInterface spirit:busRef="AHB_INTERFACE" spirit:componentRef="ahblite_axi_bridge_0"/>
-      </spirit:hierConnection>
-      <spirit:hierConnection spirit:interfaceRef="AHB_I/AHB_INTERFACE_1_1">
-        <spirit:activeInterface spirit:busRef="AHB_INTERFACE" spirit:componentRef="ahblite_axi_bridge_1"/>
-      </spirit:hierConnection>
       <spirit:hierConnection spirit:interfaceRef="ddr3/mig_7series_0_DDR3">
         <spirit:activeInterface spirit:busRef="DDR3" spirit:componentRef="mig_7series_0"/>
       </spirit:hierConnection>
@@ -762,8 +1049,8 @@
       <spirit:hierConnection spirit:interfaceRef="MDIO/axi_ethernetlite_0_MDIO">
         <spirit:activeInterface spirit:busRef="MDIO" spirit:componentRef="axi_ethernetlite_0"/>
       </spirit:hierConnection>
-      <spirit:hierConnection spirit:interfaceRef="UART/axi_uart16550_0_UART">
-        <spirit:activeInterface spirit:busRef="UART" spirit:componentRef="axi_uart16550_0"/>
+      <spirit:hierConnection spirit:interfaceRef="UART/axi_uartlite_0_UART">
+        <spirit:activeInterface spirit:busRef="UART" spirit:componentRef="axi_uartlite_0"/>
       </spirit:hierConnection>
       <spirit:hierConnection spirit:interfaceRef="SPI_FLASH/axi_spi_flash_SPI_0">
         <spirit:activeInterface spirit:busRef="SPI_0" spirit:componentRef="axi_spi_flash"/>
@@ -819,6 +1106,12 @@
       <spirit:busInterface>
         <spirit:name>M02_AXI</spirit:name>
         <spirit:master/>
+        <spirit:busType spirit:library="interface" spirit:name="aximm" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="interface" spirit:name="aximm_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>S03_AXI</spirit:name>
+        <spirit:slave/>
         <spirit:busType spirit:library="interface" spirit:name="aximm" spirit:vendor="xilinx.com" spirit:version="1.0"/>
         <spirit:abstractionType spirit:library="interface" spirit:name="aximm_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
       </spirit:busInterface>
@@ -1140,6 +1433,52 @@
           </spirit:portMap>
         </spirit:portMaps>
       </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>CLK.S03_ACLK</spirit:name>
+        <spirit:displayName>Clk</spirit:displayName>
+        <spirit:description>Clock</spirit:description>
+        <spirit:busType spirit:library="signal" spirit:name="clock" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="signal" spirit:name="clock_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:slave/>
+        <spirit:portMaps>
+          <spirit:portMap>
+            <spirit:logicalPort>
+              <spirit:name>CLK</spirit:name>
+            </spirit:logicalPort>
+            <spirit:physicalPort>
+              <spirit:name>S03_ACLK</spirit:name>
+            </spirit:physicalPort>
+          </spirit:portMap>
+        </spirit:portMaps>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+            <spirit:value>S03_AXI</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>ASSOCIATED_RESET</spirit:name>
+            <spirit:value>S03_ARESETN</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>RST.S03_ARESETN</spirit:name>
+        <spirit:displayName>Reset</spirit:displayName>
+        <spirit:description>Reset</spirit:description>
+        <spirit:busType spirit:library="signal" spirit:name="reset" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="signal" spirit:name="reset_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:slave/>
+        <spirit:portMaps>
+          <spirit:portMap>
+            <spirit:logicalPort>
+              <spirit:name>RST</spirit:name>
+            </spirit:logicalPort>
+            <spirit:physicalPort>
+              <spirit:name>S03_ARESETN</spirit:name>
+            </spirit:physicalPort>
+          </spirit:portMap>
+        </spirit:portMaps>
+      </spirit:busInterface>
     </spirit:busInterfaces>
     <spirit:model>
       <spirit:views>
@@ -1234,6 +1573,18 @@
             <spirit:direction>in</spirit:direction>
           </spirit:wire>
         </spirit:port>
+        <spirit:port>
+          <spirit:name>S03_ACLK</spirit:name>
+          <spirit:wire>
+            <spirit:direction>in</spirit:direction>
+          </spirit:wire>
+        </spirit:port>
+        <spirit:port>
+          <spirit:name>S03_ARESETN</spirit:name>
+          <spirit:wire>
+            <spirit:direction>in</spirit:direction>
+          </spirit:wire>
+        </spirit:port>
       </spirit:ports>
     </spirit:model>
   </spirit:component>
@@ -1249,7 +1600,7 @@
         <spirit:componentRef spirit:library="ip" spirit:name="axi_crossbar" spirit:vendor="xilinx.com" spirit:version="2.1"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xbar_2</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="NUM_SI">3</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="NUM_SI">4</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="NUM_MI">3</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="STRATEGY">2</spirit:configurableElementValue>
         </spirit:configurableElementValues>
@@ -1265,6 +1616,10 @@
       <spirit:componentInstance>
         <spirit:instanceName>s02_couplers</spirit:instanceName>
         <spirit:componentRef spirit:library="BlockDiagram/bd_soc_imp/sys_bus_imp" spirit:name="s02_couplers" spirit:vendor="xilinx.com" spirit:version="1.00.a"/>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>s03_couplers</spirit:instanceName>
+        <spirit:componentRef spirit:library="BlockDiagram/bd_soc_imp/sys_bus_imp" spirit:name="s03_couplers" spirit:vendor="xilinx.com" spirit:version="1.00.a"/>
       </spirit:componentInstance>
       <spirit:componentInstance>
         <spirit:instanceName>m00_couplers</spirit:instanceName>
@@ -1296,6 +1651,11 @@
         <spirit:activeInterface spirit:busRef="S02_AXI" spirit:componentRef="xbar"/>
       </spirit:interconnection>
       <spirit:interconnection>
+        <spirit:name>s03_couplers_to_xbar</spirit:name>
+        <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="s03_couplers"/>
+        <spirit:activeInterface spirit:busRef="S03_AXI" spirit:componentRef="xbar"/>
+      </spirit:interconnection>
+      <spirit:interconnection>
         <spirit:name>xbar_to_m00_couplers</spirit:name>
         <spirit:activeInterface spirit:busRef="M00_AXI" spirit:componentRef="xbar"/>
         <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="m00_couplers"/>
@@ -1319,6 +1679,7 @@
         <spirit:internalPortReference spirit:componentRef="s00_couplers" spirit:portRef="M_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="s01_couplers" spirit:portRef="M_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="s02_couplers" spirit:portRef="M_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="s03_couplers" spirit:portRef="M_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="m00_couplers" spirit:portRef="S_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="m01_couplers" spirit:portRef="S_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="m02_couplers" spirit:portRef="S_ACLK"/>
@@ -1330,6 +1691,7 @@
         <spirit:internalPortReference spirit:componentRef="s00_couplers" spirit:portRef="M_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="s01_couplers" spirit:portRef="M_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="s02_couplers" spirit:portRef="M_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="s03_couplers" spirit:portRef="M_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="m00_couplers" spirit:portRef="S_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="m01_couplers" spirit:portRef="S_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="m02_couplers" spirit:portRef="S_ARESETN"/>
@@ -1363,6 +1725,16 @@
         <spirit:name>S02_ARESETN_1</spirit:name>
         <spirit:externalPortReference spirit:portRef="S02_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="s02_couplers" spirit:portRef="S_ARESETN"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>S03_ACLK_1</spirit:name>
+        <spirit:externalPortReference spirit:portRef="S03_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="s03_couplers" spirit:portRef="S_ACLK"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>S03_ARESETN_1</spirit:name>
+        <spirit:externalPortReference spirit:portRef="S03_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="s03_couplers" spirit:portRef="S_ARESETN"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>M00_ACLK_1</spirit:name>
@@ -1413,6 +1785,9 @@
       </spirit:hierConnection>
       <spirit:hierConnection spirit:interfaceRef="M02_AXI/m02_couplers_to_sys_bus">
         <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="m02_couplers"/>
+      </spirit:hierConnection>
+      <spirit:hierConnection spirit:interfaceRef="S03_AXI/sys_bus_to_s03_couplers">
+        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="s03_couplers"/>
       </spirit:hierConnection>
     </spirit:hierConnections>
   </spirit:design>
@@ -1899,6 +2274,216 @@
     <spirit:hierConnections>
       <spirit:hierConnection spirit:interfaceRef="M_AXI/m00_couplers_to_m00_couplers">
         <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="./m00_couplers_to_m00_couplers"/>
+      </spirit:hierConnection>
+    </spirit:hierConnections>
+  </spirit:design>
+
+  <spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
+    <spirit:vendor>xilinx.com</spirit:vendor>
+    <spirit:library>BlockDiagram/bd_soc_imp/sys_bus_imp</spirit:library>
+    <spirit:name>s03_couplers</spirit:name>
+    <spirit:version>1.00.a</spirit:version>
+    <spirit:busInterfaces>
+      <spirit:busInterface>
+        <spirit:name>M_AXI</spirit:name>
+        <spirit:master/>
+        <spirit:busType spirit:library="interface" spirit:name="aximm" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="interface" spirit:name="aximm_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>S_AXI</spirit:name>
+        <spirit:slave/>
+        <spirit:busType spirit:library="interface" spirit:name="aximm" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="interface" spirit:name="aximm_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>CLK.M_ACLK</spirit:name>
+        <spirit:displayName>Clk</spirit:displayName>
+        <spirit:description>Clock</spirit:description>
+        <spirit:busType spirit:library="signal" spirit:name="clock" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="signal" spirit:name="clock_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:slave/>
+        <spirit:portMaps>
+          <spirit:portMap>
+            <spirit:logicalPort>
+              <spirit:name>CLK</spirit:name>
+            </spirit:logicalPort>
+            <spirit:physicalPort>
+              <spirit:name>M_ACLK</spirit:name>
+            </spirit:physicalPort>
+          </spirit:portMap>
+        </spirit:portMaps>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+            <spirit:value>M_AXI</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>ASSOCIATED_RESET</spirit:name>
+            <spirit:value>M_ARESETN</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>RST.M_ARESETN</spirit:name>
+        <spirit:displayName>Reset</spirit:displayName>
+        <spirit:description>Reset</spirit:description>
+        <spirit:busType spirit:library="signal" spirit:name="reset" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="signal" spirit:name="reset_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:slave/>
+        <spirit:portMaps>
+          <spirit:portMap>
+            <spirit:logicalPort>
+              <spirit:name>RST</spirit:name>
+            </spirit:logicalPort>
+            <spirit:physicalPort>
+              <spirit:name>M_ARESETN</spirit:name>
+            </spirit:physicalPort>
+          </spirit:portMap>
+        </spirit:portMaps>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>CLK.S_ACLK</spirit:name>
+        <spirit:displayName>Clk</spirit:displayName>
+        <spirit:description>Clock</spirit:description>
+        <spirit:busType spirit:library="signal" spirit:name="clock" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="signal" spirit:name="clock_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:slave/>
+        <spirit:portMaps>
+          <spirit:portMap>
+            <spirit:logicalPort>
+              <spirit:name>CLK</spirit:name>
+            </spirit:logicalPort>
+            <spirit:physicalPort>
+              <spirit:name>S_ACLK</spirit:name>
+            </spirit:physicalPort>
+          </spirit:portMap>
+        </spirit:portMaps>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>ASSOCIATED_BUSIF</spirit:name>
+            <spirit:value>S_AXI</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>ASSOCIATED_RESET</spirit:name>
+            <spirit:value>S_ARESETN</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:busInterface>
+      <spirit:busInterface>
+        <spirit:name>RST.S_ARESETN</spirit:name>
+        <spirit:displayName>Reset</spirit:displayName>
+        <spirit:description>Reset</spirit:description>
+        <spirit:busType spirit:library="signal" spirit:name="reset" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:abstractionType spirit:library="signal" spirit:name="reset_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:slave/>
+        <spirit:portMaps>
+          <spirit:portMap>
+            <spirit:logicalPort>
+              <spirit:name>RST</spirit:name>
+            </spirit:logicalPort>
+            <spirit:physicalPort>
+              <spirit:name>S_ARESETN</spirit:name>
+            </spirit:physicalPort>
+          </spirit:portMap>
+        </spirit:portMaps>
+      </spirit:busInterface>
+    </spirit:busInterfaces>
+    <spirit:model>
+      <spirit:views>
+        <spirit:view>
+          <spirit:name>BlockDiagram</spirit:name>
+          <spirit:envIdentifier>:vivado.xilinx.com:</spirit:envIdentifier>
+          <spirit:hierarchyRef spirit:library="BlockDiagram/bd_soc_imp/sys_bus_imp" spirit:name="s03_couplers_imp" spirit:vendor="xilinx.com" spirit:version="1.00.a"/>
+        </spirit:view>
+      </spirit:views>
+      <spirit:ports>
+        <spirit:port>
+          <spirit:name>M_ACLK</spirit:name>
+          <spirit:wire>
+            <spirit:direction>in</spirit:direction>
+          </spirit:wire>
+        </spirit:port>
+        <spirit:port>
+          <spirit:name>M_ARESETN</spirit:name>
+          <spirit:wire>
+            <spirit:direction>in</spirit:direction>
+          </spirit:wire>
+        </spirit:port>
+        <spirit:port>
+          <spirit:name>S_ACLK</spirit:name>
+          <spirit:wire>
+            <spirit:direction>in</spirit:direction>
+          </spirit:wire>
+        </spirit:port>
+        <spirit:port>
+          <spirit:name>S_ARESETN</spirit:name>
+          <spirit:wire>
+            <spirit:direction>in</spirit:direction>
+          </spirit:wire>
+        </spirit:port>
+      </spirit:ports>
+    </spirit:model>
+  </spirit:component>
+
+  <spirit:design xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
+    <spirit:vendor>xilinx.com</spirit:vendor>
+    <spirit:library>BlockDiagram/bd_soc_imp/sys_bus_imp</spirit:library>
+    <spirit:name>s03_couplers_imp</spirit:name>
+    <spirit:version>1.00.a</spirit:version>
+    <spirit:componentInstances>
+      <spirit:componentInstance>
+        <spirit:instanceName>s03_data_fifo</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="axi_data_fifo" spirit:vendor="xilinx.com" spirit:version="2.1"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_s03_data_fifo_0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>auto_cc</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="axi_clock_converter" spirit:vendor="xilinx.com" spirit:version="2.1"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_auto_cc_3</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+    </spirit:componentInstances>
+    <spirit:interconnections>
+      <spirit:interconnection>
+        <spirit:name>auto_cc_to_s03_data_fifo</spirit:name>
+        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="s03_data_fifo"/>
+        <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="auto_cc"/>
+      </spirit:interconnection>
+    </spirit:interconnections>
+    <spirit:adHocConnections>
+      <spirit:adHocConnection>
+        <spirit:name>M_ACLK_1</spirit:name>
+        <spirit:externalPortReference spirit:portRef="M_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="s03_data_fifo" spirit:portRef="aclk"/>
+        <spirit:internalPortReference spirit:componentRef="auto_cc" spirit:portRef="m_axi_aclk"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>M_ARESETN_1</spirit:name>
+        <spirit:externalPortReference spirit:portRef="M_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="s03_data_fifo" spirit:portRef="aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="auto_cc" spirit:portRef="m_axi_aresetn"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>S_ACLK_1</spirit:name>
+        <spirit:externalPortReference spirit:portRef="S_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="auto_cc" spirit:portRef="s_axi_aclk"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>S_ARESETN_1</spirit:name>
+        <spirit:externalPortReference spirit:portRef="S_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="auto_cc" spirit:portRef="s_axi_aresetn"/>
+      </spirit:adHocConnection>
+    </spirit:adHocConnections>
+    <spirit:hierConnections>
+      <spirit:hierConnection spirit:interfaceRef="M_AXI/s03_data_fifo_to_s03_couplers">
+        <spirit:activeInterface spirit:busRef="M_AXI" spirit:componentRef="s03_data_fifo"/>
+      </spirit:hierConnection>
+      <spirit:hierConnection spirit:interfaceRef="S_AXI/s03_couplers_to_auto_cc">
+        <spirit:activeInterface spirit:busRef="S_AXI" spirit:componentRef="auto_cc"/>
       </spirit:hierConnection>
     </spirit:hierConnections>
   </spirit:design>
@@ -4284,7 +4869,7 @@
           <spirit:segment>
             <spirit:name>SEG_axi_ethernetlite_0_Reg</spirit:name>
             <spirit:displayName>/axi_ethernetlite_0/S_AXI/Reg</spirit:displayName>
-            <spirit:addressOffset>0x1C020000</spirit:addressOffset>
+            <spirit:addressOffset>0x1C030000</spirit:addressOffset>
             <spirit:range>64K</spirit:range>
           </spirit:segment>
           <spirit:segment>
@@ -4300,8 +4885,8 @@
             <spirit:range>8M</spirit:range>
           </spirit:segment>
           <spirit:segment>
-            <spirit:name>SEG_axi_uart16550_0_Reg</spirit:name>
-            <spirit:displayName>/axi_uart16550_0/S_AXI/Reg</spirit:displayName>
+            <spirit:name>SEG_axi_uartlite_0_Reg</spirit:name>
+            <spirit:displayName>/axi_uartlite_0/S_AXI/Reg</spirit:displayName>
             <spirit:addressOffset>0x1FD00000</spirit:addressOffset>
             <spirit:range>4K</spirit:range>
           </spirit:segment>
@@ -4314,6 +4899,14 @@
         </spirit:segments>
       </spirit:addressSpace>
     </spirit:addressSpaces>
+  </spirit:component>
+
+  <spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
+    <spirit:vendor>xilinx.com</spirit:vendor>
+    <spirit:library>Addressing/ahblite_axi_bridge_2</spirit:library>
+    <spirit:name>ahblite_axi_bridge</spirit:name>
+    <spirit:version>3.0</spirit:version>
+    <spirit:addressSpaces/>
   </spirit:component>
 
 </bd:repository>
