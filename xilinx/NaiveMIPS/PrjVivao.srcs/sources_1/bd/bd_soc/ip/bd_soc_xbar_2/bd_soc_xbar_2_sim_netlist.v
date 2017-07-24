@@ -1,7 +1,7 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-// Date        : Mon Jul 24 16:16:38 2017
+// Date        : Tue Jul 25 00:28:38 2017
 // Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode funcsim
 //               /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_soc/ip/bd_soc_xbar_2/bd_soc_xbar_2_sim_netlist.v
@@ -271,7 +271,7 @@ module bd_soc_xbar_2
   (* C_DEBUG = "1" *) 
   (* C_FAMILY = "artix7" *) 
   (* C_M_AXI_ADDR_WIDTH = "480'b000000000000000000000000000011000000000000000000000000000000110000000000000000000000000000010111000000000000000000000000000100000000000000000000000000000001100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011011" *) 
-  (* C_M_AXI_BASE_ADDR = "960'b000000000000000000000000000000000001111111010000000100000000000000000000000000000000000000000000000111111101000000000000000000000000000000000000000000000000000000011110000000000000000000000000000000000000000000000000000000000001110000000010000000000000000000000000000000000000000000000000000110100000000000000000000000001111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000000000000000000000000001111111000000000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000000000000000000000000000000000000000000000000000000000000000" *) 
+  (* C_M_AXI_BASE_ADDR = "960'b000000000000000000000000000000000001111111010000000100000000000000000000000000000000000000000000000111111101000000000000000000000000000000000000000000000000000000011110000000000000000000000000000000000000000000000000000000000001110000000011000000000000000000000000000000000000000000000000000110100000000000000000000000001111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000000000000000000000000001111111000000000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000000000000000000000000000000000000000000000000000000000000000" *) 
   (* C_M_AXI_READ_CONNECTIVITY = "96'b000000000000000000000000000011110000000000000000000000000000111100000000000000000000000000001111" *) 
   (* C_M_AXI_READ_ISSUING = "96'b000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000" *) 
   (* C_M_AXI_SECURE = "96'b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" *) 
@@ -2037,7 +2037,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I4(\gen_slave_slots[3].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(\gen_slave_slots[3].gen_si_read.si_transactor_ar/target_mi_enc [0]));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[1].active_region[8]_i_5 
        (.I0(\gen_slave_slots[3].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_araddr[114]),
@@ -2057,7 +2057,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I5(s_axi_araddr[118]),
         .O(\gen_slave_slots[3].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[1].active_region[8]_i_7 
        (.I0(s_axi_araddr[114]),
         .I1(s_axi_araddr[115]),
@@ -2301,7 +2301,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I4(\gen_slave_slots[2].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(target_mi_enc_5[0]));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_5 
        (.I0(\gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_araddr[18]),
@@ -2311,7 +2311,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I5(\gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(\gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/p_4_out ));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_5__1 
        (.I0(\gen_slave_slots[1].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_araddr[50]),
@@ -2321,7 +2321,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I5(\gen_slave_slots[1].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(\gen_slave_slots[1].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/p_4_out ));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_5__3 
        (.I0(\gen_slave_slots[2].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_araddr[82]),
@@ -2361,7 +2361,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I5(s_axi_araddr[86]),
         .O(\gen_slave_slots[2].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_7 
        (.I0(s_axi_araddr[18]),
         .I1(s_axi_araddr[19]),
@@ -2369,7 +2369,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I3(s_axi_araddr[16]),
         .O(\gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_2__2 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_7__1 
        (.I0(s_axi_araddr[50]),
         .I1(s_axi_araddr[51]),
@@ -2377,7 +2377,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter
         .I3(s_axi_araddr[48]),
         .O(\gen_slave_slots[1].gen_si_read.si_transactor_ar/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_2__2 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_7__3 
        (.I0(s_axi_araddr[82]),
         .I1(s_axi_araddr[83]),
@@ -4438,7 +4438,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I4(\gen_slave_slots[3].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(target_mi_enc_7[0]));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[1].active_region[8]_i_5__0 
        (.I0(\gen_slave_slots[3].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_awaddr[114]),
@@ -4458,7 +4458,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I5(s_axi_awaddr[118]),
         .O(\gen_slave_slots[3].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[1].active_region[8]_i_7__0 
        (.I0(s_axi_awaddr[114]),
         .I1(s_axi_awaddr[115]),
@@ -4686,7 +4686,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I4(\gen_slave_slots[2].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(target_mi_enc_1[0]));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_5__0 
        (.I0(\gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_awaddr[18]),
@@ -4696,7 +4696,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I5(\gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(\gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/p_4_out ));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_5__2 
        (.I0(\gen_slave_slots[1].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_awaddr[50]),
@@ -4706,7 +4706,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I5(\gen_slave_slots[1].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[4].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_4 ),
         .O(\gen_slave_slots[1].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/p_4_out ));
   LUT6 #(
-    .INIT(64'h0000020000000000)) 
+    .INIT(64'h0200000000000000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_5__4 
        (.I0(\gen_slave_slots[2].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ),
         .I1(s_axi_awaddr[82]),
@@ -4746,7 +4746,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I5(s_axi_awaddr[86]),
         .O(\gen_slave_slots[2].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_3__4 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_7__0 
        (.I0(s_axi_awaddr[18]),
         .I1(s_axi_awaddr[19]),
@@ -4754,7 +4754,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I3(s_axi_awaddr[16]),
         .O(\gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_2__2 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_7__2 
        (.I0(s_axi_awaddr[50]),
         .I1(s_axi_awaddr[51]),
@@ -4762,7 +4762,7 @@ module bd_soc_xbar_2_axi_crossbar_v2_1_13_addr_arbiter_0
         .I3(s_axi_awaddr[48]),
         .O(\gen_slave_slots[1].gen_si_write.si_transactor_aw/gen_addr_decoder.addr_decoder_inst/gen_target[2].gen_region[1].gen_comparator_static.gen_addr_range.addr_decode_comparator/sel_2__2 ));
   LUT4 #(
-    .INIT(16'h0010)) 
+    .INIT(16'h1000)) 
     \gen_multi_thread.gen_thread_loop[3].active_region[24]_i_7__4 
        (.I0(s_axi_awaddr[82]),
         .I1(s_axi_awaddr[83]),
@@ -11828,7 +11828,7 @@ endmodule
 (* C_AXI_BUSER_WIDTH = "1" *) (* C_AXI_DATA_WIDTH = "32" *) (* C_AXI_ID_WIDTH = "6" *) 
 (* C_AXI_PROTOCOL = "0" *) (* C_AXI_RUSER_WIDTH = "1" *) (* C_AXI_SUPPORTS_USER_SIGNALS = "0" *) 
 (* C_AXI_WUSER_WIDTH = "1" *) (* C_CONNECTIVITY_MODE = "1" *) (* C_DEBUG = "1" *) 
-(* C_FAMILY = "artix7" *) (* C_M_AXI_ADDR_WIDTH = "480'b000000000000000000000000000011000000000000000000000000000000110000000000000000000000000000010111000000000000000000000000000100000000000000000000000000000001100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011011" *) (* C_M_AXI_BASE_ADDR = "960'b000000000000000000000000000000000001111111010000000100000000000000000000000000000000000000000000000111111101000000000000000000000000000000000000000000000000000000011110000000000000000000000000000000000000000000000000000000000001110000000010000000000000000000000000000000000000000000000000000110100000000000000000000000001111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000000000000000000000000001111111000000000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000000000000000000000000000000000000000000000000000000000000000" *) 
+(* C_FAMILY = "artix7" *) (* C_M_AXI_ADDR_WIDTH = "480'b000000000000000000000000000011000000000000000000000000000000110000000000000000000000000000010111000000000000000000000000000100000000000000000000000000000001100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011011" *) (* C_M_AXI_BASE_ADDR = "960'b000000000000000000000000000000000001111111010000000100000000000000000000000000000000000000000000000111111101000000000000000000000000000000000000000000000000000000011110000000000000000000000000000000000000000000000000000000000001110000000011000000000000000000000000000000000000000000000000000110100000000000000000000000001111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000000000000000000000000000000001111111000000000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000000000000000000000000000000000000000000000000000000000000000" *) 
 (* C_M_AXI_READ_CONNECTIVITY = "96'b000000000000000000000000000011110000000000000000000000000000111100000000000000000000000000001111" *) (* C_M_AXI_READ_ISSUING = "96'b000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000" *) (* C_M_AXI_SECURE = "96'b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" *) 
 (* C_M_AXI_WRITE_CONNECTIVITY = "96'b000000000000000000000000000011110000000000000000000000000000111100000000000000000000000000001111" *) (* C_M_AXI_WRITE_ISSUING = "96'b000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000" *) (* C_NUM_ADDR_RANGES = "5" *) 
 (* C_NUM_MASTER_SLOTS = "3" *) (* C_NUM_SLAVE_SLOTS = "4" *) (* C_R_REGISTER = "0" *) 

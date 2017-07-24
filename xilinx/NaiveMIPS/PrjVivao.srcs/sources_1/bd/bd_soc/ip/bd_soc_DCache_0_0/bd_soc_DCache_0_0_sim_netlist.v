@@ -1,7 +1,7 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-// Date        : Mon Jul 24 23:07:16 2017
+// Date        : Tue Jul 25 00:28:43 2017
 // Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode funcsim
 //               /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_soc/ip/bd_soc_DCache_0_0/bd_soc_DCache_0_0_sim_netlist.v
@@ -96,7 +96,7 @@ module bd_soc_DCache_0_0
   assign AHB_hprot[1] = \<const1> ;
   assign AHB_hprot[0] = \<const1> ;
   assign AHB_hready_in = AHB_hready_out;
-  assign AHB_hsize[2] = \<const1> ;
+  assign AHB_hsize[2] = \<const0> ;
   assign AHB_hsize[1] = \<const1> ;
   assign AHB_hsize[0] = \<const0> ;
   GND GND

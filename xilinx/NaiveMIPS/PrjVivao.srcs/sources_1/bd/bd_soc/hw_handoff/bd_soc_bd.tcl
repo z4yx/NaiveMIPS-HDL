@@ -654,7 +654,7 @@ CONFIG.DOUT_WIDTH {10} \
   # Create address segments
   create_bd_addr_seg -range 0x00001000 -offset 0x1FC00000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_bram_ctrl_0/S_AXI/Mem0] SEG_axi_bram_ctrl_0_Mem0
   create_bd_addr_seg -range 0x01000000 -offset 0x1A000000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_cfg_spi_0/aximm/MEM0] SEG_axi_cfg_spi_0_MEM0
-  create_bd_addr_seg -range 0x00010000 -offset 0x1C020000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_ethernetlite_0/S_AXI/Reg] SEG_axi_ethernetlite_0_Reg
+  create_bd_addr_seg -range 0x00010000 -offset 0x1C030000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_ethernetlite_0/S_AXI/Reg] SEG_axi_ethernetlite_0_Reg
   create_bd_addr_seg -range 0x00001000 -offset 0x1FD01000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg
   create_bd_addr_seg -range 0x00800000 -offset 0x1E000000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_spi_flash/AXI_LITE/Reg] SEG_axi_spi_flash_Reg
   create_bd_addr_seg -range 0x00001000 -offset 0x1FD00000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_uartlite_0/S_AXI/Reg] SEG_axi_uartlite_0_Reg
