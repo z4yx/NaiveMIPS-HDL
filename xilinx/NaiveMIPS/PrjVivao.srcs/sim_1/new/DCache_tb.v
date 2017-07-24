@@ -41,7 +41,7 @@ initial begin : tb_block
 
     repeat (1000000) begin 
 
-      daddr = ($urandom_range(0, 1024-1) << 6) + 32'b10111;
+      daddr = ($urandom_range(0, 1024-1) << 6) + 32'b10100;
       byte_en = 4'b1111; //$urandom_range(0, 15); //4'b1111;
       d_rw = ($random & 1) ? 0 : 1;
       dwrdata = $urandom;
