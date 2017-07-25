@@ -190,6 +190,7 @@ reg [7:0]mm_iaddr_exp_asid;
 reg mm_iaddr_exp_exl;
 reg mm_inv_wb_dcache;
 reg mm_inv_icache;
+reg [7:0] mm_interrupt_flags;
 
 
 wire wb_reg_we;
@@ -659,6 +660,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_exl <= 1'b0;
         mm_inv_icache <= 1'b0;
         mm_inv_wb_dcache <= 1'b0;
+        mm_interrupt_flags <= 8'h0;
     end
     else if(en_exmm && !flush) begin
         // $display("mm_pc_value<=%x", ex_pc_value);
@@ -691,6 +693,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_exl <= ex_iaddr_exp_exl;
         mm_inv_icache <= ex_inv_icache;
         mm_inv_wb_dcache <= ex_inv_wb_dcache;
+        mm_interrupt_flags <= {hardware_int,cp0_software_int} & cp0_interrupt_mask;
     end else if(en_mmwb || flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
@@ -721,6 +724,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_iaddr_exp_exl <= 1'b0;
         mm_inv_icache <= 1'b0;
         mm_inv_wb_dcache <= 1'b0;
+        mm_interrupt_flags <= 8'h0;
     end
 end
 
@@ -779,9 +783,7 @@ exception exception_detect(/*autoinst*/
      .overflow(mm_overflow),
      .special_int_vec(cp0_special_int_vec),
      .boot_exp_vec(cp0_boot_exp_vec),
-     .interrupt_mask(cp0_interrupt_mask),
-     .hardware_int(hardware_int),
-     .software_int(cp0_software_int));
+     .interrupt_flags(mm_interrupt_flags));
 assign cp0_exp_bd = mm_in_delayslot;
 
 always @(posedge clk or negedge rst_n) begin
