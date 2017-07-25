@@ -1,7 +1,7 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-// Date        : Mon Jul 24 20:09:26 2017
+// Date        : Tue Jul 25 15:21:57 2017
 // Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode synth_stub
 //               /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_soc/ip/bd_soc_blk_mem_gen_0_0/bd_soc_blk_mem_gen_0_0_stub.v

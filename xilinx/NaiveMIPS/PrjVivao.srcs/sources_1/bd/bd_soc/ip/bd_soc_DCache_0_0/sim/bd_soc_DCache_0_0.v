@@ -106,7 +106,7 @@ output wire dbus_stall;
 
   DCache #(
     .CACHE_LINE_WIDTH(6),
-    .TAG_WIDTH(22)
+    .TAG_WIDTH(20)
   ) inst (
     .nrst(nrst),
     .clk(clk),

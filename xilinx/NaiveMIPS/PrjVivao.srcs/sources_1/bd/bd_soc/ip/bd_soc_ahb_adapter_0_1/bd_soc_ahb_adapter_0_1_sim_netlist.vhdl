@@ -1,7 +1,7 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
--- Date        : Mon Jul 24 16:16:51 2017
+-- Date        : Tue Jul 25 20:31:13 2017
 -- Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 -- Command     : write_vhdl -force -mode funcsim
 --               /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_soc/ip/bd_soc_ahb_adapter_0_1/bd_soc_ahb_adapter_0_1_sim_netlist.vhdl
@@ -16,16 +16,17 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity bd_soc_ahb_adapter_0_1_ahb_adapter is
   port (
+    triple_byte_w : out STD_LOGIC;
     stall : out STD_LOGIC;
     AHB_htrans : out STD_LOGIC_VECTOR ( 0 to 0 );
-    AHB_hsize : out STD_LOGIC_VECTOR ( 1 downto 0 );
     AHB_hwdata : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    AHB_hsize : out STD_LOGIC_VECTOR ( 1 downto 0 );
+    clk : in STD_LOGIC;
     rd : in STD_LOGIC;
     wr : in STD_LOGIC;
     AHB_hready_out : in STD_LOGIC;
     rst_n : in STD_LOGIC;
     dataenable : in STD_LOGIC_VECTOR ( 3 downto 0 );
-    clk : in STD_LOGIC;
     wrdata : in STD_LOGIC_VECTOR ( 31 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -36,13 +37,16 @@ architecture STRUCTURE of bd_soc_ahb_adapter_0_1_ahb_adapter is
   signal \AHB_hwdata[31]_i_1_n_0\ : STD_LOGIC;
   signal first_cycle : STD_LOGIC;
   signal first_cycle_i_1_n_0 : STD_LOGIC;
-  signal first_cycle_i_2_n_0 : STD_LOGIC;
+  signal \^triple_byte_w\ : STD_LOGIC;
+  signal triple_byte_w_i_1_n_0 : STD_LOGIC;
+  signal triple_byte_w_i_2_n_0 : STD_LOGIC;
   attribute SOFT_HLUTNM : string;
   attribute SOFT_HLUTNM of \AHB_hsize[0]_INST_0\ : label is "soft_lutpair1";
   attribute SOFT_HLUTNM of \AHB_hsize[1]_INST_0\ : label is "soft_lutpair1";
   attribute SOFT_HLUTNM of first_cycle_i_1 : label is "soft_lutpair0";
   attribute SOFT_HLUTNM of stall_INST_0 : label is "soft_lutpair0";
 begin
+  triple_byte_w <= \^triple_byte_w\;
 \AHB_hsize[0]_INST_0\: unisim.vcomponents.LUT4
     generic map(
       INIT => X"1008"
@@ -353,20 +357,12 @@ first_cycle_i_1: unisim.vcomponents.LUT4
       I3 => rd,
       O => first_cycle_i_1_n_0
     );
-first_cycle_i_2: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => rst_n,
-      O => first_cycle_i_2_n_0
-    );
 first_cycle_reg: unisim.vcomponents.FDPE
      port map (
       C => clk,
       CE => '1',
       D => first_cycle_i_1_n_0,
-      PRE => first_cycle_i_2_n_0,
+      PRE => triple_byte_w_i_2_n_0,
       Q => first_cycle
     );
 stall_INST_0: unisim.vcomponents.LUT4
@@ -380,6 +376,35 @@ stall_INST_0: unisim.vcomponents.LUT4
       I3 => first_cycle,
       O => stall
     );
+triple_byte_w_i_1: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFFFFFFF28000000"
+    )
+        port map (
+      I0 => dataenable(1),
+      I1 => dataenable(3),
+      I2 => dataenable(0),
+      I3 => dataenable(2),
+      I4 => wr,
+      I5 => \^triple_byte_w\,
+      O => triple_byte_w_i_1_n_0
+    );
+triple_byte_w_i_2: unisim.vcomponents.LUT1
+    generic map(
+      INIT => X"1"
+    )
+        port map (
+      I0 => rst_n,
+      O => triple_byte_w_i_2_n_0
+    );
+triple_byte_w_reg: unisim.vcomponents.FDCE
+     port map (
+      C => clk,
+      CE => '1',
+      CLR => triple_byte_w_i_2_n_0,
+      D => triple_byte_w_i_1_n_0,
+      Q => \^triple_byte_w\
+    );
 end STRUCTURE;
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -387,13 +412,8 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity bd_soc_ahb_adapter_0_1 is
   port (
-    AHB_hrdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    AHB_hready_out : in STD_LOGIC;
-    AHB_hresp : in STD_LOGIC;
     rddata : out STD_LOGIC_VECTOR ( 31 downto 0 );
     stall : out STD_LOGIC;
-    clk : in STD_LOGIC;
-    rst_n : in STD_LOGIC;
     AHB_haddr : out STD_LOGIC_VECTOR ( 31 downto 0 );
     AHB_hburst : out STD_LOGIC_VECTOR ( 2 downto 0 );
     AHB_hprot : out STD_LOGIC_VECTOR ( 3 downto 0 );
@@ -403,11 +423,17 @@ entity bd_soc_ahb_adapter_0_1 is
     AHB_hwdata : out STD_LOGIC_VECTOR ( 31 downto 0 );
     AHB_hwrite : out STD_LOGIC;
     AHB_sel : out STD_LOGIC;
-    address : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    wrdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    triple_byte_w : out STD_LOGIC;
+    clk : in STD_LOGIC;
+    rst_n : in STD_LOGIC;
     dataenable : in STD_LOGIC_VECTOR ( 3 downto 0 );
     rd : in STD_LOGIC;
-    wr : in STD_LOGIC
+    wr : in STD_LOGIC;
+    address : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    wrdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    AHB_hrdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    AHB_hready_out : in STD_LOGIC;
+    AHB_hresp : in STD_LOGIC
   );
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of bd_soc_ahb_adapter_0_1 : entity is true;
@@ -476,6 +502,7 @@ inst: entity work.bd_soc_ahb_adapter_0_1_ahb_adapter
       rd => rd,
       rst_n => rst_n,
       stall => stall,
+      triple_byte_w => triple_byte_w,
       wr => \^wr\,
       wrdata(31 downto 0) => wrdata(31 downto 0)
     );

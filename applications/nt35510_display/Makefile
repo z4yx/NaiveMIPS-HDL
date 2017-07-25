@@ -1,2 +1,2 @@
 all:
-	gcc *.c -o nt35510_display
+	mipsel-linux-gnu-gcc *.c -o nt35510_display

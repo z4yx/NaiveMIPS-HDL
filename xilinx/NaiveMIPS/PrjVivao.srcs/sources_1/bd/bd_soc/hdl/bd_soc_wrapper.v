@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-//Date        : Tue Jul 25 00:26:52 2017
+//Date        : Wed Jul 26 01:56:49 2017
 //Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target bd_soc_wrapper.bd
 //Design      : bd_soc_wrapper
@@ -10,7 +10,12 @@
 `timescale 1 ps / 1 ps
 
 module bd_soc_wrapper
-   (MDIO_mdc,
+   (LCD_csel,
+    LCD_nrst,
+    LCD_rd,
+    LCD_rs,
+    LCD_wr,
+    MDIO_mdc,
     MII_col,
     MII_crs,
     MII_rst_n,
@@ -21,8 +26,20 @@ module bd_soc_wrapper
     MII_tx_clk,
     MII_tx_en,
     MII_txd,
+    UART_baudoutn,
+    UART_ctsn,
+    UART_dcdn,
+    UART_ddis,
+    UART_dsrn,
+    UART_dtrn,
+    UART_out1n,
+    UART_out2n,
+    UART_ri,
+    UART_rtsn,
     UART_rxd,
+    UART_rxrdyn,
     UART_txd,
+    UART_txrdyn,
     aux_reset_n,
     cfg_flash_io0_io,
     cfg_flash_io1_io,
@@ -45,6 +62,8 @@ module bd_soc_wrapper
     ddr_ref_clk,
     ddr_sys_clk,
     ext_spi_clk,
+    iaddr,
+    lcd_data_tri_io,
     led_tri_o,
     mdio_mdio_io,
     spi_flash_io0_io,
@@ -52,7 +71,13 @@ module bd_soc_wrapper
     spi_flash_sck_io,
     spi_flash_ss_io,
     sw_tri_i,
-    sys_rst);
+    sys_rst,
+    triple_byte_w);
+  output LCD_csel;
+  output LCD_nrst;
+  output LCD_rd;
+  output LCD_rs;
+  output LCD_wr;
   output MDIO_mdc;
   input MII_col;
   input MII_crs;
@@ -64,8 +89,20 @@ module bd_soc_wrapper
   input MII_tx_clk;
   output MII_tx_en;
   output [3:0]MII_txd;
+  output UART_baudoutn;
+  input UART_ctsn;
+  input UART_dcdn;
+  output UART_ddis;
+  input UART_dsrn;
+  output UART_dtrn;
+  output UART_out1n;
+  output UART_out2n;
+  input UART_ri;
+  output UART_rtsn;
   input UART_rxd;
+  output UART_rxrdyn;
   output UART_txd;
+  output UART_txrdyn;
   input aux_reset_n;
   inout cfg_flash_io0_io;
   inout cfg_flash_io1_io;
@@ -88,6 +125,8 @@ module bd_soc_wrapper
   input ddr_ref_clk;
   input ddr_sys_clk;
   input ext_spi_clk;
+  output [31:0]iaddr;
+  inout [15:0]lcd_data_tri_io;
   output [31:0]led_tri_o;
   inout mdio_mdio_io;
   inout spi_flash_io0_io;
@@ -96,7 +135,13 @@ module bd_soc_wrapper
   inout [0:0]spi_flash_ss_io;
   input [31:0]sw_tri_i;
   input sys_rst;
+  output triple_byte_w;
 
+  wire LCD_csel;
+  wire LCD_nrst;
+  wire LCD_rd;
+  wire LCD_rs;
+  wire LCD_wr;
   wire MDIO_mdc;
   wire MII_col;
   wire MII_crs;
@@ -108,8 +153,20 @@ module bd_soc_wrapper
   wire MII_tx_clk;
   wire MII_tx_en;
   wire [3:0]MII_txd;
+  wire UART_baudoutn;
+  wire UART_ctsn;
+  wire UART_dcdn;
+  wire UART_ddis;
+  wire UART_dsrn;
+  wire UART_dtrn;
+  wire UART_out1n;
+  wire UART_out2n;
+  wire UART_ri;
+  wire UART_rtsn;
   wire UART_rxd;
+  wire UART_rxrdyn;
   wire UART_txd;
+  wire UART_txrdyn;
   wire aux_reset_n;
   wire cfg_flash_io0_i;
   wire cfg_flash_io0_io;
@@ -141,6 +198,71 @@ module bd_soc_wrapper
   wire ddr_ref_clk;
   wire ddr_sys_clk;
   wire ext_spi_clk;
+  wire [31:0]iaddr;
+  wire [0:0]lcd_data_tri_i_0;
+  wire [1:1]lcd_data_tri_i_1;
+  wire [10:10]lcd_data_tri_i_10;
+  wire [11:11]lcd_data_tri_i_11;
+  wire [12:12]lcd_data_tri_i_12;
+  wire [13:13]lcd_data_tri_i_13;
+  wire [14:14]lcd_data_tri_i_14;
+  wire [15:15]lcd_data_tri_i_15;
+  wire [2:2]lcd_data_tri_i_2;
+  wire [3:3]lcd_data_tri_i_3;
+  wire [4:4]lcd_data_tri_i_4;
+  wire [5:5]lcd_data_tri_i_5;
+  wire [6:6]lcd_data_tri_i_6;
+  wire [7:7]lcd_data_tri_i_7;
+  wire [8:8]lcd_data_tri_i_8;
+  wire [9:9]lcd_data_tri_i_9;
+  wire [0:0]lcd_data_tri_io_0;
+  wire [1:1]lcd_data_tri_io_1;
+  wire [10:10]lcd_data_tri_io_10;
+  wire [11:11]lcd_data_tri_io_11;
+  wire [12:12]lcd_data_tri_io_12;
+  wire [13:13]lcd_data_tri_io_13;
+  wire [14:14]lcd_data_tri_io_14;
+  wire [15:15]lcd_data_tri_io_15;
+  wire [2:2]lcd_data_tri_io_2;
+  wire [3:3]lcd_data_tri_io_3;
+  wire [4:4]lcd_data_tri_io_4;
+  wire [5:5]lcd_data_tri_io_5;
+  wire [6:6]lcd_data_tri_io_6;
+  wire [7:7]lcd_data_tri_io_7;
+  wire [8:8]lcd_data_tri_io_8;
+  wire [9:9]lcd_data_tri_io_9;
+  wire [0:0]lcd_data_tri_o_0;
+  wire [1:1]lcd_data_tri_o_1;
+  wire [10:10]lcd_data_tri_o_10;
+  wire [11:11]lcd_data_tri_o_11;
+  wire [12:12]lcd_data_tri_o_12;
+  wire [13:13]lcd_data_tri_o_13;
+  wire [14:14]lcd_data_tri_o_14;
+  wire [15:15]lcd_data_tri_o_15;
+  wire [2:2]lcd_data_tri_o_2;
+  wire [3:3]lcd_data_tri_o_3;
+  wire [4:4]lcd_data_tri_o_4;
+  wire [5:5]lcd_data_tri_o_5;
+  wire [6:6]lcd_data_tri_o_6;
+  wire [7:7]lcd_data_tri_o_7;
+  wire [8:8]lcd_data_tri_o_8;
+  wire [9:9]lcd_data_tri_o_9;
+  wire [0:0]lcd_data_tri_t_0;
+  wire [1:1]lcd_data_tri_t_1;
+  wire [10:10]lcd_data_tri_t_10;
+  wire [11:11]lcd_data_tri_t_11;
+  wire [12:12]lcd_data_tri_t_12;
+  wire [13:13]lcd_data_tri_t_13;
+  wire [14:14]lcd_data_tri_t_14;
+  wire [15:15]lcd_data_tri_t_15;
+  wire [2:2]lcd_data_tri_t_2;
+  wire [3:3]lcd_data_tri_t_3;
+  wire [4:4]lcd_data_tri_t_4;
+  wire [5:5]lcd_data_tri_t_5;
+  wire [6:6]lcd_data_tri_t_6;
+  wire [7:7]lcd_data_tri_t_7;
+  wire [8:8]lcd_data_tri_t_8;
+  wire [9:9]lcd_data_tri_t_9;
   wire [31:0]led_tri_o;
   wire mdio_mdio_i;
   wire mdio_mdio_io;
@@ -164,6 +286,7 @@ module bd_soc_wrapper
   wire spi_flash_ss_t;
   wire [31:0]sw_tri_i;
   wire sys_rst;
+  wire triple_byte_w;
 
   bd_soc bd_soc_i
        (.CFG_FLASH_io0_i(cfg_flash_io0_i),
@@ -175,6 +298,14 @@ module bd_soc_wrapper
         .CFG_FLASH_ss_i(cfg_flash_ss_i_0),
         .CFG_FLASH_ss_o(cfg_flash_ss_o_0),
         .CFG_FLASH_ss_t(cfg_flash_ss_t),
+        .LCD_csel(LCD_csel),
+        .LCD_data_tri_i({lcd_data_tri_i_15,lcd_data_tri_i_14,lcd_data_tri_i_13,lcd_data_tri_i_12,lcd_data_tri_i_11,lcd_data_tri_i_10,lcd_data_tri_i_9,lcd_data_tri_i_8,lcd_data_tri_i_7,lcd_data_tri_i_6,lcd_data_tri_i_5,lcd_data_tri_i_4,lcd_data_tri_i_3,lcd_data_tri_i_2,lcd_data_tri_i_1,lcd_data_tri_i_0}),
+        .LCD_data_tri_o({lcd_data_tri_o_15,lcd_data_tri_o_14,lcd_data_tri_o_13,lcd_data_tri_o_12,lcd_data_tri_o_11,lcd_data_tri_o_10,lcd_data_tri_o_9,lcd_data_tri_o_8,lcd_data_tri_o_7,lcd_data_tri_o_6,lcd_data_tri_o_5,lcd_data_tri_o_4,lcd_data_tri_o_3,lcd_data_tri_o_2,lcd_data_tri_o_1,lcd_data_tri_o_0}),
+        .LCD_data_tri_t({lcd_data_tri_t_15,lcd_data_tri_t_14,lcd_data_tri_t_13,lcd_data_tri_t_12,lcd_data_tri_t_11,lcd_data_tri_t_10,lcd_data_tri_t_9,lcd_data_tri_t_8,lcd_data_tri_t_7,lcd_data_tri_t_6,lcd_data_tri_t_5,lcd_data_tri_t_4,lcd_data_tri_t_3,lcd_data_tri_t_2,lcd_data_tri_t_1,lcd_data_tri_t_0}),
+        .LCD_nrst(LCD_nrst),
+        .LCD_rd(LCD_rd),
+        .LCD_rs(LCD_rs),
+        .LCD_wr(LCD_wr),
         .LED_tri_o(led_tri_o),
         .MDIO_mdc(MDIO_mdc),
         .MDIO_mdio_i(mdio_mdio_i),
@@ -203,8 +334,20 @@ module bd_soc_wrapper
         .SPI_FLASH_ss_o(spi_flash_ss_o_0),
         .SPI_FLASH_ss_t(spi_flash_ss_t),
         .SW_tri_i(sw_tri_i),
+        .UART_baudoutn(UART_baudoutn),
+        .UART_ctsn(UART_ctsn),
+        .UART_dcdn(UART_dcdn),
+        .UART_ddis(UART_ddis),
+        .UART_dsrn(UART_dsrn),
+        .UART_dtrn(UART_dtrn),
+        .UART_out1n(UART_out1n),
+        .UART_out2n(UART_out2n),
+        .UART_ri(UART_ri),
+        .UART_rtsn(UART_rtsn),
         .UART_rxd(UART_rxd),
+        .UART_rxrdyn(UART_rxrdyn),
         .UART_txd(UART_txd),
+        .UART_txrdyn(UART_txrdyn),
         .aux_reset_n(aux_reset_n),
         .cpu_clk(cpu_clk),
         .ddr3_addr(ddr3_addr),
@@ -224,7 +367,9 @@ module bd_soc_wrapper
         .ddr_ref_clk(ddr_ref_clk),
         .ddr_sys_clk(ddr_sys_clk),
         .ext_spi_clk(ext_spi_clk),
-        .sys_rst(sys_rst));
+        .iaddr(iaddr),
+        .sys_rst(sys_rst),
+        .triple_byte_w(triple_byte_w));
   IOBUF cfg_flash_io0_iobuf
        (.I(cfg_flash_io0_o),
         .IO(cfg_flash_io0_io),
@@ -240,6 +385,86 @@ module bd_soc_wrapper
         .IO(cfg_flash_ss_io[0]),
         .O(cfg_flash_ss_i_0),
         .T(cfg_flash_ss_t));
+  IOBUF lcd_data_tri_iobuf_0
+       (.I(lcd_data_tri_o_0),
+        .IO(lcd_data_tri_io[0]),
+        .O(lcd_data_tri_i_0),
+        .T(lcd_data_tri_t_0));
+  IOBUF lcd_data_tri_iobuf_1
+       (.I(lcd_data_tri_o_1),
+        .IO(lcd_data_tri_io[1]),
+        .O(lcd_data_tri_i_1),
+        .T(lcd_data_tri_t_1));
+  IOBUF lcd_data_tri_iobuf_10
+       (.I(lcd_data_tri_o_10),
+        .IO(lcd_data_tri_io[10]),
+        .O(lcd_data_tri_i_10),
+        .T(lcd_data_tri_t_10));
+  IOBUF lcd_data_tri_iobuf_11
+       (.I(lcd_data_tri_o_11),
+        .IO(lcd_data_tri_io[11]),
+        .O(lcd_data_tri_i_11),
+        .T(lcd_data_tri_t_11));
+  IOBUF lcd_data_tri_iobuf_12
+       (.I(lcd_data_tri_o_12),
+        .IO(lcd_data_tri_io[12]),
+        .O(lcd_data_tri_i_12),
+        .T(lcd_data_tri_t_12));
+  IOBUF lcd_data_tri_iobuf_13
+       (.I(lcd_data_tri_o_13),
+        .IO(lcd_data_tri_io[13]),
+        .O(lcd_data_tri_i_13),
+        .T(lcd_data_tri_t_13));
+  IOBUF lcd_data_tri_iobuf_14
+       (.I(lcd_data_tri_o_14),
+        .IO(lcd_data_tri_io[14]),
+        .O(lcd_data_tri_i_14),
+        .T(lcd_data_tri_t_14));
+  IOBUF lcd_data_tri_iobuf_15
+       (.I(lcd_data_tri_o_15),
+        .IO(lcd_data_tri_io[15]),
+        .O(lcd_data_tri_i_15),
+        .T(lcd_data_tri_t_15));
+  IOBUF lcd_data_tri_iobuf_2
+       (.I(lcd_data_tri_o_2),
+        .IO(lcd_data_tri_io[2]),
+        .O(lcd_data_tri_i_2),
+        .T(lcd_data_tri_t_2));
+  IOBUF lcd_data_tri_iobuf_3
+       (.I(lcd_data_tri_o_3),
+        .IO(lcd_data_tri_io[3]),
+        .O(lcd_data_tri_i_3),
+        .T(lcd_data_tri_t_3));
+  IOBUF lcd_data_tri_iobuf_4
+       (.I(lcd_data_tri_o_4),
+        .IO(lcd_data_tri_io[4]),
+        .O(lcd_data_tri_i_4),
+        .T(lcd_data_tri_t_4));
+  IOBUF lcd_data_tri_iobuf_5
+       (.I(lcd_data_tri_o_5),
+        .IO(lcd_data_tri_io[5]),
+        .O(lcd_data_tri_i_5),
+        .T(lcd_data_tri_t_5));
+  IOBUF lcd_data_tri_iobuf_6
+       (.I(lcd_data_tri_o_6),
+        .IO(lcd_data_tri_io[6]),
+        .O(lcd_data_tri_i_6),
+        .T(lcd_data_tri_t_6));
+  IOBUF lcd_data_tri_iobuf_7
+       (.I(lcd_data_tri_o_7),
+        .IO(lcd_data_tri_io[7]),
+        .O(lcd_data_tri_i_7),
+        .T(lcd_data_tri_t_7));
+  IOBUF lcd_data_tri_iobuf_8
+       (.I(lcd_data_tri_o_8),
+        .IO(lcd_data_tri_io[8]),
+        .O(lcd_data_tri_i_8),
+        .T(lcd_data_tri_t_8));
+  IOBUF lcd_data_tri_iobuf_9
+       (.I(lcd_data_tri_o_9),
+        .IO(lcd_data_tri_io[9]),
+        .O(lcd_data_tri_i_9),
+        .T(lcd_data_tri_t_9));
   IOBUF mdio_mdio_iobuf
        (.I(mdio_mdio_o),
         .IO(mdio_mdio_io),

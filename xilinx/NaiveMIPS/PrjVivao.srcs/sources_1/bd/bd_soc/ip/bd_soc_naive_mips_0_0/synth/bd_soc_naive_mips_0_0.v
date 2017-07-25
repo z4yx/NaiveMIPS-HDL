@@ -67,7 +67,6 @@ module bd_soc_naive_mips_0_0 (
   dbus_uncached_read,
   dbus_uncached_write,
   dbus_wrdata,
-  dbus_uncached_stall,
   dbus_uncached,
   dbus_dcache_inv_wb,
   dbus_icache_inv,
@@ -79,7 +78,9 @@ module bd_soc_naive_mips_0_0 (
   ibus_stall,
   dbus_rddata,
   dbus_rddata_uncached,
+  dbus_uncached_stall,
   dbus_stall,
+  dbus_iv_stall,
   hardware_int_in
 );
 
@@ -96,7 +97,6 @@ output wire dbus_write;
 output wire dbus_uncached_read;
 output wire dbus_uncached_write;
 output wire [31 : 0] dbus_wrdata;
-input wire dbus_uncached_stall;
 output wire dbus_uncached;
 output wire dbus_dcache_inv_wb;
 output wire dbus_icache_inv;
@@ -111,7 +111,9 @@ input wire [31 : 0] ibus_rddata;
 input wire ibus_stall;
 input wire [31 : 0] dbus_rddata;
 input wire [31 : 0] dbus_rddata_uncached;
+input wire dbus_uncached_stall;
 input wire dbus_stall;
+input wire dbus_iv_stall;
 input wire [4 : 0] hardware_int_in;
 
   naive_mips inst (
@@ -128,7 +130,6 @@ input wire [4 : 0] hardware_int_in;
     .dbus_uncached_read(dbus_uncached_read),
     .dbus_uncached_write(dbus_uncached_write),
     .dbus_wrdata(dbus_wrdata),
-    .dbus_uncached_stall(dbus_uncached_stall),
     .dbus_uncached(dbus_uncached),
     .dbus_dcache_inv_wb(dbus_dcache_inv_wb),
     .dbus_icache_inv(dbus_icache_inv),
@@ -140,7 +141,9 @@ input wire [4 : 0] hardware_int_in;
     .ibus_stall(ibus_stall),
     .dbus_rddata(dbus_rddata),
     .dbus_rddata_uncached(dbus_rddata_uncached),
+    .dbus_uncached_stall(dbus_uncached_stall),
     .dbus_stall(dbus_stall),
+    .dbus_iv_stall(dbus_iv_stall),
     .hardware_int_in(hardware_int_in)
   );
 endmodule

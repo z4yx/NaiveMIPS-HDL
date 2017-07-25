@@ -1,7 +1,7 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-// Date        : Mon Jul 24 16:16:51 2017
+// Date        : Tue Jul 25 20:31:13 2017
 // Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 // Command     : write_verilog -force -mode funcsim
 //               /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_soc/ip/bd_soc_ahb_adapter_0_1/bd_soc_ahb_adapter_0_1_sim_netlist.v
@@ -15,13 +15,8 @@
 (* CHECK_LICENSE_TYPE = "bd_soc_ahb_adapter_0_1,ahb_adapter,{}" *) (* DowngradeIPIdentifiedWarnings = "yes" *) (* X_CORE_INFO = "ahb_adapter,Vivado 2017.1" *) 
 (* NotValidForBitStream *)
 module bd_soc_ahb_adapter_0_1
-   (AHB_hrdata,
-    AHB_hready_out,
-    AHB_hresp,
-    rddata,
+   (rddata,
     stall,
-    clk,
-    rst_n,
     AHB_haddr,
     AHB_hburst,
     AHB_hprot,
@@ -31,18 +26,19 @@ module bd_soc_ahb_adapter_0_1
     AHB_hwdata,
     AHB_hwrite,
     AHB_sel,
-    address,
-    wrdata,
+    triple_byte_w,
+    clk,
+    rst_n,
     dataenable,
     rd,
-    wr);
-  input [31:0]AHB_hrdata;
-  input AHB_hready_out;
-  input AHB_hresp;
+    wr,
+    address,
+    wrdata,
+    AHB_hrdata,
+    AHB_hready_out,
+    AHB_hresp);
   output [31:0]rddata;
   output stall;
-  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *) input clk;
-  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst_n RST" *) input rst_n;
   output [31:0]AHB_haddr;
   output [2:0]AHB_hburst;
   output [3:0]AHB_hprot;
@@ -52,11 +48,17 @@ module bd_soc_ahb_adapter_0_1
   output [31:0]AHB_hwdata;
   output AHB_hwrite;
   output AHB_sel;
-  input [31:0]address;
-  input [31:0]wrdata;
+  output triple_byte_w;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *) input clk;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst_n RST" *) input rst_n;
   input [3:0]dataenable;
   input rd;
   input wr;
+  input [31:0]address;
+  input [31:0]wrdata;
+  input [31:0]AHB_hrdata;
+  input AHB_hready_out;
+  input AHB_hresp;
 
   wire \<const0> ;
   wire \<const1> ;
@@ -72,6 +74,7 @@ module bd_soc_ahb_adapter_0_1
   wire rd;
   wire rst_n;
   wire stall;
+  wire triple_byte_w;
   wire wr;
   wire [31:0]wrdata;
 
@@ -110,33 +113,36 @@ module bd_soc_ahb_adapter_0_1
         .rd(rd),
         .rst_n(rst_n),
         .stall(stall),
+        .triple_byte_w(triple_byte_w),
         .wr(wr),
         .wrdata(wrdata));
 endmodule
 
 (* ORIG_REF_NAME = "ahb_adapter" *) 
 module bd_soc_ahb_adapter_0_1_ahb_adapter
-   (stall,
+   (triple_byte_w,
+    stall,
     AHB_htrans,
-    AHB_hsize,
     AHB_hwdata,
+    AHB_hsize,
+    clk,
     rd,
     wr,
     AHB_hready_out,
     rst_n,
     dataenable,
-    clk,
     wrdata);
+  output triple_byte_w;
   output stall;
   output [0:0]AHB_htrans;
-  output [1:0]AHB_hsize;
   output [31:0]AHB_hwdata;
+  output [1:0]AHB_hsize;
+  input clk;
   input rd;
   input wr;
   input AHB_hready_out;
   input rst_n;
   input [3:0]dataenable;
-  input clk;
   input [31:0]wrdata;
 
   wire AHB_hready_out;
@@ -148,10 +154,12 @@ module bd_soc_ahb_adapter_0_1_ahb_adapter
   wire [3:0]dataenable;
   wire first_cycle;
   wire first_cycle_i_1_n_0;
-  wire first_cycle_i_2_n_0;
   wire rd;
   wire rst_n;
   wire stall;
+  wire triple_byte_w;
+  wire triple_byte_w_i_1_n_0;
+  wire triple_byte_w_i_2_n_0;
   wire wr;
   wire [31:0]wrdata;
 
@@ -389,16 +397,11 @@ module bd_soc_ahb_adapter_0_1_ahb_adapter
         .I2(wr),
         .I3(rd),
         .O(first_cycle_i_1_n_0));
-  LUT1 #(
-    .INIT(2'h1)) 
-    first_cycle_i_2
-       (.I0(rst_n),
-        .O(first_cycle_i_2_n_0));
   FDPE first_cycle_reg
        (.C(clk),
         .CE(1'b1),
         .D(first_cycle_i_1_n_0),
-        .PRE(first_cycle_i_2_n_0),
+        .PRE(triple_byte_w_i_2_n_0),
         .Q(first_cycle));
   (* SOFT_HLUTNM = "soft_lutpair0" *) 
   LUT4 #(
@@ -409,6 +412,27 @@ module bd_soc_ahb_adapter_0_1_ahb_adapter
         .I2(AHB_hready_out),
         .I3(first_cycle),
         .O(stall));
+  LUT6 #(
+    .INIT(64'hFFFFFFFF28000000)) 
+    triple_byte_w_i_1
+       (.I0(dataenable[1]),
+        .I1(dataenable[3]),
+        .I2(dataenable[0]),
+        .I3(dataenable[2]),
+        .I4(wr),
+        .I5(triple_byte_w),
+        .O(triple_byte_w_i_1_n_0));
+  LUT1 #(
+    .INIT(2'h1)) 
+    triple_byte_w_i_2
+       (.I0(rst_n),
+        .O(triple_byte_w_i_2_n_0));
+  FDCE triple_byte_w_reg
+       (.C(clk),
+        .CE(1'b1),
+        .CLR(triple_byte_w_i_2_n_0),
+        .D(triple_byte_w_i_1_n_0),
+        .Q(triple_byte_w));
 endmodule
 `ifndef GLBL
 `define GLBL

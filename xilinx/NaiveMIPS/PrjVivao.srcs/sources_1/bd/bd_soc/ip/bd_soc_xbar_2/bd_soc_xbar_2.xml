@@ -19451,7 +19451,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:62bbb364</spirit:value>
+            <spirit:value>7:3e2e1f13</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -19465,11 +19465,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 24 16:27:37 UTC 2017</spirit:value>
+            <spirit:value>Tue Jul 25 14:59:45 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:62bbb364</spirit:value>
+            <spirit:value>7:3e2e1f13</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -19484,11 +19484,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 24 16:27:37 UTC 2017</spirit:value>
+            <spirit:value>Tue Jul 25 14:59:45 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:62bbb364</spirit:value>
+            <spirit:value>7:3e2e1f13</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -19522,7 +19522,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:c5941fde</spirit:value>
+            <spirit:value>7:2d97f32b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -19537,11 +19537,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 24 16:27:37 UTC 2017</spirit:value>
+            <spirit:value>Tue Jul 25 14:59:45 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:c5941fde</spirit:value>
+            <spirit:value>7:2d97f32b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -19555,11 +19555,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 24 16:28:38 UTC 2017</spirit:value>
+            <spirit:value>Tue Jul 25 15:06:48 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:62bbb364</spirit:value>
+            <spirit:value>7:3e2e1f13</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -21668,15 +21668,15 @@
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_NUM_ADDR_RANGES</spirit:name>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_NUM_ADDR_RANGES">5</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_NUM_ADDR_RANGES">6</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="std_logic_vector">
         <spirit:name>C_M_AXI_BASE_ADDR</spirit:name>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_BASE_ADDR" spirit:bitStringLength="960">0x000000001fd01000000000001fd00000000000001e000000000000001c030000000000001a000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000001fc00000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_BASE_ADDR" spirit:bitStringLength="1152">0x000000001fd02000000000001fd01000000000001e000000000000001c030000000000001b000000000000001a000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000001fc00000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="std_logic_vector">
         <spirit:name>C_M_AXI_ADDR_WIDTH</spirit:name>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_ADDR_WIDTH" spirit:bitStringLength="480">0x0000000c0000000c000000170000001000000018000000000000000000000000000000000000000c000000000000000000000000000000000000001b</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_ADDR_WIDTH" spirit:bitStringLength="576">0x0000000d0000000c0000001700000010000000180000001800000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000001b</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_S_AXI_BASE_ID</spirit:name>
@@ -22107,7 +22107,7 @@
     <spirit:parameter>
       <spirit:name>ADDR_RANGES</spirit:name>
       <spirit:displayName>Number of Address Ranges</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.ADDR_RANGES" spirit:order="2" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">5</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.ADDR_RANGES" spirit:order="2" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">6</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -30747,7 +30747,7 @@
     <spirit:parameter>
       <spirit:name>M02_A01_BASE_ADDR</spirit:name>
       <spirit:displayName>My M02_A01_BASE_ADDR</spirit:displayName>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A01_BASE_ADDR" spirit:order="726" spirit:bitStringLength="64">0x000000001C030000</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A01_BASE_ADDR" spirit:order="726" spirit:bitStringLength="64">0x000000001B000000</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -30759,7 +30759,7 @@
     <spirit:parameter>
       <spirit:name>M02_A02_BASE_ADDR</spirit:name>
       <spirit:displayName>My M02_A02_BASE_ADDR</spirit:displayName>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A02_BASE_ADDR" spirit:order="727" spirit:bitStringLength="64">0x000000001E000000</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A02_BASE_ADDR" spirit:order="727" spirit:bitStringLength="64">0x000000001C030000</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -30771,7 +30771,7 @@
     <spirit:parameter>
       <spirit:name>M02_A03_BASE_ADDR</spirit:name>
       <spirit:displayName>My M02_A03_BASE_ADDR</spirit:displayName>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A03_BASE_ADDR" spirit:order="728" spirit:bitStringLength="64">0x000000001FD00000</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A03_BASE_ADDR" spirit:order="728" spirit:bitStringLength="64">0x000000001E000000</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -30795,7 +30795,7 @@
     <spirit:parameter>
       <spirit:name>M02_A05_BASE_ADDR</spirit:name>
       <spirit:displayName>My M02_A05_BASE_ADDR</spirit:displayName>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A05_BASE_ADDR" spirit:order="730" spirit:bitStringLength="64">0xffffffffffffffff</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A05_BASE_ADDR" spirit:order="730" spirit:bitStringLength="64">0x000000001FD02000</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -33819,7 +33819,7 @@
     <spirit:parameter>
       <spirit:name>M02_A01_ADDR_WIDTH</spirit:name>
       <spirit:displayName>My M02_A01_ADDR_WIDTH</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A01_ADDR_WIDTH" spirit:order="982" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">16</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A01_ADDR_WIDTH" spirit:order="982" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">24</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -33831,7 +33831,7 @@
     <spirit:parameter>
       <spirit:name>M02_A02_ADDR_WIDTH</spirit:name>
       <spirit:displayName>My M02_A02_ADDR_WIDTH</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A02_ADDR_WIDTH" spirit:order="983" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">23</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A02_ADDR_WIDTH" spirit:order="983" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">16</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -33843,7 +33843,7 @@
     <spirit:parameter>
       <spirit:name>M02_A03_ADDR_WIDTH</spirit:name>
       <spirit:displayName>My M02_A03_ADDR_WIDTH</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A03_ADDR_WIDTH" spirit:order="984" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">12</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A03_ADDR_WIDTH" spirit:order="984" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">23</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -33867,7 +33867,7 @@
     <spirit:parameter>
       <spirit:name>M02_A05_ADDR_WIDTH</spirit:name>
       <spirit:displayName>My M02_A05_ADDR_WIDTH</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A05_ADDR_WIDTH" spirit:order="986" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">0</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M02_A05_ADDR_WIDTH" spirit:order="986" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">13</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>

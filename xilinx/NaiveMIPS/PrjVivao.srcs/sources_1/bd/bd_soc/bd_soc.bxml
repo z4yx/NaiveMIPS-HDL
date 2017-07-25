@@ -2,9 +2,9 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="bd_soc" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1500918984"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1500918984"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1500918984"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1501005455"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1501005455"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1501005455"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip/bd_soc_ahblite_axi_bridge_0_1/bd_soc_ahblite_axi_bridge_0_1.xci" Type="IP">
         <Instance HierarchyPath="ahblite_axi_bridge_0"/>
@@ -205,14 +205,6 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="ip/bd_soc_axi_uartlite_0_0/bd_soc_axi_uartlite_0_0.xci" Type="IP">
-        <Instance HierarchyPath="axi_uartlite_0"/>
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
-        <Library Name="xil_defaultlib"/>
-        <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
-        <UsedIn Val="SIMULATION"/>
-      </File>
       <File Name="ip/bd_soc_xlslice_0_0/bd_soc_xlslice_0_0.xci" Type="IP">
         <Instance HierarchyPath="xlslice_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
@@ -223,6 +215,30 @@
       </File>
       <File Name="ip/bd_soc_ICache_0_0/bd_soc_ICache_0_0.xci" Type="IP">
         <Instance HierarchyPath="ICache_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_axi_uart16550_0_0/bd_soc_axi_uart16550_0_0.xci" Type="IP">
+        <Instance HierarchyPath="axi_uart16550_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_axi_apb_bridge_0_0/bd_soc_axi_apb_bridge_0_0.xci" Type="IP">
+        <Instance HierarchyPath="axi_apb_bridge_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_nt35510_apb_adapter_0_0/bd_soc_nt35510_apb_adapter_0_0.xci" Type="IP">
+        <Instance HierarchyPath="nt35510_apb_adapter_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -287,6 +303,14 @@
       </File>
       <File Name="ip/bd_soc_auto_cc_0/bd_soc_auto_cc_0.xci" Type="IP">
         <Instance HierarchyPath="sys_bus/s00_couplers/auto_cc"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_auto_pc_4/bd_soc_auto_pc_4.xci" Type="IP">
+        <Instance HierarchyPath="perph_bus/m05_couplers/auto_pc"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>

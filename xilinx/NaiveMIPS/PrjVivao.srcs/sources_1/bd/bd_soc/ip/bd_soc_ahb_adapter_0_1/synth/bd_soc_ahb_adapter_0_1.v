@@ -54,13 +54,8 @@
 (* CHECK_LICENSE_TYPE = "bd_soc_ahb_adapter_0_1,ahb_adapter,{}" *)
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module bd_soc_ahb_adapter_0_1 (
-  AHB_hrdata,
-  AHB_hready_out,
-  AHB_hresp,
   rddata,
   stall,
-  clk,
-  rst_n,
   AHB_haddr,
   AHB_hburst,
   AHB_hprot,
@@ -70,22 +65,21 @@ module bd_soc_ahb_adapter_0_1 (
   AHB_hwdata,
   AHB_hwrite,
   AHB_sel,
-  address,
-  wrdata,
+  triple_byte_w,
+  clk,
+  rst_n,
   dataenable,
   rd,
-  wr
+  wr,
+  address,
+  wrdata,
+  AHB_hrdata,
+  AHB_hready_out,
+  AHB_hresp
 );
 
-input wire [31 : 0] AHB_hrdata;
-input wire AHB_hready_out;
-input wire AHB_hresp;
 output wire [31 : 0] rddata;
 output wire stall;
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
-input wire clk;
-(* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst_n RST" *)
-input wire rst_n;
 output wire [31 : 0] AHB_haddr;
 output wire [2 : 0] AHB_hburst;
 output wire [3 : 0] AHB_hprot;
@@ -95,20 +89,23 @@ output wire [1 : 0] AHB_htrans;
 output wire [31 : 0] AHB_hwdata;
 output wire AHB_hwrite;
 output wire AHB_sel;
-input wire [31 : 0] address;
-input wire [31 : 0] wrdata;
+output wire triple_byte_w;
+(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 clk CLK" *)
+input wire clk;
+(* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rst_n RST" *)
+input wire rst_n;
 input wire [3 : 0] dataenable;
 input wire rd;
 input wire wr;
+input wire [31 : 0] address;
+input wire [31 : 0] wrdata;
+input wire [31 : 0] AHB_hrdata;
+input wire AHB_hready_out;
+input wire AHB_hresp;
 
   ahb_adapter inst (
-    .AHB_hrdata(AHB_hrdata),
-    .AHB_hready_out(AHB_hready_out),
-    .AHB_hresp(AHB_hresp),
     .rddata(rddata),
     .stall(stall),
-    .clk(clk),
-    .rst_n(rst_n),
     .AHB_haddr(AHB_haddr),
     .AHB_hburst(AHB_hburst),
     .AHB_hprot(AHB_hprot),
@@ -118,10 +115,16 @@ input wire wr;
     .AHB_hwdata(AHB_hwdata),
     .AHB_hwrite(AHB_hwrite),
     .AHB_sel(AHB_sel),
-    .address(address),
-    .wrdata(wrdata),
+    .triple_byte_w(triple_byte_w),
+    .clk(clk),
+    .rst_n(rst_n),
     .dataenable(dataenable),
     .rd(rd),
-    .wr(wr)
+    .wr(wr),
+    .address(address),
+    .wrdata(wrdata),
+    .AHB_hrdata(AHB_hrdata),
+    .AHB_hready_out(AHB_hready_out),
+    .AHB_hresp(AHB_hresp)
   );
 endmodule

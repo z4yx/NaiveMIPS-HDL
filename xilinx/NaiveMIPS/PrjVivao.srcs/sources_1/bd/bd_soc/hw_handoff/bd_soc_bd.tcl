@@ -40,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# DCache, ahb_adapter, ahb_adapter, clk_ctrl, naive_mips
+# DCache, ICache, ahb_adapter, clk_ctrl, naive_mips
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -310,6 +310,7 @@ proc create_root_design { parentCell } {
 
   # Create interface ports
   set CFG_FLASH [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:spi_rtl:1.0 CFG_FLASH ]
+  set LCD_data [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 LCD_data ]
   set LED [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 LED ]
   set MDIO [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:mdio_rtl:1.0 MDIO ]
   set MII [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:mii_rtl:1.0 MII ]
@@ -319,10 +320,15 @@ proc create_root_design { parentCell } {
   set ddr3 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 ddr3 ]
 
   # Create ports
+  set LCD_csel [ create_bd_port -dir O LCD_csel ]
+  set LCD_nrst [ create_bd_port -dir O LCD_nrst ]
+  set LCD_rd [ create_bd_port -dir O LCD_rd ]
+  set LCD_rs [ create_bd_port -dir O LCD_rs ]
+  set LCD_wr [ create_bd_port -dir O LCD_wr ]
   set aux_reset_n [ create_bd_port -dir I -type rst aux_reset_n ]
   set cpu_clk [ create_bd_port -dir I -type clk cpu_clk ]
   set_property -dict [ list \
-CONFIG.FREQ_HZ {10000000} \
+CONFIG.FREQ_HZ {30000000} \
  ] $cpu_clk
   set ddr_ref_clk [ create_bd_port -dir I -type clk ddr_ref_clk ]
   set_property -dict [ list \
@@ -334,10 +340,12 @@ CONFIG.FREQ_HZ {200000000} \
 CONFIG.CLK_DOMAIN {bd_soc_clk_ref_i} \
 CONFIG.FREQ_HZ {60000000} \
  ] $ext_spi_clk
+  set iaddr [ create_bd_port -dir O -from 31 -to 0 iaddr ]
   set sys_rst [ create_bd_port -dir I -type rst sys_rst ]
   set_property -dict [ list \
 CONFIG.POLARITY {ACTIVE_HIGH} \
  ] $sys_rst
+  set triple_byte_w [ create_bd_port -dir O triple_byte_w ]
 
   # Create instance: DCache_0, and set properties
   set block_name DCache
@@ -350,20 +358,23 @@ CONFIG.POLARITY {ACTIVE_HIGH} \
      return 1
    }
     set_property -dict [ list \
-CONFIG.TAG_WIDTH {22} \
+CONFIG.TAG_WIDTH {20} \
  ] $DCache_0
 
-  # Create instance: ahb_adapter_I, and set properties
-  set block_name ahb_adapter
-  set block_cell_name ahb_adapter_I
-  if { [catch {set ahb_adapter_I [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+  # Create instance: ICache_0, and set properties
+  set block_name ICache
+  set block_cell_name ICache_0
+  if { [catch {set ICache_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
      catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
-   } elseif { $ahb_adapter_I eq "" } {
+   } elseif { $ICache_0 eq "" } {
      catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [ list \
+CONFIG.TAG_WIDTH {20} \
+ ] $ICache_0
+
   # Create instance: ahb_adapter_uncached, and set properties
   set block_name ahb_adapter
   set block_cell_name ahb_adapter_uncached
@@ -390,6 +401,12 @@ CONFIG.C_M_AXI_SUPPORTS_NARROW_BURST {1} \
 
   # Create instance: ahblite_axi_bridge_2, and set properties
   set ahblite_axi_bridge_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:ahblite_axi_bridge:3.0 ahblite_axi_bridge_2 ]
+
+  # Create instance: axi_apb_bridge_0, and set properties
+  set axi_apb_bridge_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_apb_bridge:3.0 axi_apb_bridge_0 ]
+  set_property -dict [ list \
+CONFIG.C_APB_NUM_SLAVES {1} \
+ ] $axi_apb_bridge_0
 
   # Create instance: axi_bram_ctrl_0, and set properties
   set axi_bram_ctrl_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_bram_ctrl:4.0 axi_bram_ctrl_0 ]
@@ -425,11 +442,8 @@ CONFIG.C_USE_STARTUP {0} \
 CONFIG.C_USE_STARTUP_INT {0} \
  ] $axi_spi_flash
 
-  # Create instance: axi_uartlite_0, and set properties
-  set axi_uartlite_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_0 ]
-  set_property -dict [ list \
-CONFIG.C_BAUDRATE {115200} \
- ] $axi_uartlite_0
+  # Create instance: axi_uart16550_0, and set properties
+  set axi_uart16550_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_0 ]
 
   # Create instance: blk_mem_gen_0, and set properties
   set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.3 blk_mem_gen_0 ]
@@ -490,10 +504,13 @@ CONFIG.XML_INPUT_FILE {mig_a.prj} \
      return 1
    }
   
+  # Create instance: nt35510_apb_adapter_0, and set properties
+  set nt35510_apb_adapter_0 [ create_bd_cell -type ip -vlnv user.org:user:nt35510_apb_adapter:1.0 nt35510_apb_adapter_0 ]
+
   # Create instance: perph_bus, and set properties
   set perph_bus [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 perph_bus ]
   set_property -dict [ list \
-CONFIG.NUM_MI {5} \
+CONFIG.NUM_MI {6} \
 CONFIG.NUM_SI {1} \
  ] $perph_bus
 
@@ -549,6 +566,7 @@ CONFIG.DOUT_WIDTH {10} \
   connect_bd_intf_net -intf_net ahblite_axi_bridge_0_M_AXI [get_bd_intf_pins ahblite_axi_bridge_0/M_AXI] [get_bd_intf_pins sys_bus/S00_AXI]
   connect_bd_intf_net -intf_net ahblite_axi_bridge_1_M_AXI [get_bd_intf_pins ahblite_axi_bridge_1/M_AXI] [get_bd_intf_pins sys_bus/S01_AXI]
   connect_bd_intf_net -intf_net ahblite_axi_bridge_2_M_AXI [get_bd_intf_pins ahblite_axi_bridge_2/M_AXI] [get_bd_intf_pins sys_bus/S02_AXI]
+  connect_bd_intf_net -intf_net axi_apb_bridge_0_APB_M [get_bd_intf_pins axi_apb_bridge_0/APB_M] [get_bd_intf_pins nt35510_apb_adapter_0/APB]
   connect_bd_intf_net -intf_net axi_cfg_spi_0_SPI_0 [get_bd_intf_ports CFG_FLASH] [get_bd_intf_pins axi_cfg_spi_0/SPI_0]
   connect_bd_intf_net -intf_net axi_ethernetlite_0_MDIO [get_bd_intf_ports MDIO] [get_bd_intf_pins axi_ethernetlite_0/MDIO]
   connect_bd_intf_net -intf_net axi_ethernetlite_0_MII [get_bd_intf_ports MII] [get_bd_intf_pins axi_ethernetlite_0/MII]
@@ -560,11 +578,13 @@ CONFIG.DOUT_WIDTH {10} \
   connect_bd_intf_net -intf_net axi_interconnect_1_M00_AXI [get_bd_intf_pins mig_7series_0/S_AXI] [get_bd_intf_pins sys_bus/M00_AXI]
   connect_bd_intf_net -intf_net axi_interconnect_1_M02_AXI [get_bd_intf_pins perph_bus/S00_AXI] [get_bd_intf_pins sys_bus/M02_AXI]
   connect_bd_intf_net -intf_net axi_spi_flash_SPI_0 [get_bd_intf_ports SPI_FLASH] [get_bd_intf_pins axi_spi_flash/SPI_0]
-  connect_bd_intf_net -intf_net axi_uartlite_0_UART [get_bd_intf_ports UART] [get_bd_intf_pins axi_uartlite_0/UART]
+  connect_bd_intf_net -intf_net axi_uart16550_0_UART [get_bd_intf_ports UART] [get_bd_intf_pins axi_uart16550_0/UART]
   connect_bd_intf_net -intf_net jtag_axi_0_M_AXI [get_bd_intf_pins jtag_axi_0/M_AXI] [get_bd_intf_pins sys_bus/S03_AXI]
   connect_bd_intf_net -intf_net mig_7series_0_DDR3 [get_bd_intf_ports ddr3] [get_bd_intf_pins mig_7series_0/DDR3]
+  connect_bd_intf_net -intf_net nt35510_apb_adapter_0_LCD_data [get_bd_intf_ports LCD_data] [get_bd_intf_pins nt35510_apb_adapter_0/LCD_data]
   connect_bd_intf_net -intf_net perph_bus_M00_AXI [get_bd_intf_pins axi_cfg_spi_0/AXI_FULL] [get_bd_intf_pins perph_bus/M00_AXI]
-  connect_bd_intf_net -intf_net perph_bus_M02_AXI [get_bd_intf_pins axi_uartlite_0/S_AXI] [get_bd_intf_pins perph_bus/M02_AXI]
+  connect_bd_intf_net -intf_net perph_bus_M02_AXI [get_bd_intf_pins axi_uart16550_0/S_AXI] [get_bd_intf_pins perph_bus/M02_AXI]
+  connect_bd_intf_net -intf_net perph_bus_M05_AXI [get_bd_intf_pins axi_apb_bridge_0/AXI4_LITE] [get_bd_intf_pins perph_bus/M05_AXI]
   connect_bd_intf_net -intf_net sys_bus_M01_AXI [get_bd_intf_pins axi_bram_ctrl_0/S_AXI] [get_bd_intf_pins sys_bus/M01_AXI]
 
   # Create port connections
@@ -580,19 +600,20 @@ CONFIG.DOUT_WIDTH {10} \
   connect_bd_net -net DCache_0_AHB_sel [get_bd_pins DCache_0/AHB_sel] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hsel]
   connect_bd_net -net DCache_0_dbus_rddata [get_bd_pins DCache_0/dbus_rddata] [get_bd_pins naive_mips_0/dbus_rddata]
   connect_bd_net -net DCache_0_dbus_stall [get_bd_pins DCache_0/dbus_stall] [get_bd_pins naive_mips_0/dbus_stall]
-  connect_bd_net -net S00_ACLK_1 [get_bd_ports cpu_clk] [get_bd_pins DCache_0/clk] [get_bd_pins ahb_adapter_I/clk] [get_bd_pins ahb_adapter_uncached/clk] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hclk] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hclk] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hclk] [get_bd_pins clk_ctrl_0/clk] [get_bd_pins jtag_axi_0/aclk] [get_bd_pins naive_mips_0/clk] [get_bd_pins naive_mips_0/debugger_uart_clk] [get_bd_pins sys_bus/S00_ACLK] [get_bd_pins sys_bus/S01_ACLK] [get_bd_pins sys_bus/S02_ACLK] [get_bd_pins sys_bus/S03_ACLK]
-  connect_bd_net -net S00_ARESETN_1 [get_bd_pins DCache_0/nrst] [get_bd_pins ahb_adapter_I/rst_n] [get_bd_pins ahb_adapter_uncached/rst_n] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hresetn] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hresetn] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hresetn] [get_bd_pins clk_ctrl_0/rst_out_n] [get_bd_pins jtag_axi_0/aresetn] [get_bd_pins naive_mips_0/rst_n] [get_bd_pins sys_bus/S00_ARESETN] [get_bd_pins sys_bus/S01_ARESETN] [get_bd_pins sys_bus/S02_ARESETN] [get_bd_pins sys_bus/S03_ARESETN]
-  connect_bd_net -net ahb_adapter_I_AHB_haddr [get_bd_pins ahb_adapter_I/AHB_haddr] [get_bd_pins ahblite_axi_bridge_1/s_ahb_haddr]
-  connect_bd_net -net ahb_adapter_I_AHB_hburst [get_bd_pins ahb_adapter_I/AHB_hburst] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hburst]
-  connect_bd_net -net ahb_adapter_I_AHB_hprot [get_bd_pins ahb_adapter_I/AHB_hprot] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hprot]
-  connect_bd_net -net ahb_adapter_I_AHB_hready_in [get_bd_pins ahb_adapter_I/AHB_hready_in] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hready_in]
-  connect_bd_net -net ahb_adapter_I_AHB_hsize [get_bd_pins ahb_adapter_I/AHB_hsize] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hsize]
-  connect_bd_net -net ahb_adapter_I_AHB_htrans [get_bd_pins ahb_adapter_I/AHB_htrans] [get_bd_pins ahblite_axi_bridge_1/s_ahb_htrans]
-  connect_bd_net -net ahb_adapter_I_AHB_hwdata [get_bd_pins ahb_adapter_I/AHB_hwdata] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hwdata]
-  connect_bd_net -net ahb_adapter_I_AHB_hwrite [get_bd_pins ahb_adapter_I/AHB_hwrite] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hwrite]
-  connect_bd_net -net ahb_adapter_I_AHB_sel [get_bd_pins ahb_adapter_I/AHB_sel] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hsel]
-  connect_bd_net -net ahb_adapter_I_rddata [get_bd_pins ahb_adapter_I/rddata] [get_bd_pins naive_mips_0/ibus_rddata]
-  connect_bd_net -net ahb_adapter_I_stall [get_bd_pins ahb_adapter_I/stall] [get_bd_pins naive_mips_0/ibus_stall]
+  connect_bd_net -net ICache_0_AHB_haddr [get_bd_pins ICache_0/AHB_haddr] [get_bd_pins ahblite_axi_bridge_1/s_ahb_haddr]
+  connect_bd_net -net ICache_0_AHB_hburst [get_bd_pins ICache_0/AHB_hburst] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hburst]
+  connect_bd_net -net ICache_0_AHB_hprot [get_bd_pins ICache_0/AHB_hprot] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hprot]
+  connect_bd_net -net ICache_0_AHB_hready_in [get_bd_pins ICache_0/AHB_hready_in] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hready_in]
+  connect_bd_net -net ICache_0_AHB_hsize [get_bd_pins ICache_0/AHB_hsize] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hsize]
+  connect_bd_net -net ICache_0_AHB_htrans [get_bd_pins ICache_0/AHB_htrans] [get_bd_pins ahblite_axi_bridge_1/s_ahb_htrans]
+  connect_bd_net -net ICache_0_AHB_hwdata [get_bd_pins ICache_0/AHB_hwdata] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hwdata]
+  connect_bd_net -net ICache_0_AHB_hwrite [get_bd_pins ICache_0/AHB_hwrite] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hwrite]
+  connect_bd_net -net ICache_0_AHB_sel [get_bd_pins ICache_0/AHB_sel] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hsel]
+  connect_bd_net -net ICache_0_dbus_ivstall [get_bd_pins ICache_0/dbus_ivstall] [get_bd_pins naive_mips_0/dbus_iv_stall]
+  connect_bd_net -net ICache_0_dbus_rddata [get_bd_pins ICache_0/dbus_rddata] [get_bd_pins naive_mips_0/ibus_rddata]
+  connect_bd_net -net ICache_0_dbus_rdstall [get_bd_pins ICache_0/dbus_rdstall] [get_bd_pins naive_mips_0/ibus_stall]
+  connect_bd_net -net S00_ACLK_1 [get_bd_ports cpu_clk] [get_bd_pins DCache_0/clk] [get_bd_pins ICache_0/clk] [get_bd_pins ahb_adapter_uncached/clk] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hclk] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hclk] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hclk] [get_bd_pins clk_ctrl_0/clk] [get_bd_pins jtag_axi_0/aclk] [get_bd_pins naive_mips_0/clk] [get_bd_pins naive_mips_0/debugger_uart_clk] [get_bd_pins sys_bus/S00_ACLK] [get_bd_pins sys_bus/S01_ACLK] [get_bd_pins sys_bus/S02_ACLK] [get_bd_pins sys_bus/S03_ACLK]
+  connect_bd_net -net S00_ARESETN_1 [get_bd_pins DCache_0/nrst] [get_bd_pins ICache_0/nrst] [get_bd_pins ahb_adapter_uncached/rst_n] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hresetn] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hresetn] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hresetn] [get_bd_pins clk_ctrl_0/rst_out_n] [get_bd_pins jtag_axi_0/aresetn] [get_bd_pins naive_mips_0/rst_n] [get_bd_pins sys_bus/S00_ARESETN] [get_bd_pins sys_bus/S01_ARESETN] [get_bd_pins sys_bus/S02_ARESETN] [get_bd_pins sys_bus/S03_ARESETN]
   connect_bd_net -net ahb_adapter_uncached_AHB_haddr [get_bd_pins ahb_adapter_uncached/AHB_haddr] [get_bd_pins ahblite_axi_bridge_2/s_ahb_haddr]
   connect_bd_net -net ahb_adapter_uncached_AHB_hburst [get_bd_pins ahb_adapter_uncached/AHB_hburst] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hburst]
   connect_bd_net -net ahb_adapter_uncached_AHB_hprot [get_bd_pins ahb_adapter_uncached/AHB_hprot] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hprot]
@@ -604,12 +625,13 @@ CONFIG.DOUT_WIDTH {10} \
   connect_bd_net -net ahb_adapter_uncached_AHB_sel [get_bd_pins ahb_adapter_uncached/AHB_sel] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hsel]
   connect_bd_net -net ahb_adapter_uncached_rddata [get_bd_pins ahb_adapter_uncached/rddata] [get_bd_pins naive_mips_0/dbus_rddata_uncached]
   connect_bd_net -net ahb_adapter_uncached_stall [get_bd_pins ahb_adapter_uncached/stall] [get_bd_pins naive_mips_0/dbus_uncached_stall]
+  connect_bd_net -net ahb_adapter_uncached_triple_byte_w [get_bd_ports triple_byte_w] [get_bd_pins ahb_adapter_uncached/triple_byte_w]
   connect_bd_net -net ahblite_axi_bridge_0_s_ahb_hrdata [get_bd_pins DCache_0/AHB_hrdata] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hrdata]
   connect_bd_net -net ahblite_axi_bridge_0_s_ahb_hready_out [get_bd_pins DCache_0/AHB_hready_out] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hready_out]
   connect_bd_net -net ahblite_axi_bridge_0_s_ahb_hresp [get_bd_pins DCache_0/AHB_hresp] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hresp]
-  connect_bd_net -net ahblite_axi_bridge_1_s_ahb_hrdata [get_bd_pins ahb_adapter_I/AHB_hrdata] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hrdata]
-  connect_bd_net -net ahblite_axi_bridge_1_s_ahb_hready_out [get_bd_pins ahb_adapter_I/AHB_hready_out] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hready_out]
-  connect_bd_net -net ahblite_axi_bridge_1_s_ahb_hresp [get_bd_pins ahb_adapter_I/AHB_hresp] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hresp]
+  connect_bd_net -net ahblite_axi_bridge_1_s_ahb_hrdata [get_bd_pins ICache_0/AHB_hrdata] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hrdata]
+  connect_bd_net -net ahblite_axi_bridge_1_s_ahb_hready_out [get_bd_pins ICache_0/AHB_hready_out] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hready_out]
+  connect_bd_net -net ahblite_axi_bridge_1_s_ahb_hresp [get_bd_pins ICache_0/AHB_hresp] [get_bd_pins ahblite_axi_bridge_1/s_ahb_hresp]
   connect_bd_net -net ahblite_axi_bridge_2_s_ahb_hrdata [get_bd_pins ahb_adapter_uncached/AHB_hrdata] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hrdata]
   connect_bd_net -net ahblite_axi_bridge_2_s_ahb_hready_out [get_bd_pins ahb_adapter_uncached/AHB_hready_out] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hready_out]
   connect_bd_net -net ahblite_axi_bridge_2_s_ahb_hresp [get_bd_pins ahb_adapter_uncached/AHB_hresp] [get_bd_pins ahblite_axi_bridge_2/s_ahb_hresp]
@@ -622,33 +644,36 @@ CONFIG.DOUT_WIDTH {10} \
   connect_bd_net -net axi_bram_ctrl_0_bram_wrdata_a [get_bd_pins axi_bram_ctrl_0/bram_wrdata_a] [get_bd_pins blk_mem_gen_0/dina]
   connect_bd_net -net axi_ethernetlite_0_ip2intc_irpt [get_bd_pins axi_ethernetlite_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
   connect_bd_net -net axi_spi_flash_ip2intc_irpt [get_bd_pins axi_spi_flash/ip2intc_irpt] [get_bd_pins xlconcat_0/In1]
-  connect_bd_net -net axi_uartlite_0_interrupt [get_bd_pins axi_uartlite_0/interrupt] [get_bd_pins xlconcat_0/In2]
+  connect_bd_net -net axi_uart16550_0_ip2intc_irpt [get_bd_pins axi_uart16550_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In2]
   connect_bd_net -net blk_mem_gen_0_douta [get_bd_pins axi_bram_ctrl_0/bram_rddata_a] [get_bd_pins blk_mem_gen_0/douta]
   connect_bd_net -net clk_ref_i_1 [get_bd_ports ddr_ref_clk] [get_bd_pins mig_7series_0/clk_ref_i]
   connect_bd_net -net ext_spi_clk_1 [get_bd_ports ext_spi_clk] [get_bd_pins axi_cfg_spi_0/ext_spi_clk] [get_bd_pins axi_spi_flash/ext_spi_clk]
   connect_bd_net -net mig_7series_0_init_calib_complete [get_bd_pins mig_7series_0/init_calib_complete] [get_bd_pins proc_sys_reset_0/dcm_locked]
-  connect_bd_net -net mig_7series_0_ui_clk [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_cfg_spi_0/s_axi4_aclk] [get_bd_pins axi_cfg_spi_0/s_axi_aclk] [get_bd_pins axi_ethernetlite_0/s_axi_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_spi_flash/s_axi_aclk] [get_bd_pins axi_uartlite_0/s_axi_aclk] [get_bd_pins mig_7series_0/ui_clk] [get_bd_pins perph_bus/ACLK] [get_bd_pins perph_bus/M00_ACLK] [get_bd_pins perph_bus/M01_ACLK] [get_bd_pins perph_bus/M02_ACLK] [get_bd_pins perph_bus/M03_ACLK] [get_bd_pins perph_bus/M04_ACLK] [get_bd_pins perph_bus/S00_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins sys_bus/ACLK] [get_bd_pins sys_bus/M00_ACLK] [get_bd_pins sys_bus/M01_ACLK] [get_bd_pins sys_bus/M02_ACLK]
+  connect_bd_net -net mig_7series_0_ui_clk [get_bd_pins axi_apb_bridge_0/s_axi_aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_cfg_spi_0/s_axi4_aclk] [get_bd_pins axi_cfg_spi_0/s_axi_aclk] [get_bd_pins axi_ethernetlite_0/s_axi_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_spi_flash/s_axi_aclk] [get_bd_pins axi_uart16550_0/s_axi_aclk] [get_bd_pins mig_7series_0/ui_clk] [get_bd_pins nt35510_apb_adapter_0/clk] [get_bd_pins perph_bus/ACLK] [get_bd_pins perph_bus/M00_ACLK] [get_bd_pins perph_bus/M01_ACLK] [get_bd_pins perph_bus/M02_ACLK] [get_bd_pins perph_bus/M03_ACLK] [get_bd_pins perph_bus/M04_ACLK] [get_bd_pins perph_bus/M05_ACLK] [get_bd_pins perph_bus/S00_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins sys_bus/ACLK] [get_bd_pins sys_bus/M00_ACLK] [get_bd_pins sys_bus/M01_ACLK] [get_bd_pins sys_bus/M02_ACLK]
   connect_bd_net -net mig_7series_0_ui_clk_sync_rst [get_bd_pins mig_7series_0/ui_clk_sync_rst] [get_bd_pins proc_sys_reset_0/ext_reset_in]
-  connect_bd_net -net naive_mips_0_dbus_address [get_bd_pins DCache_0/dbus_addr] [get_bd_pins ahb_adapter_uncached/address] [get_bd_pins naive_mips_0/dbus_address]
+  connect_bd_net -net naive_mips_0_dbus_address [get_bd_pins DCache_0/dbus_addr] [get_bd_pins ICache_0/dbus_ivaddr] [get_bd_pins ahb_adapter_uncached/address] [get_bd_pins naive_mips_0/dbus_address]
   connect_bd_net -net naive_mips_0_dbus_byteenable [get_bd_pins DCache_0/dbus_byteenable] [get_bd_pins ahb_adapter_uncached/dataenable] [get_bd_pins naive_mips_0/dbus_byteenable]
   connect_bd_net -net naive_mips_0_dbus_dcache_inv_wb [get_bd_pins DCache_0/dbus_hitinvalidate] [get_bd_pins naive_mips_0/dbus_dcache_inv_wb]
+  connect_bd_net -net naive_mips_0_dbus_icache_inv [get_bd_pins ICache_0/dbus_hitinvalidate] [get_bd_pins naive_mips_0/dbus_icache_inv]
   connect_bd_net -net naive_mips_0_dbus_read [get_bd_pins DCache_0/dbus_read] [get_bd_pins naive_mips_0/dbus_read]
   connect_bd_net -net naive_mips_0_dbus_uncached_read [get_bd_pins ahb_adapter_uncached/rd] [get_bd_pins naive_mips_0/dbus_uncached_read]
   connect_bd_net -net naive_mips_0_dbus_uncached_write [get_bd_pins ahb_adapter_uncached/wr] [get_bd_pins naive_mips_0/dbus_uncached_write]
   connect_bd_net -net naive_mips_0_dbus_wrdata [get_bd_pins DCache_0/dbus_wrdata] [get_bd_pins ahb_adapter_uncached/wrdata] [get_bd_pins naive_mips_0/dbus_wrdata]
   connect_bd_net -net naive_mips_0_dbus_write [get_bd_pins DCache_0/dbus_write] [get_bd_pins naive_mips_0/dbus_write]
-  connect_bd_net -net naive_mips_0_ibus_address [get_bd_pins ahb_adapter_I/address] [get_bd_pins naive_mips_0/ibus_address]
-  connect_bd_net -net naive_mips_0_ibus_byteenable [get_bd_pins ahb_adapter_I/dataenable] [get_bd_pins naive_mips_0/ibus_byteenable]
-  connect_bd_net -net naive_mips_0_ibus_read [get_bd_pins ahb_adapter_I/rd] [get_bd_pins naive_mips_0/ibus_read]
-  connect_bd_net -net naive_mips_0_ibus_wrdata [get_bd_pins ahb_adapter_I/wrdata] [get_bd_pins naive_mips_0/ibus_wrdata]
-  connect_bd_net -net naive_mips_0_ibus_write [get_bd_pins ahb_adapter_I/wr] [get_bd_pins naive_mips_0/ibus_write]
-  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_cfg_spi_0/s_axi4_aresetn] [get_bd_pins axi_cfg_spi_0/s_axi_aresetn] [get_bd_pins axi_ethernetlite_0/s_axi_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_spi_flash/s_axi_aresetn] [get_bd_pins axi_uartlite_0/s_axi_aresetn] [get_bd_pins clk_ctrl_0/rst_in_n] [get_bd_pins mig_7series_0/aresetn] [get_bd_pins perph_bus/M00_ARESETN] [get_bd_pins perph_bus/M01_ARESETN] [get_bd_pins perph_bus/M02_ARESETN] [get_bd_pins perph_bus/M03_ARESETN] [get_bd_pins perph_bus/M04_ARESETN] [get_bd_pins perph_bus/S00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins sys_bus/M00_ARESETN] [get_bd_pins sys_bus/M01_ARESETN] [get_bd_pins sys_bus/M02_ARESETN]
+  connect_bd_net -net naive_mips_0_ibus_address [get_bd_ports iaddr] [get_bd_pins ICache_0/dbus_rdaddr] [get_bd_pins naive_mips_0/ibus_address]
+  connect_bd_net -net naive_mips_0_ibus_read [get_bd_pins ICache_0/dbus_read] [get_bd_pins naive_mips_0/ibus_read]
+  connect_bd_net -net nt35510_apb_adapter_0_LCD_csel [get_bd_ports LCD_csel] [get_bd_pins nt35510_apb_adapter_0/LCD_csel]
+  connect_bd_net -net nt35510_apb_adapter_0_LCD_nrst [get_bd_ports LCD_nrst] [get_bd_pins nt35510_apb_adapter_0/LCD_nrst]
+  connect_bd_net -net nt35510_apb_adapter_0_LCD_rd [get_bd_ports LCD_rd] [get_bd_pins nt35510_apb_adapter_0/LCD_rd]
+  connect_bd_net -net nt35510_apb_adapter_0_LCD_rs [get_bd_ports LCD_rs] [get_bd_pins nt35510_apb_adapter_0/LCD_rs]
+  connect_bd_net -net nt35510_apb_adapter_0_LCD_wr [get_bd_ports LCD_wr] [get_bd_pins nt35510_apb_adapter_0/LCD_wr]
+  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins axi_apb_bridge_0/s_axi_aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_cfg_spi_0/s_axi4_aresetn] [get_bd_pins axi_cfg_spi_0/s_axi_aresetn] [get_bd_pins axi_ethernetlite_0/s_axi_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_spi_flash/s_axi_aresetn] [get_bd_pins axi_uart16550_0/s_axi_aresetn] [get_bd_pins clk_ctrl_0/rst_in_n] [get_bd_pins mig_7series_0/aresetn] [get_bd_pins nt35510_apb_adapter_0/nrst] [get_bd_pins perph_bus/M00_ARESETN] [get_bd_pins perph_bus/M01_ARESETN] [get_bd_pins perph_bus/M02_ARESETN] [get_bd_pins perph_bus/M03_ARESETN] [get_bd_pins perph_bus/M04_ARESETN] [get_bd_pins perph_bus/M05_ARESETN] [get_bd_pins perph_bus/S00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins sys_bus/M00_ARESETN] [get_bd_pins sys_bus/M01_ARESETN] [get_bd_pins sys_bus/M02_ARESETN]
   connect_bd_net -net sys_clk_i_1 [get_bd_ports ddr_sys_clk] [get_bd_pins mig_7series_0/sys_clk_i]
   connect_bd_net -net sys_rst_1 [get_bd_ports sys_rst] [get_bd_pins mig_7series_0/sys_rst]
   connect_bd_net -net xlconcat_0_dout [get_bd_pins naive_mips_0/hardware_int_in] [get_bd_pins xlconcat_0/dout]
   connect_bd_net -net xlconstant_1_dout [get_bd_pins naive_mips_0/debugger_uart_rxd] [get_bd_pins xlconstant_1/dout]
   connect_bd_net -net xlconstant_2_dout [get_bd_pins DCache_0/dbus_hitwriteback] [get_bd_pins xlconstant_2/dout]
-  connect_bd_net -net xlconstant_3_dout [get_bd_pins xlconcat_0/In3] [get_bd_pins xlconcat_0/In4] [get_bd_pins xlconstant_3/dout]
+  connect_bd_net -net xlconstant_3_dout [get_bd_pins axi_uart16550_0/freeze] [get_bd_pins xlconcat_0/In3] [get_bd_pins xlconcat_0/In4] [get_bd_pins xlconstant_3/dout]
   connect_bd_net -net xlslice_0_Dout [get_bd_pins blk_mem_gen_0/addra] [get_bd_pins xlslice_0/Dout]
 
   # Create address segments
@@ -657,8 +682,9 @@ CONFIG.DOUT_WIDTH {10} \
   create_bd_addr_seg -range 0x00010000 -offset 0x1C030000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_ethernetlite_0/S_AXI/Reg] SEG_axi_ethernetlite_0_Reg
   create_bd_addr_seg -range 0x00001000 -offset 0x1FD01000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg
   create_bd_addr_seg -range 0x00800000 -offset 0x1E000000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_spi_flash/AXI_LITE/Reg] SEG_axi_spi_flash_Reg
-  create_bd_addr_seg -range 0x00001000 -offset 0x1FD00000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_uartlite_0/S_AXI/Reg] SEG_axi_uartlite_0_Reg
+  create_bd_addr_seg -range 0x00002000 -offset 0x1FD02000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg] SEG_axi_uart16550_0_Reg
   create_bd_addr_seg -range 0x08000000 -offset 0x00000000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs mig_7series_0/memmap/memaddr] SEG_mig_7series_0_memaddr
+  create_bd_addr_seg -range 0x01000000 -offset 0x1B000000 [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs nt35510_apb_adapter_0/APB/Ctrl] SEG_nt35510_apb_adapter_0_Ctrl
 
 
   # Restore current instance
