@@ -14,6 +14,7 @@ module cp0(/*autoport*/
          boot_exp_vec,
          asid,
          in_exl,
+         kseg0_uncached,
          debugger_data_o,
 //input
          clk,
@@ -79,6 +80,7 @@ output wire special_int_vec;
 output wire boot_exp_vec;
 output wire[7:0] asid;
 output wire in_exl;
+output reg kseg0_uncached;
 
 input wire clean_exl;
 input wire en_exp_i;
@@ -182,10 +184,10 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {cp0_regs_EntryHi[31:13], 5'b0, cp0_regs_EntryHi[7:0]};
             end
             `CP0_EntryLo0: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo0[29:6], 3'b0, cp0_regs_EntryLo0[2:0]};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo0[29:0]};
             end
             `CP0_EntryLo1: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:6], 3'b0, cp0_regs_EntryLo1[2:0]};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:0]};
             end
             `CP0_Index: begin
                 data_o_internal[read_i] <= {cp0_regs_Index[31], 27'b0, cp0_regs_Index[3:0]};
@@ -217,6 +219,7 @@ always @(posedge clk or negedge rst_n) begin
         cp0_regs_Cause[23] <= 1'b0;
         timer_int <= 1'b0;
         timer_count <= 'b0;
+        kseg0_uncached <= 1'b0;
     end
     else begin
         cp0_regs_Count <= cp0_regs_Count+1'b1;
@@ -254,12 +257,10 @@ always @(posedge clk or negedge rst_n) begin
                 cp0_regs_EntryHi[7:0] <= data_i[7:0];
             end
             `CP0_EntryLo0: begin
-                cp0_regs_EntryLo0[29:6] <= data_i[29:6];
-                cp0_regs_EntryLo0[2:0] <= data_i[2:0];
+                cp0_regs_EntryLo0[29:0] <= data_i[29:0];
             end
             `CP0_EntryLo1: begin
-                cp0_regs_EntryLo1[29:6] <= data_i[29:6];
-                cp0_regs_EntryLo1[2:0] <= data_i[2:0];
+                cp0_regs_EntryLo1[29:0] <= data_i[29:0];
             end
             `CP0_Index: begin
                 cp0_regs_Index[3:0] <= data_i[3:0];
@@ -269,6 +270,7 @@ always @(posedge clk or negedge rst_n) begin
             end
             `CP0_Config: begin 
                 cp0_regs_Config[2:0] <= data_i[2:0];
+                kseg0_uncached <= data_i[2:0]==3'd2;
             end
 
             endcase

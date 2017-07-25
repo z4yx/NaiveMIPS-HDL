@@ -218,7 +218,7 @@ wire[31:0] cp0_exp_badv;
 wire[31:0] cp0_exp_epc;
 wire[19:0] cp0_ebase;
 wire[31:0] cp0_epc;
-wire[83:0] cp0_tlb_config;
+wire[89:0] cp0_tlb_config;
 wire cp0_user_mode;
 wire timer_int;
 reg[5:0] hardware_int;
@@ -228,6 +228,7 @@ wire cp0_special_int_vec;
 wire cp0_boot_exp_vec;
 wire[7:0]cp0_asid;
 wire cp0_in_exl;
+wire cp0_kseg0_uncached;
 
 wire debugger_flush;
 wire debugger_stall;
@@ -316,6 +317,7 @@ mmu_top mmu(/*autoinst*/
       .tlbwi(wb_we_tlb),
       .tlbp(mm_probe_tlb),
       .tlbp_result(mm_probe_result),
+      .cp0_kseg0_uncached(cp0_kseg0_uncached),
       .asid(cp0_asid),
       .user_mode(cp0_user_mode));
 
@@ -421,6 +423,7 @@ cp0 cp0_instance(/*autoinst*/
      .boot_exp_vec   (cp0_boot_exp_vec),
      .asid           (cp0_asid),
      .in_exl         (cp0_in_exl),
+     .kseg0_uncached (cp0_kseg0_uncached),
      .interrupt_mask (cp0_interrupt_mask),
      .en_exp_i(cp0_exp_en),
      .clean_exl(cp0_clean_exl),

@@ -24,7 +24,8 @@ module mmu_top(/*autoport*/
      tlb_config,
      tlbwi,
      tlbp,
-     asid);
+     asid,
+     cp0_kseg0_uncached);
 
 input wire rst_n;
 input wire clk;
@@ -48,10 +49,11 @@ output wire data_exp_dirty;
 output wire data_exp_invalid;
 output wire inst_exp_invalid;
 
-input wire[83:0] tlb_config;
+input wire[89:0] tlb_config;
 input wire tlbwi;
 input wire tlbp;
 input wire[7:0] asid;
+input wire cp0_kseg0_uncached;
 
 output wire[31:0] tlbp_result;
 
@@ -84,6 +86,7 @@ mem_map map_inst(/*autoinst*/
            .addr_i(inst_address_i),
            .using_tlb(inst_tlb_map),
            .uncached(inst_map_uncached),
+           .cp0_kseg0_uncached(cp0_kseg0_uncached),
            .en(inst_en),
            .um(user_mode));
 mem_map map_data(/*autoinst*/
@@ -92,6 +95,7 @@ mem_map map_data(/*autoinst*/
            .addr_i(data_address_i),
            .using_tlb(data_tlb_map),
            .uncached (data_map_uncached),
+           .cp0_kseg0_uncached(cp0_kseg0_uncached),
            .en(data_en),
            .um(user_mode));
 
@@ -116,7 +120,7 @@ tlb tlb0(
   .insMiss(inst_miss),
   
   .dataBypassCache(data_bypass),
-  .insBypassCache(ins_bypass),
+  .insBypassCache(inst_bypass),
 
   .dataAddrPhy(data_address_tlb),
   .insAddrPhy(inst_address_tlb),

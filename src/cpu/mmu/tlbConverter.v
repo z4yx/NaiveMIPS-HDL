@@ -61,7 +61,7 @@ assign dirt = virtAddr[12] ? tlbEntries[matchWhich][27] : tlbEntries[matchWhich]
 assign valid = virtAddr[12] ? tlbEntries[matchWhich][26] : tlbEntries[matchWhich][0];
 assign cacheFlag = virtAddr[12] ? tlbEntries[matchWhich][82:80] : tlbEntries[matchWhich][85:83];
 
-assign bypassCache = cacheFlag == 2；
+assign bypassCache = (cacheFlag == 2);
 
 assign miss = matched == 16'd0;
 

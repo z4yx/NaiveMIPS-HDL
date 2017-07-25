@@ -52,6 +52,6 @@ always @(posedge clk or negedge rst_n) begin
     end
 end
 
-always @(posedge clk) $display("PC=%x",pc_reg);
+// always @(posedge clk) $display("PC=%x",pc_reg);
 
 endmodule
