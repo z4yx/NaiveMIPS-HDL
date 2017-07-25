@@ -3,22 +3,22 @@ module tlbConverter(
 
 //  input wire[70:0] tlbEntries[0:15],
 
-  input wire[79:0] tlbEntry0,
-  input wire[79:0] tlbEntry1,
-  input wire[79:0] tlbEntry2,
-  input wire[79:0] tlbEntry3,
-  input wire[79:0] tlbEntry4,
-  input wire[79:0] tlbEntry5,
-  input wire[79:0] tlbEntry6,
-  input wire[79:0] tlbEntry7,
-  input wire[79:0] tlbEntry8,
-  input wire[79:0] tlbEntry9,
-  input wire[79:0] tlbEntry10,
-  input wire[79:0] tlbEntry11,
-  input wire[79:0] tlbEntry12,
-  input wire[79:0] tlbEntry13,
-  input wire[79:0] tlbEntry14,
-  input wire[79:0] tlbEntry15,
+  input wire[85:0] tlbEntry0,
+  input wire[85:0] tlbEntry1,
+  input wire[85:0] tlbEntry2,
+  input wire[85:0] tlbEntry3,
+  input wire[85:0] tlbEntry4,
+  input wire[85:0] tlbEntry5,
+  input wire[85:0] tlbEntry6,
+  input wire[85:0] tlbEntry7,
+  input wire[85:0] tlbEntry8,
+  input wire[85:0] tlbEntry9,
+  input wire[85:0] tlbEntry10,
+  input wire[85:0] tlbEntry11,
+  input wire[85:0] tlbEntry12,
+  input wire[85:0] tlbEntry13,
+  input wire[85:0] tlbEntry14,
+  input wire[85:0] tlbEntry15,
 
   output wire[31:0] phyAddr,
   input wire[31:0] virtAddr,
@@ -26,11 +26,12 @@ module tlbConverter(
   input wire[7:0] nowASID,
   output wire valid,
   output reg[3:0] matchWhich,
-  output wire dirt
+  output wire dirt,
+  output wire bypassCache
 );
 
 wire[15:0] matched;
-wire[79:0] tlbEntries[0:15];
+wire[85:0] tlbEntries[0:15];
 
 wire[23:0] PFN;
 
@@ -53,10 +54,14 @@ assign tlbEntries[14]=tlbEntry14;
 assign tlbEntries[15]=tlbEntry15;
 
 
+wire[2:0] cacheFlag;
 
 assign PFN[23:0] = virtAddr[12] ? tlbEntries[matchWhich][51:28] : tlbEntries[matchWhich][25:2];
 assign dirt = virtAddr[12] ? tlbEntries[matchWhich][27] : tlbEntries[matchWhich][1];
 assign valid = virtAddr[12] ? tlbEntries[matchWhich][26] : tlbEntries[matchWhich][0];
+assign cacheFlag = virtAddr[12] ? tlbEntries[matchWhich][82:80] : tlbEntries[matchWhich][85:83];
+
+assign bypassCache = cacheFlag == 2；
 
 assign miss = matched == 16'd0;
 

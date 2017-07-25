@@ -71,7 +71,7 @@ output reg timer_int;
 output wire user_mode;
 output wire[19:0] ebase;
 output wire[31:0] epc;
-output wire[83:0] tlb_config;
+output wire[89:0] tlb_config;
 output wire allow_int;
 output wire[1:0] software_int_o;
 output wire[7:0] interrupt_mask;
@@ -125,6 +125,8 @@ assign user_mode = cp0_regs_Status[4:1]==4'b1000;
 assign ebase = {2'b10, cp0_regs_EBase[29:12]};
 assign epc = cp0_regs_EPC;
 assign tlb_config = {
+    cp0_regs_EntryLo0[5:3],
+    cp0_regs_EntryLo1[5:3],
     cp0_regs_EntryHi[7:0],
     cp0_regs_EntryLo1[0] & cp0_regs_EntryLo0[0],
     cp0_regs_EntryHi[31:13],
