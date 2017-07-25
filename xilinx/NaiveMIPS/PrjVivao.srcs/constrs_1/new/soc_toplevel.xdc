@@ -63,6 +63,12 @@ set_property PACKAGE_PIN A3 [get_ports {gpio0[2]}]
 set_property PACKAGE_PIN D5 [get_ports {gpio0[1]}]
 set_property PACKAGE_PIN H7 [get_ports {gpio0[0]}]
 
+#Bicolor LEDs
+set_property -dict {PACKAGE_PIN F8 IOSTANDARD LVCMOS33} [get_ports bicolor_G[0]]
+set_property -dict {PACKAGE_PIN D6 IOSTANDARD LVCMOS33} [get_ports bicolor_G[1]]
+set_property -dict {PACKAGE_PIN G7 IOSTANDARD LVCMOS33} [get_ports bicolor_R[0]]
+set_property -dict {PACKAGE_PIN B5 IOSTANDARD LVCMOS33} [get_ports bicolor_R[1]]
+
 #NUM
 set_property PACKAGE_PIN D3 [get_ports {NUM_CSn[7]}]
 set_property PACKAGE_PIN D25 [get_ports {NUM_CSn[6]}]
@@ -119,6 +125,33 @@ set_property -dict {PACKAGE_PIN W3 IOSTANDARD LVCMOS33} [get_ports mdc]
 set_property -dict {PACKAGE_PIN W1 IOSTANDARD LVCMOS33} [get_ports mdio]
 set_property -dict {PACKAGE_PIN AE26 IOSTANDARD LVCMOS33} [get_ports MII_rst_n]
 
+#LCD
+set_property IOSTANDARD LVCMOS33 [get_ports lcd_*]
+set_property PACKAGE_PIN H9 [get_ports {lcd_data_tri_io[0]}]
+set_property PACKAGE_PIN K17 [get_ports {lcd_data_tri_io[1]}]
+set_property PACKAGE_PIN J20 [get_ports {lcd_data_tri_io[2]}]
+set_property PACKAGE_PIN M17 [get_ports {lcd_data_tri_io[3]}]
+set_property PACKAGE_PIN L17 [get_ports {lcd_data_tri_io[4]}]
+set_property PACKAGE_PIN L18 [get_ports {lcd_data_tri_io[5]}]
+set_property PACKAGE_PIN L15 [get_ports {lcd_data_tri_io[6]}]
+set_property PACKAGE_PIN M15 [get_ports {lcd_data_tri_io[7]}]
+set_property PACKAGE_PIN M16 [get_ports {lcd_data_tri_io[8]}]
+set_property PACKAGE_PIN L14 [get_ports {lcd_data_tri_io[9]}]
+set_property PACKAGE_PIN M14 [get_ports {lcd_data_tri_io[10]}]
+set_property PACKAGE_PIN F22 [get_ports {lcd_data_tri_io[11]}]
+set_property PACKAGE_PIN G22 [get_ports {lcd_data_tri_io[12]}]
+set_property PACKAGE_PIN G21 [get_ports {lcd_data_tri_io[13]}]
+set_property PACKAGE_PIN H24 [get_ports {lcd_data_tri_io[14]}]
+set_property PACKAGE_PIN J16 [get_ports {lcd_data_tri_io[15]}]
+set_property PACKAGE_PIN J25 [get_ports lcd_nrst]
+set_property PACKAGE_PIN G24 [get_ports lcd_csel]
+set_property PACKAGE_PIN K8 [get_ports lcd_rd]
+set_property PACKAGE_PIN K16 [get_ports lcd_rs]
+set_property PACKAGE_PIN L8 [get_ports lcd_wr]
+
+set_property IOSTANDARD LVCMOS33 [get_ports {lcd_lighton}]
+set_property PACKAGE_PIN J15 [get_ports {lcd_lighton}]
+
 
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
@@ -126,6 +159,6 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 #set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE 50 [current_design]
 #set_property BITSTREAM.CONFIG.SPI_FALL_EDGE Yes [current_design]
-#set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 
 

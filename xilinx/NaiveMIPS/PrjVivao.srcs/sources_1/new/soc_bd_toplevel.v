@@ -1,7 +1,6 @@
 `default_nettype none
 module soc_bd_toplevel(/*autoport*/
 //inout
-     gpio0,
      ddr3_dq,
      ddr3_dqs_p,
      ddr3_dqs_n,
@@ -13,8 +12,12 @@ module soc_bd_toplevel(/*autoport*/
      cfg_flash_mosi,
      cfg_flash_miso,
      cfg_flash_ss,
+     lcd_data_tri_io,
 //output
      txd,
+     bicolor_R,
+     bicolor_G,
+     gpio0,
      NUM_CSn,
      NUM_A_G,
      vga_pixel,
@@ -36,6 +39,12 @@ module soc_bd_toplevel(/*autoport*/
      MII_tx_en,
      MII_txd,
      MII_tx_er,
+     lcd_nrst,
+     lcd_csel,
+     lcd_rd,
+     lcd_rs,
+     lcd_wr,
+     lcd_lighton,
 //input
      rst_in_n,
      clk_in,
@@ -54,6 +63,9 @@ input wire clk_in;
 
 output wire txd;
 input wire rxd;
+
+output wire [1:0] bicolor_R;
+output wire [1:0] bicolor_G;
 
 output reg[15:0] gpio0;
 input wire[7:0] gpio1;
@@ -187,12 +199,36 @@ IOBUF CFG_FLASH_mosi_buf(
     .T(CFG_FLASH_io0_t)
 );
 
+inout wire[15:0] lcd_data_tri_io;
+output wire lcd_nrst;
+output wire lcd_csel;
+output wire lcd_rd;
+output wire lcd_rs;
+output wire lcd_wr;
+output wire lcd_lighton;
+
+wire[15:0] lcd_data_tri_i,lcd_data_tri_o,lcd_data_tri_t;
+genvar lcd_i;
+generate
+  for(lcd_i=0; lcd_i<16; lcd_i=lcd_i+1)begin : lcd_data
+    IOBUF lcd_buf(
+      .IO(lcd_data_tri_io[lcd_i]), 
+      .O(lcd_data_tri_i[lcd_i]), 
+      .I(lcd_data_tri_o[lcd_i]), 
+      .T(lcd_data_tri_t[lcd_i])
+      );
+  end
+endgenerate
+
+assign lcd_lighton = 1'b1;
+
 wire [31:0] segdisp_din, iaddr;
 
 wire clk,locked;
 wire clk_ddr_ref;
 wire clk_spi;
 wire clk_50M;
+wire triple_byte_w;
 
 
 clk_wiz_0 pll2
@@ -242,6 +278,14 @@ bd_soc soc(
   .MII_tx_clk     (MII_tx_clk),
   .MII_tx_en      (MII_tx_en),
   .MII_txd        (MII_txd),
+  .LCD_csel       (lcd_csel),
+  .LCD_data_tri_i (lcd_data_tri_i),
+  .LCD_data_tri_o (lcd_data_tri_o),
+  .LCD_data_tri_t (lcd_data_tri_t),
+  .LCD_nrst       (lcd_nrst),
+  .LCD_rd         (lcd_rd),
+  .LCD_rs         (lcd_rs),
+  .LCD_wr         (lcd_wr),
   .SPI_FLASH_io0_i(SPI_FLASH_io0_i),
   .SPI_FLASH_io0_o(SPI_FLASH_io0_o),
   .SPI_FLASH_io0_t(SPI_FLASH_io0_t),
@@ -256,8 +300,13 @@ bd_soc soc(
   .SPI_FLASH_ss_t (SPI_FLASH_ss_t),
   .SW_tri_i       ({23'h0,gpio1}),
   .iaddr          (iaddr),
+  .triple_byte_w  (triple_byte_w),
   .UART_rxd       (rxd),
   .UART_txd       (txd),
+  .UART_ctsn      (1'b0),
+  .UART_dcdn      (1'b0),
+  .UART_dsrn      (1'b0),
+  .UART_ri        (1'b1), //actually rin
   .ddr3_cas_n     (ddr3_cas_n),
   .ddr3_ck_n      (ddr3_ck_n),
   .ddr3_ck_p      (ddr3_ck_p),
@@ -282,8 +331,10 @@ bd_soc soc(
 );
 
 always @(posedge clk) begin : proc_gpio0
-  gpio0 <= iaddr[15:0];
+  gpio0 <= ~iaddr[17:2];
 end
 
+assign bicolor_G = 0;
+assign bicolor_R = {triple_byte_w,triple_byte_w};
 
 endmodule

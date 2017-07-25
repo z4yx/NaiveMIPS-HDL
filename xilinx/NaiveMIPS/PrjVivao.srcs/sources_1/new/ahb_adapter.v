@@ -2,14 +2,8 @@
 module ahb_adapter (
 /*autoport*/
 //output
-                  AHB_hrdata,
-                  AHB_hready_out,
-                  AHB_hresp,
                   rddata,
                   stall,
-//input
-                  clk,
-                  rst_n,
                   AHB_haddr,
                   AHB_hburst,
                   AHB_hprot,
@@ -19,11 +13,18 @@ module ahb_adapter (
                   AHB_hwdata,
                   AHB_hwrite,
                   AHB_sel,
-                  address,
-                  wrdata,
+                  triple_byte_w,
+//input
+                  clk,
+                  rst_n,
                   dataenable,
                   rd,
-                  wr);
+                  wr,
+                  address,
+                  wrdata,
+                  AHB_hrdata,
+                  AHB_hready_out,
+                  AHB_hresp);
 
 input wire clk;    // Clock
 input wire rst_n;  // Asynchronous reset active low
@@ -52,6 +53,7 @@ output reg [31:0]AHB_hwdata;
 output wire AHB_hwrite;
 output wire AHB_sel;
 
+output reg triple_byte_w;
 
 reg first_cycle;
 
@@ -98,5 +100,13 @@ always @(posedge clk or negedge rst_n) begin : proc_bridge
 end
 
 assign stall = issue & (first_cycle|~AHB_hready_out);
+
+always @(posedge clk or negedge rst_n) begin : proc_triple_byte_w
+      if(~rst_n) begin
+            triple_byte_w <= 1'b0;
+      end else if((dataenable==4'b1110 || dataenable==4'b0111) && wr) begin
+            triple_byte_w <= 1'b1;
+      end
+end
 
 endmodule

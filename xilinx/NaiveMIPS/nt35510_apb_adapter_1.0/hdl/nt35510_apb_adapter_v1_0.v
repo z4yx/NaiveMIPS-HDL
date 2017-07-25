@@ -1,5 +1,5 @@
-`define APB_INSTRUCTION_ADDR	(32'b000)
-`define APB_DATA_ADDR			(32'b100)
+`define APB_INSTRUCTION_ADDR	(3'b000)
+`define APB_DATA_ADDR			(3'b100)
 
 `define APH_FSM_SETUP			(0)
 `define APH_FSM_SETUP_RS		(1)
@@ -60,7 +60,7 @@ module nt35510_apb_adapter_v1_0 (
 			case (state)
 				`APH_FSM_SETUP: begin
 					if (APB_penable) begin
-                        LCD_rs <= (APB_paddr == `APB_INSTRUCTION_ADDR) ? 1'b0 : 1'b1;
+                        LCD_rs <= (APB_paddr[2:0] == `APB_INSTRUCTION_ADDR) ? 1'b0 : 1'b1;
 						state <= `APH_FSM_SETUP_RS;
 						cyclecount <= 0;
 					end
