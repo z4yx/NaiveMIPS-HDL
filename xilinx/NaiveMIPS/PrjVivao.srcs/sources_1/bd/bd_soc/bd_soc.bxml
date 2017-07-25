@@ -2,9 +2,9 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="bd_soc" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1500913658"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1500913658"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1500913658"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1500918984"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1500918984"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1500918984"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip/bd_soc_ahblite_axi_bridge_0_1/bd_soc_ahblite_axi_bridge_0_1.xci" Type="IP">
         <Instance HierarchyPath="ahblite_axi_bridge_0"/>
@@ -23,6 +23,7 @@
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="ip/bd_soc_axi_interconnect_0_1/bd_soc_axi_interconnect_0_1.xci" Type="IP">
+        <Instance HierarchyPath="perph_bus"/>
         <Properties IsEditable="false" IsVisible="false" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -94,6 +95,7 @@
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="ip/bd_soc_axi_interconnect_1_0/bd_soc_axi_interconnect_1_0.xci" Type="IP">
+        <Instance HierarchyPath="sys_bus"/>
         <Properties IsEditable="false" IsVisible="false" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -126,14 +128,6 @@
       </File>
       <File Name="ip/bd_soc_axi_quad_spi_0_1/bd_soc_axi_quad_spi_0_1.xci" Type="IP">
         <Instance HierarchyPath="axi_cfg_spi_0"/>
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
-        <Library Name="xil_defaultlib"/>
-        <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
-        <UsedIn Val="SIMULATION"/>
-      </File>
-      <File Name="ip/bd_soc_ahb_adapter_0_0/bd_soc_ahb_adapter_0_0.xci" Type="IP">
-        <Instance HierarchyPath="ahb_adapter_I"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -221,6 +215,14 @@
       </File>
       <File Name="ip/bd_soc_xlslice_0_0/bd_soc_xlslice_0_0.xci" Type="IP">
         <Instance HierarchyPath="xlslice_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_ICache_0_0/bd_soc_ICache_0_0.xci" Type="IP">
+        <Instance HierarchyPath="ICache_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>

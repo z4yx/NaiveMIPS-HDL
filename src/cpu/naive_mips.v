@@ -16,7 +16,6 @@ module naive_mips(/*autoport*/
       dbus_uncached_read,
       dbus_uncached_write,
       dbus_wrdata,
-      dbus_uncached_stall,
       dbus_uncached,
       dbus_dcache_inv_wb,
       dbus_icache_inv,
@@ -29,7 +28,9 @@ module naive_mips(/*autoport*/
       ibus_stall,
       dbus_rddata,
       dbus_rddata_uncached,
+      dbus_uncached_stall,
       dbus_stall,
+      dbus_iv_stall,
       hardware_int_in);
 
 input wire rst_n;
@@ -58,6 +59,7 @@ input wire[31:0] dbus_rddata;
 input wire[31:0] dbus_rddata_uncached;
 input wire dbus_uncached_stall;
 input wire dbus_stall;
+input wire dbus_iv_stall;
 output wire dbus_uncached;
 output wire dbus_dcache_inv_wb;
 output wire dbus_icache_inv;
@@ -336,7 +338,7 @@ assign dbus_dcache_inv_wb = mm_inv_wb_dcache & ~flush;
 assign dbus_icache_inv = mm_inv_icache & ~flush;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_uncached ? dbus_rddata_uncached : dbus_rddata;
-assign mm_stall = dbus_stall | dbus_uncached_stall;
+assign mm_stall = dbus_stall | dbus_uncached_stall | dbus_iv_stall;
 
 assign debugger_mem_data = if_inst;
 

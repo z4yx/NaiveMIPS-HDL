@@ -195,7 +195,7 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {1'b1, 21'b0, 3'b1, 4'b0, cp0_regs_Config[2:0]}; //Release 1
             end
             `CP0_Config1: begin 
-                data_o_internal[read_i] <= {1'b0, 6'd15, 3'd0, 3'd0, 3'd0, 3'd0, 3'd0, 3'd0, 7'd0}; //Cache Size
+                data_o_internal[read_i] <= {1'b0, 6'd15, 3'd0, 3'd3, 3'd0, 3'd0, 3'd3, 3'd0, 7'd0}; //Cache Size
             end
             default:
                 data_o_internal[read_i] <= 32'b0;

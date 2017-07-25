@@ -41,7 +41,7 @@ module ICache #(parameter
 	output wire        dbus_rdstall,
 	input  wire        dbus_hitinvalidate,
 	input  wire [31:0] dbus_ivaddr,
-	input  wire        dbus_ivstall
+	output wire        dbus_ivstall
 );
 
 	// Wires to cache lines

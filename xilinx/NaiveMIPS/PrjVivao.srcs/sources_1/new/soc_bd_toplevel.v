@@ -55,7 +55,7 @@ input wire clk_in;
 output wire txd;
 input wire rxd;
 
-inout wire[15:0] gpio0;
+output reg[15:0] gpio0;
 input wire[7:0] gpio1;
 output wire[7:0] NUM_CSn;
 output wire[7:0] NUM_A_G;
@@ -187,7 +187,7 @@ IOBUF CFG_FLASH_mosi_buf(
     .T(CFG_FLASH_io0_t)
 );
 
-wire [31:0] segdisp_din;
+wire [31:0] segdisp_din, iaddr;
 
 wire clk,locked;
 wire clk_ddr_ref;
@@ -255,6 +255,7 @@ bd_soc soc(
   .SPI_FLASH_ss_o (SPI_FLASH_ss_o),
   .SPI_FLASH_ss_t (SPI_FLASH_ss_t),
   .SW_tri_i       ({23'h0,gpio1}),
+  .iaddr          (iaddr),
   .UART_rxd       (rxd),
   .UART_txd       (txd),
   .ddr3_cas_n     (ddr3_cas_n),
@@ -279,5 +280,10 @@ bd_soc soc(
   .sys_rst        (~rst_in_n)
 
 );
+
+always @(posedge clk) begin : proc_gpio0
+  gpio0 <= iaddr[15:0];
+end
+
 
 endmodule
