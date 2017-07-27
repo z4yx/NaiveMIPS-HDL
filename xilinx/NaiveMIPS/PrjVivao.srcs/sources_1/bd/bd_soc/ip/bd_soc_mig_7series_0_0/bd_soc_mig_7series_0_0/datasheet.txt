@@ -2,14 +2,14 @@
 
 Vivado Project Options:
    Target Device                   : xc7a200t-fbg676
-   Speed Grade                     : -2
+   Speed Grade                     : -1
    HDL                             : verilog
    Synthesis Tool                  : VIVADO
 
 MIG Output Options:
    Module Name                     : bd_soc_mig_7series_0_0
    No of Controllers               : 1
-   Selected Compatible Device(s)   : --
+   Selected Compatible Device(s)   : xc7a200ti-fbg676
 
 FPGA Options:
    System Clock Type               : No Buffer
