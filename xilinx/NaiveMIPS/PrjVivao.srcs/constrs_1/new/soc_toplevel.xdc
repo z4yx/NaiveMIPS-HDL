@@ -64,10 +64,10 @@ set_property PACKAGE_PIN D5 [get_ports {gpio0[1]}]
 set_property PACKAGE_PIN H7 [get_ports {gpio0[0]}]
 
 #Bicolor LEDs
-set_property -dict {PACKAGE_PIN F8 IOSTANDARD LVCMOS33} [get_ports bicolor_G[0]]
-set_property -dict {PACKAGE_PIN D6 IOSTANDARD LVCMOS33} [get_ports bicolor_G[1]]
-set_property -dict {PACKAGE_PIN G7 IOSTANDARD LVCMOS33} [get_ports bicolor_R[0]]
-set_property -dict {PACKAGE_PIN B5 IOSTANDARD LVCMOS33} [get_ports bicolor_R[1]]
+set_property -dict {PACKAGE_PIN F8 IOSTANDARD LVCMOS33} [get_ports {bicolor_G[0]}]
+set_property -dict {PACKAGE_PIN D6 IOSTANDARD LVCMOS33} [get_ports {bicolor_G[1]}]
+set_property -dict {PACKAGE_PIN G7 IOSTANDARD LVCMOS33} [get_ports {bicolor_R[0]}]
+set_property -dict {PACKAGE_PIN B5 IOSTANDARD LVCMOS33} [get_ports {bicolor_R[1]}]
 
 #NUM
 set_property PACKAGE_PIN D3 [get_ports {NUM_CSn[7]}]
@@ -149,8 +149,7 @@ set_property PACKAGE_PIN K8 [get_ports lcd_rd]
 set_property PACKAGE_PIN K16 [get_ports lcd_rs]
 set_property PACKAGE_PIN L8 [get_ports lcd_wr]
 
-set_property IOSTANDARD LVCMOS33 [get_ports {lcd_lighton}]
-set_property PACKAGE_PIN J15 [get_ports {lcd_lighton}]
+set_property PACKAGE_PIN J15 [get_ports lcd_lighton]
 
 
 set_property CFGBVS VCCO [current_design]
@@ -160,5 +159,6 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE 50 [current_design]
 #set_property BITSTREAM.CONFIG.SPI_FALL_EDGE Yes [current_design]
 set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
+
 
 

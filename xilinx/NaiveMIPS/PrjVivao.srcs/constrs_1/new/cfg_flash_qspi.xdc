@@ -17,17 +17,18 @@ set_max_delay -datapath_only -from [get_pins -hier *SCK_O_reg_reg/C] -to [get_pi
 set_min_delay -from [get_pins -hier *SCK_O_reg_reg/C] -to [get_pins -hier *USRCCLKO] 0.100
 # Following command creates a divide by 2 clock
 # It also takes into account the delay added by STARTUP block to route the CCLK
-create_generated_clock  -name clk_sck -source [get_pins -hierarchical *axi_cfg_spi_0/ext_spi_clk] [get_pins -hierarchical *USRCCLKO] -edges {3 5 7}   -edge_shift [list 7.5 7.5 7.5]
+create_generated_clock -name clk_sck -source [get_pins -hierarchical *axi_cfg_spi_0/ext_spi_clk] -edges {3 5 7} -edge_shift {7.500 7.500 7.500} [get_pins -hierarchical *USRCCLKO]
 # Data is captured into FPGA on the second rising edge of ext_spi_clk after the SCK falling edge
 # Data is driven by the FPGA on every alternate rising_edge of ext_spi_clk
-set_input_delay -clock clk_sck -max [expr 7.65 + 0.25 +   0.2] [get_ports cfg_flash_*] -clock_fall;
-set_input_delay -clock clk_sck -min [expr 2 + 0.25 +   0.2] [get_ports cfg_flash_*] -clock_fall;
-set_multicycle_path 2 -setup -from clk_sck -to [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]]
-set_multicycle_path 1 -hold -end -from clk_sck -to [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]]
+set_input_delay -clock clk_sck -clock_fall -max 8.100 [get_ports cfg_flash_*]
+set_input_delay -clock clk_sck -clock_fall -min 2.450 [get_ports cfg_flash_*]
+set_multicycle_path -setup -from clk_sck -to [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]] 2
+set_multicycle_path -hold -end -from clk_sck -to [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]] 1
 # Data is captured into SPI on the following rising edge of SCK
 # Data is driven by the IP on alternate rising_edge of the ext_spi_clk
-set_output_delay -clock clk_sck -max [expr 3 + 0.25 -  0.2] [get_ports cfg_flash_*];
-set_output_delay -clock clk_sck -min [expr 0.25 -3 -    0.2] [get_ports cfg_flash_*];
-set_multicycle_path 2 -setup -start -from [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]] -to clk_sck
-set_multicycle_path 1 -hold -from [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]] -to clk_sck
+set_output_delay -clock clk_sck -max 3.050 [get_ports cfg_flash_*]
+set_output_delay -clock clk_sck -min -2.950 [get_ports cfg_flash_*]
+set_multicycle_path -setup -start -from [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]] -to clk_sck 2
+set_multicycle_path -hold -from [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]] -to clk_sck 1
+
 
