@@ -1,0 +1,9 @@
+*.dcp
+*_sim_netlist.v
+*_sim_netlist.vhdl
+*_stub.v
+*_stub.vhdl
+hw_handoff/
+*.hwdef
+*/ip/*/sim/
+*/ip/*/synth/
