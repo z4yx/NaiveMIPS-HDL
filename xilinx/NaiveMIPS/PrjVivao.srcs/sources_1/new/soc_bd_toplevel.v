@@ -9,6 +9,8 @@ module soc_bd_toplevel(/*autoport*/
      spi_flash_miso,
      spi_flash_ss,
      spi_flash_sck,
+     spi_flash_io2,
+     spi_flash_io3,
      cfg_flash_mosi,
      cfg_flash_miso,
      cfg_flash_ss,
@@ -126,6 +128,8 @@ inout wire spi_flash_mosi;
 inout wire spi_flash_miso;
 inout wire spi_flash_ss;
 inout wire spi_flash_sck;
+inout wire spi_flash_io2;
+inout wire spi_flash_io3;
 
 wire SPI_FLASH_io0_i;
 wire SPI_FLASH_io0_o;
@@ -133,6 +137,12 @@ wire SPI_FLASH_io0_t;
 wire SPI_FLASH_io1_i;
 wire SPI_FLASH_io1_o;
 wire SPI_FLASH_io1_t;
+wire SPI_FLASH_io2_i;
+wire SPI_FLASH_io2_o;
+wire SPI_FLASH_io2_t;
+wire SPI_FLASH_io3_i;
+wire SPI_FLASH_io3_o;
+wire SPI_FLASH_io3_t;
 wire SPI_FLASH_ss_i;
 wire SPI_FLASH_ss_o;
 wire SPI_FLASH_ss_t;
@@ -164,6 +174,18 @@ IOBUF SPI_FLASH_sck_buf(
     .I(SPI_FLASH_sck_o),
     .O(SPI_FLASH_sck_i),
     .T(SPI_FLASH_sck_t)
+);
+IOBUF SPI_FLASH_io2_buf(
+    .IO(spi_flash_io2),
+    .I(SPI_FLASH_io2_o),
+    .O(SPI_FLASH_io2_i),
+    .T(SPI_FLASH_io2_t)
+);
+IOBUF SPI_FLASH_io3_buf(
+    .IO(spi_flash_io3),
+    .I(SPI_FLASH_io3_o),
+    .O(SPI_FLASH_io3_i),
+    .T(SPI_FLASH_io3_t)
 );
 
 wire CFG_FLASH_io0_i;
@@ -292,6 +314,12 @@ bd_soc soc(
   .SPI_FLASH_io1_i(SPI_FLASH_io1_i),
   .SPI_FLASH_io1_o(SPI_FLASH_io1_o),
   .SPI_FLASH_io1_t(SPI_FLASH_io1_t),
+  .SPI_FLASH_io2_i(SPI_FLASH_io2_i),
+  .SPI_FLASH_io2_o(SPI_FLASH_io2_o),
+  .SPI_FLASH_io2_t(SPI_FLASH_io2_t),
+  .SPI_FLASH_io3_i(SPI_FLASH_io3_i),
+  .SPI_FLASH_io3_o(SPI_FLASH_io3_o),
+  .SPI_FLASH_io3_t(SPI_FLASH_io3_t),
   .SPI_FLASH_sck_i(SPI_FLASH_sck_i),
   .SPI_FLASH_sck_o(SPI_FLASH_sck_o),
   .SPI_FLASH_sck_t(SPI_FLASH_sck_t),

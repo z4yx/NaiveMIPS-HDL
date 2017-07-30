@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-//Date        : Sat Jul 29 13:41:54 2017
+//Date        : Sun Jul 30 12:55:34 2017
 //Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target bd_soc_wrapper.bd
 //Design      : bd_soc_wrapper
@@ -68,6 +68,8 @@ module bd_soc_wrapper
     mdio_mdio_io,
     spi_flash_io0_io,
     spi_flash_io1_io,
+    spi_flash_io2_io,
+    spi_flash_io3_io,
     spi_flash_sck_io,
     spi_flash_ss_io,
     sw_tri_i,
@@ -131,6 +133,8 @@ module bd_soc_wrapper
   inout mdio_mdio_io;
   inout spi_flash_io0_io;
   inout spi_flash_io1_io;
+  inout spi_flash_io2_io;
+  inout spi_flash_io3_io;
   inout spi_flash_sck_io;
   inout [0:0]spi_flash_ss_io;
   input [31:0]sw_tri_i;
@@ -276,6 +280,14 @@ module bd_soc_wrapper
   wire spi_flash_io1_io;
   wire spi_flash_io1_o;
   wire spi_flash_io1_t;
+  wire spi_flash_io2_i;
+  wire spi_flash_io2_io;
+  wire spi_flash_io2_o;
+  wire spi_flash_io2_t;
+  wire spi_flash_io3_i;
+  wire spi_flash_io3_io;
+  wire spi_flash_io3_o;
+  wire spi_flash_io3_t;
   wire spi_flash_sck_i;
   wire spi_flash_sck_io;
   wire spi_flash_sck_o;
@@ -327,6 +339,12 @@ module bd_soc_wrapper
         .SPI_FLASH_io1_i(spi_flash_io1_i),
         .SPI_FLASH_io1_o(spi_flash_io1_o),
         .SPI_FLASH_io1_t(spi_flash_io1_t),
+        .SPI_FLASH_io2_i(spi_flash_io2_i),
+        .SPI_FLASH_io2_o(spi_flash_io2_o),
+        .SPI_FLASH_io2_t(spi_flash_io2_t),
+        .SPI_FLASH_io3_i(spi_flash_io3_i),
+        .SPI_FLASH_io3_o(spi_flash_io3_o),
+        .SPI_FLASH_io3_t(spi_flash_io3_t),
         .SPI_FLASH_sck_i(spi_flash_sck_i),
         .SPI_FLASH_sck_o(spi_flash_sck_o),
         .SPI_FLASH_sck_t(spi_flash_sck_t),
@@ -480,6 +498,16 @@ module bd_soc_wrapper
         .IO(spi_flash_io1_io),
         .O(spi_flash_io1_i),
         .T(spi_flash_io1_t));
+  IOBUF spi_flash_io2_iobuf
+       (.I(spi_flash_io2_o),
+        .IO(spi_flash_io2_io),
+        .O(spi_flash_io2_i),
+        .T(spi_flash_io2_t));
+  IOBUF spi_flash_io3_iobuf
+       (.I(spi_flash_io3_o),
+        .IO(spi_flash_io3_io),
+        .O(spi_flash_io3_i),
+        .T(spi_flash_io3_t));
   IOBUF spi_flash_sck_iobuf
        (.I(spi_flash_sck_o),
         .IO(spi_flash_sck_io),

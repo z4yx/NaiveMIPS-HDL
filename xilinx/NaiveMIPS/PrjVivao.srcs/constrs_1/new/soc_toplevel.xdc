@@ -16,6 +16,8 @@ set_property -dict {PACKAGE_PIN P20 IOSTANDARD LVCMOS33} [get_ports spi_flash_sc
 set_property -dict {PACKAGE_PIN R20 IOSTANDARD LVCMOS33} [get_ports spi_flash_ss]
 set_property -dict {PACKAGE_PIN P19 IOSTANDARD LVCMOS33} [get_ports spi_flash_miso]
 set_property -dict {PACKAGE_PIN N18 IOSTANDARD LVCMOS33} [get_ports spi_flash_mosi]
+set_property -dict {PACKAGE_PIN R18 IOSTANDARD LVCMOS33} [get_ports spi_flash_io2]
+set_property -dict {PACKAGE_PIN R21 IOSTANDARD LVCMOS33} [get_ports spi_flash_io3]
 
 #cfg flash
 set_property -dict {PACKAGE_PIN P18 IOSTANDARD LVCMOS33} [get_ports cfg_flash_ss]
