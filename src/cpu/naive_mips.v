@@ -355,7 +355,7 @@ end
 
 assign flush = debugger_flush | debugger_flush_holding | exception_flush | exception_flush_holding;
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if (!rst_n) begin
         debugger_flush_holding <= 1'b0;
         exception_flush_holding <= 1'b0;
@@ -370,9 +370,7 @@ always @(posedge clk or negedge rst_n) begin
 end
 
 always @(*) begin
-    if (!rst_n) begin
-        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b11111;
-    end else if(mm_stall || debugger_stall) begin
+    if(mm_stall || debugger_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00000;
     end else if(ex_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
@@ -439,8 +437,8 @@ cp0 cp0_instance(/*autoinst*/
      .exp_bad_vaddr(cp0_exp_badv)
 );
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+always @(posedge clk) begin
+    if (!rst_n || (!en_ifid && en_idex) || flush) begin
         id_inst <= 32'b0; //NOP
         id_pc_value <= 32'b0;
         id_real_inst <= 1'b0;
@@ -451,7 +449,7 @@ always @(posedge clk or negedge rst_n) begin
         id_iaddr_exp_asid <= 8'b0;
         id_iaddr_exp_exl <= 1'b0;
     end
-    else if(en_ifid && !flush) begin
+    else if(en_ifid) begin
         id_inst <= if_inst;
         id_pc_value <= if_pc;
         id_real_inst <= 1'b1;
@@ -461,16 +459,6 @@ always @(posedge clk or negedge rst_n) begin
         id_iaddr_exp_invalid <= if_iaddr_exp_invalid;
         id_iaddr_exp_asid <= if_asid;
         id_iaddr_exp_exl <= if_in_exl;
-    end else if(en_idex || flush) begin
-        id_inst <= 32'b0; //NOP;
-        id_pc_value <= 32'b0;
-        id_real_inst <= 1'b0;
-        id_in_delayslot <= 1'b0;
-        id_iaddr_exp_miss <= 1'b0;
-        id_iaddr_exp_illegal <= 1'b0;
-        id_iaddr_exp_invalid <= 1'b0;
-        id_iaddr_exp_asid <= 8'b0;
-        id_iaddr_exp_exl <= 1'b0;
     end
 end
 
@@ -522,8 +510,8 @@ branch branch_detect(/*autoinst*/
          .reg_s_value(id_reg_s_value),
          .reg_t_value(id_reg_t_value));
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+always @(posedge clk) begin
+    if (!rst_n || (!en_idex && en_exmm) || flush) begin
         ex_op <= `OP_SLL;
         ex_op_type <= `OPTYPE_R;
         ex_reg_s <= 5'b0;
@@ -543,7 +531,7 @@ always @(posedge clk or negedge rst_n) begin
         ex_iaddr_exp_asid <= 8'b0;
         ex_iaddr_exp_exl <= 1'b0;
     end
-    else if(en_idex && !flush) begin
+    else if(en_idex) begin
         ex_immediate <= id_immediate;
         ex_op_type <= id_op_type;
         ex_op <= id_op;
@@ -562,25 +550,6 @@ always @(posedge clk or negedge rst_n) begin
         ex_iaddr_exp_invalid <= id_iaddr_exp_invalid;
         ex_iaddr_exp_asid <= id_iaddr_exp_asid;
         ex_iaddr_exp_exl <= id_iaddr_exp_exl;
-    end else if(en_exmm || flush) begin
-        ex_op <= `OP_SLL;
-        ex_op_type <= `OPTYPE_R;
-        ex_reg_s <= 5'b0;
-        ex_reg_t <= 5'b0;
-        ex_reg_d <= 5'b0;
-        ex_flag_unsigned <= 1'b0;
-        ex_reg_s_value <= 32'b0;
-        ex_reg_t_value <= 32'b0;
-        ex_immediate <= 16'b0;
-        ex_address <= 32'b0;
-        ex_in_delayslot <= 1'b0;
-        ex_pc_value <= 32'b0;
-        ex_real_inst <= 1'b0;
-        ex_iaddr_exp_miss <= 1'b0;
-        ex_iaddr_exp_illegal <= 1'b0;
-        ex_iaddr_exp_invalid <= 1'b0;
-        ex_iaddr_exp_asid <= 8'b0;
-        ex_iaddr_exp_exl <= 1'b0;
     end
 end
 
@@ -629,8 +598,8 @@ hilo_reg hilo(/*autoinst*/
       .we(wb_we_hilo),
       .wdata(wb_reg_hilo));
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+always @(posedge clk) begin
+    if (!rst_n || (!en_exmm && en_mmwb) || flush) begin
         mm_mem_access_op <= `ACCESS_OP_D2R;
         mm_mem_access_sz <= `ACCESS_SZ_WORD;
         mm_data_i <= 32'b0;
@@ -662,7 +631,7 @@ always @(posedge clk or negedge rst_n) begin
         mm_inv_wb_dcache <= 1'b0;
         mm_interrupt_flags <= 8'h0;
     end
-    else if(en_exmm && !flush) begin
+    else if(en_exmm) begin
         // $display("mm_pc_value<=%x", ex_pc_value);
         mm_mem_access_op <= ex_mem_access_op;
         mm_mem_access_sz <= ex_mem_access_sz;
@@ -694,37 +663,6 @@ always @(posedge clk or negedge rst_n) begin
         mm_inv_icache <= ex_inv_icache;
         mm_inv_wb_dcache <= ex_inv_wb_dcache;
         mm_interrupt_flags <= {hardware_int,cp0_software_int} & cp0_interrupt_mask;
-    end else if(en_mmwb || flush) begin
-        mm_mem_access_op <= `ACCESS_OP_D2R;
-        mm_mem_access_sz <= `ACCESS_SZ_WORD;
-        mm_data_i <= 32'b0;
-        mm_reg_addr_i <= 5'b0;
-        mm_addr_i <= 32'b0;
-        mm_reg_hilo <= 64'b0;
-        mm_we_hilo <= 1'b0;
-        mm_flag_unsigned <= 1'b0;
-        mm_we_cp0 <= 1'b0;
-        mm_cp0_wraddr <= 5'b0;
-        mm_overflow <= 1'b0;
-        mm_in_delayslot <= 1'b0;
-        mm_pc_value <= 32'b0;
-        mm_real_inst <= 1'b0;
-        mm_eret <= 1'b0;
-        mm_syscall <= 1'b0;
-        mm_break <= 1'b0;
-        mm_invalid_inst <= 1'b0;
-        mm_iaddr_exp_miss <= 1'b0;
-        mm_iaddr_exp_illegal <= 1'b0;
-        mm_iaddr_exp_invalid <= 1'b0;
-        mm_we_tlb <= 1'b0;
-        mm_is_priv_inst <= 1'b0;
-        mm_cp0_wrsel <= 3'b0;
-        mm_probe_tlb <= 1'b0;
-        mm_iaddr_exp_asid <= 8'b0;
-        mm_iaddr_exp_exl <= 1'b0;
-        mm_inv_icache <= 1'b0;
-        mm_inv_wb_dcache <= 1'b0;
-        mm_interrupt_flags <= 8'h0;
     end
 end
 
@@ -786,8 +724,8 @@ exception exception_detect(/*autoinst*/
      .interrupt_flags(mm_interrupt_flags));
 assign cp0_exp_bd = mm_in_delayslot;
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+always @(posedge clk) begin
+    if (!rst_n || flush || !en_mmwb) begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
@@ -800,7 +738,7 @@ always @(posedge clk or negedge rst_n) begin
         wb_probe_tlb <= 1'b0;
         wb_probe_result <= 32'b0;
     end
-    else if(en_mmwb && !flush) begin
+    else begin
         wb_mem_access_op <= mm_mem_access_op;
         wb_data_i <= mm_data_o;
         wb_reg_addr_i <= mm_reg_addr_i;
@@ -812,18 +750,6 @@ always @(posedge clk or negedge rst_n) begin
         wb_cp0_wrsel <= mm_cp0_wrsel;
         wb_probe_tlb <= mm_probe_tlb;
         wb_probe_result <= mm_probe_result;
-    end else begin
-        wb_mem_access_op <= `ACCESS_OP_D2R;
-        wb_data_i <= 32'b0;
-        wb_reg_addr_i <= 5'b0;
-        wb_reg_hilo <= 64'b0;
-        wb_we_hilo <= 1'b0;
-        wb_we_cp0 <= 1'b0;
-        wb_cp0_wraddr <= 5'b0;
-        wb_we_tlb <= 1'b0;
-        wb_cp0_wrsel <= 3'b0;
-        wb_probe_tlb <= 1'b0;
-        wb_probe_result <= 32'b0;
     end
 end
 

@@ -88,7 +88,7 @@ always @(*) begin
     endcase
 end
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if (!rst_n) begin
         div_stage <= 'b0;
     end

@@ -150,7 +150,7 @@ tlbConverter prober(
   .bypassCache()
 );
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
 
   if (rst_n == 0) begin :label
     integer i;

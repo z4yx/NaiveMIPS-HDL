@@ -29,7 +29,7 @@ input wire debug_reset;
 
 output reg[31:0] pc_reg;
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if (!rst_n) begin
         pc_reg <= PC_INITIAL;
     end
