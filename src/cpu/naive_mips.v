@@ -70,19 +70,17 @@ reg flush;
 reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 reg[31:0] exp_entry_addr;
 
-wire [31:0]immu_address_i,immu_address_o;
-wire immu_iaddr_exp_miss;
-wire immu_iaddr_exp_illegal;
-wire immu_iaddr_exp_invalid;
-
 wire [31:0]if_pc;
 wire [31:0]if_inst;
-reg [31:0]if_iaddr_phy;
-reg if_iaddr_exp_miss;
-reg if_iaddr_exp_illegal;
-reg if_iaddr_exp_invalid;
+wire [31:0]if_iaddr_phy;
+wire if_iaddr_exp_miss;
+wire if_iaddr_exp_illegal;
+wire if_iaddr_exp_invalid;
+wire if_valid_iaddr;
 wire [7:0]if_asid;
 wire if_in_exl;
+reg if_read_hold;
+reg [31:0]if_iaddr_phy_hold;
 
 wire [15:0]id_immediate;
 wire [1:0]id_op_type;
@@ -304,20 +302,20 @@ regs main_regs(/*autoinst*/
 
 mmu_top mmu(/*autoinst*/
       .data_address_o(dbus_address),
-      .inst_address_o(immu_address_o),
+      .inst_address_o(if_iaddr_phy),
       .data_uncached(dbus_uncached),
       .inst_uncached(),
       .data_exp_miss(mm_daddr_exp_miss),
-      .inst_exp_miss(immu_iaddr_exp_miss),
+      .inst_exp_miss(if_iaddr_exp_miss),
       .data_exp_illegal(mm_daddr_exp_illegal),
-      .inst_exp_illegal(immu_iaddr_exp_illegal),
+      .inst_exp_illegal(if_iaddr_exp_illegal),
       .data_exp_dirty(mm_daddr_dirty),
-      .inst_exp_invalid(immu_iaddr_exp_invalid),
+      .inst_exp_invalid(if_iaddr_exp_invalid),
       .data_exp_invalid(mm_daddr_exp_invalid),
       .rst_n(rst_n),
       .clk(clk),
       .data_address_i(mm_mem_address),
-      .inst_address_i(immu_address_i),
+      .inst_address_i(if_pc),
       .data_en(mm_mem_rd | mm_mem_wr | mm_inv_wb_dcache | mm_inv_icache),
       .inst_en(1'b1),
       .tlb_config(cp0_tlb_config),
@@ -328,12 +326,13 @@ mmu_top mmu(/*autoinst*/
       .asid(cp0_asid),
       .user_mode(cp0_user_mode));
 
-assign ibus_address = if_iaddr_phy;
+assign ibus_address = if_read_hold ? if_iaddr_phy_hold : if_iaddr_phy;
 assign ibus_byteenable = 4'b1111;
-assign ibus_read = ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
+assign ibus_read = if_valid_iaddr|if_read_hold; //keep ibus read signal asserted while ibus stall
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
-assign if_inst = (if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid) ? 32'b0 : ibus_rddata;
+assign if_valid_iaddr = ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
+assign if_inst = if_valid_iaddr ? ibus_rddata : 32'b0;
 assign if_in_exl = cp0_in_exl;
 assign if_asid = cp0_asid;
 
@@ -358,8 +357,6 @@ always @(posedge clk) begin : proc_hardware_int_in_sync
   hardware_int <= hardware_int_in_sync;
 end
 
-// assign flush = debugger_flush | debugger_flush_holding | exception_flush | exception_flush_holding;
-
 always @(posedge clk) begin
     if (!rst_n) begin
         flush <= 1'b0;
@@ -378,6 +375,9 @@ end
 always @(*) begin
     if(mm_stall || debugger_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00000;
+    // end else if((mm_mem_access_op == `ACCESS_OP_M2R || mm_mem_access_op == `ACCESS_OP_D2R) &&
+    //   (mm_reg_addr_i == id_reg_s || mm_reg_addr_i == id_reg_t)) begin
+    //     {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
@@ -392,7 +392,6 @@ end
 
 pc pc_instance(/*autoinst*/
          .pc_reg(if_pc),
-         .pc_next(immu_address_i),
          .rst_n(rst_n),
          .clk(clk),
          .enable(en_pc),
@@ -403,6 +402,16 @@ pc pc_instance(/*autoinst*/
          .debug_new_pc(debugger_new_pc),
          .is_branch(id_is_branch),
          .branch_address(id_branch_address));
+
+always @(posedge clk) begin : proc_if_read_hold
+    if(~rst_n) begin
+        if_read_hold <= 1'b0;
+    end else begin
+        if_read_hold <= ibus_read & ibus_stall;
+        if(!if_read_hold && ibus_read) //first cycle of ibus read transaction
+            if_iaddr_phy_hold <= if_iaddr_phy;
+    end
+end
 
 cp0 cp0_instance(/*autoinst*/
      .data_o(ex_cp0_value),
@@ -443,20 +452,6 @@ cp0 cp0_instance(/*autoinst*/
      .exp_badv_we(cp0_badv_we),
      .exp_bad_vaddr(cp0_exp_badv)
 );
-
-always @(posedge clk) begin
-    if(!rst_n) begin 
-        if_iaddr_phy <= 32'h0;
-        if_iaddr_exp_miss <= 1'b0;
-        if_iaddr_exp_illegal <= 1'b0;
-        if_iaddr_exp_invalid <= 1'b0;
-    end else if(en_pc) begin 
-        if_iaddr_phy <= immu_address_o;
-        if_iaddr_exp_miss <= immu_iaddr_exp_miss;
-        if_iaddr_exp_illegal <= immu_iaddr_exp_illegal;
-        if_iaddr_exp_invalid <= immu_iaddr_exp_invalid;
-    end
-end
 
 always @(posedge clk) begin
     if (!rst_n || (!en_ifid && en_idex) || flush) begin

@@ -1,6 +1,5 @@
 module pc(/*autoport*/
 //output
-      pc_next,
       pc_reg,
 //input
       rst_n,
@@ -28,7 +27,7 @@ input wire is_debug;
 input wire[31:0] debug_new_pc;
 input wire debug_reset;
 
-output reg[31:0] pc_next;
+reg[31:0] pc_next;
 output reg[31:0] pc_reg;
 
 always @(*) begin
