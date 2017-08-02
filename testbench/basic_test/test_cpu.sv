@@ -5,7 +5,7 @@
 
 module test_cpu();
 
-parameter IBUS_WAIT_CYCLE = 4;
+parameter IBUS_WAIT_CYCLE = 0;
 
 /*autodef*/
 wire dbus_write;
