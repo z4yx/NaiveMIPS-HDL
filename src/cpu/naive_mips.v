@@ -375,13 +375,13 @@ end
 always @(*) begin
     if(mm_stall || debugger_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00000;
-    // end else if((mm_mem_access_op == `ACCESS_OP_M2R || mm_mem_access_op == `ACCESS_OP_D2R) &&
-    //   (mm_reg_addr_i == id_reg_s || mm_reg_addr_i == id_reg_t)) begin
-    //     {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
       (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
+        {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
+    end else if((mm_reg_addr_i != 5'h0) &&
+      (mm_reg_addr_i == id_reg_s || mm_reg_addr_i == id_reg_t)) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
     end else if(ibus_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
