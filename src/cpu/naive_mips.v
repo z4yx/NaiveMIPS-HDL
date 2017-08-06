@@ -3,7 +3,6 @@
 
 module naive_mips(/*autoport*/
 //output
-      debugger_uart_txd,
       ibus_address,
       ibus_byteenable,
       ibus_read,
@@ -22,8 +21,6 @@ module naive_mips(/*autoport*/
 //input
       rst_n,
       clk,
-      debugger_uart_rxd,
-      debugger_uart_clk,
       ibus_rddata,
       ibus_stall,
       dbus_rddata,
@@ -35,10 +32,6 @@ module naive_mips(/*autoport*/
 
 input wire rst_n;
 input wire clk;
-
-input wire debugger_uart_rxd;
-input wire debugger_uart_clk;
-output wire debugger_uart_txd;
 
 output wire[31:0] ibus_address;
 output wire[3:0] ibus_byteenable;
@@ -235,57 +228,15 @@ wire[7:0]cp0_asid;
 wire cp0_in_exl;
 wire cp0_kseg0_uncached;
 
-wire debugger_flush;
-wire debugger_stall;
+wire debugger_flush = 1'b0;
+wire debugger_stall = 1'b0;
 wire[31:0] debugger_reg_val;
-wire[4:0] debugger_reg_addr;
+wire[4:0] debugger_reg_addr = 5'h0;
 wire[31:0] debugger_cp0_val;
-wire[4:0] debugger_cp0_addr;
+wire[4:0] debugger_cp0_addr = 5'h0;
 wire[63:0] debugger_hilo_val;
-wire[31:0] debugger_new_pc;
-wire debugger_mem_read;
-wire[31:0] debugger_mem_addr;
-wire[31:0] debugger_mem_data;
-wire debugger_pc_reset;
-
-wire[7:0] debugger_host_cmd;
-wire[31:0] debugger_host_param;
-wire[31:0] debugger_host_result;
-wire debugger_host_cmd_en;
-
-dbg_uart dbg_host(/*autoinst*/
-          .host_cmd(debugger_host_cmd),
-          .host_param(debugger_host_param),
-          .host_en(debugger_host_cmd_en),
-          .clk(clk),
-          .clk_uart(debugger_uart_clk),
-          .rxd     (debugger_uart_rxd),
-          .txd     (debugger_uart_txd),
-          .rst_n(rst_n),
-          .host_result(debugger_host_result));
-
-dbg_ctl debugger(/*autoinst*/
-           .new_pc_value(debugger_new_pc),
-           .flush(debugger_flush),
-           .debug_stall(debugger_stall),
-           .main_reg_addr(debugger_reg_addr),
-           .cp0_reg_addr(debugger_cp0_addr),
-           .host_result(debugger_host_result),
-           .clk(clk),
-           .rst_n(rst_n),
-           .inst_pc_value(mm_pc_value),
-           .inst_in_delayslot(mm_in_delayslot),
-           .main_reg_value(debugger_reg_val),
-           .cp0_reg_value(debugger_cp0_val),
-           .hilo_reg_value(debugger_hilo_val),
-           .pc_reg_value(if_pc),
-           .debugger_mem_read(debugger_mem_read),
-           .debugger_mem_addr(debugger_mem_addr),
-           .debugger_mem_data(debugger_mem_data),
-           .pc_reset         (debugger_pc_reset),
-           .host_cmd(debugger_host_cmd),
-           .host_param(debugger_host_param),
-           .host_cmd_en(debugger_host_cmd_en));
+wire[31:0] debugger_new_pc = 32'h0;
+wire debugger_pc_reset = 1'b0;
 
 regs main_regs(/*autoinst*/
          .rdata1(id_reg_s_value_from_regs),
@@ -346,8 +297,6 @@ assign dbus_icache_inv = mm_inv_icache & ~mm_exception_detected;
 assign dbus_wrdata= mm_mem_data_o;
 assign mm_mem_data_i = dbus_uncached ? dbus_rddata_uncached : dbus_rddata;
 assign mm_stall = dbus_stall | dbus_uncached_stall | dbus_iv_stall;
-
-assign debugger_mem_data = if_inst;
 
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
