@@ -190,7 +190,11 @@ wire[31:0] mm_exception_handler;
 
 
 wire wb_reg_we;
-reg [31:0]wb_data_i;
+reg wb_flag_unsigned;
+reg [31:0]wb_addr_i;
+reg [31:0]wb_data_i, wb_mem_data_i;
+wire[31:0]wb_data_o;
+reg [2:0]wb_mem_access_sz;
 reg [1:0]wb_mem_access_op;
 reg [4:0]wb_reg_addr_i;
 reg [2:0]wb_cp0_wrsel;
@@ -246,7 +250,7 @@ regs main_regs(/*autoinst*/
          .rst_n(rst_n),
          .we(wb_reg_we),
          .waddr(wb_reg_addr_i),
-         .wdata(wb_data_i),
+         .wdata(wb_data_o),
          .raddr1(id_reg_s),
          .raddr2(id_reg_t),
          .raddr3(debugger_reg_addr));
@@ -449,7 +453,7 @@ reg_val_mux reg_val_mux_s(/*autoinst*/
           .value_from_mm(mm_data_i),
           .access_op_from_mm(mm_mem_access_op),
           .addr_from_wb(wb_reg_addr_i),
-          .value_from_wb(wb_data_i),
+          .value_from_wb(wb_data_o),
           .write_enable_from_wb(wb_reg_we));
 
 reg_val_mux reg_val_mux_t(/*autoinst*/
@@ -463,7 +467,7 @@ reg_val_mux reg_val_mux_t(/*autoinst*/
           .value_from_mm(mm_data_i),
           .access_op_from_mm(mm_mem_access_op),
           .addr_from_wb(wb_reg_addr_i),
-          .value_from_wb(wb_data_i),
+          .value_from_wb(wb_data_o),
           .write_enable_from_wb(wb_reg_we));
 
 branch branch_detect(/*autoinst*/
@@ -694,6 +698,10 @@ assign cp0_exp_bd = mm_in_delayslot;
 always @(posedge clk) begin
     if (!rst_n || flush || !en_mmwb) begin
         wb_mem_access_op <= `ACCESS_OP_D2R;
+        wb_mem_access_sz <= `ACCESS_SZ_WORD;
+        wb_flag_unsigned <= 1'b0;
+        wb_addr_i <= 32'b0;
+        wb_mem_data_i <= 32'b0;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
         wb_reg_hilo <= 64'b0;
@@ -708,6 +716,10 @@ always @(posedge clk) begin
     end
     else begin
         wb_mem_access_op <= mm_mem_access_op;
+        wb_mem_access_sz <= mm_mem_access_sz;
+        wb_flag_unsigned <= mm_flag_unsigned;
+        wb_addr_i <= mm_addr_i;
+        wb_mem_data_i <= mm_mem_data_i;
         wb_data_i <= mm_data_o;
         wb_reg_addr_i <= mm_reg_addr_i;
         wb_reg_hilo <= mm_reg_hilo;
@@ -723,6 +735,11 @@ always @(posedge clk) begin
 end
 
 wb stage_wb(/*autoinst*/
+            .mem_access_sz(wb_mem_access_sz),
+            .mem_data_i   (wb_mem_data_i),
+            .addr_i       (wb_addr_i),
+            .flag_unsigned(wb_flag_unsigned),
+            .data_o       (wb_data_o),
             .reg_we(wb_reg_we),
             .mem_access_op(wb_mem_access_op),
             .data_i(wb_data_i),
