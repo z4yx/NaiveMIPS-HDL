@@ -380,7 +380,7 @@ always @(*) begin
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
       (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
-    end else if((mm_reg_addr_i != 5'h0) &&
+    end else if(mm_mem_access_op == `ACCESS_OP_M2R && mm_reg_addr_i != 5'h0 &&
       (mm_reg_addr_i == id_reg_s || mm_reg_addr_i == id_reg_t)) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00011;
     end else if(ibus_stall) begin
@@ -497,7 +497,7 @@ reg_val_mux reg_val_mux_s(/*autoinst*/
           .value_from_ex(ex_data_o),
           .access_op_from_ex(ex_mem_access_op),
           .addr_from_mm(mm_reg_addr_i),
-          .value_from_mm(mm_data_o),
+          .value_from_mm(mm_data_i),
           .access_op_from_mm(mm_mem_access_op),
           .addr_from_wb(wb_reg_addr_i),
           .value_from_wb(wb_data_i),
@@ -511,7 +511,7 @@ reg_val_mux reg_val_mux_t(/*autoinst*/
           .value_from_ex(ex_data_o),
           .access_op_from_ex(ex_mem_access_op),
           .addr_from_mm(mm_reg_addr_i),
-          .value_from_mm(mm_data_o),
+          .value_from_mm(mm_data_i),
           .access_op_from_mm(mm_mem_access_op),
           .addr_from_wb(wb_reg_addr_i),
           .value_from_wb(wb_data_i),
