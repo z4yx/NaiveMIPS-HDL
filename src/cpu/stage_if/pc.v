@@ -39,10 +39,10 @@ always @(*) begin
             pc_next <= debug_new_pc;
         end
         else if(is_exception) begin
-            pc_next <= exception_new_pc & 32'hfffffffc;
+            pc_next <= exception_new_pc;
         end
         else if(is_branch) begin
-            pc_next <= branch_address & 32'hfffffffc;
+            pc_next <= branch_address;
         end
         else begin
             pc_next <= pc_reg+32'd4;
