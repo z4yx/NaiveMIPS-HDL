@@ -197,11 +197,8 @@ wire[31:0]wb_data_o;
 reg [2:0]wb_mem_access_sz;
 reg [1:0]wb_mem_access_op;
 reg [4:0]wb_reg_addr_i;
-reg [2:0]wb_cp0_wrsel;
 reg [63:0]wb_reg_hilo;
 reg wb_we_hilo;
-reg wb_we_cp0;
-reg [4:0]wb_cp0_wraddr;
 reg wb_we_tlb;
 reg wb_probe_tlb;
 reg[31:0] wb_probe_result;
@@ -328,7 +325,7 @@ end
 always @(*) begin
     if(mm_stall || debugger_stall) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00000;
-    end else if(ex_stall) begin
+    end else if(ex_stall || (ex_op==`OP_MFC0 && mm_we_cp0)) begin
         {en_pc,en_ifid,en_idex,en_exmm,en_mmwb} <= 5'b00001;
     end else if(ex_mem_access_op == `ACCESS_OP_M2R &&
       (ex_reg_addr == id_reg_s || ex_reg_addr == id_reg_t)) begin
@@ -375,10 +372,10 @@ cp0 cp0_instance(/*autoinst*/
      .debugger_data_o(debugger_cp0_val),
      .rd_addr(ex_cp0_rdaddr),
      .rd_sel(ex_cp0_sel),
-     .we(wb_we_cp0 & ~wb_exception_detected),
-     .wr_addr(wb_cp0_wraddr),
-     .wr_sel(wb_cp0_wrsel),
-     .data_i(wb_data_i),
+     .we(mm_we_cp0 & ~mm_exception_detected),
+     .wr_addr(mm_cp0_wraddr),
+     .wr_sel(mm_cp0_wrsel),
+     .data_i(mm_data_i),
      .user_mode(cp0_user_mode),
      .ebase(cp0_ebase),
      .epc(cp0_epc),
@@ -706,10 +703,7 @@ always @(posedge clk) begin
         wb_reg_addr_i <= 5'b0;
         wb_reg_hilo <= 64'b0;
         wb_we_hilo <= 1'b0;
-        wb_we_cp0 <= 1'b0;
-        wb_cp0_wraddr <= 5'b0;
         wb_we_tlb <= 1'b0;
-        wb_cp0_wrsel <= 3'b0;
         wb_probe_tlb <= 1'b0;
         wb_probe_result <= 32'b0;
         wb_exception_detected <= 1'b0;
@@ -724,10 +718,7 @@ always @(posedge clk) begin
         wb_reg_addr_i <= mm_reg_addr_i;
         wb_reg_hilo <= mm_reg_hilo;
         wb_we_hilo <= mm_we_hilo;
-        wb_we_cp0 <= mm_we_cp0;
-        wb_cp0_wraddr <= mm_cp0_wraddr;
         wb_we_tlb <= mm_we_tlb;
-        wb_cp0_wrsel <= mm_cp0_wrsel;
         wb_probe_tlb <= mm_probe_tlb;
         wb_probe_result <= mm_probe_result;
         wb_exception_detected <= mm_exception_detected;
