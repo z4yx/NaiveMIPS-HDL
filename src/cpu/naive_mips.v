@@ -86,6 +86,7 @@ wire [31:0]id_address;
 wire [4:0]id_reg_t;
 wire [31:0]id_branch_address;
 wire id_is_branch;
+wire id_branch_taken;
 reg id_in_delayslot;
 reg [31:0]id_pc_value;
 reg id_real_inst;
@@ -350,7 +351,7 @@ pc pc_instance(/*autoinst*/
          .is_debug    (debugger_flush),
          .debug_reset (debugger_pc_reset),
          .debug_new_pc(debugger_new_pc),
-         .is_branch(id_is_branch),
+         .is_branch(id_branch_taken),
          .branch_address(id_branch_address));
 
 always @(posedge clk) begin : proc_if_read_hold
@@ -469,6 +470,7 @@ reg_val_mux reg_val_mux_t(/*autoinst*/
 
 branch branch_detect(/*autoinst*/
          .is_branch(id_is_branch),
+         .branch_taken  (id_branch_taken),
          .branch_address(id_branch_address),
          .return_address(id_address),
          .inst(id_inst),
