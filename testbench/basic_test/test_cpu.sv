@@ -32,7 +32,12 @@ prog_rom fake_rom(/*autoinst*/
           .data(ibus_rddata),
           .address({19'b0, ibus_address[12:0]}));
 
-naive_mips mips(/*autoinst*/
+naive_mips #(
+            .WITH_CACHE(1),
+            .WITH_TLB(1),
+            .BUS_READ_1CYCLE(0)
+)
+mips(/*autoinst*/
             .ibus_address(ibus_address[31:0]),
             .ibus_byteenable(ibus_byteenable[3:0]),
             .ibus_read(ibus_read),

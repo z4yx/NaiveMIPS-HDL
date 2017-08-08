@@ -30,8 +30,8 @@ module naive_mips(/*autoport*/
       dbus_iv_stall,
       hardware_int_in);
 
-parameter WITH_CACHE = 1;
-parameter WITH_TLB = 1;
+parameter WITH_CACHE = 0;
+parameter WITH_TLB = 0;
 parameter BUS_READ_1CYCLE = 0;
 
 input wire rst_n;
