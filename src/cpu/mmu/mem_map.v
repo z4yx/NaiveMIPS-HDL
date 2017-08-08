@@ -10,6 +10,9 @@ module mem_map(/*autoport*/
          en,
          um,
          cp0_kseg0_uncached);
+
+parameter WITH_TLB = 1;
+
 input wire[31:0] addr_i;
 output reg[31:0] addr_o;
 input wire en;
@@ -28,11 +31,14 @@ always @(*) begin
         casez(addr_i[31:29])
         3'b110,         //kseg2
         3'b111,         //kseg3
-		  3'b000,
-		  3'b001,
-		  3'b010,
-		  3'b011: begin   //useg
-            using_tlb <= 1'b1;
+        3'b000,
+		3'b001,
+		3'b010,
+		3'b011: begin   //useg
+            if(WITH_TLB)
+                using_tlb <= 1'b1;
+            else
+                addr_o <= addr_i; //fixed mapping described in Appendix A.1
         end
         3'b100: begin   //kseg0
             uncached <= cp0_kseg0_uncached;

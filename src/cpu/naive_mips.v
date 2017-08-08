@@ -258,7 +258,7 @@ regs main_regs(/*autoinst*/
          .raddr2(id_reg_t),
          .raddr3(debugger_reg_addr));
 
-mmu_top mmu(/*autoinst*/
+mmu_top #(.WITH_TLB(WITH_TLB)) mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(if_iaddr_phy),
       .data_uncached(dbus_uncached),
@@ -442,7 +442,7 @@ always @(*) begin
     end
 end
 
-id stage_id(/*autoinst*/
+id #(.WITH_TLB(WITH_TLB),.WITH_CACHE(WITH_CACHE)) stage_id(/*autoinst*/
             .op(id_op),
             .op_type(id_op_type),
             .reg_s(id_reg_s),

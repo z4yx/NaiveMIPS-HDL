@@ -27,6 +27,8 @@ module mmu_top(/*autoport*/
      asid,
      cp0_kseg0_uncached);
 
+parameter WITH_TLB = 1;
+
 input wire rst_n;
 input wire clk;
 
@@ -80,7 +82,7 @@ assign inst_address_o = inst_tlb_map ? inst_address_tlb : inst_address_direct;
 assign inst_uncached = inst_map_uncached || inst_bypass;
 assign data_uncached = data_map_uncached || data_bypass;
 
-mem_map map_inst(/*autoinst*/
+mem_map #(.WITH_TLB(WITH_TLB)) map_inst(/*autoinst*/
            .addr_o(inst_address_direct),
            .invalid(inst_exp_illegal),
            .addr_i(inst_address_i),
@@ -89,7 +91,7 @@ mem_map map_inst(/*autoinst*/
            .cp0_kseg0_uncached(cp0_kseg0_uncached),
            .en(inst_en),
            .um(user_mode));
-mem_map map_data(/*autoinst*/
+mem_map #(.WITH_TLB(WITH_TLB)) map_data(/*autoinst*/
            .addr_o(data_address_direct),
            .invalid(data_exp_illegal),
            .addr_i(data_address_i),
@@ -98,6 +100,9 @@ mem_map map_data(/*autoinst*/
            .cp0_kseg0_uncached(cp0_kseg0_uncached),
            .en(data_en),
            .um(user_mode));
+
+generate
+if(WITH_TLB) begin : gen_tlb
 
 tlb tlb0(
   .tlbConfig(tlb_config),
@@ -128,5 +133,8 @@ tlb tlb0(
   .rst_n(rst_n),
   .clk(clk)
 );
+
+end
+endgenerate
 
 endmodule

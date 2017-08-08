@@ -9,6 +9,9 @@ module id_i(/*autoport*/
 //input
             inst);
 
+parameter WITH_CACHE = 1;
+parameter WITH_TLB = 1;
+
 input wire[31:0] inst;
 output reg[7:0] op;
 output wire[4:0] reg_s;
@@ -56,9 +59,9 @@ always @(*) begin
                 op <= `OP_ERET;
             else if(inst[5:0] == 6'h20)
                 op <= `OP_WAIT;
-            else if(inst[5:0] == 6'h2)
+            else if(inst[5:0] == 6'h2 && WITH_TLB)
                 op <= `OP_TLBWI;
-            else if(inst[5:0] == 6'h8)
+            else if(inst[5:0] == 6'h8 && WITH_TLB)
                 op <= `OP_TLBP;
             else
                 op <= `OP_INVAILD;
@@ -76,7 +79,7 @@ always @(*) begin
     6'h2B: op <= `OP_SW;
     6'h2a: op <= `OP_SWL;
     6'h2e: op <= `OP_SWR;
-    6'h2F: op <= `OP_CACHE;
+    6'h2F: op <= WITH_CACHE ? `OP_CACHE : `OP_INVAILD;
     6'h33: op <= `OP_PREF;
     // 6'h38: op <= `OP_SC;
     default: op <= `OP_INVAILD;
