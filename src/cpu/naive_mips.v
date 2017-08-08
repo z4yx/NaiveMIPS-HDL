@@ -82,6 +82,7 @@ wire [15:0]id_immediate;
 wire [1:0]id_op_type;
 wire [7:0]id_op;
 reg [31:0]id_inst, id_ibus_rddata;
+reg [31:0]id_inst_keep;
 wire [4:0]id_reg_s;
 wire [4:0]id_reg_d;
 wire id_flag_unsigned;
@@ -99,6 +100,7 @@ reg id_iaddr_exp_illegal;
 reg id_iaddr_exp_invalid;
 reg [7:0]id_iaddr_exp_asid;
 reg id_iaddr_exp_exl;
+reg id_update_flag,id_update_flag_last;
 
 wire [31:0] id_reg_s_value_from_regs, id_reg_t_value_from_regs;
 wire [31:0] id_reg_s_value, id_reg_t_value;
@@ -191,6 +193,7 @@ reg mm_inv_icache;
 reg [7:0] mm_interrupt_flags;
 wire mm_exception_detected;
 wire[31:0] mm_exception_handler;
+wire mm_dbus_uncached;
 
 
 wire wb_reg_we;
@@ -261,7 +264,7 @@ regs main_regs(/*autoinst*/
 mmu_top #(.WITH_TLB(WITH_TLB)) mmu(/*autoinst*/
       .data_address_o(dbus_address),
       .inst_address_o(if_iaddr_phy),
-      .data_uncached(dbus_uncached),
+      .data_uncached(mm_dbus_uncached),
       .inst_uncached(),
       .data_exp_miss(mm_daddr_exp_miss),
       .inst_exp_miss(if_iaddr_exp_miss),
@@ -293,6 +296,7 @@ assign if_valid_iaddr = ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_in
 assign if_in_exl = cp0_in_exl;
 assign if_asid = cp0_asid;
 
+assign dbus_uncached = WITH_CACHE ? mm_dbus_uncached : 1'b0; //xxx_uncached unavailable if cache is not enabled
 assign dbus_byteenable = mm_mem_byte_en;
 assign dbus_read = mm_mem_rd & ~dbus_uncached & ~mm_exception_detected;
 assign dbus_write = mm_mem_wr & ~dbus_uncached & ~mm_exception_detected;
@@ -419,6 +423,7 @@ always @(posedge clk) begin
         id_iaddr_exp_invalid <= 1'b0;
         id_iaddr_exp_asid <= 8'b0;
         id_iaddr_exp_exl <= 1'b0;
+        id_update_flag <= 1'b0;
     end
     else if(en_ifid) begin
         id_pc_value <= if_pc;
@@ -431,12 +436,20 @@ always @(posedge clk) begin
         id_iaddr_exp_invalid <= if_iaddr_exp_invalid;
         id_iaddr_exp_asid <= if_asid;
         id_iaddr_exp_exl <= if_in_exl;
+        id_update_flag <= ~id_update_flag;
     end
 end
 
+always @(posedge clk) begin
+    id_update_flag_last <= id_update_flag;
+    if(id_update_flag != id_update_flag_last)
+      id_inst_keep <= id_inst;
+end
+
+
 always @(*) begin
     if(BUS_READ_1CYCLE) begin 
-        id_inst = id_valid_iaddr ? ibus_rddata : 32'h0;
+        id_inst = (id_valid_iaddr ? (id_update_flag!=id_update_flag_last ? ibus_rddata : id_inst_keep) : 32'h0);
     end else begin 
         id_inst = id_valid_iaddr ? id_ibus_rddata : 32'h0;
     end
