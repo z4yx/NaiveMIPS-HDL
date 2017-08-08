@@ -30,6 +30,10 @@ module naive_mips(/*autoport*/
       dbus_iv_stall,
       hardware_int_in);
 
+parameter WITH_CACHE = 1;
+parameter WITH_TLB = 1;
+parameter BUS_READ_1CYCLE = 0;
+
 input wire rst_n;
 input wire clk;
 
@@ -64,7 +68,6 @@ reg en_pc,en_ifid,en_idex,en_exmm,en_mmwb;
 reg[31:0] exp_entry_addr;
 
 wire [31:0]if_pc;
-wire [31:0]if_inst;
 wire [31:0]if_iaddr_phy;
 wire if_iaddr_exp_miss;
 wire if_iaddr_exp_illegal;
@@ -78,7 +81,7 @@ reg [31:0]if_iaddr_phy_hold;
 wire [15:0]id_immediate;
 wire [1:0]id_op_type;
 wire [7:0]id_op;
-reg [31:0]id_inst;
+reg [31:0]id_inst, id_ibus_rddata;
 wire [4:0]id_reg_s;
 wire [4:0]id_reg_d;
 wire id_flag_unsigned;
@@ -90,6 +93,7 @@ wire id_branch_taken;
 reg id_in_delayslot;
 reg [31:0]id_pc_value;
 reg id_real_inst;
+reg id_valid_iaddr;
 reg id_iaddr_exp_miss;
 reg id_iaddr_exp_illegal;
 reg id_iaddr_exp_invalid;
@@ -152,7 +156,6 @@ reg mm_invalid_inst;
 wire [31:0]mm_mem_data_o;
 reg [2:0]mm_mem_access_sz;
 reg [4:0]mm_reg_addr_i;
-wire [31:0]mm_mem_data_i;
 wire [31:0]mm_mem_address;
 wire [3:0]mm_mem_byte_en;
 wire mm_mem_rd;
@@ -194,6 +197,8 @@ wire wb_reg_we;
 reg wb_flag_unsigned;
 reg [31:0]wb_addr_i;
 reg [31:0]wb_data_i, wb_mem_data_i;
+reg [31:0]wb_dbus_rddata, wb_dbus_rddata_uncached;
+reg wb_dbus_uncached;
 wire[31:0]wb_data_o;
 reg [2:0]wb_mem_access_sz;
 reg [1:0]wb_mem_access_op;
@@ -285,7 +290,6 @@ assign ibus_read = if_valid_iaddr|if_read_hold; //keep ibus read signal asserted
 assign ibus_write = 1'b0;
 assign ibus_wrdata = 32'b0;
 assign if_valid_iaddr = ~(if_iaddr_exp_miss|if_iaddr_exp_illegal|if_iaddr_exp_invalid);
-assign if_inst = if_valid_iaddr ? ibus_rddata : 32'b0;
 assign if_in_exl = cp0_in_exl;
 assign if_asid = cp0_asid;
 
@@ -297,7 +301,6 @@ assign dbus_uncached_write = mm_mem_wr & dbus_uncached & ~mm_exception_detected;
 assign dbus_dcache_inv_wb = mm_inv_wb_dcache & ~mm_exception_detected;
 assign dbus_icache_inv = mm_inv_icache & ~mm_exception_detected;
 assign dbus_wrdata= mm_mem_data_o;
-assign mm_mem_data_i = dbus_uncached ? dbus_rddata_uncached : dbus_rddata;
 assign mm_stall = dbus_stall | dbus_uncached_stall | dbus_iv_stall;
 
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
@@ -406,9 +409,10 @@ cp0 cp0_instance(/*autoinst*/
 
 always @(posedge clk) begin
     if (!rst_n || (!en_ifid && en_idex) || flush) begin
-        id_inst <= 32'b0; //NOP
         id_pc_value <= 32'b0;
+        id_ibus_rddata <= 32'h0;
         id_real_inst <= 1'b0;
+        id_valid_iaddr <= 1'b0;
         id_in_delayslot <= 1'b0;
         id_iaddr_exp_miss <= 1'b0;
         id_iaddr_exp_illegal <= 1'b0;
@@ -417,15 +421,24 @@ always @(posedge clk) begin
         id_iaddr_exp_exl <= 1'b0;
     end
     else if(en_ifid) begin
-        id_inst <= if_inst;
         id_pc_value <= if_pc;
+        id_ibus_rddata <= ibus_rddata;
         id_real_inst <= 1'b1;
+        id_valid_iaddr <= if_valid_iaddr;
         id_in_delayslot <= id_is_branch;
         id_iaddr_exp_miss <= if_iaddr_exp_miss;
         id_iaddr_exp_illegal <= if_iaddr_exp_illegal;
         id_iaddr_exp_invalid <= if_iaddr_exp_invalid;
         id_iaddr_exp_asid <= if_asid;
         id_iaddr_exp_exl <= if_in_exl;
+    end
+end
+
+always @(*) begin
+    if(BUS_READ_1CYCLE) begin 
+        id_inst = id_valid_iaddr ? ibus_rddata : 32'h0;
+    end else begin 
+        id_inst = id_valid_iaddr ? id_ibus_rddata : 32'h0;
     end
 end
 
@@ -649,7 +662,6 @@ mm stage_mm(/*autoinst*/
             .data_i(mm_data_i),
             .reg_addr_i(mm_reg_addr_i),
             .addr_i(mm_addr_i),
-            .mem_data_i(mm_mem_data_i),
             .exception_flush(flush),
             .flag_unsigned(mm_flag_unsigned));
 
@@ -700,7 +712,6 @@ always @(posedge clk) begin
         wb_mem_access_sz <= `ACCESS_SZ_WORD;
         wb_flag_unsigned <= 1'b0;
         wb_addr_i <= 32'b0;
-        wb_mem_data_i <= 32'b0;
         wb_data_i <= 32'b0;
         wb_reg_addr_i <= 5'b0;
         wb_reg_hilo <= 64'b0;
@@ -709,13 +720,15 @@ always @(posedge clk) begin
         wb_probe_tlb <= 1'b0;
         wb_probe_result <= 32'b0;
         wb_exception_detected <= 1'b0;
+        wb_dbus_uncached <= 1'b0;
+        wb_dbus_rddata_uncached <= 32'h0;
+        wb_dbus_rddata <= 32'h0;
     end
     else begin
         wb_mem_access_op <= mm_mem_access_op;
         wb_mem_access_sz <= mm_mem_access_sz;
         wb_flag_unsigned <= mm_flag_unsigned;
         wb_addr_i <= mm_addr_i;
-        wb_mem_data_i <= mm_mem_data_i;
         wb_data_i <= mm_data_o;
         wb_reg_addr_i <= mm_reg_addr_i;
         wb_reg_hilo <= mm_reg_hilo;
@@ -724,7 +737,17 @@ always @(posedge clk) begin
         wb_probe_tlb <= mm_probe_tlb;
         wb_probe_result <= mm_probe_result;
         wb_exception_detected <= mm_exception_detected;
+        wb_dbus_uncached <= dbus_uncached;
+        wb_dbus_rddata_uncached <= dbus_rddata_uncached;
+        wb_dbus_rddata <= dbus_rddata;
     end
+end
+
+always @(*) begin
+    if(BUS_READ_1CYCLE)
+        wb_mem_data_i = wb_dbus_uncached ? dbus_rddata_uncached : dbus_rddata;
+    else
+        wb_mem_data_i = wb_dbus_uncached ? wb_dbus_rddata_uncached : wb_dbus_rddata;
 end
 
 wb stage_wb(/*autoinst*/

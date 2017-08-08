@@ -16,8 +16,7 @@ module mm(/*autoport*/
           reg_addr_i,
           addr_i,
           flag_unsigned,
-          exception_flush,
-          mem_data_i);
+          exception_flush);
 
 input wire[1:0] mem_access_op;
 input wire[2:0] mem_access_sz;
@@ -30,7 +29,6 @@ input wire exception_flush;
 output wire[31:0] data_o;
 
 output wire[31:0] mem_address;
-input wire[31:0] mem_data_i;
 output reg[31:0] mem_data_o;
 output reg mem_rd;
 output reg mem_wr;
