@@ -40,14 +40,14 @@ always @(*) begin
     end
     6'h04: op <= `OP_BEQ;
     6'h05: op <= `OP_BNE;
-    6'h06: op <= `OP_BLEZ;
-    6'h07: op <= `OP_BGTZ;
+    6'h06: op <= reg_t == 5'h0 ? `OP_BLEZ : `OP_INVAILD;
+    6'h07: op <= reg_t == 5'h0 ? `OP_BGTZ : `OP_INVAILD;
     6'h08,6'h09: op <= `OP_ADD;
     6'h0a,6'h0b: op <= `OP_SLT;
     6'h0c: op <= `OP_AND;
     6'h0d: op <= `OP_OR;
     6'h0e: op <= `OP_XOR;
-    6'h0f: op <= `OP_LU;
+    6'h0f: op <= reg_s == 5'h0 ? `OP_LU : `OP_INVAILD;
     6'h10: begin //CP0 related
         if(reg_s == 5'h0) op <= `OP_MFC0;
         else if(reg_s == 5'h4) op <= `OP_MTC0;

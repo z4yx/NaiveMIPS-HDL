@@ -16,7 +16,7 @@ output wire[63:0] rdata;
 
 reg[63:0] hilo;
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if(!rst_n) begin
         hilo <= 64'b0;
     end

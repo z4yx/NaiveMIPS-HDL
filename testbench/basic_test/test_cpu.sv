@@ -5,7 +5,7 @@
 
 module test_cpu();
 
-parameter IBUS_WAIT_CYCLE = 4;
+parameter IBUS_WAIT_CYCLE = 0;
 
 /*autodef*/
 wire dbus_write;
@@ -22,7 +22,7 @@ wire [31:0]ibus_address;
 wire [3:0]dbus_byteenable;
 wire dbus_dcache_inv_wb;
 wire dbus_stall;
-reg [31:0]ibus_rddata_ff, ibus_rddata_tmp;
+reg [31:0]ibus_rddata_ff, ibus_rddata_tmp, ibus_address_tmp;
 reg ibus_waitrequest;
 reg[4:0] hardware_int;
 reg rst_n;
@@ -194,11 +194,17 @@ initial begin
             wait_cycle = 0;
             @(negedge clk);
             ibus_rddata_tmp = ibus_rddata;
-            while(wait_cycle < IBUS_WAIT_CYCLE && rst_n)begin
+            ibus_address_tmp = ibus_address;
+            while(wait_cycle < IBUS_WAIT_CYCLE)begin
                 @(posedge clk);
+                if(!rst_n) break;
                 @(negedge clk);
                 if(~ibus_read)begin
                     $display("read transaction prematurely ended");
+                    $stop;
+                end
+                if(ibus_address != ibus_address_tmp)begin
+                    $display("ibus address changed");
                     $stop;
                 end
                 wait_cycle = wait_cycle+1;
@@ -228,8 +234,12 @@ reg[63:0] next_value;
 begin
     rst_n=1'b0;
     hardware_int = 4'b0;
-    #41 rst_n=1'b1;
+    repeat(16) @(posedge clk);
+    #1 rst_n=1'b1;
 
+    for(j=$size(fake_rom.rom)-1; j>=0; j--) begin
+        fake_rom.rom[j] = 32'h0;
+    end
     $readmemh({test_name,".mem"},fake_rom.rom);
     fd = $fopen({test_name,".ans"},"r");
     if(fd == 0) begin
@@ -304,9 +314,6 @@ always begin
 end
 
 initial begin
-    unit_test("../../../../../testbench/testcase/inst_mem");
-    unit_test("../../../../../testbench/testcase/mem_endian");
-    unit_test("../../../../../testbench/testcase/inst_unalign");
     unit_test("../../../../../testbench/testcase/inst_div");
     unit_test("../../../../../testbench/testcase/inst_alu");
     unit_test("../../../../../testbench/testcase/inst_logic");
@@ -314,6 +321,9 @@ initial begin
     unit_test("../../../../../testbench/testcase/inst_move");
     unit_test("../../../../../testbench/testcase/inst_jump");
     unit_test("../../../../../testbench/testcase/inst_branch");
+    unit_test("../../../../../testbench/testcase/inst_mem");
+    unit_test("../../../../../testbench/testcase/mem_endian");
+    unit_test("../../../../../testbench/testcase/inst_unalign");
     unit_test("../../../../../testbench/testcase/overflow_exp");
     unit_test("../../../../../testbench/testcase/inst_syscall");
     unit_test("../../../../../testbench/testcase/timer_int");

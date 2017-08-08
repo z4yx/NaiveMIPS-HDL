@@ -27,30 +27,33 @@ input wire is_debug;
 input wire[31:0] debug_new_pc;
 input wire debug_reset;
 
+reg[31:0] pc_next;
 output reg[31:0] pc_reg;
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
-        pc_reg <= PC_INITIAL;
-    end
-    else if(debug_reset) begin 
-        pc_reg <= PC_INITIAL;
-    end
-    else if(is_debug) begin
-        pc_reg <= debug_new_pc;
-    end
-    else if(is_exception) begin
-        pc_reg <= exception_new_pc & 32'hfffffffc;
+always @(*) begin
+    if (!rst_n || debug_reset) begin
+        pc_next <= PC_INITIAL;
     end
     else if(enable) begin
-        if(is_branch) begin
-            pc_reg <= branch_address & 32'hfffffffc;
+        if(is_debug) begin
+            pc_next <= debug_new_pc;
+        end
+        else if(is_exception) begin
+            pc_next <= exception_new_pc;
+        end
+        else if(is_branch) begin
+            pc_next <= branch_address;
         end
         else begin
-            pc_reg <= pc_reg+32'd4;
+            pc_next <= pc_reg+32'd4;
         end
+    end else begin 
+        pc_next <= pc_reg;
     end
 end
+
+always @(posedge clk) 
+    pc_reg <= pc_next;
 
 // always @(posedge clk) $display("PC=%x",pc_reg);
 

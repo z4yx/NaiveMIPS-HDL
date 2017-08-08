@@ -209,7 +209,7 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
 end //for
 endgenerate
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if (!rst_n) begin
         cp0_regs_Count <= 32'b0;
         cp0_regs_Compare <= 32'b0;

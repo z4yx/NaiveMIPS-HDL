@@ -28,7 +28,8 @@ output reg [63:0] result;
 output reg done;
 
 wire [31:0] abs_opa1, abs_opa2;
-wire [63:0] tmp_result, mresult;
+wire [63:0] mresult;
+reg [63:0] tmp_result;
 wire [31:0] tmp_quotient, tmp_remain;
 
 wire [31:0] dquotient, dremain;
@@ -59,15 +60,18 @@ div_uu #(.z_width(64)) div_uu0(
 assign abs_opa1 = (flag_unsigned||!operand1[31]) ? operand1 : -operand1;
 assign abs_opa2 = (flag_unsigned||!operand2[31]) ? operand2 : -operand2;
 
-assign tmp_result = abs_opa1*abs_opa2;
 assign mresult = (flag_unsigned||!(operand1[31]^operand2[31])) ? tmp_result : -tmp_result;
 
 assign div_done = div_stage[0];
 assign dquotient = (flag_unsigned||!(operand1[31]^operand2[31])) ? tmp_quotient : -tmp_quotient;
 assign dremain = (flag_unsigned||!(operand1[31]^tmp_remain[31])) ? tmp_remain : -tmp_remain;
 
+always @(posedge clk) begin : proc_tmp_result
+    tmp_result <= abs_opa1*abs_opa2;
+end
+
 always @(*) begin
-    done <= 1'b1;
+    done <= div_done;
     case(op)
     `OP_MUL,`OP_MULT: begin
         result <= mresult;
@@ -79,16 +83,16 @@ always @(*) begin
         result <= hilo_i + mresult;
     end
     `OP_DIV: begin
-        done <= div_done;
         result <= {dremain, dquotient};
     end
     default: begin
+        done <= 1'b1;
         result <= 64'b0;
     end
     endcase
 end
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if (!rst_n) begin
         div_stage <= 'b0;
     end
@@ -97,6 +101,8 @@ always @(posedge clk or negedge rst_n) begin
     end
     else if(div_stage != 'b0) begin
         div_stage <= div_stage >> 1; 
+    end else if(op == `OP_MUL || op == `OP_MULT || op == `OP_MSUB || op == `OP_MADD) begin
+        div_stage <= 2'b10;
     end else if(op == `OP_DIV) begin
         div_stage <= 'b1 << (DIV_CYCLES-1);
     end
