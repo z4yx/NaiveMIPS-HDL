@@ -5,7 +5,7 @@
 
 module test_cpu();
 
-parameter IBUS_WAIT_CYCLE = 0;
+parameter IBUS_WAIT_CYCLE = 1;
 
 /*autodef*/
 wire dbus_write;
@@ -190,20 +190,19 @@ end
 
 integer wait_cycle;
 initial begin
-    ibus_waitrequest = 1;
+    ibus_waitrequest = 0;
     while(1) begin
         @(posedge clk);
-        ibus_waitrequest = 1;
-        @(negedge clk);
+        #2;
         if(ibus_read & rst_n) begin
             wait_cycle = 0;
-            @(negedge clk);
             ibus_rddata_tmp = ibus_rddata;
             ibus_address_tmp = ibus_address;
             while(wait_cycle < IBUS_WAIT_CYCLE)begin
+                ibus_waitrequest = 1;
                 @(posedge clk);
+                #2;
                 if(!rst_n) break;
-                @(negedge clk);
                 if(~ibus_read)begin
                     $display("read transaction prematurely ended");
                     $stop;
