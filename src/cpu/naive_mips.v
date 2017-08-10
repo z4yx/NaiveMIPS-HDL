@@ -147,7 +147,13 @@ reg [7:0]ex_iaddr_exp_asid;
 reg ex_iaddr_exp_exl;
 wire ex_inv_wb_dcache;
 wire ex_inv_icache;
+wire [63:0]ex_result_mult;
+wire ex_sign_mult;
+wire ex_we_hilo_mult;
 
+reg [63:0]mm_result_mult;
+reg mm_sign_mult;
+reg mm_we_hilo_mult;
 wire mm_mem_wr;
 reg mm_in_delayslot;
 reg mm_overflow;
@@ -166,7 +172,8 @@ reg [31:0]mm_data_i;
 wire [31:0]mm_data_o;
 reg [31:0]mm_addr_i;
 reg mm_we_hilo;
-reg [63:0]mm_reg_hilo;
+reg [63:0]mm_reg_hilo_from_ex;
+wire [63:0]mm_reg_hilo;
 reg mm_flag_unsigned;
 reg mm_we_cp0;
 reg [4:0]mm_cp0_wraddr;
@@ -570,6 +577,9 @@ ex stage_ex(/*autoinst*/
             .reg_hilo_o(ex_reg_hilo_o),
             .we_hilo(ex_we_hilo),
             .reg_hilo_value(ex_reg_hilo_value),
+            .result_mult    (ex_result_mult),
+            .sign_mult      (ex_sign_mult),
+            .we_hilo_mult   (ex_we_hilo_mult),
             .we_tlb(ex_we_tlb),
             .clk(clk),
             .rst_n(rst_n),
@@ -601,7 +611,7 @@ always @(posedge clk) begin
         mm_data_i <= 32'b0;
         mm_reg_addr_i <= 5'b0;
         mm_addr_i <= 32'b0;
-        mm_reg_hilo <= 64'b0;
+        // mm_reg_hilo_from_ex <= 64'b0;
         mm_we_hilo <= 1'b0;
         mm_flag_unsigned <= 1'b0;
         mm_we_cp0 <= 1'b0;
@@ -626,6 +636,9 @@ always @(posedge clk) begin
         mm_inv_icache <= 1'b0;
         mm_inv_wb_dcache <= 1'b0;
         mm_interrupt_flags <= 8'h0;
+        // mm_sign_mult <= 1'b0;
+        // mm_result_mult <= 32'h0;
+        mm_we_hilo_mult <= 1'b0;
     end
     else if(en_exmm) begin
         // $display("mm_pc_value<=%x", ex_pc_value);
@@ -634,7 +647,7 @@ always @(posedge clk) begin
         mm_data_i <= ex_data_o;
         mm_reg_addr_i <= ex_reg_addr;
         mm_addr_i <= ex_mem_addr;
-        mm_reg_hilo <= ex_reg_hilo_o;
+        mm_reg_hilo_from_ex <= ex_reg_hilo_o;
         mm_we_hilo <= ex_we_hilo;
         mm_flag_unsigned <= ex_flag_unsigned;
         mm_we_cp0 <= ex_we_cp0;
@@ -659,8 +672,15 @@ always @(posedge clk) begin
         mm_inv_icache <= ex_inv_icache;
         mm_inv_wb_dcache <= ex_inv_wb_dcache;
         mm_interrupt_flags <= {hardware_int,cp0_software_int} & cp0_interrupt_mask;
+        mm_sign_mult <= ex_sign_mult;
+        mm_result_mult <= ex_result_mult;
+        mm_we_hilo_mult <= ex_we_hilo_mult;
     end
 end
+
+assign mm_reg_hilo = mm_we_hilo_mult ? 
+                    (mm_sign_mult ? mm_result_mult : -mm_result_mult) :
+                    mm_reg_hilo_from_ex;
 
 mm stage_mm(/*autoinst*/
             .data_o(mm_data_o),

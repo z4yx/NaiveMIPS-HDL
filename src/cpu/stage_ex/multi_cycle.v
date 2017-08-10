@@ -4,6 +4,8 @@ module multi_cycle(/*autoport*/
 //output
          result,
          done,
+         result_mult,
+         sign_mult,
 //input
          clk,
          rst_n,
@@ -26,6 +28,8 @@ input wire [31:0] operand2;
 input wire [63:0] hilo_i;
 output reg [63:0] result;
 output reg done;
+output wire [63:0]result_mult;
+output wire sign_mult;
 
 wire [31:0] abs_opa1, abs_opa2;
 wire [63:0] mresult;
@@ -60,7 +64,9 @@ div_uu #(.z_width(64)) div_uu0(
 assign abs_opa1 = (flag_unsigned||!operand1[31]) ? operand1 : -operand1;
 assign abs_opa2 = (flag_unsigned||!operand2[31]) ? operand2 : -operand2;
 
-assign mresult = (flag_unsigned||!(operand1[31]^operand2[31])) ? tmp_result : -tmp_result;
+assign result_mult = abs_opa1*abs_opa2;
+assign sign_mult = (flag_unsigned||!(operand1[31]^operand2[31]));
+assign mresult = sign_mult ? tmp_result : -tmp_result;
 
 assign div_done = div_stage[0];
 assign dquotient = (flag_unsigned||!(operand1[31]^operand2[31])) ? tmp_quotient : -tmp_quotient;
@@ -73,7 +79,7 @@ end
 always @(*) begin
     done <= div_done;
     case(op)
-    `OP_MUL,`OP_MULT: begin
+    `OP_MUL/*,`OP_MULT*/: begin
         result <= mresult;
     end
     `OP_MSUB: begin
@@ -101,7 +107,7 @@ always @(posedge clk) begin
     end
     else if(div_stage != 'b0) begin
         div_stage <= div_stage >> 1; 
-    end else if(op == `OP_MUL || op == `OP_MULT || op == `OP_MSUB || op == `OP_MADD) begin
+    end else if(op == `OP_MUL /*|| op == `OP_MULT */|| op == `OP_MSUB || op == `OP_MADD) begin
         div_stage <= 2'b10;
     end else if(op == `OP_DIV) begin
         div_stage <= 'b1 << (DIV_CYCLES-1);
