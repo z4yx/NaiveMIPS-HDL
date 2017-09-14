@@ -1,6 +1,9 @@
 `default_nettype none
 module soc_bd_toplevel(/*autoport*/
 //inout
+     vga_pixel_r,
+     vga_pixel_g,
+     vga_pixel_b,
      ddr3_dq,
      ddr3_dqs_p,
      ddr3_dqs_n,
@@ -14,6 +17,8 @@ module soc_bd_toplevel(/*autoport*/
      cfg_flash_mosi,
      cfg_flash_miso,
      cfg_flash_ss,
+     ps2_clk,
+     ps2_dat,
      lcd_data_tri_io,
 //output
      txd,
@@ -22,7 +27,6 @@ module soc_bd_toplevel(/*autoport*/
      gpio0,
      NUM_CSn,
      NUM_A_G,
-     vga_pixel,
      vga_hsync,
      vga_vsync,
      ddr3_addr,
@@ -74,11 +78,11 @@ input wire[7:0] gpio1;
 output wire[7:0] NUM_CSn;
 output wire[7:0] NUM_A_G;
 
-output wire[7:0] vga_pixel;
+inout wire[3:0] vga_pixel_r;
+inout wire[3:0] vga_pixel_g;
+inout wire[3:0] vga_pixel_b;
 output wire vga_hsync;
 output wire vga_vsync;
-wire vga_clk;
-wire vga_de;
 
 //------DDR3 interface------
 inout  wire[15:0] ddr3_dq;
@@ -221,6 +225,24 @@ IOBUF CFG_FLASH_mosi_buf(
     .T(CFG_FLASH_io0_t)
 );
 
+inout wire ps2_clk, ps2_dat;
+wire ps2_clk_i,ps2_clk_o,ps2_clk_t;
+wire ps2_dat_i,ps2_dat_o,ps2_dat_t;
+
+IOBUF ps2_clk_buf(
+    .IO(ps2_clk),
+    .I(ps2_clk_o),
+    .O(ps2_clk_i),
+    .T(ps2_clk_t)
+);
+
+IOBUF ps2_dat_buf(
+    .IO(ps2_dat),
+    .I(ps2_dat_o),
+    .O(ps2_dat_i),
+    .T(ps2_dat_t)
+);
+
 inout wire[15:0] lcd_data_tri_io;
 output wire lcd_nrst;
 output wire lcd_csel;
@@ -244,6 +266,17 @@ endgenerate
 
 assign lcd_lighton = 1'b1;
 
+wire [5:0] vga_iface_r,vga_iface_g,vga_iface_b;
+genvar vga_i;
+generate
+  for (vga_i = 0; vga_i < 4; vga_i=vga_i+1) begin : vga_data
+    //match on-board DAC built by resistor
+    assign vga_pixel_r[vga_i] = vga_iface_r[vga_i+2] ? 1'b1 : 1'bz;
+    assign vga_pixel_g[vga_i] = vga_iface_g[vga_i+2] ? 1'b1 : 1'bz;
+    assign vga_pixel_b[vga_i] = vga_iface_b[vga_i+2] ? 1'b1 : 1'bz;
+  end
+endgenerate
+
 wire [31:0] segdisp_din, iaddr;
 
 wire clk,locked;
@@ -265,8 +298,6 @@ clk_wiz_0 pll2
  // Clock in ports
   .clk_in1(clk_in)
  );
-
-assign vga_clk = clk_50M;
 
 seg_disp dec(
     .clk(clk),
@@ -308,6 +339,20 @@ bd_soc soc(
   .LCD_rd         (lcd_rd),
   .LCD_rs         (lcd_rs),
   .LCD_wr         (lcd_wr),
+  .VGA_INTF_blue  (vga_iface_b),
+  .VGA_INTF_clk  (),
+  .VGA_INTF_de  (),
+  .VGA_INTF_dps  (),
+  .VGA_INTF_green  (vga_iface_g),
+  .VGA_INTF_hsync  (vga_hsync),
+  .VGA_INTF_red  (vga_iface_r),
+  .VGA_INTF_vsync  (vga_vsync),
+  .PS2_CLK_i      (ps2_clk_i),
+  .PS2_CLK_o      (ps2_clk_o),
+  .PS2_CLK_t      (ps2_clk_t),
+  .PS2_DAT_i      (ps2_dat_i),
+  .PS2_DAT_o      (ps2_dat_o),
+  .PS2_DAT_t      (ps2_dat_t),
   .SPI_FLASH_io0_i(SPI_FLASH_io0_i),
   .SPI_FLASH_io0_o(SPI_FLASH_io0_o),
   .SPI_FLASH_io0_t(SPI_FLASH_io0_t),
@@ -353,7 +398,6 @@ bd_soc soc(
   .aux_reset_n    (locked),
   .ddr_ref_clk    (clk_ddr_ref),
   .ddr_sys_clk    (clk_in),
-  .ext_spi_clk    (clk_spi),
   .sys_rst        (~rst_in_n)
 
 );

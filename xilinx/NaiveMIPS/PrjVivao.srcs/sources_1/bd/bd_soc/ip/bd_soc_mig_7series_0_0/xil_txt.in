@@ -15,7 +15,7 @@ SET_PREFERENCE flowvendor Other
 SET_PREFERENCE tool vivado
 SET_PREFERENCE compnamestatus 0
 SET_PARAMETER component_name bd_soc_mig_7series_0_0
-SET_PARAMETER xml_input_file /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_soc/ip/bd_soc_mig_7series_0_0/mig_b.prj
+SET_PARAMETER xml_input_file /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_soc/ip/bd_soc_mig_7series_0_0/mig_a.prj
 SET_PARAMETER data_dir_path /home/zhang/Xilinx/Vivado/2017.1/data/ip/xilinx/mig_7series_v4_0
 SET_CORE_NAME Memory Interface Generator (MIG 7 Series)
 SET_CORE_VERSION 2.3

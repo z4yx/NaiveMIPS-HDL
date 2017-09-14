@@ -1,4 +1,7 @@
 *.dcp
+*_ooc.xdc
+*_board.xdc
+*_clocks.xdc
 *_sim_netlist.v
 *_sim_netlist.vhdl
 *_stub.v

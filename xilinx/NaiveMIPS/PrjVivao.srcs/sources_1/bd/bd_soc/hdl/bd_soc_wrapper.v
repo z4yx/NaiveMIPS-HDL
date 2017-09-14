@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-//Date        : Sun Jul 30 12:55:34 2017
+//Date        : Thu Sep 14 17:25:24 2017
 //Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target bd_soc_wrapper.bd
 //Design      : bd_soc_wrapper
@@ -26,6 +26,12 @@ module bd_soc_wrapper
     MII_tx_clk,
     MII_tx_en,
     MII_txd,
+    PS2_CLK_i,
+    PS2_CLK_o,
+    PS2_CLK_t,
+    PS2_DAT_i,
+    PS2_DAT_o,
+    PS2_DAT_t,
     UART_baudoutn,
     UART_ctsn,
     UART_dcdn,
@@ -40,6 +46,14 @@ module bd_soc_wrapper
     UART_rxrdyn,
     UART_txd,
     UART_txrdyn,
+    VGA_INTF_blue,
+    VGA_INTF_clk,
+    VGA_INTF_de,
+    VGA_INTF_dps,
+    VGA_INTF_green,
+    VGA_INTF_hsync,
+    VGA_INTF_red,
+    VGA_INTF_vsync,
     aux_reset_n,
     cfg_flash_io0_io,
     cfg_flash_io1_io,
@@ -61,7 +75,6 @@ module bd_soc_wrapper
     ddr3_we_n,
     ddr_ref_clk,
     ddr_sys_clk,
-    ext_spi_clk,
     iaddr,
     lcd_data_tri_io,
     led_tri_o,
@@ -91,6 +104,12 @@ module bd_soc_wrapper
   input MII_tx_clk;
   output MII_tx_en;
   output [3:0]MII_txd;
+  input PS2_CLK_i;
+  output PS2_CLK_o;
+  output PS2_CLK_t;
+  input PS2_DAT_i;
+  output PS2_DAT_o;
+  output PS2_DAT_t;
   output UART_baudoutn;
   input UART_ctsn;
   input UART_dcdn;
@@ -105,6 +124,14 @@ module bd_soc_wrapper
   output UART_rxrdyn;
   output UART_txd;
   output UART_txrdyn;
+  output [5:0]VGA_INTF_blue;
+  output VGA_INTF_clk;
+  output VGA_INTF_de;
+  output VGA_INTF_dps;
+  output [5:0]VGA_INTF_green;
+  output VGA_INTF_hsync;
+  output [5:0]VGA_INTF_red;
+  output VGA_INTF_vsync;
   input aux_reset_n;
   inout cfg_flash_io0_io;
   inout cfg_flash_io1_io;
@@ -126,7 +153,6 @@ module bd_soc_wrapper
   output ddr3_we_n;
   input ddr_ref_clk;
   input ddr_sys_clk;
-  input ext_spi_clk;
   output [31:0]iaddr;
   inout [15:0]lcd_data_tri_io;
   output [31:0]led_tri_o;
@@ -157,6 +183,12 @@ module bd_soc_wrapper
   wire MII_tx_clk;
   wire MII_tx_en;
   wire [3:0]MII_txd;
+  wire PS2_CLK_i;
+  wire PS2_CLK_o;
+  wire PS2_CLK_t;
+  wire PS2_DAT_i;
+  wire PS2_DAT_o;
+  wire PS2_DAT_t;
   wire UART_baudoutn;
   wire UART_ctsn;
   wire UART_dcdn;
@@ -171,6 +203,14 @@ module bd_soc_wrapper
   wire UART_rxrdyn;
   wire UART_txd;
   wire UART_txrdyn;
+  wire [5:0]VGA_INTF_blue;
+  wire VGA_INTF_clk;
+  wire VGA_INTF_de;
+  wire VGA_INTF_dps;
+  wire [5:0]VGA_INTF_green;
+  wire VGA_INTF_hsync;
+  wire [5:0]VGA_INTF_red;
+  wire VGA_INTF_vsync;
   wire aux_reset_n;
   wire cfg_flash_io0_i;
   wire cfg_flash_io0_io;
@@ -201,7 +241,6 @@ module bd_soc_wrapper
   wire ddr3_we_n;
   wire ddr_ref_clk;
   wire ddr_sys_clk;
-  wire ext_spi_clk;
   wire [31:0]iaddr;
   wire [0:0]lcd_data_tri_i_0;
   wire [1:1]lcd_data_tri_i_1;
@@ -333,6 +372,12 @@ module bd_soc_wrapper
         .MII_tx_clk(MII_tx_clk),
         .MII_tx_en(MII_tx_en),
         .MII_txd(MII_txd),
+        .PS2_CLK_i(PS2_CLK_i),
+        .PS2_CLK_o(PS2_CLK_o),
+        .PS2_CLK_t(PS2_CLK_t),
+        .PS2_DAT_i(PS2_DAT_i),
+        .PS2_DAT_o(PS2_DAT_o),
+        .PS2_DAT_t(PS2_DAT_t),
         .SPI_FLASH_io0_i(spi_flash_io0_i),
         .SPI_FLASH_io0_o(spi_flash_io0_o),
         .SPI_FLASH_io0_t(spi_flash_io0_t),
@@ -366,6 +411,14 @@ module bd_soc_wrapper
         .UART_rxrdyn(UART_rxrdyn),
         .UART_txd(UART_txd),
         .UART_txrdyn(UART_txrdyn),
+        .VGA_INTF_blue(VGA_INTF_blue),
+        .VGA_INTF_clk(VGA_INTF_clk),
+        .VGA_INTF_de(VGA_INTF_de),
+        .VGA_INTF_dps(VGA_INTF_dps),
+        .VGA_INTF_green(VGA_INTF_green),
+        .VGA_INTF_hsync(VGA_INTF_hsync),
+        .VGA_INTF_red(VGA_INTF_red),
+        .VGA_INTF_vsync(VGA_INTF_vsync),
         .aux_reset_n(aux_reset_n),
         .cpu_clk(cpu_clk),
         .ddr3_addr(ddr3_addr),
@@ -384,7 +437,6 @@ module bd_soc_wrapper
         .ddr3_we_n(ddr3_we_n),
         .ddr_ref_clk(ddr_ref_clk),
         .ddr_sys_clk(ddr_sys_clk),
-        .ext_spi_clk(ext_spi_clk),
         .iaddr(iaddr),
         .sys_rst(sys_rst),
         .triple_byte_w(triple_byte_w));

@@ -362,7 +362,7 @@
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>HAS_PROT</spirit:name>
-          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.AXI4_LITE.HAS_PROT">0</spirit:value>
+          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.AXI4_LITE.HAS_PROT">1</spirit:value>
           <spirit:vendorExtensions>
             <xilinx:parameterInfo>
               <xilinx:parameterUsage>none</xilinx:parameterUsage>
@@ -398,7 +398,7 @@
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>HAS_WSTRB</spirit:name>
-          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.AXI4_LITE.HAS_WSTRB">0</spirit:value>
+          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.AXI4_LITE.HAS_WSTRB">1</spirit:value>
           <spirit:vendorExtensions>
             <xilinx:parameterInfo>
               <xilinx:parameterUsage>none</xilinx:parameterUsage>
@@ -721,7 +721,7 @@
       <spirit:vendorExtensions>
         <xilinx:busInterfaceInfo>
           <xilinx:enablement>
-            <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="BUSIF_ENABLEMENT.APB_M2" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) > 1)">false</xilinx:isEnabled>
+            <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="BUSIF_ENABLEMENT.APB_M2" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) > 1)">true</xilinx:isEnabled>
           </xilinx:enablement>
         </xilinx:busInterfaceInfo>
       </spirit:vendorExtensions>
@@ -2269,11 +2269,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri Jul 28 18:41:41 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 13:53:05 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:9e7394eb</spirit:value>
+            <spirit:value>7:31e0fc08</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2288,11 +2288,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri Jul 28 18:41:41 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 13:53:05 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:9e7394eb</spirit:value>
+            <spirit:value>7:31e0fc08</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2310,11 +2310,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Thu Jul 27 16:46:50 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 04:41:29 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:f50a13db</spirit:value>
+            <spirit:value>7:3cc80217</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2329,11 +2329,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri Jul 28 18:41:41 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 13:53:05 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:f50a13db</spirit:value>
+            <spirit:value>7:3cc80217</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2347,11 +2347,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri Jul 28 18:42:18 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 14:14:40 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:9e7394eb</spirit:value>
+            <spirit:value>7:31e0fc08</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2431,7 +2431,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi_awprot" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;))= &quot;apb4&quot;">false</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi_awprot" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;))= &quot;apb4&quot;">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -2507,7 +2507,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi_wstrb" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;)) = &quot;apb4&quot;">false</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi_wstrb" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;)) = &quot;apb4&quot;">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -2629,7 +2629,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi_arprot" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;))= &quot;apb4&quot;">false</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi_arprot" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;))= &quot;apb4&quot;">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -2748,7 +2748,7 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) - 1)">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2808,7 +2808,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) - 1)">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -2862,7 +2862,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_apb_prdata2" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) > 1)">false</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_apb_prdata2" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) > 1)">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -3250,7 +3250,7 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) - 1)">0</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_APB_NUM_SLAVES&apos;)) - 1)">1</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -3281,7 +3281,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_apb_pprot" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;)) = &quot;apb4&quot;">false</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_apb_pprot" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;)) = &quot;apb4&quot;">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -3305,7 +3305,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_apb_pstrb" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;)) = &quot;apb4&quot;">false</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_apb_pstrb" xilinx:dependency="spirit:decode(id(&apos;MODELPARAM_VALUE.C_M_APB_PROTOCOL&apos;)) = &quot;apb4&quot;">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -3344,12 +3344,12 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_APB_NUM_SLAVES</spirit:name>
         <spirit:displayName>Number Of Slaves</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_APB_NUM_SLAVES" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">1</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_APB_NUM_SLAVES" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">2</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="string">
         <spirit:name>C_M_APB_PROTOCOL</spirit:name>
         <spirit:displayName>APB Protocol</spirit:displayName>
-        <spirit:value spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_APB_PROTOCOL">apb3</spirit:value>
+        <spirit:value spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_APB_PROTOCOL">apb4</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="std_logic_vector(0 to 31)">
         <spirit:name>C_BASEADDR</spirit:name>
@@ -3364,12 +3364,12 @@
       <spirit:modelParameter spirit:dataType="std_logic_vector(0 to 31)">
         <spirit:name>C_S_AXI_RNG2_BASEADDR</spirit:name>
         <spirit:displayName>Slave2 Base Address</spirit:displayName>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI_RNG2_BASEADDR" spirit:bitStringLength="32">0x1C070000</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI_RNG2_BASEADDR" spirit:bitStringLength="32">0x1C062000</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="std_logic_vector(0 to 31)">
         <spirit:name>C_S_AXI_RNG2_HIGHADDR</spirit:name>
         <spirit:displayName>Slave2 High Address</spirit:displayName>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI_RNG2_HIGHADDR" spirit:bitStringLength="32">0x1C070FFF</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI_RNG2_HIGHADDR" spirit:bitStringLength="32">0x1C062FFF</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="std_logic_vector(0 to 31)">
         <spirit:name>C_S_AXI_RNG3_BASEADDR</spirit:name>
@@ -4026,7 +4026,7 @@
       <spirit:name>C_S_AXI_RNG2_HIGHADDR</spirit:name>
       <spirit:displayName>Slave2 High Address</spirit:displayName>
       <spirit:description>Address must be greater than Base address and should not overlap with other slaves</spirit:description>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI_RNG2_HIGHADDR" spirit:order="1600" spirit:configGroups="2 UnGrouped" spirit:bitStringLength="32">0x1C070FFF</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI_RNG2_HIGHADDR" spirit:order="1600" spirit:configGroups="2 UnGrouped" spirit:bitStringLength="32">0x1C062FFF</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -4039,7 +4039,7 @@
       <spirit:name>C_S_AXI_RNG2_BASEADDR</spirit:name>
       <spirit:displayName>Slave2 Base Address</spirit:displayName>
       <spirit:description>Address must be lower than High address and should not overlap with other slaves</spirit:description>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI_RNG2_BASEADDR" spirit:order="1500" spirit:configGroups="2 UnGrouped" spirit:bitStringLength="32">0x1C070000</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI_RNG2_BASEADDR" spirit:order="1500" spirit:configGroups="2 UnGrouped" spirit:bitStringLength="32">0x1C062000</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -4078,7 +4078,7 @@
       <spirit:name>C_M_APB_PROTOCOL</spirit:name>
       <spirit:displayName>APB Protocol</spirit:displayName>
       <spirit:description>APB Master Interface support</spirit:description>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_M_APB_PROTOCOL" spirit:choiceRef="choice_list_89a5723f" spirit:order="1200" spirit:configGroups="1 UnGrouped">apb3</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.C_M_APB_PROTOCOL" spirit:choiceRef="choice_list_89a5723f" spirit:order="1200" spirit:configGroups="1 UnGrouped">apb4</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -4091,7 +4091,7 @@
       <spirit:name>C_APB_NUM_SLAVES</spirit:name>
       <spirit:displayName>Number Of Slaves</spirit:displayName>
       <spirit:description>Number of slaves to be connected to the bridge</spirit:description>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_APB_NUM_SLAVES" spirit:order="1100" spirit:configGroups="1 UnGrouped" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">1</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_APB_NUM_SLAVES" spirit:order="1100" spirit:configGroups="1 UnGrouped" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">2</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -4131,11 +4131,11 @@
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_BURST" xilinx:valueSource="constant"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_CACHE" xilinx:valueSource="constant"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_LOCK" xilinx:valueSource="constant"/>
-        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_PROT" xilinx:valueSource="propagated"/>
+        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_PROT" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_QOS" xilinx:valueSource="constant"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_REGION" xilinx:valueSource="constant"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_RRESP" xilinx:valueSource="constant"/>
-        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_WSTRB" xilinx:valueSource="propagated"/>
+        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.HAS_WSTRB" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.ID_WIDTH" xilinx:valueSource="constant"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.MAX_BURST_LENGTH" xilinx:valueSource="ip_propagated"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI4_LITE.NUM_READ_OUTSTANDING" xilinx:valueSource="ip_propagated"/>
@@ -4149,6 +4149,7 @@
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_APB_NUM_SLAVES" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_BASEADDR" xilinx:valueSource="propagated"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_HIGHADDR" xilinx:valueSource="propagated"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_M_APB_PROTOCOL" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_S_AXI_RNG2_BASEADDR" xilinx:valueSource="propagated"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_S_AXI_RNG2_HIGHADDR" xilinx:valueSource="propagated"/>
       </xilinx:configElementInfos>

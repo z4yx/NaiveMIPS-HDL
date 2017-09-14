@@ -1,0 +1,1 @@
+write_cfgmem  -format mcs -size 16 -interface SPIx1 -loadbit {up 0x00000000 "PrjVivao.runs/impl_2/soc_bd_toplevel.bit" } -loaddata {up 0x00800000 "/home/zhang/u-boot.bin" up 0x00860000 "/home/zhang/ucore.ub.bin" up 0x00A00000 "/home/zhang/mips-linux.ub.bin" } -force -file "/home/zhang/nscscc.mcs"

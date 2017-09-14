@@ -1527,7 +1527,7 @@
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>ID_WIDTH</spirit:name>
-          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.AXI_FULL.ID_WIDTH">6</spirit:value>
+          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.AXI_FULL.ID_WIDTH">0</spirit:value>
           <spirit:vendorExtensions>
             <xilinx:parameterInfo>
               <xilinx:parameterUsage>none</xilinx:parameterUsage>
@@ -1900,7 +1900,7 @@
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>PHASE</spirit:name>
-          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.SPI_CLK.PHASE">0.000</spirit:value>
+          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.SPI_CLK.PHASE">0.0</spirit:value>
           <spirit:vendorExtensions>
             <xilinx:parameterInfo>
               <xilinx:parameterUsage>none</xilinx:parameterUsage>
@@ -1909,7 +1909,7 @@
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>CLK_DOMAIN</spirit:name>
-          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.SPI_CLK.CLK_DOMAIN">bd_soc_clk_ref_i</spirit:value>
+          <spirit:value spirit:resolve="generated" spirit:id="BUSIFPARAM_VALUE.SPI_CLK.CLK_DOMAIN">/clk_wiz_peri_clk_out1</spirit:value>
           <spirit:vendorExtensions>
             <xilinx:parameterInfo>
               <xilinx:parameterUsage>none</xilinx:parameterUsage>
@@ -3311,11 +3311,11 @@ This bit has no significance in dual or quad mode.
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Thu Jul 27 16:46:49 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 04:41:29 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:20c0c94d</spirit:value>
+            <spirit:value>7:45f16eba</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -3330,11 +3330,11 @@ This bit has no significance in dual or quad mode.
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Thu Jul 27 16:46:49 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 04:41:29 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:20c0c94d</spirit:value>
+            <spirit:value>7:45f16eba</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -3372,11 +3372,11 @@ This bit has no significance in dual or quad mode.
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Thu Jul 27 16:46:49 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 04:41:29 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:d7175930</spirit:value>
+            <spirit:value>7:1a2fe896</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -3391,11 +3391,11 @@ This bit has no significance in dual or quad mode.
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Thu Jul 27 16:46:49 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 04:41:29 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:d7175930</spirit:value>
+            <spirit:value>7:1a2fe896</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -3409,11 +3409,11 @@ This bit has no significance in dual or quad mode.
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Thu Jul 27 16:46:49 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 04:41:29 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:20c0c94d</spirit:value>
+            <spirit:value>7:45f16eba</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -3427,11 +3427,11 @@ This bit has no significance in dual or quad mode.
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Thu Jul 27 16:46:54 UTC 2017</spirit:value>
+            <spirit:value>Wed Sep 13 04:50:21 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:20c0c94d</spirit:value>
+            <spirit:value>7:45f16eba</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -3945,7 +3945,7 @@ This bit has no significance in dual or quad mode.
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">5</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -3962,7 +3962,7 @@ This bit has no significance in dual or quad mode.
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_awid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_awid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -4320,7 +4320,7 @@ This bit has no significance in dual or quad mode.
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">5</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -4334,7 +4334,7 @@ This bit has no significance in dual or quad mode.
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_bid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_bid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -4411,7 +4411,7 @@ This bit has no significance in dual or quad mode.
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">5</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -4428,7 +4428,7 @@ This bit has no significance in dual or quad mode.
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_arid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_arid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -4666,7 +4666,7 @@ This bit has no significance in dual or quad mode.
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">5</spirit:left>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) - 1)">0</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -4680,7 +4680,7 @@ This bit has no significance in dual or quad mode.
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_rid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.s_axi4_rid" xilinx:dependency="(spirit:decode(id(&apos;PARAM_VALUE.C_S_AXI4_ID_WIDTH&apos;)) != 0) and (spirit:decode(id(&apos;MODELPARAM_VALUE.C_TYPE_OF_AXI4_INTERFACE&apos;)) = 1 or     spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;)) = 1)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -5916,7 +5916,7 @@ This bit has no significance in dual or quad mode.
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_S_AXI4_ID_WIDTH</spirit:name>
         <spirit:displayName>C S Axi4 Id Width</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH" spirit:minimum="0" spirit:maximum="16" spirit:rangeType="long">6</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_S_AXI4_ID_WIDTH" spirit:minimum="0" spirit:maximum="16" spirit:rangeType="long">1</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_SHARED_STARTUP</spirit:name>
@@ -6502,9 +6502,10 @@ This bit has no significance in dual or quad mode.
     <spirit:fileSet>
       <spirit:name>xilinx_externalfiles_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>bd_soc_axi_quad_spi_0_1_stub.vhdl</spirit:name>
-        <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>USED_IN_synth_blackbox_stub</spirit:userFileType>
+        <spirit:name>bd_soc_axi_quad_spi_0_1.dcp</spirit:name>
+        <spirit:userFileType>dcp</spirit:userFileType>
+        <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
+        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
@@ -6514,22 +6515,21 @@ This bit has no significance in dual or quad mode.
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
-        <spirit:name>bd_soc_axi_quad_spi_0_1_sim_netlist.vhdl</spirit:name>
+        <spirit:name>bd_soc_axi_quad_spi_0_1_stub.vhdl</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
-        <spirit:userFileType>USED_IN_single_language</spirit:userFileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>bd_soc_axi_quad_spi_0_1.dcp</spirit:name>
-        <spirit:userFileType>dcp</spirit:userFileType>
-        <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
-        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
+        <spirit:userFileType>USED_IN_synth_blackbox_stub</spirit:userFileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>bd_soc_axi_quad_spi_0_1_sim_netlist.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
+        <spirit:userFileType>USED_IN_single_language</spirit:userFileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>bd_soc_axi_quad_spi_0_1_sim_netlist.vhdl</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
         <spirit:userFileType>USED_IN_single_language</spirit:userFileType>
         <spirit:logicalName>xil_defaultlib</spirit:logicalName>
@@ -6879,7 +6879,7 @@ This bit has no significance in dual or quad mode.
     <spirit:parameter>
       <spirit:name>C_S_AXI4_ID_WIDTH</spirit:name>
       <spirit:displayName>C S Axi4 Id Width</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI4_ID_WIDTH" spirit:order="40" spirit:minimum="0" spirit:maximum="16" spirit:rangeType="long">6</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_S_AXI4_ID_WIDTH" spirit:order="40" spirit:minimum="0" spirit:maximum="16" spirit:rangeType="long">0</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -6912,9 +6912,8 @@ This bit has no significance in dual or quad mode.
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.HAS_PROT" xilinx:valueSource="constant_prop"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.HAS_QOS" xilinx:valueSource="constant"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.HAS_REGION" xilinx:valueSource="constant"/>
-        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.HAS_RRESP" xilinx:valueSource="constant_prop"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.HAS_WSTRB" xilinx:valueSource="constant_prop"/>
-        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.ID_WIDTH" xilinx:valueSource="ip_propagated"/>
+        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.ID_WIDTH" xilinx:valueSource="constant_prop"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.MAX_BURST_LENGTH" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.NUM_READ_OUTSTANDING" xilinx:valueSource="ip_propagated"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_FULL.NUM_WRITE_OUTSTANDING" xilinx:valueSource="ip_propagated"/>
@@ -6947,8 +6946,9 @@ This bit has no significance in dual or quad mode.
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.LITE_CLK.CLK_DOMAIN" xilinx:valueSource="default_prop"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.LITE_CLK.FREQ_HZ" xilinx:valueSource="user_prop"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.LITE_CLK.PHASE" xilinx:valueSource="default_prop"/>
-        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.SPI_CLK.CLK_DOMAIN" xilinx:valueSource="user_prop"/>
-        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.SPI_CLK.FREQ_HZ" xilinx:valueSource="user_prop"/>
+        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.SPI_CLK.CLK_DOMAIN" xilinx:valueSource="ip_propagated"/>
+        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.SPI_CLK.FREQ_HZ" xilinx:valueSource="ip_propagated"/>
+        <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.SPI_CLK.PHASE" xilinx:valueSource="ip_propagated"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Async_Clk" xilinx:valueSource="propagated"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_SCK_RATIO" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_SPI_MEMORY" xilinx:valueSource="user"/>
