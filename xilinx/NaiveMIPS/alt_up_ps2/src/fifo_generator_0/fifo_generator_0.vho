@@ -64,7 +64,7 @@ COMPONENT fifo_generator_0
     almost_full : OUT STD_LOGIC;
     empty : OUT STD_LOGIC;
     almost_empty : OUT STD_LOGIC;
-    data_count : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+    data_count : OUT STD_LOGIC_VECTOR(8 DOWNTO 0)
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------

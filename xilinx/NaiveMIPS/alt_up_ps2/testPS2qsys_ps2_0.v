@@ -46,6 +46,7 @@ module testPS2qsys_ps2_0 (
 	byteenable,
 	write,
 	writedata,
+	perr,
 	
 	// Bidirectionals
 	PS2_CLK_i,					// PS2 Clock
@@ -85,6 +86,7 @@ input			[ 3: 0]	byteenable;
 input						write;
 wire						read = ~write;
 input			[31: 0]	writedata;
+output                      perr;
 
 // Bidirectionals
 input						PS2_CLK_i;
@@ -182,16 +184,18 @@ end
  *                            Combinational Logic                            *
  *****************************************************************************/
 
+assign perr = 0;
+
 assign irq				= control_register[8];
 assign waitrequest_n	= ~(send_command_to_PS2_port & 
 						~(command_was_sent | error_sending_command));
 
-assign get_data_from_PS2_port  = chipselect & byteenable[0] & ~address & read;
+assign get_data_from_PS2_port  = chipselect & ~address & read;
 assign send_command_to_PS2_port= chipselect & byteenable[0] & ~address & write;
 assign clear_command_error     = chipselect & byteenable[1] & address & write;
 assign set_interrupt_enable    = chipselect & byteenable[0] & address & write;
 
-assign data_available[8]	= data_fifo_is_full;
+// assign data_available[8]	= data_fifo_is_full;
 assign data_valid				= ~data_fifo_is_empty;
 
 /*****************************************************************************
@@ -229,7 +233,7 @@ defparam
 	PS2_Serial_Port.CLOCK_CYCLES_FOR_2MS	= CLOCK_CYCLES_FOR_2MS,
 	PS2_Serial_Port.DATA_WIDTH_FOR_2MS		= DATA_WIDTH_FOR_2MS;
 
-fifo_generator_0	Incoming_Data_FIFO (
+fifo_ps2_recv	Incoming_Data_FIFO (
 	// Inputs
 	.clk			(clk),
 	.srst				(reset),
@@ -243,7 +247,7 @@ fifo_generator_0	Incoming_Data_FIFO (
 	// Outputs
 	.dout					(data_in_fifo),
 
-	.data_count			(data_available[7:0]),
+	.data_count			(data_available[8:0]),
 	.empty			(data_fifo_is_empty),
 	.full				(data_fifo_is_full),
 

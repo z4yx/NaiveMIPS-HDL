@@ -113,17 +113,17 @@ parameter	PS2_STATE_0_IDLE							= 3'h0,
 // Internal Wires
 
 // Internal Registers
-reg			[ 3: 0]	cur_bit;
+(* mark_debug = "true" *) reg			[ 3: 0]	cur_bit;
 reg			[ 8: 0]	ps2_command;
 
 reg			[DATA_WIDTH_FOR_101US:1]	command_initiate_counter;
 
-reg			[DATA_WIDTH_FOR_15MS:1]		waiting_counter;
-reg			[DATA_WIDTH_FOR_2MS:1]		transfer_counter;
+(* mark_debug = "true" *) reg			[DATA_WIDTH_FOR_15MS:1]		waiting_counter;
+(* mark_debug = "true" *) reg			[DATA_WIDTH_FOR_2MS:1]		transfer_counter;
 
 // State Machine Registers
 reg			[ 2: 0]	ns_ps2_transmitter;
-reg			[ 2: 0]	s_ps2_transmitter;
+(* mark_debug = "true" *) reg			[ 2: 0]	s_ps2_transmitter;
 
 /*****************************************************************************
  *                         Finite State Machine(s)                           *

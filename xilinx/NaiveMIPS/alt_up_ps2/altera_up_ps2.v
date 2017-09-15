@@ -109,8 +109,8 @@ wire						wait_for_incoming_data;
 // Internal Registers
 reg			[ 7: 0]	idle_counter;
 
-reg						ps2_clk_reg;
-reg						ps2_data_reg;
+(* mark_debug = "true" *) reg						ps2_clk_reg;
+(* mark_debug = "true" *) reg						ps2_data_reg;
 reg						last_ps2_clk;
 
 // State Machine Registers
