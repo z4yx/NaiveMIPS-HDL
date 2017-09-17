@@ -19,10 +19,10 @@ reg invalidate = 0;
 reg writeback = 0;
 
 reg [7:0] answer[0:1024*1024-1]; //1MiB RAM
-reg[31:0] daddr, phyaddr;
+reg[31:0] daddr, lastdaddr, phyaddr;
 reg[31:0] dwrdata;
 reg[3:0] byte_en;
-reg d_rw;
+reg d_rw, lastd_rw;
 
 initial begin : tb_block
     integer i;
@@ -39,6 +39,7 @@ initial begin : tb_block
 
     $display("Starting cache test program");
 
+    lastd_rw = 1;
     repeat (1000000) begin 
 
       daddr = ($urandom_range(0, 1024-1) << 6) + 32'b10100;
@@ -55,6 +56,21 @@ initial begin : tb_block
       @(posedge clk);
       while(stall1 == 1)
           @(posedge clk);
+          
+      if (lastd_rw == 0) begin
+            if (answer[lastdaddr] != rddata1[7:0] ||
+                answer[lastdaddr+1] != rddata1[15:8] ||
+                answer[lastdaddr+2] != rddata1[23:16] ||
+                answer[lastdaddr+3] != rddata1[31:24]) begin
+                $display("Read Failed: [%h]=%h v.s %h %h %h %h", lastdaddr, rddata1,
+                  answer[lastdaddr], answer[lastdaddr+1], answer[lastdaddr+2], answer[lastdaddr+3]);
+                $stop;
+            end
+            $display("Read Success: [%h]=%h v.s %h %h %h %h", lastdaddr, rddata1,
+              answer[lastdaddr], answer[lastdaddr+1], answer[lastdaddr+2], answer[lastdaddr+3]);
+      end
+      lastd_rw = d_rw;
+      lastdaddr = daddr;
       
       if (d_rw == 1) begin 
           if (byte_en[0]) answer[daddr] = dwrdata[7:0];
@@ -62,17 +78,6 @@ initial begin : tb_block
           if (byte_en[2]) answer[daddr+2] = dwrdata[23:16];
           if (byte_en[3]) answer[daddr+3] = dwrdata[31:24];
           $display("Write: [%h]=%h BE=%b", daddr, dwrdata, byte_en);
-      end else if (d_rw == 0) begin 
-          if (answer[daddr] != rddata1[7:0] ||
-              answer[daddr+1] != rddata1[15:8] ||
-              answer[daddr+2] != rddata1[23:16] ||
-              answer[daddr+3] != rddata1[31:24]) begin
-              $display("Read Failed: [%h]=%h v.s %h %h %h %h BE=%b", daddr, rddata1,
-                answer[daddr], answer[daddr+1], answer[daddr+2], answer[daddr+3], byte_en);
-              $stop;
-          end
-          $display("Read Success: [%h]=%h v.s %h %h %h %h BE=%b", daddr, rddata1,
-            answer[daddr], answer[daddr+1], answer[daddr+2], answer[daddr+3], byte_en);
       end
       
     end

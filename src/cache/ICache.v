@@ -3,6 +3,7 @@
 `define NAIVE_ICACHE_FSM_MEMREAD_FIRST		3'd1
 `define NAIVE_ICACHE_FSM_MEMREAD			3'd2
 `define NAIVE_ICACHE_FSM_WAIT_WRITE			3'd3
+`define NAIVE_ICACHE_FSM_WAIT_READ			3'd4
 
 `define AHB_IDLE		2'b00
 `define AHB_BUSY		2'b01
@@ -44,6 +45,10 @@ module ICache #(parameter
 	output wire        dbus_ivstall
 );
 
+	// Store to process
+	reg        dbus_read_prev;
+	reg [31:0] dbus_rdaddr_prev;
+
 	// Wires to cache lines
 	wire [TAG_WIDTH-1:0]     rd_tag[`NUM_CACHE_LINES-1:0];
 	wire [`OFFSET_WIDTH-1:0] rd_off;
@@ -78,37 +83,49 @@ module ICache #(parameter
 	end endgenerate
 
 	// FSM
-	reg  [1:0] state;
+	reg  [2:0] state;
 
 	// Cache access tag, index and offset
 	wire [TAG_WIDTH-1:0]     cache_addr_cpu_rdtag;
 	wire [`INDEX_WIDTH-1:0]  cache_addr_cpu_rdidx;
 	wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_rdoff;
 	wire [1:0]               cache_addr_rd_dropoff;
+
+	wire [TAG_WIDTH-1:0]     cache_addr_cpu_rdtag_next;
+	wire [`INDEX_WIDTH-1:0]  cache_addr_cpu_rdidx_next;
+	wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_rdoff_next;
+	wire [1:0]               cache_addr_rd_dropoff_next;
 	
 	wire [TAG_WIDTH-1:0]     cache_addr_cpu_ivtag;
 	wire [`INDEX_WIDTH-1:0]  cache_addr_cpu_ividx;
 	wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_ivoff;
 	wire [1:0]               cache_addr_iv_dropoff;
 	
+    reg  [`OFFSET_WIDTH-1:0] cache_addr_access_off;
+        
 	reg  [TAG_WIDTH-1:0]     cache_addr_mem_tag;
 	wire [`OFFSET_WIDTH-1:0] cache_addr_mem_off = cache_addr_access_off + 1;
-	
-	reg  [`OFFSET_WIDTH-1:0] cache_addr_access_off;
 	
 	assign {
 		cache_addr_cpu_rdtag,  cache_addr_cpu_rdidx,
 		cache_addr_cpu_rdoff,  cache_addr_rd_dropoff
+	} = dbus_rdaddr_prev;
+
+	assign {
+		cache_addr_cpu_rdtag_next,  cache_addr_cpu_rdidx_next,
+		cache_addr_cpu_rdoff_next,  cache_addr_rd_dropoff_next
 	} = dbus_rdaddr;
-	
+
 	assign {
 		cache_addr_cpu_ivtag,  cache_addr_cpu_ividx,
 		cache_addr_cpu_ivoff,  cache_addr_iv_dropoff
 	} = dbus_ivaddr;
 
 	wire [`OFFSET_WIDTH-1:0] cache_addr_off = (
-		state == `NAIVE_ICACHE_FSM_IDLE ?
-		cache_addr_cpu_rdoff : cache_addr_access_off
+		(state == `NAIVE_ICACHE_FSM_IDLE ||
+		 state == `NAIVE_ICACHE_FSM_WAIT_WRITE ||
+		 state == `NAIVE_ICACHE_FSM_WAIT_READ) ?
+		cache_addr_cpu_rdoff_next : cache_addr_access_off
 	);
 	
 	wire [`OFFSET_WIDTH-1:0] cache_end_off = 0 - 1;
@@ -146,16 +163,15 @@ module ICache #(parameter
 
 	// Logic
 	wire need_invalidate = (cl_ivvalid && cl_ivhit) && dbus_hitinvalidate;
-	wire need_memread    = (~cl_rdvalid || ~cl_rdhit) && dbus_read;
+	wire need_memread    = (~cl_rdvalid || ~cl_rdhit) && dbus_read_prev;
 
 	// Outputs
-	assign dbus_rdstall = (
+	assign dbus_rdstall = dbus_read && (
 		state != `NAIVE_ICACHE_FSM_IDLE ||
-		(need_invalidate && dbus_ivaddr == dbus_rdaddr) ||
 		need_memread
 	);
 	assign dbus_rddata  = (!dbus_rdstall) ? cl_rddata : 0;
-	assign dbus_ivstall = (
+	assign dbus_ivstall = dbus_hitinvalidate && (
 		state != `NAIVE_ICACHE_FSM_IDLE ||
 		need_invalidate
 	);
@@ -166,6 +182,9 @@ module ICache #(parameter
 			AHB_htrans <= `AHB_IDLE;
 			AHB_hwrite <= 1'b0;
 			AHB_sel <= 1'b0;
+
+			dbus_read_prev <= 0;
+			dbus_rdaddr_prev <= 0;
 			
 			write_cache <= 1'b0;
 			cache_addr_access_off <= 1'b0;
@@ -203,6 +222,11 @@ module ICache #(parameter
 						AHB_sel <= 1'b1;
 						
 					end 
+
+					if (!dbus_rdstall) begin
+						dbus_read_prev <= dbus_read;
+						dbus_rdaddr_prev <= dbus_rdaddr;
+					end
 					// if dbus_read data on dbus_rddata
 				end
 
@@ -248,6 +272,10 @@ module ICache #(parameter
 				
 				`NAIVE_ICACHE_FSM_WAIT_WRITE: begin
 					write_cache <= 1'b0;  // finished register writing
+					state <= `NAIVE_ICACHE_FSM_WAIT_READ;
+				end
+
+				`NAIVE_ICACHE_FSM_WAIT_READ: begin
 					state <= `NAIVE_ICACHE_FSM_IDLE;
 				end
 

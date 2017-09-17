@@ -7,11 +7,11 @@ module CacheLine #(parameter
 	input  wire nrst,
 	input  wire clk,
 
-	output wire [TAG_WIDTH-1:0]     rd_tag,
+	output reg  [TAG_WIDTH-1:0]     rd_tag,
 	input  wire [`OFFSET_WIDTH-1:0] rd_off,
-	output wire [31:0]              rd_data,
-	output wire                     rd_dirty,
-	output wire                     rd_valid,
+	output reg  [31:0]              rd_data,
+	output reg                      rd_dirty,
+	output reg                      rd_valid,
 
 	input  wire                     wr_write,
 	input  wire [TAG_WIDTH-1:0]     wr_tag,
@@ -28,12 +28,6 @@ module CacheLine #(parameter
 	reg dirty;
 	reg valid;
 
-	// Reading data
-	assign rd_tag = tag;
-	assign rd_data = valid ? data[rd_off] : 0;
-	assign rd_dirty = valid ? dirty : 0;
-	assign rd_valid = valid;
-
 	// Resetting or writing data
 	always @(posedge clk, negedge nrst) begin
 		if (~nrst) begin : rst_data
@@ -48,7 +42,7 @@ module CacheLine #(parameter
 
 		end else if (wr_write) begin
 			// Writing data
-			tag   <= wr_tag;
+			tag <= wr_tag;
 			if (wr_byte_enable[0]) begin
 				data[wr_off][0*8+7:0*8] <= wr_data[0*8+7:0*8];
 			end
@@ -63,7 +57,14 @@ module CacheLine #(parameter
 			end
 			dirty <= wr_dirty;
 			valid <= wr_valid;
-		end
+			
+		end else begin
+            // Reading data
+            rd_tag <= tag;
+            rd_data <= valid ? data[rd_off] : 0;
+            rd_dirty <= valid ? dirty : 0;
+            rd_valid <= valid;
+        end
 	end
 
 endmodule

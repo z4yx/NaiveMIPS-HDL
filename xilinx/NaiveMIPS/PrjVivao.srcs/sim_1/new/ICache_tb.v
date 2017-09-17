@@ -17,7 +17,7 @@ wire ivstall1;
 reg invalidate = 0;
 
 reg [7:0] answer[0:1024*1024-1]; //1MiB RAM
-reg[31:0] daddr, phyaddr;
+reg[31:0] daddr, lastdaddr, phyaddr;
 reg[31:0] dwrdata;
 reg[3:0] byte_en;
 reg d_rw;
@@ -42,6 +42,7 @@ initial begin : tb_block
     
     $display("Starting I-cache test program");
 
+    lastdaddr = 0;
     repeat (1000000) begin 
 
       daddr = ($urandom_range(0, 1024-1) << 6) + 32'b10100;
@@ -69,16 +70,18 @@ initial begin : tb_block
           @(posedge clk);
       end
       
-      if (answer[daddr] != rddata1[7:0] ||
-          answer[daddr+1] != rddata1[15:8] ||
-          answer[daddr+2] != rddata1[23:16] ||
-          answer[daddr+3] != rddata1[31:24]) begin
-          $display("Read Failed: [%h]=%h v.s %h %h %h %h", daddr, rddata1,
-            answer[daddr], answer[daddr+1], answer[daddr+2], answer[daddr+3]);
+      if (lastdaddr == 0) begin
+      end else if (answer[lastdaddr] != rddata1[7:0] ||
+          answer[lastdaddr+1] != rddata1[15:8] ||
+          answer[lastdaddr+2] != rddata1[23:16] ||
+          answer[lastdaddr+3] != rddata1[31:24]) begin
+          $display("Read Failed: [%h]=%h v.s %h %h %h %h", lastdaddr, rddata1,
+            answer[lastdaddr], answer[lastdaddr+1], answer[lastdaddr+2], answer[lastdaddr+3]);
           $stop;
       end
-      $display("Read Success: [%h]=%h v.s %h %h %h %h", daddr, rddata1,
-        answer[daddr], answer[daddr+1], answer[daddr+2], answer[daddr+3]);
+      $display("Read Success: [%h]=%h v.s %h %h %h %h", lastdaddr, rddata1,
+        answer[lastdaddr], answer[lastdaddr+1], answer[lastdaddr+2], answer[lastdaddr+3]);
+      lastdaddr = daddr;
       
     end
     $display("Pass");
