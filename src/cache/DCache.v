@@ -1,9 +1,9 @@
 `define NAIVE_DCACHE_FSM_IDLE				3'd0
 `define NAIVE_DCACHE_FSM_WRITEBACK_FIRST	3'd1
-`define NAIVE_DCACHE_FSM_WRITEBACK			3'd2
-`define NAIVE_DCACHE_FSM_MEMREAD_FIRST		3'd3
-`define NAIVE_DCACHE_FSM_MEMREAD			3'd4
-`define NAIVE_DCACHE_FSM_WAIT_WRITE			3'd5
+`define NAIVE_DCACHE_FSM_WRITEBACK			3'd3
+`define NAIVE_DCACHE_FSM_MEMREAD_FIRST		3'd4
+`define NAIVE_DCACHE_FSM_MEMREAD			3'd5
+`define NAIVE_DCACHE_FSM_WAIT_WRITE			3'd6
 
 `define AHB_IDLE		2'b00
 `define AHB_BUSY		2'b01
@@ -31,7 +31,7 @@ module DCache #(parameter
 	input  wire        AHB_hresp,
 	output wire [2:0]  AHB_hsize,
 	output reg  [1:0]  AHB_htrans,
-	output reg  [31:0] AHB_hwdata,
+	output wire [31:0] AHB_hwdata,
 	output reg         AHB_hwrite,
 	output reg         AHB_sel,
 
@@ -141,6 +141,9 @@ module DCache #(parameter
 		cache_addr_mem_tag,  cache_addr_idx,
 		cache_addr_mem_off,  2'b0
 	};
+	
+	reg [31:0] AHB_hwdata_time;
+	assign AHB_hwdata = AHB_hready_out ? cl_data : AHB_hwdata_time;
 
 	// Logic
 	wire need_invalidate = cl_valid && cl_hit && dbus_hitinvalidate;
@@ -237,7 +240,7 @@ module DCache #(parameter
 					if (AHB_hready_out == 1'b1) begin
 						cache_addr_access_off <= cache_addr_access_off + 1;
                         cache_addr_mem_off <= cache_addr_mem_off + 1;
-                        AHB_hwdata <= cl_data;
+                        AHB_hwdata_time <= cl_data;
 						AHB_htrans <= `AHB_SEQ;
 						state <= `NAIVE_DCACHE_FSM_WRITEBACK;
 					end
@@ -266,7 +269,7 @@ module DCache #(parameter
 							end
 							cache_addr_access_off <= cache_addr_access_off + 1;
 							cache_addr_mem_off <= cache_addr_mem_off + 1;
-							AHB_hwdata <= cl_data;
+							AHB_hwdata_time <= cl_data;
 						end
 					end
 				end
