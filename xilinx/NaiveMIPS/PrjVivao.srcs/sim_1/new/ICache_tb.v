@@ -68,6 +68,7 @@ initial begin : tb_block
           if (stall1 == 0) rd1 = 0;
           @(posedge clk);
       end
+      @(posedge clk);
       
       if (answer[daddr] != rddata1[7:0] ||
           answer[daddr+1] != rddata1[15:8] ||

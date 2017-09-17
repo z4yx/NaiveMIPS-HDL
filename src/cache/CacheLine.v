@@ -9,7 +9,7 @@ module CacheLine #(parameter
 
 	output wire [TAG_WIDTH-1:0]     rd_tag,
 	input  wire [`OFFSET_WIDTH-1:0] rd_off,
-	output wire [31:0]              rd_data,
+	output reg  [31:0]              rd_data,
 	output wire                     rd_dirty,
 	output wire                     rd_valid,
 
@@ -30,7 +30,6 @@ module CacheLine #(parameter
 
 	// Reading data
 	assign rd_tag = tag;
-	assign rd_data = valid ? data[rd_off] : 0;
 	assign rd_dirty = valid ? dirty : 0;
 	assign rd_valid = valid;
 
@@ -63,6 +62,9 @@ module CacheLine #(parameter
 			end
 			dirty <= wr_dirty;
 			valid <= wr_valid;
+
+		end else begin
+			rd_data = valid ? data[rd_off] : 0;
 		end
 	end
 

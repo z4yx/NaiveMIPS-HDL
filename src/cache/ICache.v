@@ -44,6 +44,8 @@ module ICache #(parameter
 	output wire        dbus_ivstall
 );
 
+    reg  [31:0] dbus_rdaddr_pre;
+
 	// Wires to cache lines
 	wire [TAG_WIDTH-1:0]     rd_tag[`NUM_CACHE_LINES-1:0];
 	wire [`OFFSET_WIDTH-1:0] rd_off;
@@ -86,6 +88,11 @@ module ICache #(parameter
 	wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_rdoff;
 	wire [1:0]               cache_addr_rd_dropoff;
 	
+    wire [TAG_WIDTH-1:0]     cache_addr_cpu_rdtag_pre;
+    wire [`INDEX_WIDTH-1:0]  cache_addr_cpu_rdidx_pre;
+    wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_rdoff_pre;
+    wire [1:0]               cache_addr_rd_dropoff_pre;
+	
 	wire [TAG_WIDTH-1:0]     cache_addr_cpu_ivtag;
 	wire [`INDEX_WIDTH-1:0]  cache_addr_cpu_ividx;
 	wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_ivoff;
@@ -100,6 +107,11 @@ module ICache #(parameter
 		cache_addr_cpu_rdtag,  cache_addr_cpu_rdidx,
 		cache_addr_cpu_rdoff,  cache_addr_rd_dropoff
 	} = dbus_rdaddr;
+	
+    assign {
+        cache_addr_cpu_rdtag_pre,  cache_addr_cpu_rdidx_pre,
+        cache_addr_cpu_rdoff_pre,  cache_addr_rd_dropoff_pre
+    } = dbus_rdaddr_pre;
 	
 	assign {
 		cache_addr_cpu_ivtag,  cache_addr_cpu_ividx,
@@ -119,7 +131,7 @@ module ICache #(parameter
 	wire cl_rdvalid = rd_valid[cache_addr_cpu_rdidx];
     wire cl_rdhit   = rd_tag  [cache_addr_cpu_rdidx] == cache_addr_cpu_rdtag;
 	wire [TAG_WIDTH-1:0]     cl_rdtag   = rd_tag  [cache_addr_cpu_rdidx];
-	wire [31:0]              cl_rddata  = rd_data [cache_addr_cpu_rdidx];
+	wire [31:0]              cl_rddata  = rd_data [cache_addr_cpu_rdidx_pre];
 	
 	wire cl_ivvalid = rd_valid[cache_addr_cpu_ividx];
     wire cl_ivhit   = rd_tag  [cache_addr_cpu_ividx] == cache_addr_cpu_ivtag;
@@ -154,7 +166,7 @@ module ICache #(parameter
 		(need_invalidate && dbus_ivaddr == dbus_rdaddr) ||
 		need_memread
 	);
-	assign dbus_rddata  = (!dbus_rdstall) ? cl_rddata : 0;
+	assign dbus_rddata  = cl_rddata;
 	assign dbus_ivstall = (
 		state != `NAIVE_ICACHE_FSM_IDLE ||
 		need_invalidate
@@ -178,8 +190,12 @@ module ICache #(parameter
             wr_byte_enable <= 4'b0;
 			wr_data <= 0;
 			
+			dbus_rdaddr_pre <= 0;
+			
 			state <= `NAIVE_ICACHE_FSM_IDLE;
 		end else begin
+			dbus_rdaddr_pre <= dbus_rdaddr;
+
 			case (state)
 				`NAIVE_ICACHE_FSM_IDLE: begin
 					if (need_invalidate) begin

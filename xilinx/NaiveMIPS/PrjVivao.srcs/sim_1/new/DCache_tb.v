@@ -55,6 +55,7 @@ initial begin : tb_block
       @(posedge clk);
       while(stall1 == 1)
           @(posedge clk);
+      if (d_rw == 0) @(posedge clk);
       
       if (d_rw == 1) begin 
           if (byte_en[0]) answer[daddr] = dwrdata[7:0];
