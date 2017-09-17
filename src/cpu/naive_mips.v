@@ -312,7 +312,7 @@ assign dbus_uncached_write = mm_mem_wr & dbus_uncached & ~mm_exception_detected;
 assign dbus_dcache_inv_wb = mm_inv_wb_dcache & ~mm_exception_detected;
 assign dbus_icache_inv = mm_inv_icache & ~mm_exception_detected;
 assign dbus_wrdata= mm_mem_data_o;
-assign mm_stall = dbus_stall | dbus_uncached_stall | dbus_iv_stall;
+assign mm_stall = dbus_stall | dbus_uncached_stall | (dbus_iv_stall & dbus_icache_inv);
 
 assign ex_reg_hilo_value = mm_we_hilo ? mm_reg_hilo :
   (wb_we_hilo ? wb_reg_hilo : hilo_value_from_reg);
