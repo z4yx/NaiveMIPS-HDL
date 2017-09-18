@@ -2,9 +2,9 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="bd_soc" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1505711896"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1505711896"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1505711896"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1505734780"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1505734780"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1505734780"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip/bd_soc_ahblite_axi_bridge_0_1/bd_soc_ahblite_axi_bridge_0_1.xci" Type="IP">
         <Instance HierarchyPath="ahblite_axi_bridge_0"/>
@@ -79,7 +79,7 @@
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="ip/bd_soc_axi_bram_ctrl_0_0/bd_soc_axi_bram_ctrl_0_0.xci" Type="IP">
-        <Instance HierarchyPath="axi_bram_ctrl_0"/>
+        <Instance HierarchyPath="bootrom/axi_bram_ctrl_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -151,7 +151,7 @@
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="ip/bd_soc_xlslice_0_0/bd_soc_xlslice_0_0.xci" Type="IP">
-        <Instance HierarchyPath="xlslice_0"/>
+        <Instance HierarchyPath="bootrom/xlslice_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -207,7 +207,7 @@
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="ip/bd_soc_blk_mem_gen_0_1/bd_soc_blk_mem_gen_0_1.xci" Type="IP">
-        <Instance HierarchyPath="blk_mem_gen_0"/>
+        <Instance HierarchyPath="bootrom/blk_mem_gen_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -285,6 +285,110 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
+      <File Name="ip/bd_soc_vio_0_0/bd_soc_vio_0_0.xci" Type="IP">
+        <Instance HierarchyPath="vio_prst"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_util_vector_logic_0_1/bd_soc_util_vector_logic_0_1.xci" Type="IP">
+        <Instance HierarchyPath="util_vector_logic_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_blk_mem_gen_1_0/bd_soc_blk_mem_gen_1_0.xci" Type="IP">
+        <Instance HierarchyPath="ocm/ocm_1"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_axi_bram_ctrl_1_1/bd_soc_axi_bram_ctrl_1_1.xci" Type="IP">
+        <Instance HierarchyPath="ocm/ocm_ctrl_1"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_smartconnect_0_0/bd_soc_smartconnect_0_0.xci" Type="IP">
+        <Instance HierarchyPath="jtag_bram/smartconnect_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_proc_sys_reset_0_0/bd_soc_proc_sys_reset_0_0.xci" Type="IP">
+        <Instance HierarchyPath="jtag_bram/proc_sys_reset_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_jtag_axi_0_0/bd_soc_jtag_axi_0_0.xci" Type="IP">
+        <Instance HierarchyPath="jtag_bram/jtag_test"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_xlslice_0_1/bd_soc_xlslice_0_1.xci" Type="IP">
+        <Instance HierarchyPath="ocm/xlslice_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_axi_bram_ctrl_0_1/bd_soc_axi_bram_ctrl_0_1.xci" Type="IP">
+        <Instance HierarchyPath="ocm/axi_bram_ctrl_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_xlslice_0_2/bd_soc_xlslice_0_2.xci" Type="IP">
+        <Instance HierarchyPath="ocm/xlslice_1"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_axi_bram_ctrl_1_2/bd_soc_axi_bram_ctrl_1_2.xci" Type="IP">
+        <Instance HierarchyPath="bootrom/axi_bram_ctrl_1"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_xlslice_0_3/bd_soc_xlslice_0_3.xci" Type="IP">
+        <Instance HierarchyPath="bootrom/xlslice_1"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_auto_ds_9/bd_soc_auto_ds_9.xci" Type="IP">
+        <Instance HierarchyPath="sys_bus/m03_couplers/auto_ds"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
       <File Name="ip/bd_soc_auto_ds_8/bd_soc_auto_ds_8.xci" Type="IP">
         <Instance HierarchyPath="sys_bus/m01_couplers/auto_ds"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
@@ -293,8 +397,8 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="ip/bd_soc_auto_us_cc_df_3/bd_soc_auto_us_cc_df_3.xci" Type="IP">
-        <Instance HierarchyPath="sys_bus/s03_couplers/auto_us_cc_df"/>
+      <File Name="ip/bd_soc_auto_us_df_0/bd_soc_auto_us_df_0.xci" Type="IP">
+        <Instance HierarchyPath="sys_bus/s03_couplers/auto_us_df"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>

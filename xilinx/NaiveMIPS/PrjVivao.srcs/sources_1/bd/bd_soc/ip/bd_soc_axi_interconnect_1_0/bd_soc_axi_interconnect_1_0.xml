@@ -58,7 +58,7 @@
     <spirit:parameter>
       <spirit:name>NUM_MI</spirit:name>
       <spirit:displayName>Number of Master Interfaces</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.NUM_MI" spirit:order="3" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">3</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.NUM_MI" spirit:order="3" spirit:minimum="1" spirit:maximum="16" spirit:rangeType="long">4</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>STRATEGY</spirit:name>
@@ -758,7 +758,7 @@
     <spirit:parameter>
       <spirit:name>S03_HAS_REGSLICE</spirit:name>
       <spirit:displayName>Enable Register Slice on interface S03_AXI</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.S03_HAS_REGSLICE" spirit:choiceRef="choice_pairs_b6c9535e" spirit:order="1635415">0</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.S03_HAS_REGSLICE" spirit:choiceRef="choice_pairs_b6c9535e" spirit:order="1635415">3</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>S04_HAS_REGSLICE</spirit:name>
@@ -1637,6 +1637,7 @@
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S01_HAS_DATA_FIFO" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S02_HAS_DATA_FIFO" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S03_HAS_DATA_FIFO" xilinx:valueSource="user"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S03_HAS_REGSLICE" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.STRATEGY" xilinx:valueSource="user"/>
       </xilinx:configElementInfos>
     </xilinx:coreExtensions>
