@@ -142,8 +142,11 @@ module DCache #(parameter
 		cache_addr_mem_off,  2'b0
 	};
 	
-	reg [31:0] AHB_hwdata_time;
-	assign AHB_hwdata = AHB_hready_out ? cl_data : AHB_hwdata_time;
+	reg [31:0] AHB_hwdata_previous;
+	reg        AHB_hwdata_fetched;
+    // stall: access_off fetched and not ready to feed next value
+	wire       AHB_data_stall = AHB_hwdata_fetched && !AHB_hready_out;
+	assign AHB_hwdata = AHB_data_stall ? AHB_hwdata_previous : cl_data;
 
 	// Logic
 	wire need_invalidate = cl_valid && cl_hit && dbus_hitinvalidate;
@@ -240,9 +243,12 @@ module DCache #(parameter
 					if (AHB_hready_out == 1'b1) begin
 						cache_addr_access_off <= cache_addr_access_off + 1;
                         cache_addr_mem_off <= cache_addr_mem_off + 1;
-                        AHB_hwdata_time <= cl_data;
+						AHB_hwdata_fetched <= 1'b0; // access_off unfetched
 						AHB_htrans <= `AHB_SEQ;
 						state <= `NAIVE_DCACHE_FSM_WRITEBACK;
+					end else if (!AHB_hwdata_fetched) begin
+						AHB_hwdata_previous <= cl_data;
+						AHB_hwdata_fetched <= 1'b1; // access_off fetched
 					end
 				end
 
@@ -269,8 +275,11 @@ module DCache #(parameter
 							end
 							cache_addr_access_off <= cache_addr_access_off + 1;
 							cache_addr_mem_off <= cache_addr_mem_off + 1;
-							AHB_hwdata_time <= cl_data;
+							AHB_hwdata_fetched <= 1'b0; // access_off unfetched
 						end
+					end else if (!AHB_hwdata_fetched) begin
+						AHB_hwdata_previous <= cl_data;
+						AHB_hwdata_fetched <= 1'b1; // access_off fetched
 					end
 				end
 
@@ -288,7 +297,7 @@ module DCache #(parameter
 					if (AHB_hready_out == 1'b1) begin
 						write_cache <= 1'b1;
 						wr_dirty <= 1'b0;
-                        wr_off <= cache_addr_off;
+                        wr_off <= cache_addr_access_off;
                         write_idx <= cache_addr_idx;
 						wr_tag <= cache_addr_mem_tag;
 						wr_byte_enable <= 4'b1111;
