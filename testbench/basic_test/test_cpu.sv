@@ -5,7 +5,7 @@
 
 module test_cpu();
 
-parameter IBUS_WAIT_CYCLE = 1;
+parameter IBUS_WAIT_CYCLE_MOD = 5;
 
 /*autodef*/
 wire dbus_write;
@@ -35,7 +35,7 @@ prog_rom fake_rom(/*autoinst*/
 naive_mips #(
             .WITH_CACHE(1),
             .WITH_TLB(1),
-            .BUS_READ_1CYCLE(0)
+            .BUS_READ_1CYCLE(1)
 )
 mips(/*autoinst*/
             .ibus_address(ibus_address[31:0]),
@@ -88,7 +88,7 @@ endgenerate
 
 DCache #(
     .CACHE_LINE_WIDTH (6),
-    .TAG_WIDTH        (22)
+    .TAG_WIDTH        (20)
 ) cache (
     .nrst          (rst_n),
     .clk           (clk),
@@ -178,17 +178,26 @@ always @(posedge clk) begin
       if (dbus_byteenable[2]) cache_ground_truth[dbus_address[31:2]][23:16] = dbus_wrdata[23:16];
       if (dbus_byteenable[3]) cache_ground_truth[dbus_address[31:2]][31:24] = dbus_wrdata[31:24];
       $display("Dbus Write: [%h]=%h BE=%b", {dbus_address[31:2],2'h0}, dbus_wrdata, dbus_byteenable);
-    end else if (dbus_read && !dbus_stall) begin 
-      if ((cache_ground_truth[dbus_address[31:2]] & byte_mask) !== (dbus_rddata & byte_mask)) begin
-          $display("Dbus Read Failed: [%h]=%h v.s %h BE=%b", 
-            {dbus_address[31:2],2'h0}, dbus_rddata,
-            cache_ground_truth[dbus_address[31:2]], dbus_byteenable);
-          $stop;
-      end
     end
 end
-
-integer wait_cycle;
+reg [31:0] dbus_address_last,byte_mask_last;
+reg [3:0] dbus_byteenable_last;
+always begin 
+    @(negedge clk)
+    if (dbus_read && !dbus_stall) begin 
+        dbus_address_last = dbus_address;
+        byte_mask_last = byte_mask;
+        dbus_byteenable_last = dbus_byteenable;
+        @(negedge clk);
+        if ((cache_ground_truth[dbus_address_last[31:2]] & byte_mask_last) !== (dbus_rddata & byte_mask_last)) begin
+            $display("Dbus Read Failed: [%h]=%h v.s %h BE=%b", 
+                {dbus_address_last[31:2],2'h0}, dbus_rddata,
+                cache_ground_truth[dbus_address_last[31:2]], dbus_byteenable_last);
+            $stop;
+        end
+    end
+end
+integer wait_cycle,wait_cycle_rand;
 initial begin
     ibus_waitrequest = 0;
     while(1) begin
@@ -196,9 +205,10 @@ initial begin
         #2;
         if(ibus_read & rst_n) begin
             wait_cycle = 0;
-            ibus_rddata_tmp = ibus_rddata;
+            wait_cycle_rand = $random() % IBUS_WAIT_CYCLE_MOD;
+            ibus_rddata_tmp = 32'hXXXXXXXX;
             ibus_address_tmp = ibus_address;
-            while(wait_cycle < IBUS_WAIT_CYCLE)begin
+            while(wait_cycle < wait_cycle_rand)begin
                 ibus_waitrequest = 1;
                 @(posedge clk);
                 #2;
@@ -213,10 +223,14 @@ initial begin
                 end
                 wait_cycle = wait_cycle+1;
             end
-            ibus_rddata_ff = ibus_rddata_tmp;
+            ibus_rddata_tmp = ibus_rddata;
             ibus_waitrequest = 0;
         end
     end
+end
+
+always @(posedge clk) begin
+    ibus_rddata_ff <= ibus_rddata_tmp;
 end
 
 defparam mips.pc_instance.PC_INITIAL = 32'h80000000;
