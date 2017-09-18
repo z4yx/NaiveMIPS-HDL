@@ -8,7 +8,7 @@ preplace port LCD_rs -pg 1 -y 1510 -defaultsOSRD
 preplace port PS2_DAT_i -pg 1 -y 1740 -defaultsOSRD
 preplace port ddr_ref_clk -pg 1 -y 1340 -defaultsOSRD
 preplace port UART -pg 1 -y 1160 -defaultsOSRD
-preplace port MII -pg 1 -y 480 -defaultsOSRD
+preplace port MII -pg 1 -y 340 -defaultsOSRD
 preplace port sys_rst -pg 1 -y 1320 -defaultsOSRD
 preplace port cpu_clk -pg 1 -y 430 -defaultsOSRD
 preplace port LCD_nrst -pg 1 -y 1470 -defaultsOSRD
@@ -16,23 +16,26 @@ preplace port triple_byte_w -pg 1 -y 990 -defaultsOSRD
 preplace port PS2_CLK_o -pg 1 -y 1660 -defaultsOSRD
 preplace port ddr_sys_clk -pg 1 -y 1360 -defaultsOSRD
 preplace port LCD_data -pg 1 -y 1450 -defaultsOSRD
-preplace port MDIO -pg 1 -y 500 -defaultsOSRD
+preplace port MDIO -pg 1 -y 360 -defaultsOSRD
 preplace port PS2_DAT_o -pg 1 -y 1700 -defaultsOSRD
-preplace port LED -pg 1 -y 630 -defaultsOSRD
 preplace port LCD_csel -pg 1 -y 1490 -defaultsOSRD
 preplace port CFG_FLASH -pg 1 -y 790 -defaultsOSRD
-preplace port SW -pg 1 -y 650 -defaultsOSRD
 preplace port LCD_wr -pg 1 -y 1530 -defaultsOSRD
 preplace port VGA_INTF -pg 1 -y 1130 -defaultsOSRD
 preplace port PS2_CLK_t -pg 1 -y 1680 -defaultsOSRD
 preplace port LCD_rd -pg 1 -y 1550 -defaultsOSRD
 preplace port aux_reset_n -pg 1 -y 1100 -defaultsOSRD
 preplace port ddr3 -pg 1 -y 1300 -defaultsOSRD
-preplace portBus iaddr -pg 1 -y 460 -defaultsOSRD
+preplace portBus num_data -pg 1 -y 470 -defaultsOSRD
+preplace portBus iaddr -pg 1 -y -90 -defaultsOSRD
+preplace portBus led_rg0 -pg 1 -y 510 -defaultsOSRD
+preplace portBus led_rg1 -pg 1 -y 530 -defaultsOSRD
+preplace portBus led -pg 1 -y 490 -defaultsOSRD
+preplace portBus SW -pg 1 -y 490 -defaultsOSRD
 preplace inst axi_tft_0 -pg 1 -lvl 4 -y 1140 -defaultsOSRD
-preplace inst axi_spi_flash -pg 1 -lvl 6 -y 840 -defaultsOSRD
+preplace inst axi_spi_flash -pg 1 -lvl 6 -y 860 -defaultsOSRD
 preplace inst perph_bus -pg 1 -lvl 5 -y 710 -defaultsOSRD
-preplace inst xlslice_0 -pg 1 -lvl 5 -y 160 -defaultsOSRD
+preplace inst xlslice_0 -pg 1 -lvl 5 -y 130 -defaultsOSRD
 preplace inst nt35510_apb_adapter_0 -pg 1 -lvl 6 -y 1370 -defaultsOSRD
 preplace inst axi_intc_0 -pg 1 -lvl 6 -y 1540 -defaultsOSRD
 preplace inst mig_7series_0 -pg 1 -lvl 6 -y 1190 -defaultsOSRD
@@ -45,146 +48,149 @@ preplace inst ICache_0 -pg 1 -lvl 2 -y 480 -defaultsOSRD
 preplace inst xlconstant_3 -pg 1 -lvl 5 -y 1610 -defaultsOSRD
 preplace inst xlconcat_0 -pg 1 -lvl 6 -y 1880 -defaultsOSRD
 preplace inst proc_sys_reset_0 -pg 1 -lvl 3 -y 1380 -defaultsOSRD
-preplace inst axi_cfg_spi_0 -pg 1 -lvl 6 -y 660 -defaultsOSRD
-preplace inst axi_gpio_0 -pg 1 -lvl 6 -y 490 -defaultsOSRD
-preplace inst dram_crossbar -pg 1 -lvl 5 -y 1160 -defaultsOSRD
+preplace inst axi_cfg_spi_0 -pg 1 -lvl 6 -y 680 -defaultsOSRD
+preplace inst confreg_0 -pg 1 -lvl 6 -y 500 -defaultsOSRD
 preplace inst naive_mips_0 -pg 1 -lvl 1 -y 590 -defaultsOSRD
+preplace inst dram_crossbar -pg 1 -lvl 5 -y 1160 -defaultsOSRD
 preplace inst blk_mem_gen_0 -pg 1 -lvl 6 -y 180 -defaultsOSRD
 preplace inst ahblite_axi_bridge_0 -pg 1 -lvl 3 -y 100 -defaultsOSRD
 preplace inst axi_ethernetlite_0 -pg 1 -lvl 6 -y 360 -defaultsOSRD
 preplace inst ahblite_axi_bridge_1 -pg 1 -lvl 3 -y 480 -defaultsOSRD
 preplace inst sys_bus -pg 1 -lvl 4 -y 710 -defaultsOSRD
 preplace inst ahblite_axi_bridge_2 -pg 1 -lvl 3 -y 880 -defaultsOSRD
-preplace inst axi_apb_bridge_0 -pg 1 -lvl 5 -y 1430 -defaultsOSRD
 preplace inst DCache_0 -pg 1 -lvl 2 -y 120 -defaultsOSRD
+preplace inst axi_apb_bridge_0 -pg 1 -lvl 5 -y 1430 -defaultsOSRD
 preplace inst clk_wiz_peri -pg 1 -lvl 3 -y 1640 -defaultsOSRD
-preplace inst axi_uart16550_0 -pg 1 -lvl 6 -y 990 -defaultsOSRD
-preplace inst axi_bram_ctrl_0 -pg 1 -lvl 5 -y 350 -defaultsOSRD
-preplace netloc DCache_0_AHB_hwdata 1 2 1 1790
-preplace netloc sys_clk_i_1 1 0 6 40J 1270 NJ 1270 NJ 1270 NJ 1270 2630J 1320 3200J
-preplace netloc mig_7series_0_DDR3 1 6 1 3620J
-preplace netloc perph_bus_M07_AXI 1 3 3 2320 90 NJ 90 3070
-preplace netloc perph_bus_M00_AXI 1 5 1 3140
-preplace netloc ICache_0_AHB_haddr 1 2 1 1770
-preplace netloc PS2_DAT_i_1 1 0 6 20J 1730 NJ 1730 NJ 1730 NJ 1730 NJ 1730 3080J
-preplace netloc ICache_0_AHB_hburst 1 2 1 1770
-preplace netloc ahb_adapter_uncached_AHB_hwdata 1 2 1 1750
-preplace netloc axi_tft_0_VGA_INTF 1 4 3 2690J 1010 3050J 1100 3570J
+preplace inst axi_uart16550_0 -pg 1 -lvl 6 -y 1010 -defaultsOSRD
+preplace inst axi_bram_ctrl_0 -pg 1 -lvl 5 -y 310 -defaultsOSRD
+preplace netloc DCache_0_AHB_hwdata 1 2 1 1850
+preplace netloc sys_clk_i_1 1 0 6 40J 1270 NJ 1270 NJ 1270 NJ 1270 2630J 1320 3270J
+preplace netloc mig_7series_0_DDR3 1 6 1 3690J
+preplace netloc perph_bus_M07_AXI 1 3 3 2320 440 NJ 440 3110
+preplace netloc perph_bus_M00_AXI 1 5 1 N
+preplace netloc ICache_0_AHB_haddr 1 2 1 1760
+preplace netloc PS2_DAT_i_1 1 0 6 20J 1730 NJ 1730 NJ 1730 NJ 1730 NJ 1730 3120J
+preplace netloc ICache_0_AHB_hburst 1 2 1 1780
+preplace netloc ahb_adapter_uncached_AHB_hwdata 1 2 1 1740
+preplace netloc axi_tft_0_VGA_INTF 1 4 3 2680J 1010 3080J 1100 3630J
 preplace netloc ICache_0_AHB_htrans 1 2 1 1760
-preplace netloc naive_mips_0_ibus_read 1 1 1 1130
-preplace netloc axi_interconnect_0_M04_AXI 1 5 1 3150
+preplace netloc naive_mips_0_ibus_read 1 1 1 1120
+preplace netloc perph_bus_M04_AXI 1 5 1 3150
 preplace netloc altera_up_ps2_0_PS2_DAT_o 1 6 1 N
 preplace netloc ICache_0_AHB_hwdata 1 2 1 1750
-preplace netloc xlconstant_3_dout 1 5 1 3190
-preplace netloc nt35510_apb_adapter_0_LCD_rd 1 6 1 3590
-preplace netloc nt35510_apb_adapter_0_LCD_data 1 6 1 3640
-preplace netloc axi_cfg_spi_0_SPI_0 1 6 1 3560J
-preplace netloc axi_ethernetlite_0_ip2intc_irpt 1 5 2 3220J 60 3580
-preplace netloc DCache_0_AHB_htrans 1 2 1 1810
-preplace netloc xlconcat_0_dout 1 0 7 50 2010 NJ 2010 NJ 2010 NJ 2010 NJ 2010 NJ 2010 3560
-preplace netloc sys_bus_M01_AXI 1 4 1 2640
-preplace netloc ahblite_axi_bridge_1_s_ahb_hrdata 1 1 2 1200 300 1850J
+preplace netloc xlconstant_3_dout 1 5 1 3260
+preplace netloc nt35510_apb_adapter_0_LCD_rd 1 6 1 3650
+preplace netloc nt35510_apb_adapter_0_LCD_data 1 6 1 3700
+preplace netloc axi_cfg_spi_0_SPI_0 1 6 1 3700J
+preplace netloc axi_ethernetlite_0_ip2intc_irpt 1 5 2 3280J 50 3630
+preplace netloc DCache_0_AHB_htrans 1 2 1 1870
+preplace netloc xlconcat_0_dout 1 0 7 50 2010 NJ 2010 NJ 2010 NJ 2010 NJ 2010 NJ 2010 3620
+preplace netloc sys_bus_M01_AXI 1 4 1 2630
+preplace netloc ahblite_axi_bridge_1_s_ahb_hrdata 1 1 2 1180 300 1890J
 preplace netloc naive_mips_0_dbus_uncached_write 1 1 1 1060
+preplace netloc confreg_0_num_data 1 6 1 N
 preplace netloc altera_up_ps2_0_PS2_DAT_t 1 6 1 N
-preplace netloc ahb_adapter_uncached_AHB_hready_in 1 2 1 1840
-preplace netloc axi_gpio_0_GPIO 1 6 1 3580J
+preplace netloc ahb_adapter_uncached_AHB_hready_in 1 2 1 1860
 preplace netloc ahblite_axi_bridge_2_M_AXI 1 3 1 2250
-preplace netloc DCache_0_dbus_stall 1 0 3 100 790 1130J 660 1680
-preplace netloc perph_bus_M05_AXI 1 4 2 2710 1000 3050
-preplace netloc naive_mips_0_dbus_dcache_inv_wb 1 1 1 1100
-preplace netloc axi_gpio_0_GPIO2 1 6 1 3570J
-preplace netloc axi_interconnect_0_M01_AXI 1 5 1 3120
-preplace netloc ahblite_axi_bridge_0_s_ahb_hresp 1 1 2 1180J -70 1830J
-preplace netloc axi_bram_ctrl_0_bram_we_a 1 5 1 3210
-preplace netloc ahb_adapter_uncached_AHB_hburst 1 2 1 1810
-preplace netloc DCache_0_dbus_rddata 1 0 3 90 780 1170J 700 1710
+preplace netloc DCache_0_dbus_stall 1 0 3 70 1080 NJ 1080 1720
+preplace netloc perph_bus_M05_AXI 1 4 2 2710 1000 3060
+preplace netloc confreg_0_led 1 6 1 N
+preplace netloc naive_mips_0_dbus_dcache_inv_wb 1 1 1 1080
+preplace netloc axi_interconnect_0_M01_AXI 1 5 1 3140
+preplace netloc ahblite_axi_bridge_0_s_ahb_hresp 1 1 2 1160J -80 1890J
+preplace netloc axi_bram_ctrl_0_bram_we_a 1 5 1 3130
+preplace netloc ahb_adapter_uncached_AHB_hburst 1 2 1 1830
+preplace netloc DCache_0_dbus_rddata 1 0 3 110 780 1150J 700 1690
 preplace netloc axi_apb_bridge_0_APB_M2 1 5 1 3070
-preplace netloc mig_7series_0_ui_clk_sync_rst 1 2 5 1860 1740 NJ 1740 NJ 1740 3060J 1980 3580
+preplace netloc mig_7series_0_ui_clk_sync_rst 1 2 5 1880 1740 NJ 1740 NJ 1740 3080J 1980 3640
 preplace netloc ahblite_axi_bridge_0_M_AXI 1 3 1 2260
-preplace netloc DCache_0_AHB_hburst 1 2 1 1780
-preplace netloc ICache_0_dbus_rdstall 1 0 3 40 800 1220J 670 1670
-preplace netloc axi_bram_ctrl_0_bram_clk_a 1 5 1 3090
-preplace netloc ICache_0_AHB_hready_in 1 2 1 1800
-preplace netloc naive_mips_0_dbus_byteenable 1 1 1 1180
-preplace netloc axi_spi_flash_ip2intc_irpt 1 5 2 3230J 1090 3580
-preplace netloc ahb_adapter_uncached_AHB_haddr 1 2 1 1800
+preplace netloc DCache_0_AHB_hburst 1 2 1 1690
+preplace netloc ICache_0_dbus_rdstall 1 0 3 60 790 1120J 660 1680
+preplace netloc axi_bram_ctrl_0_bram_clk_a 1 5 1 3080
+preplace netloc SW_1 1 0 6 20J 290 NJ 290 NJ 290 2250J 190 NJ 190 3070J
+preplace netloc ICache_0_AHB_hready_in 1 2 1 1820
+preplace netloc naive_mips_0_dbus_byteenable 1 1 1 1160
+preplace netloc axi_spi_flash_ip2intc_irpt 1 5 2 3290J 60 3620
+preplace netloc ahb_adapter_uncached_AHB_haddr 1 2 1 1810
 preplace netloc altera_up_ps2_0_PS2_CLK_o 1 6 1 N
-preplace netloc proc_sys_reset_0_peripheral_aresetn 1 0 6 100 1110 NJ 1110 NJ 1110 2280 960 2650 210 3160
+preplace netloc proc_sys_reset_0_peripheral_aresetn 1 0 6 110 1110 NJ 1110 NJ 1110 2280 1010 2670 450 3230
 preplace netloc ICache_0_AHB_hwrite 1 2 1 1740
-preplace netloc ahb_adapter_uncached_stall 1 0 3 70 1060 NJ 1060 1670
-preplace netloc mig_7series_0_init_calib_complete 1 2 5 1870 2000 NJ 2000 NJ 2000 NJ 2000 3570
-preplace netloc nt35510_apb_adapter_0_LCD_rs 1 6 1 3610
-preplace netloc xlslice_0_Dout 1 5 1 3080
-preplace netloc naive_mips_0_ibus_address 1 1 6 1140 -90 NJ -90 NJ -90 NJ -90 NJ -90 3640J
-preplace netloc axi_apb_bridge_0_APB_M 1 5 1 3200
-preplace netloc ext_spi_clk_1 1 3 3 2310 970 NJ 970 3210
-preplace netloc axi_interconnect_1_M02_AXI 1 4 1 2670
+preplace netloc ahb_adapter_uncached_stall 1 0 3 100 810 1080J 720 1680
+preplace netloc mig_7series_0_init_calib_complete 1 2 5 1890 2000 NJ 2000 NJ 2000 NJ 2000 3630
+preplace netloc nt35510_apb_adapter_0_LCD_rs 1 6 1 3670
+preplace netloc xlslice_0_Dout 1 5 1 N
+preplace netloc naive_mips_0_ibus_address 1 1 6 1130 -90 NJ -90 NJ -90 NJ -90 NJ -90 NJ
+preplace netloc axi_apb_bridge_0_APB_M 1 5 1 3270
+preplace netloc ext_spi_clk_1 1 3 3 2310 990 NJ 990 3200
+preplace netloc axi_interconnect_1_M02_AXI 1 4 1 2650
 preplace netloc PS2_CLK_i_1 1 0 6 NJ 1720 NJ 1720 NJ 1720 NJ 1720 NJ 1720 NJ
 preplace netloc xlconstant_2_dout 1 1 1 1150
-preplace netloc axi_ethernetlite_0_MDIO 1 6 1 3620J
+preplace netloc axi_ethernetlite_0_MDIO 1 6 1 NJ
 preplace netloc altera_up_ps2_0_PS2_CLK_t 1 6 1 N
-preplace netloc aux_reset_in_1 1 0 3 NJ 1100 NJ 1100 1700J
-preplace netloc ahb_adapter_uncached_rddata 1 0 3 60 810 1070J 720 1670
-preplace netloc axi_bram_ctrl_0_bram_rst_a 1 5 1 3200
-preplace netloc ahb_adapter_uncached_AHB_sel 1 2 1 1750
-preplace netloc axi_ethernetlite_0_MII 1 6 1 3630J
-preplace netloc axi_uart16550_0_ip2intc_irpt 1 5 2 3210 1080 3560
-preplace netloc perph_bus_M03_AXI 1 5 1 3060
-preplace netloc perph_bus_M06_AXI 1 5 1 3140
-preplace netloc nt35510_apb_adapter_0_LCD_csel 1 6 1 3620
+preplace netloc aux_reset_in_1 1 0 3 NJ 1100 NJ 1100 1690J
+preplace netloc ahb_adapter_uncached_rddata 1 0 3 90 800 1200J 710 1690
+preplace netloc axi_bram_ctrl_0_bram_rst_a 1 5 1 3120
+preplace netloc ahb_adapter_uncached_AHB_sel 1 2 1 1740
+preplace netloc axi_ethernetlite_0_MII 1 6 1 NJ
+preplace netloc axi_uart16550_0_ip2intc_irpt 1 5 2 3300 1090 3620
+preplace netloc perph_bus_M03_AXI 1 5 1 3180
+preplace netloc perph_bus_M06_AXI 1 5 1 3150
+preplace netloc nt35510_apb_adapter_0_LCD_csel 1 6 1 3680
 preplace netloc ICache_0_AHB_sel 1 2 1 1730
-preplace netloc ahblite_axi_bridge_1_s_ahb_hready_out 1 1 2 1210 310 1810J
-preplace netloc DCache_0_AHB_haddr 1 2 1 1770
-preplace netloc clk_ref_i_1 1 0 6 20J 1250 NJ 1250 NJ 1250 NJ 1250 2640J 1310 3170J
-preplace netloc axi_bram_ctrl_0_bram_addr_a 1 4 2 2710 110 3060
+preplace netloc ahblite_axi_bridge_1_s_ahb_hready_out 1 1 2 1190 310 1830J
+preplace netloc DCache_0_AHB_haddr 1 2 1 1680
+preplace netloc clk_ref_i_1 1 0 6 20J 1250 NJ 1250 NJ 1250 NJ 1250 2650J 1310 3240J
+preplace netloc axi_bram_ctrl_0_bram_addr_a 1 4 2 2630 80 3060
 preplace netloc naive_mips_0_dbus_read 1 1 1 1060
-preplace netloc DCache_0_AHB_sel 1 2 1 1770
-preplace netloc nt35510_apb_adapter_0_LCD_wr 1 6 1 3600
-preplace netloc S00_ARESETN_1 1 0 4 100 400 1090 290 1690 680 2300
-preplace netloc axi_uart16550_0_UART 1 6 1 3630
-preplace netloc perph_bus_M02_AXI 1 5 1 3080
-preplace netloc DCache_0_AHB_hprot 1 2 1 1790
-preplace netloc naive_mips_0_dbus_icache_inv 1 1 1 1110
-preplace netloc naive_mips_0_dbus_uncached_read 1 1 1 1080
-preplace netloc ahblite_axi_bridge_2_s_ahb_hrdata 1 1 2 1210 1040 1850J
-preplace netloc DCache_0_AHB_hready_in 1 2 1 1810
-preplace netloc ahblite_axi_bridge_0_s_ahb_hrdata 1 1 2 1210J -50 1850J
+preplace netloc DCache_0_AHB_sel 1 2 1 1830
+preplace netloc nt35510_apb_adapter_0_LCD_wr 1 6 1 3660
+preplace netloc S00_ARESETN_1 1 0 6 110 400 1090 280 1840 680 2300 970 2700J 980 3170J
+preplace netloc axi_uart16550_0_UART 1 6 1 3700
+preplace netloc perph_bus_M02_AXI 1 5 1 3190
+preplace netloc DCache_0_AHB_hprot 1 2 1 1710
+preplace netloc naive_mips_0_dbus_icache_inv 1 1 1 1100
+preplace netloc naive_mips_0_dbus_uncached_read 1 1 1 1070
+preplace netloc ahblite_axi_bridge_2_s_ahb_hrdata 1 1 2 1190 1040 1870J
+preplace netloc DCache_0_AHB_hready_in 1 2 1 1720
+preplace netloc ahblite_axi_bridge_0_s_ahb_hrdata 1 1 2 1200J -40 1870J
 preplace netloc clk_wiz_peri_clk_out2 1 3 1 2320
-preplace netloc ahblite_axi_bridge_2_s_ahb_hready_out 1 1 2 1200 1070 1860J
-preplace netloc altera_up_ps2_0_irq 1 5 2 3230 1990 3550
-preplace netloc ICache_0_AHB_hprot 1 2 1 1770
-preplace netloc ahb_adapter_uncached_AHB_hsize 1 2 1 1750
+preplace netloc ahblite_axi_bridge_2_s_ahb_hready_out 1 1 2 1180 1070 1880J
+preplace netloc altera_up_ps2_0_irq 1 5 2 3300 1990 3610
+preplace netloc ICache_0_AHB_hprot 1 2 1 1800
+preplace netloc ahb_adapter_uncached_AHB_hsize 1 2 1 1740
 preplace netloc jtag_axi_0_M_AXI 1 3 1 2260
-preplace netloc naive_mips_0_dbus_wrdata 1 1 1 1190
-preplace netloc mig_7series_0_ui_clk 1 2 5 1850 1150 2290 990 2680 230 3130 1790 3560
-preplace netloc axi_intc_0_irq 1 5 2 3220 1970 3540
-preplace netloc nt35510_apb_adapter_0_LCD_nrst 1 6 1 3630
-preplace netloc ahb_adapter_uncached_AHB_hwrite 1 2 1 1750
-preplace netloc DCache_0_AHB_hwrite 1 2 1 1780
-preplace netloc ahb_adapter_uncached_AHB_hprot 1 2 1 1830
-preplace netloc ICache_0_dbus_rddata 1 0 3 30 1090 NJ 1090 1720
-preplace netloc axi_spi_flash_SPI_0 1 6 1 3640J
-preplace netloc ahb_adapter_uncached_triple_byte_w 1 2 5 1790J 290 NJ 290 2710J 980 3070J 1070 3640J
-preplace netloc ICache_0_AHB_hsize 1 2 1 1770
-preplace netloc DCache_0_AHB_hsize 1 2 1 1820
-preplace netloc naive_mips_0_dbus_write 1 1 1 1080
-preplace netloc naive_mips_0_dbus_address 1 1 1 1120
+preplace netloc naive_mips_0_dbus_wrdata 1 1 1 1170
+preplace netloc mig_7series_0_ui_clk 1 2 5 1870 1150 2290 1000 2660 430 3210 1790 3620
+preplace netloc axi_intc_0_irq 1 5 2 3290 1970 3600
+preplace netloc nt35510_apb_adapter_0_LCD_nrst 1 6 1 3690
+preplace netloc ahb_adapter_uncached_AHB_hwrite 1 2 1 1740
+preplace netloc DCache_0_AHB_hwrite 1 2 1 1840
+preplace netloc ahb_adapter_uncached_AHB_hprot 1 2 1 1850
+preplace netloc ICache_0_dbus_rddata 1 0 3 40 1060 NJ 1060 1710
+preplace netloc axi_spi_flash_SPI_0 1 6 1 3630J
+preplace netloc ahb_adapter_uncached_triple_byte_w 1 2 5 1770J -110 NJ -110 NJ -110 NJ -110 3690J
+preplace netloc ICache_0_AHB_hsize 1 2 1 1780
+preplace netloc DCache_0_AHB_hsize 1 2 1 1880
+preplace netloc naive_mips_0_dbus_write 1 1 1 1070
+preplace netloc naive_mips_0_dbus_address 1 1 1 1110
 preplace netloc ahblite_axi_bridge_1_M_AXI 1 3 1 2250
-preplace netloc blk_mem_gen_0_douta 1 5 1 3110
-preplace netloc ahb_adapter_uncached_AHB_htrans 1 2 1 1750
-preplace netloc ARESETN_1 1 3 2 2270 980 2700
-preplace netloc ahblite_axi_bridge_2_s_ahb_hresp 1 1 2 1220 1050 1870J
-preplace netloc ICache_0_dbus_ivstall 1 0 3 80 1080 NJ 1080 1700
-preplace netloc ahblite_axi_bridge_1_s_ahb_hresp 1 1 2 1220 320 1780J
-preplace netloc axi_bram_ctrl_0_bram_en_a 1 5 1 3190
-preplace netloc ahblite_axi_bridge_0_s_ahb_hready_out 1 1 2 1220J -40 1820J
-preplace netloc sys_rst_1 1 0 6 30J 1290 NJ 1290 NJ 1290 2250J 1330 NJ 1330 3180J
-preplace netloc axi_interconnect_0_M00_AXI 1 5 1 3180
-preplace netloc S00_AXI_1 1 4 1 2660
-preplace netloc axi_tft_0_M_AXI_MM 1 4 1 2670
-preplace netloc axi_bram_ctrl_0_bram_wrdata_a 1 5 1 3100
-preplace netloc S00_ACLK_1 1 0 4 20J 390 1160 280 1820 670 2310
-levelinfo -pg 1 0 820 1460 2070 2480 2880 3400 3660 -top -130 -bot 2410
+preplace netloc blk_mem_gen_0_douta 1 5 1 3100
+preplace netloc ahb_adapter_uncached_AHB_htrans 1 2 1 1740
+preplace netloc ARESETN_1 1 3 2 2270 980 2690
+preplace netloc ahblite_axi_bridge_2_s_ahb_hresp 1 1 2 1200 1050 1890J
+preplace netloc ICache_0_dbus_ivstall 1 0 3 80 1090 NJ 1090 1700
+preplace netloc ahblite_axi_bridge_1_s_ahb_hresp 1 1 2 1200 320 1810J
+preplace netloc axi_bram_ctrl_0_bram_en_a 1 5 1 3110
+preplace netloc confreg_0_led_rg0 1 6 1 N
+preplace netloc ahblite_axi_bridge_0_s_ahb_hready_out 1 1 2 1190J -70 1880J
+preplace netloc sys_rst_1 1 0 6 30J 1290 NJ 1290 NJ 1290 2250J 1330 NJ 1330 3250J
+preplace netloc axi_interconnect_0_M00_AXI 1 5 1 3220
+preplace netloc S00_AXI_1 1 4 1 2640
+preplace netloc axi_tft_0_M_AXI_MM 1 4 1 2640
+preplace netloc confreg_0_led_rg1 1 6 1 N
+preplace netloc axi_bram_ctrl_0_bram_wrdata_a 1 5 1 3090
+preplace netloc S00_ACLK_1 1 0 6 30J 390 1140 -50 1790 670 2310 960 2710J 970 3160J
+levelinfo -pg 1 0 820 1464 2070 2478 2882 3450 3720 -top -130 -bot 2410
 ",
 }
 0

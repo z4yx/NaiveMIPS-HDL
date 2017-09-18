@@ -2,9 +2,9 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="bd_soc" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1505381146"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1505381146"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1505381146"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1505711896"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1505711896"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1505711896"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip/bd_soc_ahblite_axi_bridge_0_1/bd_soc_ahblite_axi_bridge_0_1.xci" Type="IP">
         <Instance HierarchyPath="ahblite_axi_bridge_0"/>
@@ -56,14 +56,6 @@
       </File>
       <File Name="ip/bd_soc_axi_ethernetlite_0_0/bd_soc_axi_ethernetlite_0_0.xci" Type="IP">
         <Instance HierarchyPath="axi_ethernetlite_0"/>
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
-        <Library Name="xil_defaultlib"/>
-        <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
-        <UsedIn Val="SIMULATION"/>
-      </File>
-      <File Name="ip/bd_soc_axi_gpio_0_0/bd_soc_axi_gpio_0_0.xci" Type="IP">
-        <Instance HierarchyPath="axi_gpio_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -262,13 +254,6 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="hdl/bd_soc.v" Type="Verilog">
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="false" IsStatusTracked="false"/>
-        <Library Name="xil_defaultlib"/>
-        <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
-        <UsedIn Val="SIMULATION"/>
-      </File>
       <File Name="ip/bd_soc_clk_wiz_0_0/bd_soc_clk_wiz_0_0.xci" Type="IP">
         <Instance HierarchyPath="clk_wiz_peri"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
@@ -279,6 +264,21 @@
       </File>
       <File Name="ip/bd_soc_altera_up_ps2_0_0/bd_soc_altera_up_ps2_0_0.xci" Type="IP">
         <Instance HierarchyPath="altera_up_ps2_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="hdl/bd_soc.v" Type="Verilog">
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="false" IsStatusTracked="false"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_confreg_0_0/bd_soc_confreg_0_0.xci" Type="IP">
+        <Instance HierarchyPath="confreg_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -349,7 +349,7 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="ip/bd_soc_auto_rs_w_7/bd_soc_auto_rs_w_7.xci" Type="IP">
+      <File Name="ip/bd_soc_auto_rs_w_6/bd_soc_auto_rs_w_6.xci" Type="IP">
         <Instance HierarchyPath="perph_bus/m07_couplers/auto_rs_w"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
@@ -381,7 +381,7 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="ip/bd_soc_auto_rs_w_6/bd_soc_auto_rs_w_6.xci" Type="IP">
+      <File Name="ip/bd_soc_auto_rs_w_5/bd_soc_auto_rs_w_5.xci" Type="IP">
         <Instance HierarchyPath="perph_bus/m06_couplers/auto_rs_w"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
@@ -413,8 +413,16 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="ip/bd_soc_auto_rs_w_5/bd_soc_auto_rs_w_5.xci" Type="IP">
+      <File Name="ip/bd_soc_auto_rs_w_4/bd_soc_auto_rs_w_4.xci" Type="IP">
         <Instance HierarchyPath="perph_bus/m05_couplers/auto_rs_w"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/bd_soc_auto_cc_0/bd_soc_auto_cc_0.xci" Type="IP">
+        <Instance HierarchyPath="perph_bus/m04_couplers/auto_cc"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
@@ -439,14 +447,6 @@
       </File>
       <File Name="ip/bd_soc_auto_rs_4/bd_soc_auto_rs_4.xci" Type="IP">
         <Instance HierarchyPath="perph_bus/m04_couplers/auto_rs"/>
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
-        <Library Name="xil_defaultlib"/>
-        <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
-        <UsedIn Val="SIMULATION"/>
-      </File>
-      <File Name="ip/bd_soc_auto_rs_w_4/bd_soc_auto_rs_w_4.xci" Type="IP">
-        <Instance HierarchyPath="perph_bus/m04_couplers/auto_rs_w"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>

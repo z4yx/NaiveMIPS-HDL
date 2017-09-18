@@ -19995,7 +19995,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:a227fc68</spirit:value>
+            <spirit:value>7:51245079</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -20009,11 +20009,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Sep 13 13:53:05 UTC 2017</spirit:value>
+            <spirit:value>Mon Sep 18 01:26:25 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:a227fc68</spirit:value>
+            <spirit:value>7:51245079</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -20028,11 +20028,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Sep 13 13:53:05 UTC 2017</spirit:value>
+            <spirit:value>Mon Sep 18 01:26:25 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:a227fc68</spirit:value>
+            <spirit:value>7:51245079</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -20066,7 +20066,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:a8913f48</spirit:value>
+            <spirit:value>7:b6b09e33</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -20081,11 +20081,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Sep 13 13:53:05 UTC 2017</spirit:value>
+            <spirit:value>Mon Sep 18 01:26:25 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:a8913f48</spirit:value>
+            <spirit:value>7:b6b09e33</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -20099,11 +20099,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Sep 13 14:14:55 UTC 2017</spirit:value>
+            <spirit:value>Mon Sep 18 01:35:23 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:a227fc68</spirit:value>
+            <spirit:value>7:51245079</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -22216,11 +22216,11 @@
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="std_logic_vector">
         <spirit:name>C_M_AXI_BASE_ADDR</spirit:name>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_BASE_ADDR" spirit:bitStringLength="1024">0xffffffffffffffff000000001c090000ffffffffffffffff000000001c080000000000001c062000000000001c060000ffffffffffffffff000000001fd01000ffffffffffffffff000000001e000000ffffffffffffffff000000001fd02000ffffffffffffffff000000001c030000ffffffffffffffff000000001a000000</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_BASE_ADDR" spirit:bitStringLength="1024">0xffffffffffffffff000000001c090000ffffffffffffffff000000001c080000000000001c062000000000001c060000ffffffffffffffff000000001fd0e000ffffffffffffffff000000001e000000ffffffffffffffff000000001fd02000ffffffffffffffff000000001c030000ffffffffffffffff000000001a000000</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="std_logic_vector">
         <spirit:name>C_M_AXI_ADDR_WIDTH</spirit:name>
-        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_ADDR_WIDTH" spirit:bitStringLength="512">0x000000000000000c000000000000000c0000000c0000000c000000000000000c000000000000000c000000000000000d00000000000000100000000000000018</spirit:value>
+        <spirit:value spirit:format="bitString" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M_AXI_ADDR_WIDTH" spirit:bitStringLength="512">0x000000000000000c000000000000000c0000000c0000000c000000000000000d000000000000000c000000000000000d00000000000000100000000000000018</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_S_AXI_BASE_ID</spirit:name>
@@ -31663,7 +31663,7 @@
     <spirit:parameter>
       <spirit:name>M04_A00_BASE_ADDR</spirit:name>
       <spirit:displayName>My M04_A00_BASE_ADDR</spirit:displayName>
-      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M04_A00_BASE_ADDR" spirit:order="757" spirit:bitStringLength="64">0x000000001FD01000</spirit:value>
+      <spirit:value spirit:format="bitString" spirit:resolve="user" spirit:id="PARAM_VALUE.M04_A00_BASE_ADDR" spirit:order="757" spirit:bitStringLength="64">0x000000001FD0E000</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -34735,7 +34735,7 @@
     <spirit:parameter>
       <spirit:name>M04_A00_ADDR_WIDTH</spirit:name>
       <spirit:displayName>My M04_A00_ADDR_WIDTH</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M04_A00_ADDR_WIDTH" spirit:order="1013" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">12</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M04_A00_ADDR_WIDTH" spirit:order="1013" spirit:minimum="0" spirit:maximum="64" spirit:rangeType="long">13</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>

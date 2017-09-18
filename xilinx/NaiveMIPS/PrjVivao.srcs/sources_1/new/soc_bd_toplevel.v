@@ -73,7 +73,7 @@ input wire rxd;
 output wire [1:0] bicolor_R;
 output wire [1:0] bicolor_G;
 
-output reg[15:0] gpio0;
+output wire[15:0] gpio0;
 input wire[7:0] gpio1;
 output wire[7:0] NUM_CSn;
 output wire[7:0] NUM_A_G;
@@ -316,7 +316,7 @@ bd_soc soc(
   .CFG_FLASH_ss_i (CFG_FLASH_ss_i),
   .CFG_FLASH_ss_o (CFG_FLASH_ss_o),
   .CFG_FLASH_ss_t (CFG_FLASH_ss_t),
-  .LED_tri_o      (segdisp_din),
+  .num_data       (segdisp_din),
   .MDIO_mdc       (mdc),
   .MDIO_mdio_i    (mdio_i),
   .MDIO_mdio_o    (mdio_o),
@@ -371,9 +371,12 @@ bd_soc soc(
   .SPI_FLASH_ss_i (SPI_FLASH_ss_i),
   .SPI_FLASH_ss_o (SPI_FLASH_ss_o),
   .SPI_FLASH_ss_t (SPI_FLASH_ss_t),
-  .SW_tri_i       ({23'h0,gpio1}),
+  .SW             ({23'h0,gpio1}),
+  .led            (gpio0),
+  .led_rg0        ({bicolor_G[0],bicolor_R[0]}),
+  .led_rg1        ({bicolor_G[1],bicolor_R[1]}),
   .iaddr          (iaddr),
-  .triple_byte_w  (triple_byte_w),
+  .triple_byte_w  (),
   .UART_rxd       (rxd),
   .UART_txd       (txd),
   .UART_ctsn      (1'b0),
@@ -402,11 +405,11 @@ bd_soc soc(
 
 );
 
-always @(posedge clk) begin : proc_gpio0
-  gpio0 <= ~iaddr[17:2];
-end
+//always @(posedge clk) begin : proc_gpio0
+//  gpio0 <= ~iaddr[17:2];
+//end
 
-assign bicolor_G = 0;
-assign bicolor_R = {triple_byte_w,triple_byte_w};
+//assign bicolor_G = 0;
+//assign bicolor_R = {triple_byte_w,triple_byte_w};
 
 endmodule

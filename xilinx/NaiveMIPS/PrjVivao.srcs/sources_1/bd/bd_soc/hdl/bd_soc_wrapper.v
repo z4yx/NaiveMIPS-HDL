@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-//Date        : Thu Sep 14 17:25:24 2017
+//Date        : Mon Sep 18 13:17:54 2017
 //Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target bd_soc_wrapper.bd
 //Design      : bd_soc_wrapper
@@ -32,6 +32,7 @@ module bd_soc_wrapper
     PS2_DAT_i,
     PS2_DAT_o,
     PS2_DAT_t,
+    SW,
     UART_baudoutn,
     UART_ctsn,
     UART_dcdn,
@@ -77,15 +78,17 @@ module bd_soc_wrapper
     ddr_sys_clk,
     iaddr,
     lcd_data_tri_io,
-    led_tri_o,
+    led,
+    led_rg0,
+    led_rg1,
     mdio_mdio_io,
+    num_data,
     spi_flash_io0_io,
     spi_flash_io1_io,
     spi_flash_io2_io,
     spi_flash_io3_io,
     spi_flash_sck_io,
     spi_flash_ss_io,
-    sw_tri_i,
     sys_rst,
     triple_byte_w);
   output LCD_csel;
@@ -110,6 +113,7 @@ module bd_soc_wrapper
   input PS2_DAT_i;
   output PS2_DAT_o;
   output PS2_DAT_t;
+  input [31:0]SW;
   output UART_baudoutn;
   input UART_ctsn;
   input UART_dcdn;
@@ -155,15 +159,17 @@ module bd_soc_wrapper
   input ddr_sys_clk;
   output [31:0]iaddr;
   inout [15:0]lcd_data_tri_io;
-  output [31:0]led_tri_o;
+  output [15:0]led;
+  output [1:0]led_rg0;
+  output [1:0]led_rg1;
   inout mdio_mdio_io;
+  output [31:0]num_data;
   inout spi_flash_io0_io;
   inout spi_flash_io1_io;
   inout spi_flash_io2_io;
   inout spi_flash_io3_io;
   inout spi_flash_sck_io;
   inout [0:0]spi_flash_ss_io;
-  input [31:0]sw_tri_i;
   input sys_rst;
   output triple_byte_w;
 
@@ -189,6 +195,7 @@ module bd_soc_wrapper
   wire PS2_DAT_i;
   wire PS2_DAT_o;
   wire PS2_DAT_t;
+  wire [31:0]SW;
   wire UART_baudoutn;
   wire UART_ctsn;
   wire UART_dcdn;
@@ -306,11 +313,14 @@ module bd_soc_wrapper
   wire [7:7]lcd_data_tri_t_7;
   wire [8:8]lcd_data_tri_t_8;
   wire [9:9]lcd_data_tri_t_9;
-  wire [31:0]led_tri_o;
+  wire [15:0]led;
+  wire [1:0]led_rg0;
+  wire [1:0]led_rg1;
   wire mdio_mdio_i;
   wire mdio_mdio_io;
   wire mdio_mdio_o;
   wire mdio_mdio_t;
+  wire [31:0]num_data;
   wire spi_flash_io0_i;
   wire spi_flash_io0_io;
   wire spi_flash_io0_o;
@@ -335,7 +345,6 @@ module bd_soc_wrapper
   wire [0:0]spi_flash_ss_io_0;
   wire [0:0]spi_flash_ss_o_0;
   wire spi_flash_ss_t;
-  wire [31:0]sw_tri_i;
   wire sys_rst;
   wire triple_byte_w;
 
@@ -357,7 +366,6 @@ module bd_soc_wrapper
         .LCD_rd(LCD_rd),
         .LCD_rs(LCD_rs),
         .LCD_wr(LCD_wr),
-        .LED_tri_o(led_tri_o),
         .MDIO_mdc(MDIO_mdc),
         .MDIO_mdio_i(mdio_mdio_i),
         .MDIO_mdio_o(mdio_mdio_o),
@@ -396,7 +404,7 @@ module bd_soc_wrapper
         .SPI_FLASH_ss_i(spi_flash_ss_i_0),
         .SPI_FLASH_ss_o(spi_flash_ss_o_0),
         .SPI_FLASH_ss_t(spi_flash_ss_t),
-        .SW_tri_i(sw_tri_i),
+        .SW(SW),
         .UART_baudoutn(UART_baudoutn),
         .UART_ctsn(UART_ctsn),
         .UART_dcdn(UART_dcdn),
@@ -438,6 +446,10 @@ module bd_soc_wrapper
         .ddr_ref_clk(ddr_ref_clk),
         .ddr_sys_clk(ddr_sys_clk),
         .iaddr(iaddr),
+        .led(led),
+        .led_rg0(led_rg0),
+        .led_rg1(led_rg1),
+        .num_data(num_data),
         .sys_rst(sys_rst),
         .triple_byte_w(triple_byte_w));
   IOBUF cfg_flash_io0_iobuf
