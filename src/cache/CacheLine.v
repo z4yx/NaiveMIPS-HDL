@@ -27,6 +27,7 @@ module CacheLine #(parameter
 	reg [31:0] data[2**`OFFSET_WIDTH - 1 : 0];
 	reg dirty;
 	reg valid;
+	reg [31:0] dout;
 
 	// Reading data
 	assign rd_tag = tag;
@@ -36,36 +37,36 @@ module CacheLine #(parameter
 	// Resetting or writing data
 	always @(posedge clk, negedge nrst) begin
 		if (~nrst) begin : rst_data
-			integer i;
 			// Resetting
 			dirty <= 1'b0;
 			valid <= 1'b0;
 			tag   <= 0;
-			for (i = 0; i < 2**`OFFSET_WIDTH; i = i + 1) begin
-				data[i] <= 32'b0;
-			end
 
 		end else if (wr_write) begin
 			// Writing data
 			tag   <= wr_tag;
-			if (wr_byte_enable[0]) begin
-				data[wr_off][0*8+7:0*8] <= wr_data[0*8+7:0*8];
-			end
-			if (wr_byte_enable[1]) begin
-				data[wr_off][1*8+7:1*8] <= wr_data[1*8+7:1*8];
-			end
-			if (wr_byte_enable[2]) begin
-				data[wr_off][2*8+7:2*8] <= wr_data[2*8+7:2*8];
-			end
-			if (wr_byte_enable[3]) begin
-				data[wr_off][3*8+7:3*8] <= wr_data[3*8+7:3*8];
-			end
 			dirty <= wr_dirty;
 			valid <= wr_valid;
 
 		end else begin
-			rd_data = valid ? data[rd_off] : 0;
+			// rd_data = valid ? data[rd_off] : 0;
 		end
+	end
+
+	integer k;
+	always @(posedge clk) begin : proc_bram
+		if(wr_write) begin
+			for(k=0; k<4; k=k+1)
+				if (wr_byte_enable[k]) begin
+					data[wr_off][k*8 +: 8] <= wr_data[k*8 +: 8];
+				end
+		end else begin 
+			dout <= data[rd_off];
+		end
+	end
+
+	always @(*) begin
+		rd_data = valid ? dout : 0;
 	end
 
 endmodule
