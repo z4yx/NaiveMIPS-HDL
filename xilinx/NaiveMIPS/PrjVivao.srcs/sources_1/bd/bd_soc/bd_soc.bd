@@ -666,7 +666,7 @@
         <spirit:componentRef spirit:library="ip" spirit:name="axi_quad_spi" spirit:vendor="xilinx.com" spirit:version="3.2"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_axi_spi_flash_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="C_SPI_MEMORY">1</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_SPI_MEMORY">3</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="C_USE_STARTUP">0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="C_SPI_MODE">2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="C_FIFO_DEPTH">256</spirit:configurableElementValue>
@@ -1007,15 +1007,15 @@
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hclk"/>
-        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="ICache_0" spirit:portRef="clk"/>
-        <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M04_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="s00_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="vio_prst" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M04_ACLK"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>S00_ARESETN_1</spirit:name>
@@ -1024,14 +1024,14 @@
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hresetn"/>
-        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="rst_n"/>
         <spirit:internalPortReference spirit:componentRef="DCache_0" spirit:portRef="nrst"/>
         <spirit:internalPortReference spirit:componentRef="ICache_0" spirit:portRef="nrst"/>
-        <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M04_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="s00_axi_aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M04_ARESETN"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>clk_ref_i_1</spirit:name>
@@ -1059,6 +1059,7 @@
         <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="m_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="clk_wiz_peri" spirit:portRef="clk_in1"/>
         <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aclk"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="S00_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M00_ACLK"/>
@@ -1080,7 +1081,6 @@
         <spirit:internalPortReference spirit:componentRef="ocm" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M03_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="jtag_bram" spirit:portRef="aclk"/>
-        <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aclk"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ACLK"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
@@ -1105,6 +1105,8 @@
         <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="m_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="reset_n"/>
+        <spirit:internalPortReference spirit:componentRef="clk_ctrl_0" spirit:portRef="rst_in_n"/>
+        <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aresetn"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="S00_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M00_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M01_ARESETN"/>
@@ -1116,11 +1118,9 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M02_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M06_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M07_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="clk_ctrl_0" spirit:portRef="rst_in_n"/>
         <spirit:internalPortReference spirit:componentRef="bootrom" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="ocm" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M03_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aresetn"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ARESETN"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
@@ -1799,8 +1799,8 @@
       <spirit:adHocConnection>
         <spirit:name>Net</spirit:name>
         <spirit:internalPortReference spirit:componentRef="proc_sys_reset_0" spirit:portRef="peripheral_aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aresetn"/>
         <spirit:externalPortReference spirit:portRef="peripheral_aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aresetn"/>
         <spirit:internalPortReference spirit:componentRef="jtag_test" spirit:portRef="aresetn"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
@@ -1940,7 +1940,7 @@
           <spirit:configurableElementValue spirit:referenceId="Byte_Size">8</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Assume_Synchronous_Clk">true</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Write_Width_A">32</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="Write_Depth_A">4096</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Write_Depth_A">16384</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Read_Width_A">32</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Operating_Mode_A">WRITE_FIRST</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Write_Width_B">32</spirit:configurableElementValue>
@@ -1948,8 +1948,8 @@
           <spirit:configurableElementValue spirit:referenceId="Enable_B">Use_ENB_Pin</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Register_PortA_Output_of_Memory_Primitives">false</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Register_PortB_Output_of_Memory_Primitives">false</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="Use_RSTA_Pin">false</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="Use_RSTB_Pin">false</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Use_RSTA_Pin">true</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Use_RSTB_Pin">true</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_B_Clock">100</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_B_Write_Rate">50</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_B_Enable_Rate">100</spirit:configurableElementValue>
@@ -1970,9 +1970,9 @@
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xlslice_0_1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="DIN_TO">2</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="DIN_FROM">13</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="DIN_WIDTH">14</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="DOUT_WIDTH">12</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DIN_FROM">15</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DIN_WIDTH">16</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DOUT_WIDTH">14</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
@@ -1989,9 +1989,9 @@
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_xlslice_0_2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="DIN_TO">2</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="DIN_FROM">13</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="DIN_WIDTH">14</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="DOUT_WIDTH">12</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DIN_FROM">15</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DIN_WIDTH">16</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="DOUT_WIDTH">14</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
     </spirit:componentInstances>
@@ -2082,6 +2082,16 @@
         <spirit:name>s_axi_aresetn1_1</spirit:name>
         <spirit:externalPortReference spirit:portRef="s_axi_aresetn1"/>
         <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="s_axi_aresetn"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>ocm_ctrl_1_bram_rst_a</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="ocm_ctrl_1" spirit:portRef="bram_rst_a"/>
+        <spirit:internalPortReference spirit:componentRef="ocm_1" spirit:portRef="rsta"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>axi_bram_ctrl_0_bram_rst_a</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_0" spirit:portRef="bram_rst_a"/>
+        <spirit:internalPortReference spirit:componentRef="ocm_1" spirit:portRef="rstb"/>
       </spirit:adHocConnection>
     </spirit:adHocConnections>
     <spirit:hierConnections>
@@ -2245,6 +2255,7 @@
           <spirit:configurableElementValue spirit:referenceId="Coe_File">../../../../../../bootrom.coe</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Fill_Remaining_Memory_Locations">false</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Use_RSTA_Pin">true</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Use_RSTB_Pin">true</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_B_Clock">100</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_B_Write_Rate">50</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_B_Enable_Rate">100</spirit:configurableElementValue>
@@ -2363,6 +2374,11 @@
         <spirit:name>s_axi_aresetn1_1</spirit:name>
         <spirit:externalPortReference spirit:portRef="s_axi_aresetn1"/>
         <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_1" spirit:portRef="s_axi_aresetn"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>axi_bram_ctrl_1_bram_rst_a</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="axi_bram_ctrl_1" spirit:portRef="bram_rst_a"/>
+        <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="rstb"/>
       </spirit:adHocConnection>
     </spirit:adHocConnections>
     <spirit:hierConnections>
@@ -8520,7 +8536,7 @@
             <spirit:name>SEG_axi_bram_ctrl_0_Mem0</spirit:name>
             <spirit:displayName>/ocm/axi_bram_ctrl_0/S_AXI/Mem0</spirit:displayName>
             <spirit:addressOffset>0x10000000</spirit:addressOffset>
-            <spirit:range>16K</spirit:range>
+            <spirit:range>64K</spirit:range>
           </spirit:segment>
           <spirit:segment>
             <spirit:name>SEG_axi_bram_ctrl_1_Mem0</spirit:name>
@@ -8614,7 +8630,7 @@
             <spirit:name>SEG_ocm_ctrl_1_Mem0</spirit:name>
             <spirit:displayName>/ocm/ocm_ctrl_1/S_AXI/Mem0</spirit:displayName>
             <spirit:addressOffset>0x08000000</spirit:addressOffset>
-            <spirit:range>16K</spirit:range>
+            <spirit:range>64K</spirit:range>
           </spirit:segment>
         </spirit:segments>
       </spirit:addressSpace>
