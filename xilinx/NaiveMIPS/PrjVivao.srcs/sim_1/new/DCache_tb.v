@@ -41,7 +41,7 @@ initial begin : tb_block
 
     repeat (1000000) begin 
 
-      daddr = ($urandom_range(0, 1024-1) << 6) + 32'b10100;
+      daddr = ($urandom_range(0, 1024*8-1) << 2);// + 32'b10100;
       byte_en = 4'b1111; //$urandom_range(0, 15); //4'b1111;
       d_rw = ($random & 1) ? 0 : 1;
       dwrdata = $urandom;
@@ -55,6 +55,7 @@ initial begin : tb_block
       @(posedge clk);
       while(stall1 == 1)
           @(posedge clk);
+      if (d_rw == 0) @(posedge clk);
       
       if (d_rw == 1) begin 
           if (byte_en[0]) answer[daddr] = dwrdata[7:0];
