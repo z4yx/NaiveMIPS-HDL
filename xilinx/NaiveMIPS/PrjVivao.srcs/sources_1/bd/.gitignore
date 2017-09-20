@@ -10,3 +10,5 @@ hw_handoff/
 *.hwdef
 */ip/*/sim/
 */ip/*/synth/
+synth/
+sim/

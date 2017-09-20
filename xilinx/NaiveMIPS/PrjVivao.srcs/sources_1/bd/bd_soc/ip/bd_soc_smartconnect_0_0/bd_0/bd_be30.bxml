@@ -2,10 +2,17 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="bd_be30" CanBeSetAsTop="true" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1505884950"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1505884950"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1505884950"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1505891759"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1505891759"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1505891759"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
+      <File Name="hdl/bd_be30.v" Type="Verilog">
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="false" IsStatusTracked="false"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
       <File Name="ip/ip_10/bd_be30_s00a2s_0.xci" Type="IP">
         <Instance HierarchyPath="s00_axi2sc"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
@@ -241,13 +248,6 @@
       <File Name="ip/ip_1/bd_be30_psr_aclk_0.xci" Type="IP">
         <Instance HierarchyPath="clk_map/psr_aclk"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
-        <Library Name="xil_defaultlib"/>
-        <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
-        <UsedIn Val="SIMULATION"/>
-      </File>
-      <File Name="hdl/bd_be30.v" Type="Verilog">
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="false" IsStatusTracked="false"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
         <UsedIn Val="IMPLEMENTATION"/>

@@ -46,7 +46,7 @@ Controller Options :
 AXI Parameters :
    Data Width                    : 64
    Arbitration Scheme            : RD_PRI_REG
-   Narrow Burst Support          : 1
+   Narrow Burst Support          : 0
    ID Width                      : 3
 
 Memory Options:

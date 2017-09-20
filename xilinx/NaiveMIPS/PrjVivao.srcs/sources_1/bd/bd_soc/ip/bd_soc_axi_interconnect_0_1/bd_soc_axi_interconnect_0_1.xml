@@ -58,7 +58,7 @@
     <spirit:parameter>
       <spirit:name>NUM_MI</spirit:name>
       <spirit:displayName>Number of Master Interfaces</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.NUM_MI" spirit:order="3" spirit:minimum="1" spirit:maximum="64" spirit:rangeType="long">8</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.NUM_MI" spirit:order="3" spirit:minimum="1" spirit:maximum="64" spirit:rangeType="long">10</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>STRATEGY</spirit:name>
@@ -143,12 +143,12 @@
     <spirit:parameter>
       <spirit:name>M08_HAS_REGSLICE</spirit:name>
       <spirit:displayName>Enable Register Slice on interface M08_AXI</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M08_HAS_REGSLICE" spirit:choiceRef="choice_pairs_b6c9535e" spirit:order="1635292">0</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M08_HAS_REGSLICE" spirit:choiceRef="choice_pairs_b6c9535e" spirit:order="1635292">3</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>M09_HAS_REGSLICE</spirit:name>
       <spirit:displayName>Enable Register Slice on interface M09_AXI</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M09_HAS_REGSLICE" spirit:choiceRef="choice_pairs_b6c9535e" spirit:order="1635293">0</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M09_HAS_REGSLICE" spirit:choiceRef="choice_pairs_b6c9535e" spirit:order="1635293">3</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>M10_HAS_REGSLICE</spirit:name>
@@ -1638,6 +1638,8 @@
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.M05_HAS_REGSLICE" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.M06_HAS_REGSLICE" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.M07_HAS_REGSLICE" xilinx:valueSource="user"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.M08_HAS_REGSLICE" xilinx:valueSource="user"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.M09_HAS_REGSLICE" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.NUM_MI" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.NUM_SI" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S00_HAS_REGSLICE" xilinx:valueSource="user"/>

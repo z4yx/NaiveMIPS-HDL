@@ -202,7 +202,7 @@ module example_top #
                                              // Width of WDATA and RDATA on SI slot.
                                              // Must be <= APP_DATA_WIDTH.
                                              // # = 32, 64, 128, 256.
-   parameter C_S_AXI_SUPPORTS_NARROW_BURST = 1,
+   parameter C_S_AXI_SUPPORTS_NARROW_BURST = 0,
                                              // Indicates whether to instatiate upsizer
                                              // Range: 0, 1
       
