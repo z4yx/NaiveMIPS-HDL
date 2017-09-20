@@ -1,4 +1,4 @@
-`default_nettype wire
+`default_nettype none
 module ahb_adapter (
 /*autoport*/
 //output
@@ -110,3 +110,4 @@ always @(posedge clk or negedge rst_n) begin : proc_triple_byte_w
 end
 
 endmodule
+`default_nettype wire

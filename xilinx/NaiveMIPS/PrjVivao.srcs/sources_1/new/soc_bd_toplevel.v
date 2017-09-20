@@ -413,3 +413,4 @@ bd_soc soc(
 //assign bicolor_R = {triple_byte_w,triple_byte_w};
 
 endmodule
+`default_nettype wire

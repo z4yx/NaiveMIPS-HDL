@@ -63,3 +63,5 @@ begin
         endcase
 end
 endmodule
+
+`default_nettype wire

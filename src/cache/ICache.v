@@ -98,10 +98,10 @@ module ICache #(parameter
 	wire [`OFFSET_WIDTH-1:0] cache_addr_cpu_ivoff;
 	wire [1:0]               cache_addr_iv_dropoff;
 	
+    reg  [`OFFSET_WIDTH-1:0] cache_addr_access_off;
+	
 	reg  [TAG_WIDTH-1:0]     cache_addr_mem_tag;
 	wire [`OFFSET_WIDTH-1:0] cache_addr_mem_off = cache_addr_access_off + 1;
-	
-	reg  [`OFFSET_WIDTH-1:0] cache_addr_access_off;
 	
 	assign {
 		cache_addr_cpu_rdtag,  cache_addr_cpu_rdidx,
@@ -275,3 +275,4 @@ module ICache #(parameter
 	end
 
 endmodule
+`default_nettype wire
