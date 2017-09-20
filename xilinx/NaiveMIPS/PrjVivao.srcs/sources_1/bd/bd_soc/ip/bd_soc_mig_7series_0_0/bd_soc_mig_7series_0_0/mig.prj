@@ -8,7 +8,7 @@
     <DataDepth_En>1024</DataDepth_En>
     <LowPower_En>OFF</LowPower_En>
     <XADC_En>Enabled</XADC_En>
-    <TargetFPGA>xc7a200t-fbg676/-1</TargetFPGA>
+    <TargetFPGA>xc7a200t-fbg676/-2</TargetFPGA>
     <Version>4.0</Version>
     <SystemClock>No Buffer</SystemClock>
     <ReferenceClock>No Buffer</ReferenceClock>
@@ -17,9 +17,6 @@
     <InternalVref>1</InternalVref>
     <dci_hr_inouts_inputs>50 Ohms</dci_hr_inouts_inputs>
     <dci_cascade>0</dci_cascade>
-    <FPGADevice>
-        <selected>7a/xc7a200ti-fbg676</selected>
-    </FPGADevice>
     <Controller number="0" >
         <MemoryDevice>DDR3_SDRAM/Components/MT41J64M16XX-125</MemoryDevice>
         <TimePeriod>2500</TimePeriod>

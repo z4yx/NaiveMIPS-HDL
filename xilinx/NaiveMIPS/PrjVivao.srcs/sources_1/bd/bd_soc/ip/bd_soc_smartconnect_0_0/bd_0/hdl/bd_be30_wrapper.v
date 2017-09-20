@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-//Date        : Tue Sep 19 19:55:15 2017
+//Date        : Wed Sep 20 13:22:27 2017
 //Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
 //Command     : generate_target bd_be30_wrapper.bd
 //Design      : bd_be30_wrapper
@@ -148,7 +148,7 @@ module bd_be30_wrapper
   input M00_AXI_wready;
   output [3:0]M00_AXI_wstrb;
   output M00_AXI_wvalid;
-  output [15:0]M01_AXI_araddr;
+  output [13:0]M01_AXI_araddr;
   output [1:0]M01_AXI_arburst;
   output [3:0]M01_AXI_arcache;
   output [7:0]M01_AXI_arlen;
@@ -158,7 +158,7 @@ module bd_be30_wrapper
   input M01_AXI_arready;
   output [2:0]M01_AXI_arsize;
   output M01_AXI_arvalid;
-  output [15:0]M01_AXI_awaddr;
+  output [13:0]M01_AXI_awaddr;
   output [1:0]M01_AXI_awburst;
   output [3:0]M01_AXI_awcache;
   output [7:0]M01_AXI_awlen;
@@ -254,7 +254,7 @@ module bd_be30_wrapper
   wire M00_AXI_wready;
   wire [3:0]M00_AXI_wstrb;
   wire M00_AXI_wvalid;
-  wire [15:0]M01_AXI_araddr;
+  wire [13:0]M01_AXI_araddr;
   wire [1:0]M01_AXI_arburst;
   wire [3:0]M01_AXI_arcache;
   wire [7:0]M01_AXI_arlen;
@@ -264,7 +264,7 @@ module bd_be30_wrapper
   wire M01_AXI_arready;
   wire [2:0]M01_AXI_arsize;
   wire M01_AXI_arvalid;
-  wire [15:0]M01_AXI_awaddr;
+  wire [13:0]M01_AXI_awaddr;
   wire [1:0]M01_AXI_awburst;
   wire [3:0]M01_AXI_awcache;
   wire [7:0]M01_AXI_awlen;
