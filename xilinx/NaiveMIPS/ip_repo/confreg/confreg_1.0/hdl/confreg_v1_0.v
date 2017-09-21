@@ -20,6 +20,7 @@
 		output wire    [1 :0] led_rg0,
 		output wire    [1 :0] led_rg1,
 		input  wire    [31:0] SW,
+        output wire    [31:0] vidstream_ctl,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -57,6 +58,7 @@
 		.led_rg1(led_rg1),
 		.led_rg0(led_rg0),
 		.SW(SW),
+		.vidstream_ctl(vidstream_ctl),
 		.S_AXI_ACLK(s00_axi_aclk),
 		.S_AXI_ARESETN(s00_axi_aresetn),
 		.S_AXI_AWADDR(s00_axi_awaddr),

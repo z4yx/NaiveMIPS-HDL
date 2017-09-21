@@ -20,6 +20,7 @@
 		output wire    [1 :0] led_rg0,
 		output wire    [1 :0] led_rg1,
         input  wire    [31:0] SW,
+        output wire    [31:0] vidstream_ctl,
 
 		// User ports ends
 		// Do not modify the ports beyond this line
@@ -456,6 +457,7 @@
 	assign led_rg0 = slv_reg1[1:0];
 	assign led_rg1 = slv_reg2[1:0];
 	assign num_data = slv_reg3;
+	assign vidstream_ctl = slv_reg6;
 	// User logic ends
 
 	endmodule
