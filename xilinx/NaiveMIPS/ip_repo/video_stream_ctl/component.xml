@@ -3,7 +3,7 @@
   <spirit:vendor>user.org</spirit:vendor>
   <spirit:library>user</spirit:library>
   <spirit:name>video_stream_ctl</spirit:name>
-  <spirit:version>1.0</spirit:version>
+  <spirit:version>1.1</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>m_axis_video</spirit:name>
@@ -228,7 +228,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>64d5dd98</spirit:value>
+            <spirit:value>537ba3d0</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -244,7 +244,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>64d5dd98</spirit:value>
+            <spirit:value>537ba3d0</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -596,7 +596,7 @@
       <spirit:file>
         <spirit:name>stream_ctl.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_64d5dd98</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_537ba3d0</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -609,7 +609,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/video_stream_ctl_v1_0.tcl</spirit:name>
+        <spirit:name>xgui/video_stream_ctl_v1_1.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_f92e9879</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
@@ -643,21 +643,23 @@
       </xilinx:taxonomies>
       <xilinx:displayName>video_stream_ctl</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>3</xilinx:coreRevision>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>user.org:user:stream_ctl:1.0</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>user.org:user:video_stream_ctl:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2017-09-21T02:28:45Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2017-09-21T11:09:15Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="nopcore"/>
         <xilinx:tag xilinx:name="user.org:user:stream_ctl:1.0_ARCHIVE_LOCATION">/home/zhang/NaiveMIPS-HDL-periph-dev/xilinx/NaiveMIPS/ip_repo/video_stream_ctl</xilinx:tag>
         <xilinx:tag xilinx:name="user.org:user:video_stream_ctl:1.0_ARCHIVE_LOCATION">/home/zhang/NaiveMIPS-HDL-periph-dev/xilinx/NaiveMIPS/ip_repo/video_stream_ctl</xilinx:tag>
+        <xilinx:tag xilinx:name="user.org:user:video_stream_ctl:1.1_ARCHIVE_LOCATION">/home/zhang/NaiveMIPS-HDL-periph-dev/xilinx/NaiveMIPS/ip_repo/video_stream_ctl</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2017.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="58c778c6"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="9d254720"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="5249c603"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="482a74c6"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="cf375289"/>
     </xilinx:packagingInfo>

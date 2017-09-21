@@ -70,8 +70,8 @@ preplace inst clk_wiz_peri -pg 1 -lvl 3 -y 1270 -defaultsOSRD
 preplace inst axi_uart16550_0 -pg 1 -lvl 6 -y 1110 -defaultsOSRD
 preplace netloc DCache_0_AHB_hwdata 1 2 1 1290
 preplace netloc sys_clk_i_1 1 0 6 NJ 1760 NJ 1760 NJ 1760 NJ 1760 2510J 1310 NJ
-preplace netloc video_stream_ctl_0_m_axis_video 1 3 2 1910 1510 2390
 preplace netloc mig_7series_0_DDR3 1 6 1 3500J
+preplace netloc video_stream_ctl_0_m_axis_video 1 3 2 1910 1510 2390
 preplace netloc perph_bus_M07_AXI 1 3 3 1900 330 NJ 330 2880
 preplace netloc perph_bus_M00_AXI 1 5 1 2960
 preplace netloc ICache_0_AHB_haddr 1 2 1 1230

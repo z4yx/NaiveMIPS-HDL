@@ -285,17 +285,41 @@
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_util_vector_logic_0_1/bd_soc_util_vector_logic_0_1.xci">
-          <Proxy FileSetName="bd_soc_util_vector_logic_0_1"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_mig_7series_0_0/bd_soc_mig_7series_0_0.xci">
+          <Proxy FileSetName="bd_soc_mig_7series_0_0"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_spi_flash_0/bd_soc_axi_spi_flash_0.xci">
-          <Proxy FileSetName="bd_soc_axi_spi_flash_0"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_0_0/bd_soc_axi_bram_ctrl_0_0.xci">
+          <Proxy FileSetName="bd_soc_axi_bram_ctrl_0_0"/>
         </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_quad_spi_0_1/bd_soc_axi_quad_spi_0_1.xci">
           <Proxy FileSetName="bd_soc_axi_quad_spi_0_1"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_mig_7series_0_0/bd_soc_mig_7series_0_0.xci">
-          <Proxy FileSetName="bd_soc_mig_7series_0_0"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_DCache_0_0/bd_soc_DCache_0_0.xci">
+          <Proxy FileSetName="bd_soc_DCache_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_naive_mips_0_0/bd_soc_naive_mips_0_0.xci">
+          <Proxy FileSetName="bd_soc_naive_mips_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_clk_ctrl_0_0/bd_soc_clk_ctrl_0_0.xci">
+          <Proxy FileSetName="bd_soc_clk_ctrl_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_ahb_adapter_0_1/bd_soc_ahb_adapter_0_1.xci">
+          <Proxy FileSetName="bd_soc_ahb_adapter_0_1"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_0/bd_soc_xlslice_0_0.xci">
+          <Proxy FileSetName="bd_soc_xlslice_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_ICache_0_0/bd_soc_ICache_0_0.xci">
+          <Proxy FileSetName="bd_soc_ICache_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_apb_bridge_0_0/bd_soc_axi_apb_bridge_0_0.xci">
+          <Proxy FileSetName="bd_soc_axi_apb_bridge_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_intc_0_0/bd_soc_axi_intc_0_0.xci">
+          <Proxy FileSetName="bd_soc_axi_intc_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_spi_flash_0/bd_soc_axi_spi_flash_0.xci">
+          <Proxy FileSetName="bd_soc_axi_spi_flash_0"/>
         </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_blk_mem_gen_0_1/bd_soc_blk_mem_gen_0_1.xci">
           <Proxy FileSetName="bd_soc_blk_mem_gen_0_1"/>
@@ -315,71 +339,47 @@
         <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_vio_0_0/bd_soc_vio_0_0.xci">
           <Proxy FileSetName="bd_soc_vio_0_0"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_DCache_0_0/bd_soc_DCache_0_0.xci">
-          <Proxy FileSetName="bd_soc_DCache_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_naive_mips_0_0/bd_soc_naive_mips_0_0.xci">
-          <Proxy FileSetName="bd_soc_naive_mips_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_clk_ctrl_0_0/bd_soc_clk_ctrl_0_0.xci">
-          <Proxy FileSetName="bd_soc_clk_ctrl_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_ahb_adapter_0_1/bd_soc_ahb_adapter_0_1.xci">
-          <Proxy FileSetName="bd_soc_ahb_adapter_0_1"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_3/bd_soc_xlslice_0_3.xci">
-          <Proxy FileSetName="bd_soc_xlslice_0_3"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xbar_1/bd_soc_xbar_1.xci">
-          <Proxy FileSetName="bd_soc_xbar_1"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_v_frmbuf_rd_0_0/bd_soc_v_frmbuf_rd_0_0.xci">
-          <Proxy FileSetName="bd_soc_v_frmbuf_rd_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_2/bd_soc_xlslice_0_2.xci">
-          <Proxy FileSetName="bd_soc_xlslice_0_2"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_v_frmbuf_wr_0_0/bd_soc_v_frmbuf_wr_0_0.xci">
-          <Proxy FileSetName="bd_soc_v_frmbuf_wr_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_0_1/bd_soc_axi_bram_ctrl_0_1.xci">
-          <Proxy FileSetName="bd_soc_axi_bram_ctrl_0_1"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xbar_2/bd_soc_xbar_2.xci">
-          <Proxy FileSetName="bd_soc_xbar_2"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_1/bd_soc_xlslice_0_1.xci">
-          <Proxy FileSetName="bd_soc_xlslice_0_1"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_1_2/bd_soc_axi_bram_ctrl_1_2.xci">
-          <Proxy FileSetName="bd_soc_axi_bram_ctrl_1_2"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_smartconnect_0_1/bd_soc_smartconnect_0_1.xci">
-          <Proxy FileSetName="bd_soc_smartconnect_0_1"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_smartconnect_0_0/bd_soc_smartconnect_0_0.xci">
-          <Proxy FileSetName="bd_soc_smartconnect_0_0"/>
-        </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_1_1/bd_soc_axi_bram_ctrl_1_1.xci">
-          <Proxy FileSetName="bd_soc_axi_bram_ctrl_1_1"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_util_vector_logic_0_1/bd_soc_util_vector_logic_0_1.xci">
+          <Proxy FileSetName="bd_soc_util_vector_logic_0_1"/>
         </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_blk_mem_gen_1_0/bd_soc_blk_mem_gen_1_0.xci">
           <Proxy FileSetName="bd_soc_blk_mem_gen_1_0"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_intc_0_0/bd_soc_axi_intc_0_0.xci">
-          <Proxy FileSetName="bd_soc_axi_intc_0_0"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_1_1/bd_soc_axi_bram_ctrl_1_1.xci">
+          <Proxy FileSetName="bd_soc_axi_bram_ctrl_1_1"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_apb_bridge_0_0/bd_soc_axi_apb_bridge_0_0.xci">
-          <Proxy FileSetName="bd_soc_axi_apb_bridge_0_0"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_smartconnect_0_0/bd_soc_smartconnect_0_0.xci">
+          <Proxy FileSetName="bd_soc_smartconnect_0_0"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_ICache_0_0/bd_soc_ICache_0_0.xci">
-          <Proxy FileSetName="bd_soc_ICache_0_0"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_1/bd_soc_xlslice_0_1.xci">
+          <Proxy FileSetName="bd_soc_xlslice_0_1"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_0/bd_soc_xlslice_0_0.xci">
-          <Proxy FileSetName="bd_soc_xlslice_0_0"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_0_1/bd_soc_axi_bram_ctrl_0_1.xci">
+          <Proxy FileSetName="bd_soc_axi_bram_ctrl_0_1"/>
         </CompFileExtendedInfo>
-        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_0_0/bd_soc_axi_bram_ctrl_0_0.xci">
-          <Proxy FileSetName="bd_soc_axi_bram_ctrl_0_0"/>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_2/bd_soc_xlslice_0_2.xci">
+          <Proxy FileSetName="bd_soc_xlslice_0_2"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_axi_bram_ctrl_1_2/bd_soc_axi_bram_ctrl_1_2.xci">
+          <Proxy FileSetName="bd_soc_axi_bram_ctrl_1_2"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xlslice_0_3/bd_soc_xlslice_0_3.xci">
+          <Proxy FileSetName="bd_soc_xlslice_0_3"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xbar_2/bd_soc_xbar_2.xci">
+          <Proxy FileSetName="bd_soc_xbar_2"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_xbar_1/bd_soc_xbar_1.xci">
+          <Proxy FileSetName="bd_soc_xbar_1"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_smartconnect_0_1/bd_soc_smartconnect_0_1.xci">
+          <Proxy FileSetName="bd_soc_smartconnect_0_1"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_v_frmbuf_rd_0_0/bd_soc_v_frmbuf_rd_0_0.xci">
+          <Proxy FileSetName="bd_soc_v_frmbuf_rd_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_v_frmbuf_wr_0_0/bd_soc_v_frmbuf_wr_0_0.xci">
+          <Proxy FileSetName="bd_soc_v_frmbuf_wr_0_0"/>
         </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="bd_soc.bd" FileRelPathName="ip/bd_soc_video_stream_ctl_0_0/bd_soc_video_stream_ctl_0_0.xci">
           <Proxy FileSetName="bd_soc_video_stream_ctl_0_0"/>
@@ -946,12 +946,6 @@
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
-    <FileSet Name="bd_soc_video_stream_ctl_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/bd_soc_video_stream_ctl_0_0">
-      <Config>
-        <Option Name="TopModule" Val="bd_soc_video_stream_ctl_0_0"/>
-        <Option Name="UseBlackboxStub" Val="1"/>
-      </Config>
-    </FileSet>
     <FileSet Name="bd_soc_naive_mips_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/bd_soc_naive_mips_0_0">
       <Config>
         <Option Name="TopModule" Val="bd_soc_naive_mips_0_0"/>
@@ -961,6 +955,12 @@
     <FileSet Name="bd_soc_axi_tft_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/bd_soc_axi_tft_0_0">
       <Config>
         <Option Name="TopModule" Val="bd_soc_axi_tft_0_0"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="bd_soc_video_stream_ctl_0_0" Type="BlockSrcs" RelSrcDir="$PSRCDIR/bd_soc_video_stream_ctl_0_0">
+      <Config>
+        <Option Name="TopModule" Val="bd_soc_video_stream_ctl_0_0"/>
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
@@ -1266,22 +1266,9 @@
       <ReportStrategy/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
-    <Run Id="bd_soc_video_stream_ctl_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_soc_video_stream_ctl_0_0" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_video_stream_ctl_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_soc_video_stream_ctl_0_0_synth_1" IncludeInArchive="true">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
-        <Step Id="synth_design"/>
-      </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
-      <ReportStrategy/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-    </Run>
     <Run Id="bd_soc_naive_mips_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_soc_naive_mips_0_0" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_naive_mips_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_soc_naive_mips_0_0_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017"/>
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -1289,6 +1276,15 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
     <Run Id="bd_soc_axi_tft_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_soc_axi_tft_0_0" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_axi_tft_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_soc_axi_tft_0_0_synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <ReportStrategy/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="bd_soc_video_stream_ctl_0_0_synth_1" Type="Ft3:Synth" SrcSet="bd_soc_video_stream_ctl_0_0" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_video_stream_ctl_0_0" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/bd_soc_video_stream_ctl_0_0_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017">
           <Desc>Vivado Synthesis Defaults</Desc>
@@ -1796,29 +1792,9 @@
       <ReportStrategy/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
-    <Run Id="bd_soc_video_stream_ctl_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_video_stream_ctl_0_0" Description="Default settings for Implementation." SynthRun="bd_soc_video_stream_ctl_0_0_synth_1" IncludeInArchive="false">
-      <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2017">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
-        <Step Id="init_design"/>
-        <Step Id="opt_design"/>
-        <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
-        <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
-        <Step Id="post_route_phys_opt_design"/>
-        <Step Id="write_bitstream"/>
-      </Strategy>
-      <ReportStrategy/>
-      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
-    </Run>
     <Run Id="bd_soc_naive_mips_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_naive_mips_0_0" Description="Default settings for Implementation." SynthRun="bd_soc_naive_mips_0_0_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2017">
-          <Desc>Default settings for Implementation.</Desc>
-        </StratHandle>
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2017"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
@@ -1833,6 +1809,22 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
     <Run Id="bd_soc_axi_tft_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_axi_tft_0_0" Description="Default settings for Implementation." SynthRun="bd_soc_axi_tft_0_0_synth_1" IncludeInArchive="false">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2017"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+      <ReportStrategy/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+    </Run>
+    <Run Id="bd_soc_video_stream_ctl_0_0_impl_1" Type="Ft2:EntireDesign" Part="xc7a200tfbg676-2" ConstrsSet="bd_soc_video_stream_ctl_0_0" Description="Default settings for Implementation." SynthRun="bd_soc_video_stream_ctl_0_0_synth_1" IncludeInArchive="false">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2017">
           <Desc>Default settings for Implementation.</Desc>

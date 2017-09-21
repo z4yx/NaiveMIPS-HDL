@@ -74,7 +74,7 @@ reg en_constant;
 reg[23:0] constant_value;
 
 always @(*) begin : proc_axis
-    m_axis_video_TDATA = en_constant ? constant_value : s_axis_video_TDATA;
+    m_axis_video_TDATA = en_constant ? constant_value : (s_axis_video_TDATA^constant_value);
 
     m_axis_video_TVALID = s_axis_video_TVALID;
     m_axis_video_TKEEP = s_axis_video_TKEEP;
