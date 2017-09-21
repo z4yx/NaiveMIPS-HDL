@@ -1472,9 +1472,9 @@
           <spirit:configurableElementValue spirit:referenceId="NUM_MSC">2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC000_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC001_ROUTE">0b0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="SSC002_ROUTE">0b1</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="SSC002_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC003_ROUTE">0b0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="SSC004_ROUTE">0b0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="SSC004_ROUTE">0b1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC005_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC006_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC007_ROUTE">0b0</spirit:configurableElementValue>
@@ -2131,9 +2131,9 @@
           <spirit:configurableElementValue spirit:referenceId="NUM_MSC">2</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC000_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC001_ROUTE">0b0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="SSC002_ROUTE">0b1</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="SSC002_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC003_ROUTE">0b0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="SSC004_ROUTE">0b0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="SSC004_ROUTE">0b1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC005_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC006_ROUTE">0b0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="SSC007_ROUTE">0b0</spirit:configurableElementValue>
@@ -3320,7 +3320,7 @@
           <spirit:configurableElementValue spirit:referenceId="IS_CASCADED">0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="NUM_READ_THREADS">1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="NUM_WRITE_THREADS">1</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="MEP_IDENTIFIER">2</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="MEP_IDENTIFIER">4</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="MEP_IDENTIFIER_WIDTH">3</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="ADDR_WIDTH">32</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="S_ID_WIDTH">1</spirit:configurableElementValue>

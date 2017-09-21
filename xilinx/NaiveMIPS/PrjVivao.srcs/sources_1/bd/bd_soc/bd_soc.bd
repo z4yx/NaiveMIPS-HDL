@@ -605,7 +605,7 @@
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_ICache_0_0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="CACHE_LINE_WIDTH">6</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="TAG_WIDTH">20</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="TAG_WIDTH">18</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="bd:referenceName">ICache</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
@@ -746,6 +746,7 @@
         <spirit:componentRef spirit:library="ip" spirit:name="axi_tft" spirit:vendor="xilinx.com" spirit:version="2.0"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_axi_tft_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_MAX_BURST_LEN">128</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="C_EN_I2C_INTF">0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="C_TFT_INTERFACE">0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
@@ -774,13 +775,6 @@
           <spirit:configurableElementValue spirit:referenceId="CLKOUT1_PHASE_ERROR">99.281</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="CLKOUT2_JITTER">174.188</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="CLKOUT2_PHASE_ERROR">99.281</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
-        <spirit:instanceName>confreg_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="user" spirit:name="confreg" spirit:vendor="user.org" spirit:version="1.0"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_confreg_0_0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
@@ -870,8 +864,11 @@
         <spirit:componentRef spirit:library="ip" spirit:name="v_frmbuf_rd" spirit:vendor="xilinx.com" spirit:version="1.0"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_v_frmbuf_rd_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_M_AXI_MM_VIDEO_DATA_WIDTH">64</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="SAMPLES_PER_CLOCK">1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="MAX_COLS">1024</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="MAX_ROWS">768</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="AXIMM_DATA_WIDTH">64</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="HAS_RGBX8">1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="HAS_RGB8">0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
@@ -881,10 +878,27 @@
         <spirit:componentRef spirit:library="ip" spirit:name="v_frmbuf_wr" spirit:vendor="xilinx.com" spirit:version="1.0"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_v_frmbuf_wr_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_M_AXI_MM_VIDEO_DATA_WIDTH">64</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="SAMPLES_PER_CLOCK">1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="MAX_COLS">1024</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="MAX_ROWS">768</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="AXIMM_DATA_WIDTH">64</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="HAS_RGBX8">1</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="HAS_RGB8">0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>confreg_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="user" spirit:name="confreg" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_confreg_0_0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>video_stream_ctl_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="user" spirit:name="video_stream_ctl" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_video_stream_ctl_0_0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
@@ -1014,11 +1028,6 @@
         <spirit:activeInterface spirit:busRef="M_AXI_MM" spirit:componentRef="axi_tft_0"/>
       </spirit:interconnection>
       <spirit:interconnection>
-        <spirit:name>v_frmbuf_rd_0_m_axis_video</spirit:name>
-        <spirit:activeInterface spirit:busRef="s_axis_video" spirit:componentRef="v_frmbuf_wr_0"/>
-        <spirit:activeInterface spirit:busRef="m_axis_video" spirit:componentRef="v_frmbuf_rd_0"/>
-      </spirit:interconnection>
-      <spirit:interconnection>
         <spirit:name>v_frmbuf_rd_0_m_axi_mm_video</spirit:name>
         <spirit:activeInterface spirit:busRef="m_axi_mm_video" spirit:componentRef="v_frmbuf_rd_0"/>
         <spirit:activeInterface spirit:busRef="S02_AXI" spirit:componentRef="smartconnect_0"/>
@@ -1038,6 +1047,16 @@
         <spirit:activeInterface spirit:busRef="s_axi_CTRL" spirit:componentRef="v_frmbuf_wr_0"/>
         <spirit:activeInterface spirit:busRef="M09_AXI" spirit:componentRef="perph_bus"/>
       </spirit:interconnection>
+      <spirit:interconnection>
+        <spirit:name>v_frmbuf_rd_0_m_axis_video</spirit:name>
+        <spirit:activeInterface spirit:busRef="m_axis_video" spirit:componentRef="v_frmbuf_rd_0"/>
+        <spirit:activeInterface spirit:busRef="s_axis_video" spirit:componentRef="video_stream_ctl_0"/>
+      </spirit:interconnection>
+      <spirit:interconnection>
+        <spirit:name>video_stream_ctl_0_m_axis_video</spirit:name>
+        <spirit:activeInterface spirit:busRef="m_axis_video" spirit:componentRef="video_stream_ctl_0"/>
+        <spirit:activeInterface spirit:busRef="s_axis_video" spirit:componentRef="v_frmbuf_wr_0"/>
+      </spirit:interconnection>
     </spirit:interconnections>
     <spirit:adHocConnections>
       <spirit:adHocConnection>
@@ -1056,18 +1075,18 @@
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hclk"/>
-        <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="s00_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="vio_prst" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="axi_apb_bridge_0" spirit:portRef="s_axi_aclk"/>
+        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="s_axi_aclk"/>
+        <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="s00_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M04_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M05_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="axi_apb_bridge_0" spirit:portRef="s_axi_aclk"/>
-        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="clk"/>
-        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M07_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="clk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
@@ -1079,17 +1098,17 @@
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_0" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hresetn"/>
+        <spirit:internalPortReference spirit:componentRef="axi_apb_bridge_0" spirit:portRef="s_axi_aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="nrst"/>
+        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="reset_n"/>
+        <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="s00_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M04_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S00_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S01_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M05_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="axi_apb_bridge_0" spirit:portRef="s_axi_aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="nrst"/>
-        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="reset_n"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M07_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="rst_n"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
@@ -1115,6 +1134,9 @@
         <spirit:internalPortReference spirit:componentRef="clk_wiz_peri" spirit:portRef="clk_in1"/>
         <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aclk"/>
         <spirit:internalPortReference spirit:componentRef="proc_sys_reset_0" spirit:portRef="slowest_sync_clk"/>
+        <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aclk"/>
+        <spirit:internalPortReference spirit:componentRef="v_frmbuf_rd_0" spirit:portRef="ap_clk"/>
+        <spirit:internalPortReference spirit:componentRef="v_frmbuf_wr_0" spirit:portRef="ap_clk"/>
         <spirit:internalPortReference spirit:componentRef="bootrom" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="ocm" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="jtag_bram" spirit:portRef="aclk"/>
@@ -1131,11 +1153,9 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M02_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M03_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aclk"/>
-        <spirit:internalPortReference spirit:componentRef="v_frmbuf_rd_0" spirit:portRef="ap_clk"/>
-        <spirit:internalPortReference spirit:componentRef="v_frmbuf_wr_0" spirit:portRef="ap_clk"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M08_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M09_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="video_stream_ctl_0" spirit:portRef="aclk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>mig_7series_0_ui_clk_sync_rst</spirit:name>
@@ -1157,6 +1177,9 @@
         <spirit:internalPortReference spirit:componentRef="axi_uart16550_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="jtag_axi_0" spirit:portRef="aresetn"/>
         <spirit:internalPortReference spirit:componentRef="mig_7series_0" spirit:portRef="aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="v_frmbuf_rd_0" spirit:portRef="ap_rst_n"/>
+        <spirit:internalPortReference spirit:componentRef="v_frmbuf_wr_0" spirit:portRef="ap_rst_n"/>
         <spirit:internalPortReference spirit:componentRef="bootrom" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="ocm" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="S00_ARESETN"/>
@@ -1170,11 +1193,9 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M02_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="M03_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="v_frmbuf_rd_0" spirit:portRef="ap_rst_n"/>
-        <spirit:internalPortReference spirit:componentRef="v_frmbuf_wr_0" spirit:portRef="ap_rst_n"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M08_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M09_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="video_stream_ctl_0" spirit:portRef="aresetn"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>sys_clk_i_1</spirit:name>
@@ -1666,6 +1687,11 @@
         <spirit:internalPortReference spirit:componentRef="jtag_bram" spirit:portRef="peripheral_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="ocm" spirit:portRef="s_axi_aresetn1"/>
         <spirit:internalPortReference spirit:componentRef="bootrom" spirit:portRef="s_axi_aresetn1"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>confreg_0_vidstream_ctl</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="vidstream_ctl"/>
+        <spirit:internalPortReference spirit:componentRef="video_stream_ctl_0" spirit:portRef="ctl_reg1"/>
       </spirit:adHocConnection>
     </spirit:adHocConnections>
     <spirit:hierConnections>
