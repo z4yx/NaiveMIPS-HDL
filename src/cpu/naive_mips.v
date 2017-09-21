@@ -796,3 +796,5 @@ wb stage_wb(/*autoinst*/
             .reg_addr_i(wb_reg_addr_i));
 
 endmodule
+
+`default_nettype wire
