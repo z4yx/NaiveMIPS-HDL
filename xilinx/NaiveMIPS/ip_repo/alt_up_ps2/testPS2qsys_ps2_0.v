@@ -41,7 +41,7 @@ module testPS2qsys_ps2_0 (
 	reset_n,
 
 	paddr,
-	chipselect,
+	penable,
 	psel,
 	byteenable,
 	write,
@@ -80,8 +80,9 @@ wire						reset = ~reset_n;
 
 input			[ 3: 0]		paddr;
 wire						address = paddr[2];
-input						chipselect;
+input						penable;
 input						psel;
+wire                        chipselect = psel&penable;
 input			[ 3: 0]	byteenable;
 input						write;
 wire						read = ~write;

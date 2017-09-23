@@ -7,9 +7,9 @@
 `define APH_FSM_READY			(3)
 `define APH_FSM_STALL			(4)
 
-`define NT35510_RD_CYCLE		(100)
-`define NT35510_WR_CYCLE		(10)
-`define NT35510_RS_CYCLE		(5)
+`define NT35510_RD_CYCLE		(50)
+`define NT35510_WR_CYCLE		(5)
+`define NT35510_RS_CYCLE		(3)
 
 module nt35510_apb_adapter_v1_0 (
 	// Clock and reset
@@ -59,7 +59,7 @@ module nt35510_apb_adapter_v1_0 (
 		end else begin
 			case (state)
 				`APH_FSM_SETUP: begin
-					if (APB_penable) begin
+					if (APB_penable&APB_psel) begin
                         LCD_rs <= (APB_paddr[2:0] == `APB_INSTRUCTION_ADDR) ? 1'b0 : 1'b1;
 						state <= `APH_FSM_SETUP_RS;
 						cyclecount <= 0;
@@ -94,7 +94,7 @@ module nt35510_apb_adapter_v1_0 (
 					end
 				end
 				`APH_FSM_READY: begin
-				    if (~APB_penable) begin
+				    if (~(APB_penable&APB_psel)) begin
                         cyclecount = 0;
 						state <= `APH_FSM_STALL;
 					end

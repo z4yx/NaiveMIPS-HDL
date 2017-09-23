@@ -82,7 +82,7 @@
             <spirit:name>PENABLE</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
-            <spirit:name>chipselect</spirit:name>
+            <spirit:name>penable</spirit:name>
           </spirit:physicalPort>
         </spirit:portMap>
         <spirit:portMap>
@@ -187,7 +187,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>f4271cfb</spirit:value>
+            <spirit:value>335db8e2</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -206,7 +206,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>f4271cfb</spirit:value>
+            <spirit:value>335db8e2</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -285,7 +285,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>chipselect</spirit:name>
+        <spirit:name>penable</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:wireTypeDefs>
@@ -535,7 +535,7 @@
       <spirit:file>
         <spirit:name>testPS2qsys_ps2_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_8434cf9a</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_b23e2060</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -634,25 +634,25 @@
       </xilinx:taxonomies>
       <xilinx:displayName>altera_up_ps2_v1</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>1</xilinx:coreRevision>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>user.org:user:altera_up_ps2:1.0</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>user.org:user:altera_up_ps2:1.1</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2017-09-15T07:53:30Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2017-09-23T02:31:55Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="nopcore"/>
         <xilinx:tag xilinx:name="user.org:user:altera_up_ps2:1.0_ARCHIVE_LOCATION">/home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/alt_up_ps2</xilinx:tag>
         <xilinx:tag xilinx:name="user.org:user:altera_up_ps2:1.1_ARCHIVE_LOCATION">/home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/alt_up_ps2</xilinx:tag>
-        <xilinx:tag xilinx:name="user.org:user:altera_up_ps2:1.2_ARCHIVE_LOCATION">/home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/alt_up_ps2</xilinx:tag>
+        <xilinx:tag xilinx:name="user.org:user:altera_up_ps2:1.2_ARCHIVE_LOCATION">/home/zhang/nscscc_2nd_stage/NaiveMIPS-HDL/xilinx/NaiveMIPS/ip_repo/alt_up_ps2</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2017.1</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="f6e43683"/>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="758c9d2a"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="5cccab87"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="6c04476b"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="0a8c914f"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="719fb592"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="9fde2b1e"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="07580c37"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="78e49774"/>
     </xilinx:packagingInfo>
