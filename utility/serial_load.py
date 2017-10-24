@@ -138,8 +138,10 @@ def uart_loopback_test():
             print "read data timed out"
             raise IOError
             return
-        for i in xrange(4):
-            assert recv[i] == sent[i]
+        for i in xrange(len(recv)):
+            if recv[i] != sent[i]:
+                print "%s(recv) != %s(sent)" % (binascii.hexlify(recv), binascii.hexlify(sent))
+                break
 
 def ram_test():
 
@@ -410,6 +412,8 @@ if __name__ == "__main__":
 
     global ser
     ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
+    ser.flushOutput()
+    ser.flushInput()
 
     if tests:
         if tests == 'uart':
