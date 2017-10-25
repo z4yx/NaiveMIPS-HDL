@@ -13,6 +13,8 @@ module id(/*autoport*/
           inst,
           pc_value);
 
+parameter WITH_CACHE = 1;
+parameter WITH_TLB = 1;
 
 input wire[31:0] inst;
 input wire[31:0] pc_value;
@@ -30,7 +32,7 @@ wire[4:0] id_i_reg_s;
 wire[4:0] id_i_reg_t;
 wire[15:0] id_i_immediate;
 wire id_i_flag_unsigned;
-id_i id_i_inst(
+id_i #(.WITH_TLB(WITH_TLB),.WITH_CACHE(WITH_CACHE)) id_i_inst(
     .op(id_i_op),
     .reg_s(id_i_reg_s),
     .reg_t(id_i_reg_t),

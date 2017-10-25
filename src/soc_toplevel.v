@@ -146,9 +146,6 @@ inout wire[31:0] gpio1;
 
 input wire[5:0] touch_btn;
 
-wire rs232_rxd=1'b1;
-wire rs232_txd=1'b1;
-
 output wire[7:0] vga_pixel;
 output wire vga_hsync;
 output wire vga_vsync;
@@ -237,9 +234,6 @@ wire [7:0]ticker_dbus_address;
 wire ticker_dbus_read;
 wire ticker_dbus_write;
 
-wire debugger_uart_rxd;
-wire debugger_uart_txd;
-
 assign base_ram_ce_n = ram_address[22];
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
@@ -255,9 +249,6 @@ assign ext_ram_data  = ~ext_ram_we_n ? ram_data_o : {32{1'hz}};
 assign ext_ram_be = ram_dataenable_n;
 
 assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
-
-assign debugger_uart_rxd = rs232_rxd;
-assign rs232_txd = debugger_uart_txd;
 
 assign vga_clk = clk_in;
 
@@ -282,7 +273,7 @@ bootrom rom(
         .clock(~clk),
         .q(rom_data));
 
-naive_mips cpu(/*autoinst*/
+naive_mips #(.WITH_TLB(1)) cpu(/*autoinst*/
          .ibus_address(ibus_address[31:0]),
          .ibus_byteenable(ibus_byteenable[3:0]),
          .ibus_read(ibus_read),
@@ -293,13 +284,8 @@ naive_mips cpu(/*autoinst*/
          .dbus_read(dbus_read),
          .dbus_write(dbus_write),
          .dbus_wrdata(dbus_wrdata[31:0]),
-         .register_dump    (register_dump),
-         .pc_dump          (pc_dump),
          .rst_n(rst_n),
          .clk(clk),
-         .debugger_uart_clk(clk_uart),
-         .debugger_uart_rxd(debugger_uart_rxd),
-         .debugger_uart_txd(debugger_uart_txd),
          .ibus_rddata(ibus_rddata[31:0]),
          .ibus_stall(1'b0),
          .dbus_rddata(dbus_rddata[31:0]),

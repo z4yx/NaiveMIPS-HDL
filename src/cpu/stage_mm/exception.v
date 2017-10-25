@@ -1,47 +1,45 @@
 `default_nettype none
 module exception(/*autoport*/
 //output
-     flush,
-     cp0_wr_exp,
-     cp0_clean_exl,
-     exp_epc,
-     exp_code,
-     exp_bad_vaddr,
-     cp0_badv_we,
-     exception_new_pc,
-     exp_asid,
-     cp0_exp_asid_we,
+           flush,
+           cp0_wr_exp,
+           cp0_clean_exl,
+           exp_epc,
+           exp_code,
+           exp_bad_vaddr,
+           cp0_badv_we,
+           exception_new_pc,
+           exp_asid,
+           cp0_exp_asid_we,
 //input
-     iaddr_exp_miss,
-     daddr_exp_miss,
-     iaddr_exp_invalid,
-     daddr_exp_invalid,
-     iaddr_exp_illegal,
-     daddr_exp_illegal,
-     daddr_exp_dirty,
-     data_we,
-     invalid_inst,
-     syscall,
-     break_inst,
-     eret,
-     pc_value,
-     mem_access_vaddr,
-     in_delayslot,
-     overflow,
-     hardware_int,
-     software_int,
-     allow_int,
-     ebase_in,
-     epc_in,
-     restrict_priv_inst,
-     interrupt_mask,
-     special_int_vec,
-     boot_exp_vec,
-     if_asid,
-     mm_asid,
-     if_exl,
-     mm_exl,
-     is_real_inst);
+           iaddr_exp_miss,
+           daddr_exp_miss,
+           iaddr_exp_invalid,
+           daddr_exp_invalid,
+           iaddr_exp_illegal,
+           daddr_exp_illegal,
+           daddr_exp_dirty,
+           data_we,
+           invalid_inst,
+           syscall,
+           break_inst,
+           eret,
+           pc_value,
+           mem_access_vaddr,
+           in_delayslot,
+           overflow,
+           interrupt_flags,
+           allow_int,
+           ebase_in,
+           epc_in,
+           restrict_priv_inst,
+           special_int_vec,
+           boot_exp_vec,
+           if_asid,
+           mm_asid,
+           if_exl,
+           mm_exl,
+           is_real_inst);
 
 input wire iaddr_exp_miss;
 input wire daddr_exp_miss;
@@ -59,13 +57,11 @@ input wire [31:0]pc_value;
 input wire [31:0]mem_access_vaddr;
 input wire in_delayslot;
 input wire overflow;
-input wire [5:0]hardware_int;
-input wire [1:0]software_int;
+input wire [7:0]interrupt_flags;
 input wire allow_int;
 input wire[19:0] ebase_in;
 input wire[31:0] epc_in;
 input wire restrict_priv_inst;
-input wire[7:0] interrupt_mask;
 input wire special_int_vec;
 input wire boot_exp_vec;
 input wire[7:0] if_asid;
@@ -102,11 +98,11 @@ always @(*) begin
     exp_epc <= in_delayslot ? (pc_value-32'd4) : pc_value;
     exp_bad_vaddr <= 32'b0;
     exception_new_pc <= exception_base + 32'h180;
-    if(is_real_inst && allow_int && ({hardware_int,software_int} & interrupt_mask)!=8'h0) begin
+    if(is_real_inst && allow_int && (interrupt_flags!=8'h0)) begin
         if(special_int_vec)
             exception_new_pc <= exception_base + 32'h200;
         exp_code <= 5'h00;
-        $display("Exception: Interrupt=%x",{hardware_int,software_int});
+        $display("Exception: Interrupt=%x",interrupt_flags);
     end
     else if(iaddr_exp_illegal) begin
         exp_bad_vaddr <= pc_value;

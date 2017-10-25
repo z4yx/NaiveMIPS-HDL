@@ -21,6 +21,11 @@ module ex(/*autoport*/
           we_tlb,
           is_priv_inst,
           probe_tlb,
+          inv_wb_dcache,
+          inv_icache,
+          result_mult,
+          sign_mult,
+          we_hilo_mult,
 //input
           clk,
           rst_n,
@@ -74,6 +79,11 @@ output wire eret;
 output wire we_tlb;
 output reg is_priv_inst;
 output wire probe_tlb;
+output reg inv_wb_dcache;
+output reg inv_icache;
+output wire [63:0]result_mult;
+output wire sign_mult;
+output reg we_hilo_mult;
 
 wire [31:0] tmp_clo, tmp_clz;
 wire [31:0] tmp_sign_operand, tmp_add, tmp_sub;
@@ -104,6 +114,8 @@ assign probe_tlb = op == `OP_TLBP;
 
 multi_cycle mul_instance(/*autoinst*/
            .result(mul_result),
+           .result_mult(result_mult),
+           .sign_mult(sign_mult),
            .flag_unsigned(flag_unsigned),
            .operand1(reg_s_value),
            .operand2(reg_t_value),
@@ -126,6 +138,7 @@ count_bit_word clz(/*autoinst*/
 always @(*) begin
     overflow <= 1'b0;
     we_hilo <= 1'b0;
+    we_hilo_mult <= 1'b0;
     reg_hilo_o <= 64'b0;
     we_cp0 <= 1'b0;
     cp0_rd_addr <= 5'b0;
@@ -243,7 +256,12 @@ always @(*) begin
         we_cp0 <= 1'b1;
         reg_addr <= 5'b0;
     end
-    `OP_MULT,
+    `OP_MULT: begin 
+        we_hilo_mult <= 1'b1;
+        we_hilo <= 1'b1;
+        data_o <= 32'h0;
+        reg_addr <= 5'h0;
+    end
     `OP_MSUB,
     `OP_MADD,
     `OP_DIV: begin
@@ -307,6 +325,10 @@ end
 
 always @(*) begin
     case (op)
+    `OP_CACHE: begin 
+        mem_addr <= reg_s_value+signExtImm;
+        mem_access_op <= `ACCESS_OP_D2R;
+    end
     `OP_LB,
     `OP_LH,
     `OP_LWL,
@@ -364,6 +386,16 @@ always @(*) begin
     default:
         is_priv_inst <= 1'b0;
     endcase
+end
+
+always @(*) begin
+    if(op == `OP_CACHE) begin 
+        inv_icache <= (reg_t == 5'b00000 || reg_t == 5'b10000);
+        inv_wb_dcache <= (reg_t == 5'b00001 || reg_t == 5'b10101);
+    end else begin 
+        inv_icache <= 1'b0;
+        inv_wb_dcache <= 1'b0;
+    end
 end
 
 endmodule
