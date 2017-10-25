@@ -10,10 +10,12 @@ module soc_toplevel(/*autoport*/
             gpio0,
             gpio1,
 //output
+`ifdef HS_DIFF_OUT
             clkout1_p,
             clkout1_n,
             dataout1_p,
             dataout1_n,
+`endif
             base_ram_addr,
             base_ram_be,
             base_ram_ce_n,
@@ -86,8 +88,10 @@ clk_ctrl clk_ctrl1(/*autoinst*/
          .clk(clk),
          .rst_in_n(locked));
 
+`ifdef HS_DIFF_OUT
 output  wire       clkout1_p,  clkout1_n;          // lvds channel 1 clock output
 output  wire[3:0]   dataout1_p, dataout1_n;         // lvds channel 1 data outputs
+`endif
 
 inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
@@ -479,6 +483,7 @@ gpu gpu_inst(
 
 assign irq_line = {1'b0,usb_irq,uart_irq,2'b0};
 
+`ifdef HS_DIFF_OUT
 wire [255:0] testdata_in;
 assign testdata_in = {
     dbus_address,
@@ -499,5 +504,6 @@ sampler_0 la(
     .stop_sample  (touch_btn[1]),
     .data_in       (testdata_in)
 );
+`endif
 
 endmodule
