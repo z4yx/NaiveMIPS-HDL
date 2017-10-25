@@ -13,6 +13,13 @@ set_property PACKAGE_PIN E23 [get_ports touch_btn[3]] ;#BTN_IN3
 set_property PACKAGE_PIN H19 [get_ports touch_btn[4]] ;#BTN_IN4
 set_property PACKAGE_PIN F22 [get_ports touch_btn[5]] ;#BTN_IN5
 
+#CPLD
+set_property -dict {PACKAGE_PIN P20 IOSTANDARD LVCMOS33} [get_ports {uart_wrn}]
+set_property -dict {PACKAGE_PIN K22 IOSTANDARD LVCMOS33} [get_ports {uart_rdn}]
+set_property -dict {PACKAGE_PIN M20 IOSTANDARD LVCMOS33} [get_ports {uart_tbre}]
+set_property -dict {PACKAGE_PIN M16 IOSTANDARD LVCMOS33} [get_ports {uart_tsre}]
+set_property -dict {PACKAGE_PIN J24 IOSTANDARD LVCMOS33} [get_ports {uart_dataready}]
+
 set_property -dict {PACKAGE_PIN P20 IOSTANDARD TMDS_33} [get_ports clkout1_p]
 set_property -dict {PACKAGE_PIN P21 IOSTANDARD TMDS_33} [get_ports clkout1_n]
 set_property -dict {PACKAGE_PIN K22 IOSTANDARD TMDS_33} [get_ports {dataout1_p[0]}]
