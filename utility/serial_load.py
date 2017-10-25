@@ -138,8 +138,10 @@ def uart_loopback_test():
             print "read data timed out"
             raise IOError
             return
-        for i in xrange(4):
-            assert recv[i] == sent[i]
+        for i in xrange(len(recv)):
+            if recv[i] != sent[i]:
+                print "%s(recv) != %s(sent)" % (binascii.hexlify(recv), binascii.hexlify(sent))
+                break
 
 def ram_test():
 
@@ -290,7 +292,7 @@ def load_elf_and_run(f):
         if segment['p_filesz']==0 or segment['p_vaddr']==0:
             print "Skipped"
             continue
-        write_ram(segment['p_vaddr'], segment.data(), True)
+        write_ram(0xa0000000|segment['p_vaddr'], segment.data(), True)
 
     print "Entry: 0x%x" % elffile['e_entry']
     go_ram(elffile['e_entry'])
@@ -300,24 +302,27 @@ def start_terminal():
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
     new = termios.tcgetattr(fd)
-    new[3] = new[3] & ~termios.ICANON & ~termios.ECHO
-    new[6][termios.VMIN] = 1
+    new[3] = new[3] & ~termios.ICANON & ~termios.ECHO & ~termios.ISIG & ~termios.IEXTEN
+    new[6][termios.VMIN] = 0
     new[6][termios.VTIME] = 0
     try:
         # tty.setraw(fd)
         termios.tcsetattr(fd, termios.TCSADRAIN, new)
+        print "Terminal enabled, press Ctrl+] to quit"
         slt_list = [sys.stdin, ser]
         while True:
             ready = select.select(slt_list, [], [])[0]
             for f in ready:
-                recv = f.read(1)
+                recv = f.read()
                 if f.fileno()==fd:
+                    # print binascii.hexlify(recv)
+                    assert ord(recv[0]) != 0x1d
                     write_uart(recv)
                 else:
                     sys.stdout.write(recv)
                     sys.stdout.flush()
     except Exception, e:
-        raise e
+        print "Closing terminal..."
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
@@ -410,6 +415,8 @@ if __name__ == "__main__":
 
     global ser
     ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
+    ser.flushOutput()
+    ser.flushInput()
 
     if tests:
         if tests == 'uart':
