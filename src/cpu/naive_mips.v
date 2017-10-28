@@ -378,7 +378,7 @@ always @(posedge clk) begin : proc_if_read_hold
     end
 end
 
-cp0 cp0_instance(/*autoinst*/
+cp0 #(.WITH_CACHE(WITH_CACHE)) cp0_instance(/*autoinst*/
      .data_o(ex_cp0_value),
      .clk(clk),
      .rst_n(rst_n),

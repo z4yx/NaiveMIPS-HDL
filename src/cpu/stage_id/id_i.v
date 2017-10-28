@@ -19,6 +19,8 @@ output wire[4:0] reg_t;
 output wire[15:0] immediate;
 output reg flag_unsigned;
 
+wire cache_op_invalid = (inst[20:16]==5'b11000 || &inst[18:17]);
+
 assign reg_s = inst[25:21];
 assign reg_t = inst[20:16];
 assign immediate = inst[15:0];
@@ -79,7 +81,7 @@ always @(*) begin
     6'h2B: op <= `OP_SW;
     6'h2a: op <= `OP_SWL;
     6'h2e: op <= `OP_SWR;
-    6'h2F: op <= WITH_CACHE ? `OP_CACHE : `OP_INVAILD;
+    6'h2F: op <= cache_op_invalid ? `OP_INVAILD : `OP_CACHE;
     6'h33: op <= `OP_PREF;
     // 6'h38: op <= `OP_SC;
     default: op <= `OP_INVAILD;

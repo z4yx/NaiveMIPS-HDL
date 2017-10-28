@@ -56,6 +56,8 @@ module cp0(/*autoport*/
 `define CP0_Config {5'd16,3'd0}
 `define CP0_Config1 {5'd16,3'd1}
 
+parameter WITH_CACHE = 1;
+
 input wire clk;
 input wire rst_n;
 
@@ -199,6 +201,9 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {1'b1, 21'b0, 3'b1, 4'b0, cp0_regs_Config[2:0]}; //Release 1
             end
             `CP0_Config1: begin 
+            if(!WITH_CACHE)
+                data_o_internal[read_i] <= {1'b0, 6'd15, 25'h0};
+            else
                 //Cache Size:                            I:128-64B-direct, D:256-64B-direct
                 data_o_internal[read_i] <= {1'b0, 6'd15, 3'd1, 3'd5, 3'd0, 3'd2, 3'd5, 3'd0, 7'd0}; 
             end
