@@ -110,6 +110,7 @@ output wire ext_ram_we_n;
 wire[29:0] ram_address;
 wire ram_ext_ce_n;
 wire ram_wr_n;
+(* MAX_FANOUT = 16 *) wire ram_io_t;
 wire ram_rd_n;
 wire[3:0] ram_dataenable_n;
 wire[31:0] ram_data_i, ram_data_o;
@@ -242,17 +243,15 @@ assign base_ram_ce_n = ram_address[22];
 assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
-assign base_ram_data =  ~base_ram_we_n ? ram_data_o : {32{1'hz}};
+assign base_ram_data = ram_io_t ? {32{1'hz}} : ram_data_o;
 assign base_ram_be = ram_dataenable_n;
 
 assign ext_ram_ce_n = ram_ext_ce_n;
 assign ext_ram_oe_n = ram_rd_n;
 assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
-assign ext_ram_data  = ~ext_ram_we_n ? ram_data_o : {32{1'hz}};
+assign ext_ram_data  = ram_io_t ? {32{1'hz}} : ram_data_o;
 assign ext_ram_be = ram_dataenable_n;
-
-assign ram_data_i = (~base_ram_ce_n) ? base_ram_data : ext_ram_data;
 
 assign vga_clk = clk_in;
 
@@ -297,12 +296,14 @@ naive_mips #(.WITH_TLB(1)) cpu(/*autoinst*/
          .hardware_int_in(irq_line));
 
 two_port mainram(/*autoinst*/
-           .ram_data_i(ram_data_i),
+           .ram_data_i_base(base_ram_data),
+           .ram_data_i_ext(ext_ram_data),
            .ram_data_o(ram_data_o),
            .rddata1(ibus_ram_rddata),
            .rddata2(dbus_ram_rddata),
            .ram_address(ram_address),
            .ram_ext_ce_n(ram_ext_ce_n),
+           .ram_io_t(ram_io_t),
            .ram_wr_n(ram_wr_n),
            .ram_rd_n(ram_rd_n),
            .dataenable_n(ram_dataenable_n),
