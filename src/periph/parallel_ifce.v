@@ -24,18 +24,18 @@ input wire rst_n;
 
 input wire[23:0] bus_address;
 input wire[31:0] bus_data_i;
-output reg[31:0] bus_data_o;
+(* IOB = "true" *) output reg[31:0] bus_data_o;
 input wire bus_read;
 input wire bus_write;
 output wire bus_stall;
 
-output reg[23:0] dev_address;
+(* IOB = "true" *) output reg[23:0] dev_address;
 inout wire[31:0] dev_data;
-output reg dev_we_n;
-output reg dev_oe_n;
-output reg dev_ce_n;
+(* IOB = "true" *) output reg dev_we_n;
+(* IOB = "true" *) output reg dev_oe_n;
+(* IOB = "true" *) output reg dev_ce_n;
 
-reg[31:0]dev_wrdata;
+(* IOB = "true" *) reg[31:0]dev_wrdata;
 reg[3:0] hold_cycle;
 
 always @(posedge clk_bus or negedge rst_n) begin
