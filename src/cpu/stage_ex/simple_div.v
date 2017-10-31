@@ -4,16 +4,16 @@ module simple_div(/*autoport*/
 );
     parameter d_width = 32;
 
-	input clk;               // system clock
-    input rst_n;             // reset
+	input wire clk;               // system clock
+    input wire rst_n;             // reset
 
 	input  [d_width-1:0] z; // divident
 	input  [d_width-1:0] d; // divisor
 	output reg[d_width-1:0] q; // quotient
 	output [d_width-1:0] s; // remainder
 
-	input start;
-    output done;
+	input wire start;
+    output wire done;
 
     reg [2:0] state;
     reg [15:0] round;
@@ -25,9 +25,9 @@ module simple_div(/*autoport*/
 
     assign add_result = (do_minus ? d_n : d_p) + sketchpad[d_width +: (d_width+2)];
     assign s = sketchpad[(d_width+1) +: d_width]; //sketchpad is left shifted
-    assign done = (state==2 && do_minus) || state==3;
+    assign done = state==3;
 
-    always @(clk) begin
+    always @(posedge clk) begin
         if(~rst_n)begin
             state <= 0;
         end else begin
@@ -42,21 +42,21 @@ module simple_div(/*autoport*/
                 end
                 1: if(round <= d_width)begin
                     sketchpad <= {add_result[0 +: (d_width+1)], sketchpad[0 +: d_width], 1'b0}; //result with left shift 1
-                    q <= {q[1 +: (d_width-1)], ~add_result[d_width+1]};
+                    q <= {q[0 +: (d_width-1)], ~add_result[d_width+1]};
                     do_minus <= ~add_result[d_width+1];
                     round <= round+1;
                 end else begin
-                    state <= 2;
-                end
-                2: begin
                     if(do_minus) begin//finished
-                        state <= 0;
+                        state <= 3;
                     end else begin //fix remainer
                         sketchpad[(d_width+1) +: d_width] <= s + d_p;
                         state <= 3;
                     end
                 end
                 3: begin //finished
+                    state <= 0;
+                end
+                default: begin 
                     state <= 0;
                 end
             endcase // state
