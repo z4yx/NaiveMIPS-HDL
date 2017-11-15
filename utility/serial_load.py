@@ -20,6 +20,7 @@ SERIAL_DELAY = 0.00001
 SERIAL_DEVICE = ""
 FLASH_BASE = 0xbe000000
 USB_BASE = 0xbc020000
+ETH_BASE = 0xbc020100
 FLASH_BLKSIZE = 128*1024
 FLASH_SIZE = 64*FLASH_BLKSIZE
 RAM_SIZE = 0x800000
@@ -279,6 +280,18 @@ def usb_test():
     buf = read_ram(USB_BASE+4, 4)
     print "Rev: %s" % binascii.hexlify(buf[0])
 
+def eth_test():
+    write_ram(ETH_BASE, "\x28\x00\x00\x00")
+    buf1 = read_ram(ETH_BASE+4, 4)
+    write_ram(ETH_BASE, "\x29\x00\x00\x00")
+    buf2 = read_ram(ETH_BASE+4, 4)
+    write_ram(ETH_BASE, "\x2a\x00\x00\x00")
+    buf3 = read_ram(ETH_BASE+4, 4)
+    write_ram(ETH_BASE, "\x2b\x00\x00\x00")
+    buf4 = read_ram(ETH_BASE+4, 4)
+    print "VID: %s%s" % (binascii.hexlify(buf2[0]),binascii.hexlify(buf1[0]))
+    print "PID: %s%s" % (binascii.hexlify(buf4[0]),binascii.hexlify(buf3[0]))
+
 def flash_test():
 
     write_ram(FLASH_BASE, "\x90\x00\x90\x00")
@@ -460,7 +473,7 @@ if __name__ == "__main__":
         groups = match.groups()
         ser = tcp_wrapper()
         host, port = groups[0], groups[4]
-        print "connecting %s:%s" % (host, port)
+        print "connecting to %s:%s..." % (host, port) ,
         ser.connect(host, int(port))
         print "connected"
     else:
@@ -477,6 +490,8 @@ if __name__ == "__main__":
             flash_test()
         elif tests == 'usb':
             usb_test()
+        elif tests == 'eth':
+            eth_test()
         else:
             print "Unknown test: '%s'" % tests
             sys.exit(1)
