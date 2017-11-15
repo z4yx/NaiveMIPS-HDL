@@ -2,6 +2,8 @@
 
 import sys
 import os
+import re
+import socket
 import serial
 import struct
 import time
@@ -36,6 +38,41 @@ class ProgressPH(object):
         pass
     def __enter__(self, *args, **kwds):
         return type(self).fake_tqdm()
+
+class tcp_wrapper:
+
+    def __init__(self, sock=None):
+        if sock is None:
+            self.sock = socket.socket(
+                socket.AF_INET, socket.SOCK_STREAM)
+        else:
+            self.sock = sock
+
+    def connect(self, host, port):
+        self.sock.connect((host, port))
+
+    def write(self, msg):
+        totalsent = 0
+        MSGLEN = len(msg)
+        while totalsent < MSGLEN:
+            sent = self.sock.send(msg[totalsent:])
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            totalsent = totalsent + sent
+
+    def flush(sel): # dummy
+        pass
+
+    def read(self, MSGLEN):
+        chunks = []
+        bytes_recd = 0
+        while bytes_recd < MSGLEN:
+            chunk = self.sock.recv(min(MSGLEN - bytes_recd, 2048))
+            if chunk == '':
+                raise RuntimeError("socket connection broken")
+            chunks.append(chunk)
+            bytes_recd = bytes_recd + len(chunk)
+        return ''.join(chunks)
 
 def write_uart(buf):
     for b in buf:
@@ -413,10 +450,23 @@ if __name__ == "__main__":
         print 'Please specify serial port!'
         sys.exit(1)
 
+    ValidIpAddressRegex = re.compile("^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])):(\d+)$");
+    ValidHostnameRegex = re.compile("^((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])):(\d+)$");
     global ser
-    ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
-    ser.flushOutput()
-    ser.flushInput()
+    if ValidIpAddressRegex.search(SERIAL_DEVICE) is not None or \
+        ValidHostnameRegex.search(SERIAL_DEVICE) is not None:
+
+        match = ValidIpAddressRegex.search(SERIAL_DEVICE) or ValidHostnameRegex.search(SERIAL_DEVICE)
+        groups = match.groups()
+        ser = tcp_wrapper()
+        host, port = groups[0], groups[4]
+        print "connecting %s:%s" % (host, port)
+        ser.connect(host, int(port))
+        print "connected"
+    else:
+        ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
+        ser.flushOutput()
+        ser.flushInput()
 
     if tests:
         if tests == 'uart':
