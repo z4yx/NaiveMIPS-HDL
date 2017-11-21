@@ -50,6 +50,8 @@ module soc_toplevel(/*autoport*/
             vga_vsync,
             vga_clk,
             vga_de,
+            uart_wrn,
+            uart_rdn,
 //input
             clk_in,
             clk_uart_in,
@@ -157,6 +159,9 @@ output wire vga_vsync;
 output wire vga_clk;
 output wire vga_de;
 
+output wire uart_wrn;
+output wire uart_rdn;
+
 wire[4:0] irq_line;
 wire uart_irq;
 
@@ -254,6 +259,9 @@ assign ext_ram_data  = ram_io_t ? {32{1'hz}} : ram_data_o;
 assign ext_ram_be = ram_dataenable_n;
 
 assign vga_clk = clk_in;
+
+assign uart_wrn = 1'b1;
+assign uart_rdn = 1'b1;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
