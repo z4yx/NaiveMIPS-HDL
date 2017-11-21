@@ -52,7 +52,7 @@ mem fake_ram(/*autoinst*/
 //             .LB_n(~dbus_byteenable[2]),
 //             .UB_n(~dbus_byteenable[3]));
 
-naive_mips mips(/*autoinst*/
+naive_mips #(.WITH_TLB(1)) mips(/*autoinst*/
             .ibus_address(ibus_address[31:0]),
             .ibus_byteenable(ibus_byteenable[3:0]),
             .ibus_read(ibus_read),
