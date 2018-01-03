@@ -46,7 +46,7 @@ soc_toplevel soc(/*autoinst*/
            .ext_ram_ce_n(ext_ram_ce_n),
            .ext_ram_oe_n(ext_ram_oe_n),
            .ext_ram_we_n(ext_ram_we_n),
-           .rst_in_n(rst_in_n),
+           .touch_btn({~rst_in_n,5'h0}),
            .clk_in(clk_in),
            .clk_uart_in(clk_uart_in),
            .flash_data(flash_data),
@@ -153,7 +153,7 @@ defparam soc.uart0.tx1.COUNTER_PERIOD=3;
 defparam soc.uart0.tx1.ignore_for_sim=1;
 defparam soc.cpu.pc_instance.PC_INITIAL = 32'h80000000;
 
-defparam soc.cpu.dbg_host.tx_dbg.ignore_for_sim=1;
+//defparam soc.cpu.dbg_host.tx_dbg.ignore_for_sim=1;
 
 task uart_send_byte;
 input [7:0] data;
@@ -185,6 +185,7 @@ begin
 end
 endtask
 
+/*
 task debugger_send_byte;
 input [7:0] data;
 begin
@@ -206,6 +207,7 @@ begin
     debugger_send_byte(data[31:24]);
 end
 endtask
+*/
 
 // assign gpio0 = 32'h0;
 assign gpio1 = 32'h1;
