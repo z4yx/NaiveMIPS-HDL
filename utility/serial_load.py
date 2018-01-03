@@ -297,6 +297,11 @@ def flash_test():
     write_ram(FLASH_BASE, "\x90\x00\x90\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
+    print "Device code: %s" % binascii.hexlify(buf[2])
+    buf = read_ram(FLASH_BASE+0x100, 20)
+    print "OTP Protection Register: %s" % binascii.hexlify(buf[0])
+    print "Unique ID: %s" % binascii.hexlify(buf[2:2+8])
+    print "User Area: %s" % binascii.hexlify(buf[10:10+8])
 
     # !!! clear lock bits !!!
     write_ram(FLASH_BASE, "\x60\x00\x60\x00")
