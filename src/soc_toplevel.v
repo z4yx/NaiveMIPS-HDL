@@ -1,5 +1,6 @@
 `default_nettype none
 `define EXT_UART_CLOCK
+// `define STEP_CPU_CLOCK
 module soc_toplevel(/*autoport*/
 //inout
             base_ram_data,
@@ -66,7 +67,9 @@ wire[31:0] pc_dump;
 
 input wire clk_in;
 
-wire clk2x,clk,locked,rst_n;
+wire locked,rst_n;
+wire clk, clk_pll;
+wire clk_ram, clk_ram_pll;
 wire clk_uart, clk_uart_pll;
 wire clk_tick;
 
@@ -76,12 +79,19 @@ assign clk_uart = clk_uart_in;
 `else
 assign clk_uart = clk_uart_pll;
 `endif
+`ifdef STEP_CPU_CLOCK
+assign clk = touch_btn[4];
+assign clk_ram = touch_btn[4];
+`else
+assign clk = clk_pll;
+assign clk_ram = clk_ram_pll;
+`endif
 
 sys_pll pll1(
     .areset(touch_btn[5]),
     .inclk0(clk_in),
-    .c0(clk),
-    .c1(clk2x),
+    .c0(clk_pll),
+    .c1(clk_ram_pll),
     .c2(clk_uart_pll),
     .c3(clk_tick),
     .locked(locked));
@@ -178,6 +188,7 @@ wire [31:0]ibus_rddata;
 wire [31:0]dbus_address;
 wire [31:0]ibus_address;
 wire dbus_stall;
+wire ibus_stall;
 
 wire [31:0]rom_data;
 wire [12:0]rom_address;
@@ -188,6 +199,7 @@ wire [31:0]ibus_ram_wrdata;
 wire [3:0]ibus_ram_byteenable;
 wire ibus_ram_read;
 wire ibus_ram_write;
+wire ibus_ram_stall;
 
 wire [23:0]dbus_ram_address;
 wire [31:0]dbus_ram_rddata;
@@ -195,6 +207,7 @@ wire [31:0]dbus_ram_wrdata;
 wire [3:0]dbus_ram_byteenable;
 wire dbus_ram_read;
 wire dbus_ram_write;
+wire dbus_ram_stall;
 
 wire [31:0]uart_data_o;
 wire [31:0]uart_data_i;
@@ -271,11 +284,13 @@ ibus ibus0(/*autoinst*/
          .ram_data_enable(ibus_ram_byteenable),
          .ram_rd(ibus_ram_read),
          .ram_wr(ibus_ram_write),
+         .ram_stall(ibus_ram_stall),
          .master_address(ibus_address),
          .master_byteenable(ibus_byteenable),
          .master_read(ibus_read),
          .master_write(ibus_write),
          .master_wrdata(ibus_wrdata),
+         .master_stall(ibus_stall),
          .bootrom_data_o(rom_data),
          .ram_data_o(ibus_ram_rddata));
 
@@ -298,12 +313,12 @@ naive_mips #(.WITH_TLB(1)) cpu(/*autoinst*/
          .rst_n(rst_n),
          .clk(clk),
          .ibus_rddata(ibus_rddata[31:0]),
-         .ibus_stall(1'b0),
+         .ibus_stall(ibus_stall),
          .dbus_rddata(dbus_rddata[31:0]),
          .dbus_stall(dbus_stall),
          .hardware_int_in(irq_line));
 
-two_port mainram(/*autoinst*/
+two_port_stall mainram(/*autoinst*/
            .ram_data_i_base(base_ram_data),
            .ram_data_i_ext(ext_ram_data),
            .ram_data_o(ram_data_o),
@@ -316,16 +331,18 @@ two_port mainram(/*autoinst*/
            .ram_rd_n(ram_rd_n),
            .dataenable_n(ram_dataenable_n),
            .rst_n(rst_n),
-           .clk2x(clk2x),
+           .clk_n(clk_ram),
            .address1(ibus_ram_address),
            .wrdata1(ibus_ram_wrdata),
            .rd1(ibus_ram_read),
            .wr1(ibus_ram_write),
+           .stall1(ibus_ram_stall),
            .dataenable1(ibus_ram_byteenable),
            .address2(dbus_ram_address),
            .wrdata2(dbus_ram_wrdata),
            .rd2(dbus_ram_read),
            .wr2(dbus_ram_write),
+           .stall2(dbus_ram_stall),
            .dataenable2(dbus_ram_byteenable));
 
 dbus dbus0(/*autoinst*/
@@ -379,7 +396,7 @@ dbus dbus0(/*autoinst*/
          .ticker_data_o(ticker_dbus_data_o),
          .gpu_data_o(gpu_dbus_data_o),
          .ram_data_o(dbus_ram_rddata[31:0]),
-         .ram_stall(1'b0),
+         .ram_stall(dbus_ram_stall),
          .flash_stall (flash_dbus_stall),
          .flash_data_o(flash_dbus_data_o[31:0]));
 
