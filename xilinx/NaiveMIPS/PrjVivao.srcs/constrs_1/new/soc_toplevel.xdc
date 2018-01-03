@@ -1,3 +1,4 @@
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 
 set_property IOSTANDARD LVCMOS33 [get_ports clk_in]
 set_property PACKAGE_PIN D18 [get_ports clk_in]
@@ -12,6 +13,7 @@ set_property PACKAGE_PIN F23 [get_ports touch_btn[2]] ;#BTN_IN2
 set_property PACKAGE_PIN E23 [get_ports touch_btn[3]] ;#BTN_IN3
 set_property PACKAGE_PIN H19 [get_ports touch_btn[4]] ;#BTN_IN4
 set_property PACKAGE_PIN F22 [get_ports touch_btn[5]] ;#BTN_IN5
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {touch_btn_IBUF[4]}]
 
 #CPLD
 set_property -dict {PACKAGE_PIN P20 IOSTANDARD LVCMOS33} [get_ports {uart_wrn}]
