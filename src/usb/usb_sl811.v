@@ -43,6 +43,9 @@ input wire sl811_dack;
 input wire sl811_int;
 output wire sl811_drq;
 
+wire[1:0] dummy2;
+wire[23:0] dummy24;
+
 parallel_ifce #(.RW_BUS_CYCLE(4)) u_ifce(
   .clk_bus    (clk_bus),
   .rst_n      (rst_n),
@@ -52,8 +55,8 @@ parallel_ifce #(.RW_BUS_CYCLE(4)) u_ifce(
   .bus_read   (bus_read),
   .bus_write  (bus_write),
   .bus_stall  (bus_stall),
-  .dev_address({sl811_a0,2'bzz}),
-  .dev_data   ({{24{1'bz}},sl811_data}),
+  .dev_address({sl811_a0,dummy2}),
+  .dev_data   ({dummy24,sl811_data}),
   .dev_we_n   (sl811_we_n),
   .dev_oe_n   (sl811_rd_n),
   .dev_ce_n   (sl811_cs_n)
