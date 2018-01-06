@@ -19,6 +19,7 @@ module ex(/*autoport*/
           break_inst,
           eret,
           we_tlb,
+          tlb_by_random,
           is_priv_inst,
           probe_tlb,
           inv_wb_dcache,
@@ -77,6 +78,7 @@ output wire syscall;
 output wire break_inst;
 output wire eret;
 output wire we_tlb;
+output wire tlb_by_random;
 output reg is_priv_inst;
 output wire probe_tlb;
 output reg inv_wb_dcache;
@@ -109,7 +111,8 @@ assign tmp_sub = reg_s_value - tmp_sign_operand; //used by SLT/SLTI and SUB
 assign syscall = op == `OP_SYSCALL;
 assign break_inst = op == `OP_BREAK;
 assign eret = op == `OP_ERET;
-assign we_tlb = op == `OP_TLBWI;
+assign we_tlb = op == `OP_TLBWI || op == `OP_TLBWR;
+assign tlb_by_random = op == `OP_TLBWR;
 assign probe_tlb = op == `OP_TLBP;
 
 multi_cycle mul_instance(/*autoinst*/

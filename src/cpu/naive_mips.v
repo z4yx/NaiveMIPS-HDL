@@ -141,6 +141,7 @@ reg ex_iaddr_exp_miss;
 reg ex_iaddr_exp_illegal;
 reg ex_iaddr_exp_invalid;
 wire ex_we_tlb;
+wire ex_tlb_by_random;
 wire ex_is_priv_inst;
 wire ex_probe_tlb;
 reg [7:0]ex_iaddr_exp_asid;
@@ -189,6 +190,7 @@ wire mm_daddr_dirty;
 wire mm_daddr_exp_invalid;
 wire mm_alignment_err;
 reg mm_we_tlb;
+reg mm_tlb_by_random;
 wire mm_stall;
 reg mm_is_priv_inst;
 reg mm_probe_tlb;
@@ -216,6 +218,7 @@ reg [4:0]wb_reg_addr_i;
 reg [63:0]wb_reg_hilo;
 reg wb_we_hilo;
 reg wb_we_tlb;
+reg wb_tlb_by_random;
 reg wb_probe_tlb;
 reg[31:0] wb_probe_result;
 reg wb_exception_detected;
@@ -408,6 +411,7 @@ cp0 #(.WITH_CACHE(WITH_CACHE)) cp0_instance(/*autoinst*/
      .en_exp_i(cp0_exp_en),
      .clean_exl(cp0_clean_exl),
      .we_probe       (wb_probe_tlb & ~wb_exception_detected),
+     .en_tlbwr(wb_tlb_by_random),
      .probe_result(wb_probe_result),
      .exp_bd(cp0_exp_bd),
      .exp_epc(cp0_exp_epc),
@@ -581,6 +585,7 @@ ex stage_ex(/*autoinst*/
             .sign_mult      (ex_sign_mult),
             .we_hilo_mult   (ex_we_hilo_mult),
             .we_tlb(ex_we_tlb),
+            .tlb_by_random(ex_tlb_by_random),
             .clk(clk),
             .rst_n(rst_n),
             .exception_flush(flush),
@@ -628,6 +633,7 @@ always @(posedge clk) begin
         mm_iaddr_exp_illegal <= 1'b0;
         mm_iaddr_exp_invalid <= 1'b0;
         mm_we_tlb <= 1'b0;
+        mm_tlb_by_random <= 1'b0;
         mm_is_priv_inst <= 1'b0;
         mm_cp0_wrsel <= 3'b0;
         mm_probe_tlb <= 1'b0;
@@ -664,6 +670,7 @@ always @(posedge clk) begin
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
         mm_iaddr_exp_invalid <= ex_iaddr_exp_invalid;
         mm_we_tlb <= ex_we_tlb;
+        mm_tlb_by_random <= ex_tlb_by_random;
         mm_is_priv_inst <= ex_is_priv_inst;
         mm_cp0_wrsel <= ex_cp0_sel;
         mm_probe_tlb <= ex_probe_tlb;
@@ -750,6 +757,7 @@ always @(posedge clk) begin
         wb_reg_hilo <= 64'b0;
         wb_we_hilo <= 1'b0;
         wb_we_tlb <= 1'b0;
+        wb_tlb_by_random <= 1'b0;
         wb_probe_tlb <= 1'b0;
         wb_probe_result <= 32'b0;
         wb_exception_detected <= 1'b0;
@@ -767,6 +775,7 @@ always @(posedge clk) begin
         wb_reg_hilo <= mm_reg_hilo;
         wb_we_hilo <= mm_we_hilo;
         wb_we_tlb <= mm_we_tlb;
+        wb_tlb_by_random <= mm_tlb_by_random;
         wb_probe_tlb <= mm_probe_tlb;
         wb_probe_result <= mm_probe_result;
         wb_exception_detected <= mm_exception_detected;

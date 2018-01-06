@@ -37,13 +37,16 @@ module cp0(/*autoport*/
          exp_asid_we,
          we_probe,
          probe_result,
+         en_tlbwr,
          debugger_rd_addr,
          debugger_rd_sel);
 
 `define CP0_Index {5'd0,3'd0}
+`define CP0_Random {5'd1,3'd0}
 `define CP0_EntryLo0 {5'd2,3'd0}
 `define CP0_EntryLo1 {5'd3,3'd0}
 `define CP0_Context {5'd4,3'd0}
+`define CP0_Wired {5'd6,3'd0}
 `define CP0_BadVAddr {5'd8,3'd0}
 `define CP0_Count {5'd9,3'd0}
 `define CP0_EntryHi {5'd10,3'd0}
@@ -57,6 +60,7 @@ module cp0(/*autoport*/
 `define CP0_Config1 {5'd16,3'd1}
 
 parameter WITH_CACHE = 1;
+parameter TLB_ENTRIES = 16;
 
 input wire clk;
 input wire rst_n;
@@ -97,6 +101,8 @@ input wire exp_asid_we;
 input wire we_probe;
 input wire[31:0] probe_result;
 
+input wire en_tlbwr;
+
 input wire[4:0] debugger_rd_addr;
 input wire[2:0] debugger_rd_sel;
 output wire[31:0] debugger_data_o;
@@ -112,6 +118,8 @@ reg[31:0] cp0_regs_EntryLo1;
 reg[31:0] cp0_regs_EntryLo0;
 reg[31:0] cp0_regs_EntryHi;
 reg[31:0] cp0_regs_Index;
+reg[3:0]  cp0_regs_Wired;
+reg[3:0]  cp0_regs_Random;
 reg[31:0] cp0_regs_BadVAddr;
 reg[31:0] cp0_regs_Config;
 
@@ -119,6 +127,8 @@ wire[7:0] rd_addr_internal[0:1];
 reg[31:0] data_o_internal[0:1];
 
 reg[7:0] timer_count;
+
+wire[5:0] tlb_entries_minus1 = TLB_ENTRIES-1;
 
 assign rd_addr_internal[0] = {rd_addr,rd_sel};
 assign data_o = data_o_internal[0];
@@ -138,7 +148,7 @@ assign tlb_config = {
     cp0_regs_EntryLo1[2:1],
     cp0_regs_EntryLo0[29:6],
     cp0_regs_EntryLo0[2:1],
-    cp0_regs_Index[3:0]
+    en_tlbwr ? cp0_regs_Random[3:0] : cp0_regs_Index[3:0]
 };
 assign allow_int = cp0_regs_Status[2:0]==3'b001;
 assign software_int_o = cp0_regs_Cause[9:8];
@@ -163,6 +173,12 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
             end
             `CP0_Count: begin
                 data_o_internal[read_i] <= cp0_regs_Count;
+            end
+            `CP0_Wired: begin 
+                data_o_internal[read_i] <= {28'h0, cp0_regs_Wired};
+            end
+            `CP0_Random: begin 
+                data_o_internal[read_i] <= {28'h0, cp0_regs_Random};
             end
             `CP0_EBase: begin
                 data_o_internal[read_i] <= {2'b10, cp0_regs_EBase[29:12], 12'b0};
@@ -202,10 +218,10 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
             end
             `CP0_Config1: begin 
             if(!WITH_CACHE)
-                data_o_internal[read_i] <= {1'b0, 6'd15, 25'h0};
+                data_o_internal[read_i] <= {1'b0, tlb_entries_minus1, 25'h0};
             else
                 //Cache Size:                            I:128-64B-direct, D:256-64B-direct
-                data_o_internal[read_i] <= {1'b0, 6'd15, 3'd1, 3'd5, 3'd0, 3'd2, 3'd5, 3'd0, 7'd0}; 
+                data_o_internal[read_i] <= {1'b0, tlb_entries_minus1, 3'd1, 3'd5, 3'd0, 3'd2, 3'd5, 3'd0, 7'd0}; 
             end
             default:
                 data_o_internal[read_i] <= 32'b0;
@@ -223,6 +239,8 @@ always @(posedge clk) begin
         cp0_regs_EBase <= 32'h80000000;
         cp0_regs_Cause[9:8] <= 2'b0;
         cp0_regs_Cause[23] <= 1'b0;
+        cp0_regs_Random <= tlb_entries_minus1;
+        cp0_regs_Wired <= 4'h0;
         timer_int <= 1'b0;
         timer_count <= 'b0;
         kseg0_uncached <= 1'b0;
@@ -240,6 +258,10 @@ always @(posedge clk) begin
             end
             `CP0_Count: begin
                 cp0_regs_Count <= data_i;
+            end
+            `CP0_Wired: begin 
+                cp0_regs_Wired <= data_i[3:0];
+                cp0_regs_Random <= tlb_entries_minus1;
             end
             `CP0_EBase: begin
                 cp0_regs_EBase[29:12] <= data_i[29:12]; //only bits 29..12 is writable
@@ -281,6 +303,8 @@ always @(posedge clk) begin
 
             endcase
         end
+        if(en_tlbwr)
+            cp0_regs_Random <= cp0_regs_Random==cp0_regs_Wired ? tlb_entries_minus1 : cp0_regs_Random-1'b1;
         if(we_probe)
             cp0_regs_Index <= probe_result;
         if(en_exp_i) begin
