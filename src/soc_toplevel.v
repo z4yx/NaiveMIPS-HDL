@@ -1,6 +1,7 @@
 `default_nettype none
 `define EXT_UART_CLOCK
-// `define STEP_CPU_CLOCK
+//`define STEP_CPU_CLOCK
+//`define HS_DIFF_OUT
 module soc_toplevel(/*autoport*/
 //inout
             base_ram_data,
@@ -51,8 +52,10 @@ module soc_toplevel(/*autoport*/
             vga_vsync,
             vga_clk,
             vga_de,
+`ifndef HS_DIFF_OUT
             uart_wrn,
             uart_rdn,
+`endif
 //input
             clk_in,
             clk_uart_in,
@@ -61,9 +64,6 @@ module soc_toplevel(/*autoport*/
             sl811_int,
             dm9k_int,
             touch_btn);
-
-wire[127:0] register_dump;
-wire[31:0] pc_dump;
 
 input wire clk_in;
 
@@ -169,8 +169,13 @@ output wire vga_vsync;
 output wire vga_clk;
 output wire vga_de;
 
-output wire uart_wrn;
-output wire uart_rdn;
+`ifndef HS_DIFF_OUT
+output uart_wrn;
+output uart_rdn;
+`endif
+
+wire uart_wrn = 1'b1;
+wire uart_rdn = 1'b1;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -272,9 +277,6 @@ assign ext_ram_data  = ram_io_t ? {32{1'hz}} : ram_data_o;
 assign ext_ram_be = ram_dataenable_n;
 
 assign vga_clk = clk_in;
-
-assign uart_wrn = 1'b1;
-assign uart_rdn = 1'b1;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -512,22 +514,31 @@ assign irq_line = {1'b0,usb_irq,uart_irq,2'b0};
 `ifdef HS_DIFF_OUT
 wire [255:0] testdata_in;
 assign testdata_in = {
-    dbus_address,
-    dbus_wrdata,
-    {16'h0},
-    {8'h0,uart_irq,dbus_read,dbus_write,dbus_stall,dbus_ram_byteenable},
-    pc_dump,
-    register_dump
+    cpu.main_regs.registers[12],
+    cpu.main_regs.registers[11],
+    cpu.main_regs.registers[10],
+    cpu.main_regs.registers[9],
+    cpu.main_regs.registers[8],
+    cpu.ibus_address,
+    cpu.ibus_rddata,
+    cpu.pc_instance.pc_reg
 };
+reg start_sample;
+always @(posedge clk or negedge rst_n) begin
+    if(!rst_n)
+        start_sample <= 1'b0;
+    else
+        start_sample <= 1'b1;
+end
 sampler_0 la(
-    .sample_clk    (clk),
-    .txmit_ref_clk(clk_in),
+    .sample_clk    (clk_tick), // vio-like usage, cross clock-domain
+    .ref_50M_clk   (clk_in),
     .clkout1_p (clkout1_p),
     .clkout1_n (clkout1_n),
     .dataout1_p(dataout1_p),
     .dataout1_n(dataout1_n),
-    .start_sample  (touch_btn[0]),
-    .stop_sample  (touch_btn[1]),
+    .start_sample  (start_sample),
+    .stop_sample   (~start_sample),
     .data_in       (testdata_in)
 );
 `endif
