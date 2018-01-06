@@ -55,7 +55,7 @@ assign {
   tlbEntryIndex
 } = tlbConfig;//refer to cp0.v
 
-reg[85:0] tlbEntries[0:15];
+(* MAX_FANOUT = 50 *) reg[85:0] tlbEntries[0:15];
 
 tlbConverter conv4inst(
 
