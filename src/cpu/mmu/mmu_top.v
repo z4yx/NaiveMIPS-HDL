@@ -13,6 +13,7 @@ module mmu_top(/*autoport*/
      data_exp_invalid,
      inst_exp_invalid,
      tlbp_result,
+     tlbr_result,
 //input
      rst_n,
      clk,
@@ -58,6 +59,7 @@ input wire[7:0] asid;
 input wire cp0_kseg0_uncached;
 
 output wire[31:0] tlbp_result;
+output wire[85:0] tlbr_result;
 
 wire data_tlb_map, inst_tlb_map;
 wire data_miss, inst_miss, data_dirty;
@@ -109,6 +111,8 @@ tlb tlb0(
   .tlbwi(tlbwi),
   .tlbp(tlbp),
   .tlbp_result(tlbp_result),
+
+  .tlbr_result(tlbr_result),
 
   .dataDirt(data_dirty),
   .insDirt (),

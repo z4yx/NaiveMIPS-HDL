@@ -144,6 +144,7 @@ wire ex_we_tlb;
 wire ex_tlb_by_random;
 wire ex_is_priv_inst;
 wire ex_probe_tlb;
+wire ex_read_tlb;
 reg [7:0]ex_iaddr_exp_asid;
 reg ex_iaddr_exp_exl;
 wire ex_inv_wb_dcache;
@@ -190,11 +191,13 @@ wire mm_daddr_dirty;
 wire mm_daddr_exp_invalid;
 wire mm_alignment_err;
 reg mm_we_tlb;
+reg mm_read_tlb;
 reg mm_tlb_by_random;
 wire mm_stall;
 reg mm_is_priv_inst;
 reg mm_probe_tlb;
 wire[31:0] mm_probe_result;
+wire[85:0] mm_tlbr_result;
 reg [7:0]mm_iaddr_exp_asid;
 reg mm_iaddr_exp_exl;
 reg mm_inv_wb_dcache;
@@ -221,6 +224,8 @@ reg wb_we_tlb;
 reg wb_tlb_by_random;
 reg wb_probe_tlb;
 reg[31:0] wb_probe_result;
+reg[85:0] wb_tlbr_result;
+reg wb_read_tlb;
 reg wb_exception_detected;
 
 wire cp0_allow_int;
@@ -293,6 +298,7 @@ mmu_top #(.WITH_TLB(WITH_TLB)) mmu(/*autoinst*/
       .tlbwi(wb_we_tlb & ~wb_exception_detected),
       .tlbp(mm_probe_tlb),
       .tlbp_result(mm_probe_result),
+      .tlbr_result(mm_tlbr_result),
       .cp0_kseg0_uncached(cp0_kseg0_uncached),
       .asid(cp0_asid),
       .user_mode(cp0_user_mode));
@@ -411,6 +417,8 @@ cp0 #(.WITH_CACHE(WITH_CACHE)) cp0_instance(/*autoinst*/
      .en_exp_i(cp0_exp_en),
      .clean_exl(cp0_clean_exl),
      .we_probe       (wb_probe_tlb & ~wb_exception_detected),
+     .tlbr_result    (wb_tlbr_result),
+     .we_tlbr        (wb_read_tlb & ~wb_exception_detected),
      .en_tlbwr(wb_tlb_by_random),
      .probe_result(wb_probe_result),
      .exp_bd(cp0_exp_bd),
@@ -585,6 +593,7 @@ ex stage_ex(/*autoinst*/
             .sign_mult      (ex_sign_mult),
             .we_hilo_mult   (ex_we_hilo_mult),
             .we_tlb(ex_we_tlb),
+            .read_tlb       (ex_read_tlb),
             .tlb_by_random(ex_tlb_by_random),
             .clk(clk),
             .rst_n(rst_n),
@@ -633,6 +642,7 @@ always @(posedge clk) begin
         mm_iaddr_exp_illegal <= 1'b0;
         mm_iaddr_exp_invalid <= 1'b0;
         mm_we_tlb <= 1'b0;
+        mm_read_tlb <= 1'b0;
         mm_tlb_by_random <= 1'b0;
         mm_is_priv_inst <= 1'b0;
         mm_cp0_wrsel <= 3'b0;
@@ -670,6 +680,7 @@ always @(posedge clk) begin
         mm_iaddr_exp_illegal <= ex_iaddr_exp_illegal;
         mm_iaddr_exp_invalid <= ex_iaddr_exp_invalid;
         mm_we_tlb <= ex_we_tlb;
+        mm_read_tlb <= ex_read_tlb;
         mm_tlb_by_random <= ex_tlb_by_random;
         mm_is_priv_inst <= ex_is_priv_inst;
         mm_cp0_wrsel <= ex_cp0_sel;
@@ -760,6 +771,8 @@ always @(posedge clk) begin
         wb_tlb_by_random <= 1'b0;
         wb_probe_tlb <= 1'b0;
         wb_probe_result <= 32'b0;
+        wb_read_tlb <= 1'b0;
+        wb_tlbr_result <= 86'b0;
         wb_exception_detected <= 1'b0;
         wb_dbus_uncached <= 1'b0;
         wb_dbus_rddata_uncached <= 32'h0;
@@ -778,6 +791,8 @@ always @(posedge clk) begin
         wb_tlb_by_random <= mm_tlb_by_random;
         wb_probe_tlb <= mm_probe_tlb;
         wb_probe_result <= mm_probe_result;
+        wb_read_tlb <= mm_read_tlb;
+        wb_tlbr_result <= mm_tlbr_result;
         wb_exception_detected <= mm_exception_detected;
         wb_dbus_uncached <= dbus_uncached;
         wb_dbus_rddata_uncached <= dbus_rddata_uncached;

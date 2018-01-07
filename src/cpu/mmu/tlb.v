@@ -5,6 +5,7 @@ module tlb(
   input wire tlbp,
 
   output wire[31:0] tlbp_result,
+  output wire[85:0] tlbr_result,
 
   input wire[31:0] dataAddrVirt,
   input wire[31:0] insAddrVirt,
@@ -56,6 +57,8 @@ assign {
 } = tlbConfig;//refer to cp0.v
 
 (* MAX_FANOUT = 50 *) reg[85:0] tlbEntries[0:15];
+
+assign tlbr_result = tlbEntries[tlbEntryIndex];
 
 tlbConverter conv4inst(
 

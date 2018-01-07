@@ -37,6 +37,8 @@ module cp0(/*autoport*/
          exp_asid_we,
          we_probe,
          probe_result,
+         we_tlbr,
+         tlbr_result,
          en_tlbwr,
          debugger_rd_addr,
          debugger_rd_sel);
@@ -84,7 +86,7 @@ output wire[1:0] software_int_o;
 output wire[7:0] interrupt_mask;
 output wire special_int_vec;
 output wire boot_exp_vec;
-output wire[7:0] asid;
+(* MAX_FANOUT = 30 *) output reg[7:0] asid;
 output wire in_exl;
 output reg kseg0_uncached;
 
@@ -100,6 +102,9 @@ input wire exp_asid_we;
 
 input wire we_probe;
 input wire[31:0] probe_result;
+
+input wire we_tlbr;
+input wire[85:0] tlbr_result;
 
 input wire en_tlbwr;
 
@@ -118,8 +123,8 @@ reg[31:0] cp0_regs_EntryLo1;
 reg[31:0] cp0_regs_EntryLo0;
 reg[31:0] cp0_regs_EntryHi;
 reg[31:0] cp0_regs_Index;
-reg[3:0]  cp0_regs_Wired;
-reg[3:0]  cp0_regs_Random;
+reg[$clog2(TLB_ENTRIES)-1:0]  cp0_regs_Wired;
+reg[$clog2(TLB_ENTRIES)-1:0]  cp0_regs_Random;
 reg[31:0] cp0_regs_BadVAddr;
 reg[31:0] cp0_regs_Config;
 
@@ -129,6 +134,8 @@ reg[31:0] data_o_internal[0:1];
 reg[7:0] timer_count;
 
 wire[5:0] tlb_entries_minus1 = TLB_ENTRIES-1;
+
+wire [31:0] tlbr_EntryHi, tlbr_EntryLo0, tlbr_EntryLo1;
 
 assign rd_addr_internal[0] = {rd_addr,rd_sel};
 assign data_o = data_o_internal[0];
@@ -150,13 +157,32 @@ assign tlb_config = {
     cp0_regs_EntryLo0[2:1],
     en_tlbwr ? cp0_regs_Random[3:0] : cp0_regs_Index[3:0]
 };
+assign {
+    tlbr_EntryLo0[5:3],
+    tlbr_EntryLo1[5:3],
+    tlbr_EntryHi[7:0],
+    tlbr_EntryLo1[0],
+    tlbr_EntryHi[31:13],
+    tlbr_EntryLo1[29:6],
+    tlbr_EntryLo1[2:1],
+    tlbr_EntryLo0[29:6],
+    tlbr_EntryLo0[2:1]
+    } = tlbr_result;
+assign tlbr_EntryLo0[0] = tlbr_EntryLo1[0];
+assign tlbr_EntryHi[12:8] = 5'h0;
+assign tlbr_EntryLo1[31:30] = 2'b0;
+assign tlbr_EntryLo0[31:30] = 2'b0;
+
 assign allow_int = cp0_regs_Status[2:0]==3'b001;
 assign software_int_o = cp0_regs_Cause[9:8];
 assign interrupt_mask = cp0_regs_Status[15:8];
 assign special_int_vec = cp0_regs_Cause[23];
 assign boot_exp_vec = cp0_regs_Status[22];
-assign asid = cp0_regs_EntryHi[7:0];
 assign in_exl = cp0_regs_Status[1];
+
+always @(posedge clk) begin : proc_asid //timing optimization
+    asid <= cp0_regs_EntryHi[7:0];
+end
 
 genvar read_i;
 generate
@@ -175,10 +201,10 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= cp0_regs_Count;
             end
             `CP0_Wired: begin 
-                data_o_internal[read_i] <= {28'h0, cp0_regs_Wired};
+                data_o_internal[read_i] <= {cp0_regs_Wired};
             end
             `CP0_Random: begin 
-                data_o_internal[read_i] <= {28'h0, cp0_regs_Random};
+                data_o_internal[read_i] <= {cp0_regs_Random};
             end
             `CP0_EBase: begin
                 data_o_internal[read_i] <= {2'b10, cp0_regs_EBase[29:12], 12'b0};
@@ -240,7 +266,7 @@ always @(posedge clk) begin
         cp0_regs_Cause[9:8] <= 2'b0;
         cp0_regs_Cause[23] <= 1'b0;
         cp0_regs_Random <= tlb_entries_minus1;
-        cp0_regs_Wired <= 4'h0;
+        cp0_regs_Wired <= 32'h0;
         timer_int <= 1'b0;
         timer_count <= 'b0;
         kseg0_uncached <= 1'b0;
@@ -250,6 +276,17 @@ always @(posedge clk) begin
         timer_count <= timer_count + 'b1;
         if(cp0_regs_Compare != 32'b0 && cp0_regs_Compare==cp0_regs_Count)
             timer_int <= 1'b1;
+        // ===== write from WB =====
+        if(en_tlbwr)
+            cp0_regs_Random <= cp0_regs_Random==cp0_regs_Wired ? tlb_entries_minus1 : cp0_regs_Random-1'b1;
+        if(we_probe)
+            cp0_regs_Index <= probe_result;
+        if(we_tlbr)begin 
+            cp0_regs_EntryHi <= tlbr_EntryHi;
+            cp0_regs_EntryLo0 <= tlbr_EntryLo0;
+            cp0_regs_EntryLo1 <= tlbr_EntryLo1;
+        end
+        // ===== write from MM =====
         if(we) begin
             case({wr_addr,wr_sel})
             `CP0_Compare: begin
@@ -260,7 +297,7 @@ always @(posedge clk) begin
                 cp0_regs_Count <= data_i;
             end
             `CP0_Wired: begin 
-                cp0_regs_Wired <= data_i[3:0];
+                cp0_regs_Wired <= data_i[$clog2(TLB_ENTRIES)-1:0];
                 cp0_regs_Random <= tlb_entries_minus1;
             end
             `CP0_EBase: begin
@@ -303,10 +340,6 @@ always @(posedge clk) begin
 
             endcase
         end
-        if(en_tlbwr)
-            cp0_regs_Random <= cp0_regs_Random==cp0_regs_Wired ? tlb_entries_minus1 : cp0_regs_Random-1'b1;
-        if(we_probe)
-            cp0_regs_Index <= probe_result;
         if(en_exp_i) begin
             if(exp_badv_we)
                 cp0_regs_BadVAddr <= exp_bad_vaddr;

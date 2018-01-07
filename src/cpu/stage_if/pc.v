@@ -28,7 +28,7 @@ input wire[31:0] debug_new_pc;
 input wire debug_reset;
 
 reg[31:0] pc_next;
-output reg[31:0] pc_reg;
+(* MAX_FANOUT = 50 *) output reg[31:0] pc_reg;
 
 always @(*) begin
     if (!rst_n || debug_reset) begin

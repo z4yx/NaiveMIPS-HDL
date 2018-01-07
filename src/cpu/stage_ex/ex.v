@@ -22,6 +22,7 @@ module ex(/*autoport*/
           tlb_by_random,
           is_priv_inst,
           probe_tlb,
+          read_tlb,
           inv_wb_dcache,
           inv_icache,
           result_mult,
@@ -81,6 +82,7 @@ output wire we_tlb;
 output wire tlb_by_random;
 output reg is_priv_inst;
 output wire probe_tlb;
+output wire read_tlb;
 output reg inv_wb_dcache;
 output reg inv_icache;
 output wire [63:0]result_mult;
@@ -114,6 +116,7 @@ assign eret = op == `OP_ERET;
 assign we_tlb = op == `OP_TLBWI || op == `OP_TLBWR;
 assign tlb_by_random = op == `OP_TLBWR;
 assign probe_tlb = op == `OP_TLBP;
+assign read_tlb = op == `OP_TLBR;
 
 multi_cycle mul_instance(/*autoinst*/
            .result(mul_result),
@@ -384,6 +387,8 @@ always @(*) begin
     `OP_WAIT,
     `OP_ERET,
     `OP_TLBP,
+    `OP_TLBR,
+    `OP_TLBWR,
     `OP_TLBWI:
         is_priv_inst <= 1'b1;
     default:

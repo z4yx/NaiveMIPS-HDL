@@ -61,6 +61,8 @@ always @(*) begin
                 op <= `OP_ERET;
             else if(inst[5:0] == 6'h20)
                 op <= `OP_WAIT;
+            else if(inst[5:0] == 6'h1 && WITH_TLB)
+                op <= `OP_TLBR;
             else if(inst[5:0] == 6'h2 && WITH_TLB)
                 op <= `OP_TLBWI;
             else if(inst[5:0] == 6'h6 && WITH_TLB)
