@@ -41,6 +41,9 @@ output wire flash_rp_n;
 output wire[2:0] flash_ce;
 output wire flash_vpen;
 
+wire flash_data_t;
+wire[15:0] flash_data_o;
+
 wire [15:0] bus_d16_i, bus_d16_o;
 wire upper_half;
 wire ifce_stall;
@@ -80,12 +83,15 @@ parallel_ifce #(.RW_BUS_CYCLE(3)) f_ifce(
   .bus_write  (bus_write),
   .bus_stall  (ifce_stall),
   .dev_address(flash_address),
-  .dev_data   (flash_data),
+  .dev_data_i (flash_data),
+  .dev_data_o (flash_data_o),
+  .dev_data_t (flash_data_t),
   .dev_we_n   (flash_we_n),
   .dev_oe_n   (flash_oe_n),
   .dev_ce_n   ()
 );
 
+assign flash_data = flash_data_t ? {16{1'bz}} : flash_data_o;
 assign flash_rp_n = rst_n;
 assign flash_byte_n = 1'b1;
 assign flash_ce = 3'b000;

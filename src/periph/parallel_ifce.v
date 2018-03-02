@@ -1,21 +1,17 @@
 `default_nettype none
 module parallel_ifce (/*autoport*/
-//inout
-          dev_data,
 //output
-          bus_data_o,
-          bus_stall,
-          dev_address,
-          dev_we_n,
-          dev_oe_n,
-          dev_ce_n,
+      bus_stall,
+      dev_data_o,
+      dev_data_t,
 //input
-          clk_bus,
-          rst_n,
-          bus_address,
-          bus_data_i,
-          bus_read,
-          bus_write);
+      clk_bus,
+      rst_n,
+      bus_address,
+      bus_data_i,
+      bus_read,
+      bus_write,
+      dev_data_i);
 
 parameter RW_BUS_CYCLE = 4;
 
@@ -30,7 +26,9 @@ input wire bus_write;
 output wire bus_stall;
 
 (* IOB = "true" *) output reg[23:0] dev_address;
-inout wire[31:0] dev_data;
+output wire[31:0] dev_data_o;
+input wire[31:0] dev_data_i;
+output wire dev_data_t;
 (* IOB = "true" *) output reg dev_we_n;
 (* IOB = "true" *) output reg dev_oe_n;
 (* IOB = "true" *) output reg dev_ce_n;
@@ -62,11 +60,12 @@ always @(posedge clk_bus or negedge rst_n) begin
       dev_ce_n <= 1'b1;
     end
     if(!dev_oe_n)
-      bus_data_o <= dev_data;
+      bus_data_o <= dev_data_i;
   end
 end
 
-assign dev_data = (~dev_we_n) ? dev_wrdata : {32{1'bz}};
+assign dev_data_t = dev_we_n;
+assign dev_data_o = dev_wrdata;
 assign bus_stall = (bus_read || bus_write) && (hold_cycle < (RW_BUS_CYCLE+1));
 
 endmodule
