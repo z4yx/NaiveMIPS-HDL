@@ -1,12 +1,12 @@
 `default_nettype none
 module usb_sl811 (/*autoport*/
-//inout
-      sl811_data,
 //output
       bus_data_o,
       bus_stall,
       bus_irq,
       sl811_a0,
+      sl811_data_o,
+      sl811_data_t,
       sl811_we_n,
       sl811_rd_n,
       sl811_cs_n,
@@ -19,6 +19,7 @@ module usb_sl811 (/*autoport*/
       bus_data_i,
       bus_read,
       bus_write,
+      sl811_data_i,
       sl811_dack,
       sl811_int);
 
@@ -34,7 +35,9 @@ output wire bus_stall;
 output reg bus_irq;
 
 output wire sl811_a0;
-inout wire[7:0] sl811_data;
+output wire[7:0] sl811_data_o;
+input wire[7:0] sl811_data_i;
+output wire sl811_data_t;
 output wire sl811_we_n;
 output wire sl811_rd_n;
 output wire sl811_cs_n;
@@ -44,7 +47,6 @@ input wire sl811_int;
 output wire sl811_drq;
 
 wire[1:0] dummy2;
-wire[23:0] dummy24;
 
 parallel_ifce #(.RW_BUS_CYCLE(4)) u_ifce(
   .clk_bus    (clk_bus),
@@ -56,7 +58,9 @@ parallel_ifce #(.RW_BUS_CYCLE(4)) u_ifce(
   .bus_write  (bus_write),
   .bus_stall  (bus_stall),
   .dev_address({sl811_a0,dummy2}),
-  .dev_data   ({dummy24,sl811_data}),
+  .dev_data_o (sl811_data_o),
+  .dev_data_i (sl811_data_i),
+  .dev_data_t (sl811_data_t),
   .dev_we_n   (sl811_we_n),
   .dev_oe_n   (sl811_rd_n),
   .dev_ce_n   (sl811_cs_n)

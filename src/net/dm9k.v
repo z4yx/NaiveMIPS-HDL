@@ -1,12 +1,12 @@
 `default_nettype none
 module net_dm9k (/*autoport*/
-//inout
-     dm9k_data,
 //output
      bus_data_o,
      bus_stall,
      bus_irq,
      dm9k_cmd,
+     dm9k_data_o,
+     dm9k_data_t,
      dm9k_we_n,
      dm9k_rd_n,
      dm9k_cs_n,
@@ -18,6 +18,7 @@ module net_dm9k (/*autoport*/
      bus_data_i,
      bus_read,
      bus_write,
+     dm9k_data_i,
      dm9k_int);
 
 input wire clk_bus;
@@ -32,7 +33,9 @@ output wire bus_stall;
 output reg bus_irq;
 
 output wire dm9k_cmd;
-inout wire[15:0] dm9k_data;
+output wire[15:0] dm9k_data_o;
+input  wire[15:0] dm9k_data_i;
+output wire dm9k_data_t;
 output wire dm9k_we_n;
 output wire dm9k_rd_n;
 output wire dm9k_cs_n;
@@ -40,7 +43,6 @@ output wire dm9k_rst_n;
 input wire dm9k_int;
 
 wire[1:0] dummy2;
-wire[15:0] dummy16;
 
 parallel_ifce #(.RW_BUS_CYCLE(1)) u_ifce(
   .clk_bus    (clk_bus),
@@ -52,7 +54,9 @@ parallel_ifce #(.RW_BUS_CYCLE(1)) u_ifce(
   .bus_write  (bus_write),
   .bus_stall  (bus_stall),
   .dev_address({dm9k_cmd,dummy2}),
-  .dev_data   ({dummy16,dm9k_data}),
+  .dev_data_o (dm9k_data_o),
+  .dev_data_i (dm9k_data_i),
+  .dev_data_t (dm9k_data_t),
   .dev_we_n   (dm9k_we_n),
   .dev_oe_n   (dm9k_rd_n),
   .dev_ce_n   (dm9k_cs_n)

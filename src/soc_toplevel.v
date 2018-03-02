@@ -1,13 +1,12 @@
 `default_nettype none
 `define EXT_UART_CLOCK
 //`define STEP_CPU_CLOCK
-//`define HS_DIFF_OUT
+`define HS_DIFF_OUT
 module soc_toplevel(/*autoport*/
 //inout
             base_ram_data,
             ext_ram_data,
             flash_data,
-            sl811_data,
             dm9k_data,
             gpio0,
             gpio1,
@@ -52,10 +51,8 @@ module soc_toplevel(/*autoport*/
             vga_vsync,
             vga_clk,
             vga_de,
-`ifndef HS_DIFF_OUT
             uart_wrn,
             uart_rdn,
-`endif
 //input
             clk_in,
             clk_uart_in,
@@ -140,7 +137,6 @@ output wire flash_byte_n;
 output wire flash_we_n;
 
 output wire sl811_a0;
-inout wire[7:0] sl811_data;
 output wire sl811_we_n;
 output wire sl811_rd_n;
 output wire sl811_cs_n;
@@ -148,15 +144,19 @@ output wire sl811_rst_n;
 input wire sl811_dack;
 input wire sl811_int;
 output wire sl811_drq;
+wire [7:0] sl811_data_i, sl811_data_o;
+wire sl811_data_t;
 
 //DM9000 Ethernet controller signals
 output wire dm9k_cmd;
-inout wire[15:0] dm9k_data;
+inout wire[15:0] dm9k_data; //shared by sl811 and dm9k
 output wire dm9k_we_n;
 output wire dm9k_rd_n;
 output wire dm9k_cs_n;
 output wire dm9k_rst_n;
 input wire dm9k_int;
+wire [15:0] dm9k_data_i, dm9k_data_o;
+wire dm9k_data_t;
 
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
@@ -169,10 +169,8 @@ output wire vga_vsync;
 output wire vga_clk;
 output wire vga_de;
 
-`ifndef HS_DIFF_OUT
 output uart_wrn;
 output uart_rdn;
-`endif
 
 wire uart_wrn = 1'b1;
 wire uart_rdn = 1'b1;
@@ -277,6 +275,12 @@ assign ext_ram_data  = ram_io_t ? {32{1'hz}} : ram_data_o;
 assign ext_ram_be = ram_dataenable_n;
 
 assign vga_clk = clk_in;
+
+assign dm9k_data_i = dm9k_data;
+assign sl811_data_i = dm9k_data[7:0];
+assign dm9k_data = dm9k_data_t ?
+                (sl811_data_t ? {16{1'bz}} : {8'h0,sl811_data_o}) :
+                dm9k_data_o;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -435,9 +439,11 @@ flash_top flash0(/*autoinst*/
          .bus_write(flash_dbus_write));
 
 usb_sl811 usbhcd0(/*autoinst*/
-          .sl811_data(sl811_data[7:0]),
           .bus_data_o(usb_dbus_data_o[31:0]),
           .bus_stall(usb_dbus_stall),
+          .sl811_data_o(sl811_data_o),
+          .sl811_data_i(sl811_data_i),
+          .sl811_data_t(sl811_data_t),
           .sl811_a0(sl811_a0),
           .sl811_we_n(sl811_we_n),
           .sl811_rd_n(sl811_rd_n),
@@ -455,9 +461,11 @@ usb_sl811 usbhcd0(/*autoinst*/
           .sl811_int(sl811_int));
 
 net_dm9k eth0(/*autoinst*/
-          .dm9k_data(dm9k_data),
           .bus_data_o(net_dbus_data_o[31:0]),
           .bus_stall(net_dbus_stall),
+          .dm9k_data_o(dm9k_data_o),
+          .dm9k_data_i(dm9k_data_i),
+          .dm9k_data_t(dm9k_data_t),
           .dm9k_cmd(dm9k_cmd),
           .dm9k_we_n(dm9k_we_n),
           .dm9k_rd_n(dm9k_rd_n),
