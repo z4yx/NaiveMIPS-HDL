@@ -70,7 +70,7 @@ always @(posedge clk_bus or negedge rst_n) begin : proc_wait_state
   end
 end
 
-parallel_ifce #(.RW_BUS_CYCLE(3)) f_ifce(
+parallel_ifce #(.RW_BUS_CYCLE(5)) f_ifce(
   .clk_bus    (clk_bus),
   .rst_n      (rst_n),
   .bus_address({bus_address[22:2],upper_half}), // 22-bit address
