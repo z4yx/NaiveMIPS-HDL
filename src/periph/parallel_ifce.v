@@ -1,17 +1,22 @@
 `default_nettype none
 module parallel_ifce (/*autoport*/
 //output
-      bus_stall,
       dev_data_o,
       dev_data_t,
+      bus_data_o,
+      bus_stall,
+      dev_address,
+      dev_we_n,
+      dev_oe_n,
+      dev_ce_n,
 //input
       clk_bus,
       rst_n,
+      dev_data_i,
       bus_address,
       bus_data_i,
       bus_read,
-      bus_write,
-      dev_data_i);
+      bus_write);
 
 parameter RW_BUS_CYCLE = 4;
 
