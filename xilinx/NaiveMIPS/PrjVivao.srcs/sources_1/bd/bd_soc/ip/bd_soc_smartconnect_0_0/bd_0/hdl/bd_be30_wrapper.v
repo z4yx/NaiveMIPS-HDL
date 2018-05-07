@@ -1,8 +1,8 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-//Date        : Thu Sep 21 21:07:44 2017
-//Host        : nuc6i7 running 64-bit Ubuntu 16.04.2 LTS
+//Date        : Mon May  7 06:04:15 2018
+//Host        : a6f209d2376e running 64-bit unknown
 //Command     : generate_target bd_be30_wrapper.bd
 //Design      : bd_be30_wrapper
 //Purpose     : IP block netlist

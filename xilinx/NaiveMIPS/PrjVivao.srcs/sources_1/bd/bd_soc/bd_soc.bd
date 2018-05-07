@@ -648,14 +648,6 @@
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
-        <spirit:instanceName>altera_up_ps2_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="user" spirit:name="altera_up_ps2" spirit:vendor="user.org" spirit:version="1.2"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_altera_up_ps2_0_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="CLK_FREQ">50000000</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
         <spirit:instanceName>axi_apb_bridge_0</spirit:instanceName>
         <spirit:componentRef spirit:library="ip" spirit:name="axi_apb_bridge" spirit:vendor="xilinx.com" spirit:version="3.0"/>
         <spirit:configurableElementValues>
@@ -795,13 +787,6 @@
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
-        <spirit:instanceName>nt35510_apb_adapter_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="user" spirit:name="nt35510_apb_adapter" spirit:vendor="user.org" spirit:version="1.0"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_nt35510_apb_adapter_0_0</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
         <spirit:instanceName>proc_sys_reset_0</spirit:instanceName>
         <spirit:componentRef spirit:library="ip" spirit:name="proc_sys_reset" spirit:vendor="xilinx.com" spirit:version="5.0"/>
         <spirit:configurableElementValues>
@@ -913,6 +898,21 @@
         <spirit:componentRef spirit:library="user" spirit:name="video_stream_ctl" spirit:vendor="user.org" spirit:version="1.1"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_video_stream_ctl_0_0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>altera_up_ps2_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="user" spirit:name="altera_up_ps2" spirit:vendor="user.org" spirit:version="1.2"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_altera_up_ps2_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="CLK_FREQ">50000000</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>nt35510_apb_adapter_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="user" spirit:name="nt35510_apb_adapter" spirit:vendor="user.org" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_soc_nt35510_apb_adapter_0_0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
     </spirit:componentInstances>
@@ -1077,8 +1077,6 @@
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hclk"/>
         <spirit:internalPortReference spirit:componentRef="vio_prst" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="axi_apb_bridge_0" spirit:portRef="s_axi_aclk"/>
-        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="clk"/>
-        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="s00_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="clk"/>
@@ -1088,6 +1086,8 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M05_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M07_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="clk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>S00_ARESETN_1</spirit:name>
@@ -1099,8 +1099,6 @@
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_1" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="ahblite_axi_bridge_2" spirit:portRef="s_ahb_hresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_apb_bridge_0" spirit:portRef="s_axi_aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="nrst"/>
-        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="reset_n"/>
         <spirit:internalPortReference spirit:componentRef="axi_tft_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="confreg_0" spirit:portRef="s00_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="naive_mips_0" spirit:portRef="rst_n"/>
@@ -1110,6 +1108,8 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S02_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M05_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M07_ARESETN"/>
+        <spirit:internalPortReference spirit:componentRef="altera_up_ps2_0" spirit:portRef="reset_n"/>
+        <spirit:internalPortReference spirit:componentRef="nt35510_apb_adapter_0" spirit:portRef="nrst"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>clk_ref_i_1</spirit:name>
@@ -1137,6 +1137,7 @@
         <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aclk"/>
         <spirit:internalPortReference spirit:componentRef="v_frmbuf_rd_0" spirit:portRef="ap_clk"/>
         <spirit:internalPortReference spirit:componentRef="v_frmbuf_wr_0" spirit:portRef="ap_clk"/>
+        <spirit:internalPortReference spirit:componentRef="video_stream_ctl_0" spirit:portRef="aclk"/>
         <spirit:internalPortReference spirit:componentRef="bootrom" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="ocm" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="jtag_bram" spirit:portRef="aclk"/>
@@ -1155,7 +1156,6 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M08_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M09_ACLK"/>
-        <spirit:internalPortReference spirit:componentRef="video_stream_ctl_0" spirit:portRef="aclk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>mig_7series_0_ui_clk_sync_rst</spirit:name>
@@ -1180,6 +1180,7 @@
         <spirit:internalPortReference spirit:componentRef="smartconnect_0" spirit:portRef="aresetn"/>
         <spirit:internalPortReference spirit:componentRef="v_frmbuf_rd_0" spirit:portRef="ap_rst_n"/>
         <spirit:internalPortReference spirit:componentRef="v_frmbuf_wr_0" spirit:portRef="ap_rst_n"/>
+        <spirit:internalPortReference spirit:componentRef="video_stream_ctl_0" spirit:portRef="aresetn"/>
         <spirit:internalPortReference spirit:componentRef="bootrom" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="ocm" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="S00_ARESETN"/>
@@ -1195,7 +1196,6 @@
         <spirit:internalPortReference spirit:componentRef="sys_bus" spirit:portRef="S03_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M08_ARESETN"/>
         <spirit:internalPortReference spirit:componentRef="perph_bus" spirit:portRef="M09_ARESETN"/>
-        <spirit:internalPortReference spirit:componentRef="video_stream_ctl_0" spirit:portRef="aresetn"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>sys_clk_i_1</spirit:name>
