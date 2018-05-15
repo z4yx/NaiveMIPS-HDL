@@ -1,7 +1,7 @@
 `default_nettype none
-`define EXT_UART_CLOCK
+//`define EXT_UART_CLOCK
 //`define STEP_CPU_CLOCK
-`define HS_DIFF_OUT
+//`define HS_DIFF_OUT
 module soc_toplevel(/*autoport*/
 //inout
             base_ram_data,
