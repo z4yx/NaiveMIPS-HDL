@@ -11,7 +11,9 @@ upgrade_ip [get_ips]
 
 create_ip_run [get_files -of_objects [get_fileset sources_1] *bd_soc.bd]
 set ip_run [create_ip_run [get_ips clk_wiz_0]]
-launch_runs $ip_run
-wait_on_run $ip_run
-launch_runs impl_2 -to_step write_bitstream -jobs 8
+launch_runs -quiet clk_wiz_0_synth_1
+wait_on_run clk_wiz_0_synth_1
+launch_runs -quiet impl_2 -to_step write_bitstream -jobs 8
 wait_on_run impl_2
+
+exit
