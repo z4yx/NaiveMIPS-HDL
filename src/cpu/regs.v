@@ -31,7 +31,7 @@ output reg[31:0] rdata3;
 
 reg[31:0] registers[0:31];
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if(!rst_n) begin
         registers[0] <= 32'b0;
         registers[1] <= 32'b0;
@@ -72,9 +72,7 @@ always @(posedge clk or negedge rst_n) begin
 end
 
 always @(*) begin
-    if(!rst_n)
-        rdata1 <= 32'b0;
-    else if(raddr1 == 32'b0)
+    if(raddr1 == 32'b0)
         rdata1 <= 32'b0;
     else if(raddr1 == waddr && we)
         rdata1 <= wdata;
@@ -83,9 +81,7 @@ always @(*) begin
 end
 
 always @(*) begin
-    if(!rst_n)
-        rdata2 <= 32'b0;
-    else if(raddr2 == 32'b0)
+    if(raddr2 == 32'b0)
         rdata2 <= 32'b0;
     else if(raddr2 == waddr && we)
         rdata2 <= wdata;
@@ -94,9 +90,7 @@ always @(*) begin
 end
 
 always @(*) begin
-    if(!rst_n)
-        rdata3 <= 32'b0;
-    else if(raddr3 == 32'b0)
+    if(raddr3 == 32'b0)
         rdata3 <= 32'b0;
     else if(raddr3 == waddr && we)
         rdata3 <= wdata;

@@ -23,3 +23,5 @@ planAhead_run_*
 xilinx/NaiveMIPS/ipcore_dir/*/example_design/
 *.log
 ._*
+*.str
+*.jou

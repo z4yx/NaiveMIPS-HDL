@@ -9,12 +9,17 @@ module id_i(/*autoport*/
 //input
             inst);
 
+parameter WITH_CACHE = 1;
+parameter WITH_TLB = 1;
+
 input wire[31:0] inst;
 output reg[7:0] op;
 output wire[4:0] reg_s;
 output wire[4:0] reg_t;
 output wire[15:0] immediate;
 output reg flag_unsigned;
+
+wire cache_op_invalid = (inst[20:16]==5'b11000 || &inst[18:17]);
 
 assign reg_s = inst[25:21];
 assign reg_t = inst[20:16];
@@ -40,14 +45,14 @@ always @(*) begin
     end
     6'h04: op <= `OP_BEQ;
     6'h05: op <= `OP_BNE;
-    6'h06: op <= `OP_BLEZ;
-    6'h07: op <= `OP_BGTZ;
+    6'h06: op <= reg_t == 5'h0 ? `OP_BLEZ : `OP_INVAILD;
+    6'h07: op <= reg_t == 5'h0 ? `OP_BGTZ : `OP_INVAILD;
     6'h08,6'h09: op <= `OP_ADD;
     6'h0a,6'h0b: op <= `OP_SLT;
     6'h0c: op <= `OP_AND;
     6'h0d: op <= `OP_OR;
     6'h0e: op <= `OP_XOR;
-    6'h0f: op <= `OP_LU;
+    6'h0f: op <= reg_s == 5'h0 ? `OP_LU : `OP_INVAILD;
     6'h10: begin //CP0 related
         if(reg_s == 5'h0) op <= `OP_MFC0;
         else if(reg_s == 5'h4) op <= `OP_MTC0;
@@ -56,9 +61,13 @@ always @(*) begin
                 op <= `OP_ERET;
             else if(inst[5:0] == 6'h20)
                 op <= `OP_WAIT;
-            else if(inst[5:0] == 6'h2)
+            else if(inst[5:0] == 6'h1 && WITH_TLB)
+                op <= `OP_TLBR;
+            else if(inst[5:0] == 6'h2 && WITH_TLB)
                 op <= `OP_TLBWI;
-            else if(inst[5:0] == 6'h8)
+            else if(inst[5:0] == 6'h6 && WITH_TLB)
+                op <= `OP_TLBWR;
+            else if(inst[5:0] == 6'h8 && WITH_TLB)
                 op <= `OP_TLBP;
             else
                 op <= `OP_INVAILD;
@@ -76,7 +85,7 @@ always @(*) begin
     6'h2B: op <= `OP_SW;
     6'h2a: op <= `OP_SWL;
     6'h2e: op <= `OP_SWR;
-    6'h2F: op <= `OP_CACHE;
+    6'h2F: op <= cache_op_invalid ? `OP_INVAILD : `OP_CACHE;
     6'h33: op <= `OP_PREF;
     // 6'h38: op <= `OP_SC;
     default: op <= `OP_INVAILD;

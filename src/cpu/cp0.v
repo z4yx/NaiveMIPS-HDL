@@ -14,6 +14,7 @@ module cp0(/*autoport*/
          boot_exp_vec,
          asid,
          in_exl,
+         kseg0_uncached,
          debugger_data_o,
 //input
          clk,
@@ -36,13 +37,18 @@ module cp0(/*autoport*/
          exp_asid_we,
          we_probe,
          probe_result,
+         we_tlbr,
+         tlbr_result,
+         en_tlbwr,
          debugger_rd_addr,
          debugger_rd_sel);
 
 `define CP0_Index {5'd0,3'd0}
+`define CP0_Random {5'd1,3'd0}
 `define CP0_EntryLo0 {5'd2,3'd0}
 `define CP0_EntryLo1 {5'd3,3'd0}
 `define CP0_Context {5'd4,3'd0}
+`define CP0_Wired {5'd6,3'd0}
 `define CP0_BadVAddr {5'd8,3'd0}
 `define CP0_Count {5'd9,3'd0}
 `define CP0_EntryHi {5'd10,3'd0}
@@ -54,6 +60,9 @@ module cp0(/*autoport*/
 `define CP0_EBase {5'd15,3'd1}
 `define CP0_Config {5'd16,3'd0}
 `define CP0_Config1 {5'd16,3'd1}
+
+parameter WITH_CACHE = 1;
+parameter TLB_ENTRIES = 16;
 
 input wire clk;
 input wire rst_n;
@@ -71,14 +80,15 @@ output reg timer_int;
 output wire user_mode;
 output wire[19:0] ebase;
 output wire[31:0] epc;
-output wire[83:0] tlb_config;
+output wire[89:0] tlb_config;
 output wire allow_int;
 output wire[1:0] software_int_o;
 output wire[7:0] interrupt_mask;
 output wire special_int_vec;
 output wire boot_exp_vec;
-output wire[7:0] asid;
+(* MAX_FANOUT = 30 *) output reg[7:0] asid;
 output wire in_exl;
+output reg kseg0_uncached;
 
 input wire clean_exl;
 input wire en_exp_i;
@@ -92,6 +102,11 @@ input wire exp_asid_we;
 
 input wire we_probe;
 input wire[31:0] probe_result;
+
+input wire we_tlbr;
+input wire[85:0] tlbr_result;
+
+input wire en_tlbwr;
 
 input wire[4:0] debugger_rd_addr;
 input wire[2:0] debugger_rd_sel;
@@ -108,13 +123,19 @@ reg[31:0] cp0_regs_EntryLo1;
 reg[31:0] cp0_regs_EntryLo0;
 reg[31:0] cp0_regs_EntryHi;
 reg[31:0] cp0_regs_Index;
+reg[$clog2(TLB_ENTRIES)-1:0]  cp0_regs_Wired;
+reg[$clog2(TLB_ENTRIES)-1:0]  cp0_regs_Random;
 reg[31:0] cp0_regs_BadVAddr;
 reg[31:0] cp0_regs_Config;
 
 wire[7:0] rd_addr_internal[0:1];
 reg[31:0] data_o_internal[0:1];
 
-reg[1:0] timer_count;
+reg[7:0] timer_count;
+
+wire[5:0] tlb_entries_minus1 = TLB_ENTRIES-1;
+
+wire [31:0] tlbr_EntryHi, tlbr_EntryLo0, tlbr_EntryLo1;
 
 assign rd_addr_internal[0] = {rd_addr,rd_sel};
 assign data_o = data_o_internal[0];
@@ -125,6 +146,8 @@ assign user_mode = cp0_regs_Status[4:1]==4'b1000;
 assign ebase = {2'b10, cp0_regs_EBase[29:12]};
 assign epc = cp0_regs_EPC;
 assign tlb_config = {
+    cp0_regs_EntryLo0[5:3],
+    cp0_regs_EntryLo1[5:3],
     cp0_regs_EntryHi[7:0],
     cp0_regs_EntryLo1[0] & cp0_regs_EntryLo0[0],
     cp0_regs_EntryHi[31:13],
@@ -132,15 +155,34 @@ assign tlb_config = {
     cp0_regs_EntryLo1[2:1],
     cp0_regs_EntryLo0[29:6],
     cp0_regs_EntryLo0[2:1],
-    cp0_regs_Index[3:0]
+    en_tlbwr ? cp0_regs_Random[3:0] : cp0_regs_Index[3:0]
 };
+assign {
+    tlbr_EntryLo0[5:3],
+    tlbr_EntryLo1[5:3],
+    tlbr_EntryHi[7:0],
+    tlbr_EntryLo1[0],
+    tlbr_EntryHi[31:13],
+    tlbr_EntryLo1[29:6],
+    tlbr_EntryLo1[2:1],
+    tlbr_EntryLo0[29:6],
+    tlbr_EntryLo0[2:1]
+    } = tlbr_result;
+assign tlbr_EntryLo0[0] = tlbr_EntryLo1[0];
+assign tlbr_EntryHi[12:8] = 5'h0;
+assign tlbr_EntryLo1[31:30] = 2'b0;
+assign tlbr_EntryLo0[31:30] = 2'b0;
+
 assign allow_int = cp0_regs_Status[2:0]==3'b001;
 assign software_int_o = cp0_regs_Cause[9:8];
 assign interrupt_mask = cp0_regs_Status[15:8];
 assign special_int_vec = cp0_regs_Cause[23];
 assign boot_exp_vec = cp0_regs_Status[22];
-assign asid = cp0_regs_EntryHi[7:0];
 assign in_exl = cp0_regs_Status[1];
+
+always @(posedge clk) begin : proc_asid //timing optimization
+    asid <= cp0_regs_EntryHi[7:0];
+end
 
 genvar read_i;
 generate
@@ -157,6 +199,12 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
             end
             `CP0_Count: begin
                 data_o_internal[read_i] <= cp0_regs_Count;
+            end
+            `CP0_Wired: begin 
+                data_o_internal[read_i] <= {cp0_regs_Wired};
+            end
+            `CP0_Random: begin 
+                data_o_internal[read_i] <= {cp0_regs_Random};
             end
             `CP0_EBase: begin
                 data_o_internal[read_i] <= {2'b10, cp0_regs_EBase[29:12], 12'b0};
@@ -180,10 +228,10 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {cp0_regs_EntryHi[31:13], 5'b0, cp0_regs_EntryHi[7:0]};
             end
             `CP0_EntryLo0: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo0[29:6], 3'b0, cp0_regs_EntryLo0[2:0]};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo0[29:0]};
             end
             `CP0_EntryLo1: begin
-                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:6], 3'b0, cp0_regs_EntryLo1[2:0]};
+                data_o_internal[read_i] <= {2'b0, cp0_regs_EntryLo1[29:0]};
             end
             `CP0_Index: begin
                 data_o_internal[read_i] <= {cp0_regs_Index[31], 27'b0, cp0_regs_Index[3:0]};
@@ -195,7 +243,11 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
                 data_o_internal[read_i] <= {1'b1, 21'b0, 3'b1, 4'b0, cp0_regs_Config[2:0]}; //Release 1
             end
             `CP0_Config1: begin 
-                data_o_internal[read_i] <= {1'b0, 6'd15, 3'd0, 3'd0, 3'd0, 3'd0, 3'd0, 3'd0, 7'd0}; //Cache Size
+            if(!WITH_CACHE)
+                data_o_internal[read_i] <= {1'b0, tlb_entries_minus1, 25'h0};
+            else
+                //Cache Size:                            I:128-64B-direct, D:256-64B-direct
+                data_o_internal[read_i] <= {1'b0, tlb_entries_minus1, 3'd1, 3'd5, 3'd0, 3'd2, 3'd5, 3'd0, 7'd0}; 
             end
             default:
                 data_o_internal[read_i] <= 32'b0;
@@ -205,7 +257,7 @@ for (read_i = 0; read_i < 2; read_i=read_i+1) begin : cp0_read
 end //for
 endgenerate
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
     if (!rst_n) begin
         cp0_regs_Count <= 32'b0;
         cp0_regs_Compare <= 32'b0;
@@ -213,14 +265,28 @@ always @(posedge clk or negedge rst_n) begin
         cp0_regs_EBase <= 32'h80000000;
         cp0_regs_Cause[9:8] <= 2'b0;
         cp0_regs_Cause[23] <= 1'b0;
+        cp0_regs_Random <= tlb_entries_minus1;
+        cp0_regs_Wired <= 32'h0;
         timer_int <= 1'b0;
-		  timer_count <= 2'b0;
+        timer_count <= 'b0;
+        kseg0_uncached <= 1'b0;
     end
     else begin
-        cp0_regs_Count <= cp0_regs_Count+(timer_count[1]&timer_count[0]);
-		  timer_count <= timer_count + 2'b1;
+        cp0_regs_Count <= cp0_regs_Count+1'b1;
+        timer_count <= timer_count + 'b1;
         if(cp0_regs_Compare != 32'b0 && cp0_regs_Compare==cp0_regs_Count)
             timer_int <= 1'b1;
+        // ===== write from WB =====
+        if(en_tlbwr)
+            cp0_regs_Random <= cp0_regs_Random==cp0_regs_Wired ? tlb_entries_minus1 : cp0_regs_Random-1'b1;
+        if(we_probe)
+            cp0_regs_Index <= probe_result;
+        if(we_tlbr)begin 
+            cp0_regs_EntryHi <= tlbr_EntryHi;
+            cp0_regs_EntryLo0 <= tlbr_EntryLo0;
+            cp0_regs_EntryLo1 <= tlbr_EntryLo1;
+        end
+        // ===== write from MM =====
         if(we) begin
             case({wr_addr,wr_sel})
             `CP0_Compare: begin
@@ -229,6 +295,10 @@ always @(posedge clk or negedge rst_n) begin
             end
             `CP0_Count: begin
                 cp0_regs_Count <= data_i;
+            end
+            `CP0_Wired: begin 
+                cp0_regs_Wired <= data_i[$clog2(TLB_ENTRIES)-1:0];
+                cp0_regs_Random <= tlb_entries_minus1;
             end
             `CP0_EBase: begin
                 cp0_regs_EBase[29:12] <= data_i[29:12]; //only bits 29..12 is writable
@@ -252,12 +322,10 @@ always @(posedge clk or negedge rst_n) begin
                 cp0_regs_EntryHi[7:0] <= data_i[7:0];
             end
             `CP0_EntryLo0: begin
-                cp0_regs_EntryLo0[29:6] <= data_i[29:6];
-                cp0_regs_EntryLo0[2:0] <= data_i[2:0];
+                cp0_regs_EntryLo0[29:0] <= data_i[29:0];
             end
             `CP0_EntryLo1: begin
-                cp0_regs_EntryLo1[29:6] <= data_i[29:6];
-                cp0_regs_EntryLo1[2:0] <= data_i[2:0];
+                cp0_regs_EntryLo1[29:0] <= data_i[29:0];
             end
             `CP0_Index: begin
                 cp0_regs_Index[3:0] <= data_i[3:0];
@@ -267,12 +335,11 @@ always @(posedge clk or negedge rst_n) begin
             end
             `CP0_Config: begin 
                 cp0_regs_Config[2:0] <= data_i[2:0];
+                kseg0_uncached <= data_i[2:0]==3'd2;
             end
 
             endcase
         end
-        if(we_probe)
-            cp0_regs_Index <= probe_result;
         if(en_exp_i) begin
             if(exp_badv_we)
                 cp0_regs_BadVAddr <= exp_bad_vaddr;

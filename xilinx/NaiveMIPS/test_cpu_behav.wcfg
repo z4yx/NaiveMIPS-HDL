@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="test_cpu_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="ahblite_axi_bridge_pkg" />
+            <top_module name="emc_pkg" />
+            <top_module name="glbl" />
+            <top_module name="lib_pkg" />
+            <top_module name="test_cpu" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="88893250000fs"></ZoomStartTime>
+      <ZoomEndTime time="89239750001fs"></ZoomEndTime>
+      <Cursor1Time time="89182000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="130"></NameColumnWidth>
+      <ValueColumnWidth column_width="73"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="22" />
+   <wvobject type="logic" fp_name="/test_cpu/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/mips/flush">
+      <obj_property name="ElementShortName">flush</obj_property>
+      <obj_property name="ObjectShortName">flush</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/mips/if_pc">
+      <obj_property name="ElementShortName">if_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">if_pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/ibus_read">
+      <obj_property name="ElementShortName">ibus_read</obj_property>
+      <obj_property name="ObjectShortName">ibus_read</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/ibus_address">
+      <obj_property name="ElementShortName">ibus_address[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ibus_address[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/ibus_rddata">
+      <obj_property name="ElementShortName">ibus_rddata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ibus_rddata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/mips/ibus_stall">
+      <obj_property name="ElementShortName">ibus_stall</obj_property>
+      <obj_property name="ObjectShortName">ibus_stall</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/mips/id_pc_value">
+      <obj_property name="ElementShortName">id_pc_value[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_pc_value[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/mips/id_inst">
+      <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/mips/ex_op">
+      <obj_property name="ElementShortName">ex_op[7:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_op[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/mips/ex_stall">
+      <obj_property name="ElementShortName">ex_stall</obj_property>
+      <obj_property name="ObjectShortName">ex_stall</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/mips/mm_pc_value">
+      <obj_property name="ElementShortName">mm_pc_value[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mm_pc_value[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/mips/mm_exception_detected">
+      <obj_property name="ElementShortName">mm_exception_detected</obj_property>
+      <obj_property name="ObjectShortName">mm_exception_detected</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/dbus_address">
+      <obj_property name="ElementShortName">dbus_address[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dbus_address[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/dbus_wrdata">
+      <obj_property name="ElementShortName">dbus_wrdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dbus_wrdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/dbus_byteenable">
+      <obj_property name="ElementShortName">dbus_byteenable[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dbus_byteenable[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/dbus_write">
+      <obj_property name="ElementShortName">dbus_write</obj_property>
+      <obj_property name="ObjectShortName">dbus_write</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/dbus_dcache_inv_wb">
+      <obj_property name="ElementShortName">dbus_dcache_inv_wb</obj_property>
+      <obj_property name="ObjectShortName">dbus_dcache_inv_wb</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/dbus_read">
+      <obj_property name="ElementShortName">dbus_read</obj_property>
+      <obj_property name="ObjectShortName">dbus_read</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/dbus_rddata">
+      <obj_property name="ElementShortName">dbus_rddata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dbus_rddata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_cpu/dbus_stall">
+      <obj_property name="ElementShortName">dbus_stall</obj_property>
+      <obj_property name="ObjectShortName">dbus_stall</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_cpu/mips/main_regs/registers">
+      <obj_property name="ElementShortName">registers[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">registers[0:31][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+</wave_config>

@@ -2,6 +2,8 @@
 
 import sys
 import os
+import re
+import socket
 import serial
 import struct
 import time
@@ -18,6 +20,7 @@ SERIAL_DELAY = 0.00001
 SERIAL_DEVICE = ""
 FLASH_BASE = 0xbe000000
 USB_BASE = 0xbc020000
+ETH_BASE = 0xbc020100
 FLASH_BLKSIZE = 128*1024
 FLASH_SIZE = 64*FLASH_BLKSIZE
 RAM_SIZE = 0x800000
@@ -36,6 +39,41 @@ class ProgressPH(object):
         pass
     def __enter__(self, *args, **kwds):
         return type(self).fake_tqdm()
+
+class tcp_wrapper:
+
+    def __init__(self, sock=None):
+        if sock is None:
+            self.sock = socket.socket(
+                socket.AF_INET, socket.SOCK_STREAM)
+        else:
+            self.sock = sock
+
+    def connect(self, host, port):
+        self.sock.connect((host, port))
+
+    def write(self, msg):
+        totalsent = 0
+        MSGLEN = len(msg)
+        while totalsent < MSGLEN:
+            sent = self.sock.send(msg[totalsent:])
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            totalsent = totalsent + sent
+
+    def flush(sel): # dummy
+        pass
+
+    def read(self, MSGLEN):
+        chunks = []
+        bytes_recd = 0
+        while bytes_recd < MSGLEN:
+            chunk = self.sock.recv(min(MSGLEN - bytes_recd, 2048))
+            if chunk == '':
+                raise RuntimeError("socket connection broken")
+            chunks.append(chunk)
+            bytes_recd = bytes_recd + len(chunk)
+        return ''.join(chunks)
 
 def write_uart(buf):
     for b in buf:
@@ -138,8 +176,10 @@ def uart_loopback_test():
             print "read data timed out"
             raise IOError
             return
-        for i in xrange(4):
-            assert recv[i] == sent[i]
+        for i in xrange(len(recv)):
+            if recv[i] != sent[i]:
+                print "%s(recv) != %s(sent)" % (binascii.hexlify(recv), binascii.hexlify(sent))
+                break
 
 def ram_test():
 
@@ -240,11 +280,28 @@ def usb_test():
     buf = read_ram(USB_BASE, 4)
     print "Rev: %s" % binascii.hexlify(buf[0:2])
 
+def eth_test():
+    write_ram(ETH_BASE, "\x28\x00\x00\x00")
+    buf1 = read_ram(ETH_BASE+4, 4)
+    write_ram(ETH_BASE, "\x29\x00\x00\x00")
+    buf2 = read_ram(ETH_BASE+4, 4)
+    write_ram(ETH_BASE, "\x2a\x00\x00\x00")
+    buf3 = read_ram(ETH_BASE+4, 4)
+    write_ram(ETH_BASE, "\x2b\x00\x00\x00")
+    buf4 = read_ram(ETH_BASE+4, 4)
+    print "VID: %s%s" % (binascii.hexlify(buf2[0]),binascii.hexlify(buf1[0]))
+    print "PID: %s%s" % (binascii.hexlify(buf4[0]),binascii.hexlify(buf3[0]))
+
 def flash_test():
 
     write_ram(FLASH_BASE, "\x90\x00\x90\x00")
     buf = read_ram(FLASH_BASE, 4)
     print "Manufacture code: %s" % binascii.hexlify(buf[0])
+    print "Device code: %s" % binascii.hexlify(buf[2])
+    buf = read_ram(FLASH_BASE+0x100, 20)
+    print "OTP Protection Register: %s" % binascii.hexlify(buf[0])
+    print "Unique ID: %s" % binascii.hexlify(buf[2:2+8])
+    print "User Area: %s" % binascii.hexlify(buf[10:10+8])
 
     # !!! clear lock bits !!!
     write_ram(FLASH_BASE, "\x60\x00\x60\x00")
@@ -290,7 +347,7 @@ def load_elf_and_run(f):
         if segment['p_filesz']==0 or segment['p_vaddr']==0:
             print "Skipped"
             continue
-        write_ram(segment['p_vaddr'], segment.data(), True)
+        write_ram(0xa0000000|segment['p_vaddr'], segment.data(), True)
 
     print "Entry: 0x%x" % elffile['e_entry']
     go_ram(elffile['e_entry'])
@@ -300,24 +357,27 @@ def start_terminal():
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
     new = termios.tcgetattr(fd)
-    new[3] = new[3] & ~termios.ICANON & ~termios.ECHO
-    new[6][termios.VMIN] = 1
+    new[3] = new[3] & ~termios.ICANON & ~termios.ECHO & ~termios.ISIG & ~termios.IEXTEN
+    new[6][termios.VMIN] = 0
     new[6][termios.VTIME] = 0
     try:
         # tty.setraw(fd)
         termios.tcsetattr(fd, termios.TCSADRAIN, new)
+        print "Terminal enabled, press Ctrl+] to quit"
         slt_list = [sys.stdin, ser]
         while True:
             ready = select.select(slt_list, [], [])[0]
             for f in ready:
-                recv = f.read(1)
+                recv = f.read()
                 if f.fileno()==fd:
+                    # print binascii.hexlify(recv)
+                    assert ord(recv[0]) != 0x1d
                     write_uart(recv)
                 else:
                     sys.stdout.write(recv)
                     sys.stdout.flush()
     except Exception, e:
-        raise e
+        print "Closing terminal..."
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
@@ -408,8 +468,23 @@ if __name__ == "__main__":
         print 'Please specify serial port!'
         sys.exit(1)
 
+    ValidIpAddressRegex = re.compile("^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])):(\d+)$");
+    ValidHostnameRegex = re.compile("^((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])):(\d+)$");
     global ser
-    ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
+    if ValidIpAddressRegex.search(SERIAL_DEVICE) is not None or \
+        ValidHostnameRegex.search(SERIAL_DEVICE) is not None:
+
+        match = ValidIpAddressRegex.search(SERIAL_DEVICE) or ValidHostnameRegex.search(SERIAL_DEVICE)
+        groups = match.groups()
+        ser = tcp_wrapper()
+        host, port = groups[0], groups[4]
+        print "connecting to %s:%s..." % (host, port) ,
+        ser.connect(host, int(port))
+        print "connected"
+    else:
+        ser = serial.Serial(SERIAL_DEVICE, baud, timeout=1)
+        ser.flushOutput()
+        ser.flushInput()
 
     if tests:
         if tests == 'uart':
@@ -420,6 +495,8 @@ if __name__ == "__main__":
             flash_test()
         elif tests == 'usb':
             usb_test()
+        elif tests == 'eth':
+            eth_test()
         else:
             print "Unknown test: '%s'" % tests
             sys.exit(1)

@@ -1,10 +1,11 @@
 `default_nettype none
 module tlb(
-  input wire[83:0] tlbConfig,
+  input wire[89:0] tlbConfig,
   input wire tlbwi,
   input wire tlbp,
 
   output wire[31:0] tlbp_result,
+  output wire[85:0] tlbr_result,
 
   input wire[31:0] dataAddrVirt,
   input wire[31:0] insAddrVirt,
@@ -17,6 +18,9 @@ module tlb(
   output wire insDirt,
   output wire insValid,
   output wire dataValid,
+  
+  output wire dataBypassCache,
+  output wire insBypassCache,
 
   output wire[31:0] dataAddrPhy,
   output wire[31:0] insAddrPhy,
@@ -36,8 +40,12 @@ wire tlbEntryV1;
 wire[3:0] tlbEntryIndex;
 wire[7:0] tlbEntryASID;
 wire tlbEntryG;
+wire[2:0] tlbEntryC0;
+wire[2:0] tlbEntryC1;
 
 assign {
+  tlbEntryC0,   //[85:83]
+  tlbEntryC1,   //[82:80]
   tlbEntryASID, //[79:72]
   tlbEntryG,    //71
   tlbEntryVpn2, //[70:52]
@@ -48,7 +56,9 @@ assign {
   tlbEntryIndex
 } = tlbConfig;//refer to cp0.v
 
-reg[79:0] tlbEntries[0:15];
+(* MAX_FANOUT = 50 *) reg[85:0] tlbEntries[0:15];
+
+assign tlbr_result = tlbEntries[tlbEntryIndex];
 
 tlbConverter conv4inst(
 
@@ -77,7 +87,8 @@ tlbConverter conv4inst(
   .nowASID(nowASID),
   .matchWhich(),
   .valid(insValid),
-  .dirt(insDirt)
+  .dirt(insDirt),
+  .bypassCache(insBypassCache)
 );
 
 tlbConverter conv4data(
@@ -107,7 +118,8 @@ tlbConverter conv4data(
   .nowASID(nowASID),
   .matchWhich(),
   .valid(dataValid),
-  .dirt(dataDirt)
+  .dirt(dataDirt),
+  .bypassCache(dataBypassCache)
 );
 
 tlbConverter prober(
@@ -137,10 +149,11 @@ tlbConverter prober(
   .nowASID(nowASID),
   .matchWhich(tlbp_result[3:0]),
   .valid(),
-  .dirt()
+  .dirt(),
+  .bypassCache()
 );
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk) begin
 
   if (rst_n == 0) begin :label
     integer i;
@@ -149,7 +162,7 @@ always @(posedge clk or negedge rst_n) begin
     end
   end else begin
     if (tlbwi) begin
-      tlbEntries[tlbEntryIndex] [79:0] <= tlbConfig[83:4];
+      tlbEntries[tlbEntryIndex] [85:0] <= tlbConfig[89:4];
     end
   end
 end

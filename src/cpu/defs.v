@@ -65,6 +65,8 @@
 `define OP_SYNC 8'd59
 `define OP_PREF 8'd60
 `define OP_BREAK 8'd61
+`define OP_TLBWR 8'd62
+`define OP_TLBR 8'd63
 
 `define OP_INVAILD 8'hff
 
