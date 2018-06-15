@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Fri Jul 21 08:42:55 2017" VIVADOVERSION="2016.4">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Fri Jun 15 16:37:49 2018" VIVADOVERSION="2017.3">
 
   <SYSTEMINFO ARCH="kintex7" DEVICE="7k160t" NAME="bd_qspi" PACKAGE="ffg676" SPEEDGRADE="-2"/>
 
@@ -49,15 +49,15 @@
     <PORT CLKFREQUENCY="100000000" DIR="I" NAME="axi_clk" SIGIS="clk" SIGNAME="External_Ports_axi_clk">
       <CONNECTIONS>
         <CONNECTION INSTANCE="axi_clock_converter_0" PORT="m_axi_aclk"/>
-        <CONNECTION INSTANCE="axi_quad_spi_0" PORT="s_axi4_aclk"/>
         <CONNECTION INSTANCE="axi_quad_spi_0" PORT="s_axi_aclk"/>
+        <CONNECTION INSTANCE="axi_quad_spi_0" PORT="s_axi4_aclk"/>
       </CONNECTIONS>
     </PORT>
     <PORT DIR="I" NAME="axi_clk_rstn" SIGIS="rst" SIGNAME="External_Ports_axi_clk_rstn">
       <CONNECTIONS>
         <CONNECTION INSTANCE="axi_clock_converter_0" PORT="m_axi_aresetn"/>
-        <CONNECTION INSTANCE="axi_quad_spi_0" PORT="s_axi4_aresetn"/>
         <CONNECTION INSTANCE="axi_quad_spi_0" PORT="s_axi_aresetn"/>
+        <CONNECTION INSTANCE="axi_quad_spi_0" PORT="s_axi4_aresetn"/>
       </CONNECTIONS>
     </PORT>
   </EXTERNALPORTS>
@@ -335,7 +335,7 @@
           <PARAMETER NAME="NUM_READ_OUTSTANDING" VALUE="2"/>
           <PARAMETER NAME="NUM_WRITE_OUTSTANDING" VALUE="2"/>
           <PARAMETER NAME="PHASE" VALUE="0.000"/>
-          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_s_ahb_hclk"/>
+          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_clk_bus"/>
           <PARAMETER NAME="NUM_READ_THREADS" VALUE="1"/>
           <PARAMETER NAME="NUM_WRITE_THREADS" VALUE="1"/>
           <PARAMETER NAME="RUSER_BITS_PER_BYTE" VALUE="0"/>
@@ -799,7 +799,7 @@
           <PARAMETER NAME="NUM_WRITE_OUTSTANDING" VALUE="2"/>
           <PARAMETER NAME="MAX_BURST_LENGTH" VALUE="16"/>
           <PARAMETER NAME="PHASE" VALUE="0.000"/>
-          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_s_ahb_hclk"/>
+          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_clk_bus"/>
           <PARAMETER NAME="NUM_READ_THREADS" VALUE="1"/>
           <PARAMETER NAME="NUM_WRITE_THREADS" VALUE="1"/>
           <PARAMETER NAME="RUSER_BITS_PER_BYTE" VALUE="0"/>
@@ -868,7 +868,7 @@
           <PARAMETER NAME="NUM_WRITE_OUTSTANDING" VALUE="2"/>
           <PARAMETER NAME="MAX_BURST_LENGTH" VALUE="16"/>
           <PARAMETER NAME="PHASE" VALUE="0.000"/>
-          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_m_axi_aclk"/>
+          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_axi_clk"/>
           <PARAMETER NAME="NUM_READ_THREADS" VALUE="1"/>
           <PARAMETER NAME="NUM_WRITE_THREADS" VALUE="1"/>
           <PARAMETER NAME="RUSER_BITS_PER_BYTE" VALUE="0"/>
@@ -1217,7 +1217,7 @@
           <PARAMETER NAME="NUM_WRITE_OUTSTANDING" VALUE="1"/>
           <PARAMETER NAME="MAX_BURST_LENGTH" VALUE="1"/>
           <PARAMETER NAME="PHASE" VALUE="0.000"/>
-          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_m_axi_aclk"/>
+          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_axi_clk"/>
           <PARAMETER NAME="NUM_READ_THREADS" VALUE="1"/>
           <PARAMETER NAME="NUM_WRITE_THREADS" VALUE="1"/>
           <PARAMETER NAME="RUSER_BITS_PER_BYTE" VALUE="0"/>
@@ -1268,7 +1268,7 @@
           <PARAMETER NAME="NUM_WRITE_OUTSTANDING" VALUE="2"/>
           <PARAMETER NAME="MAX_BURST_LENGTH" VALUE="256"/>
           <PARAMETER NAME="PHASE" VALUE="0.000"/>
-          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_m_axi_aclk"/>
+          <PARAMETER NAME="CLK_DOMAIN" VALUE="bd_qspi_axi_clk"/>
           <PARAMETER NAME="NUM_READ_THREADS" VALUE="1"/>
           <PARAMETER NAME="NUM_WRITE_THREADS" VALUE="1"/>
           <PARAMETER NAME="RUSER_BITS_PER_BYTE" VALUE="0"/>

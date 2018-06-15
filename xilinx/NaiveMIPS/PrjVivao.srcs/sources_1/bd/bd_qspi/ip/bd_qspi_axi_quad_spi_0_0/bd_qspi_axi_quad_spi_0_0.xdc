@@ -46,10 +46,6 @@
 # PART OF THIS FILE AT ALL TIMES.
 set_false_path -to [get_pins -hier *cdc_to*/D]
 set_false_path -to [get_pins -hierarchical -filter {NAME =~*RESET_SYNC_AXI_SPI_CLK_INST/RESET_SYNC_AX2S_1/D}]
-# Set false path on the reset synchronizers
-set_false_path -from [get_cells -hierarchical -filter {NAME =~*_FIFO_II/USE_2N_DEPTH.V6_S6_AND_LATER.I_ASYNC_FIFO_BRAM/*rstblk*/*rst_reg_reg[*]}]
-set_false_path -to [get_pins -hierarchical -filter {NAME =~*_FIFO_II/USE_2N_DEPTH.V6_S6_AND_LATER.I_ASYNC_FIFO_BRAM/*rstblk*/*PRE}]
-##set_false_path -to [get_pins -hierarchical -filter {NAME =~*/*rstblk*/*CLR}]
 
 ## IOB constraints ######
 set_property IOB true [get_cells -hierarchical -filter {NAME =~*IO*_I_REG}]

@@ -44,13 +44,14 @@
 # 
 # THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS
 # PART OF THIS FILE AT ALL TIMES.
+
+
+
 		set clk_domain_axi_full [get_clocks -of_objects [get_ports s_axi4_aclk]]
 		set clk_domain_ext_spi_clk [get_clocks -of_objects [get_ports ext_spi_clk]]
 
 # Set max delay on cross clock domain path for Block/Distributed RAM based FIFO
-        set_false_path -from [filter [all_fanout -from [get_ports ext_spi_clk] -flat -endpoints_only] {IS_LEAF}] -to [get_cells -hierarchical -filter {NAME =~*XIP_RECEIVE_FIFO_II/USE_2N_DEPTH.V6_S6_AND_LATER.I_ASYNC_FIFO_BRAM/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gdm.dm*/gpr1.dout_i_reg[*]}]
-        set_max_delay -from [get_cells -hierarchical -filter {NAME =~*XIP_RECEIVE_FIFO_II/USE_2N_DEPTH.V6_S6_AND_LATER.I_ASYNC_FIFO_BRAM/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gcx.clkx/*rd_pntr_gc_reg[*]}] -to [get_cells -hierarchical -filter {NAME =~*XIP_RECEIVE_FIFO_II/USE_2N_DEPTH.V6_S6_AND_LATER.I_ASYNC_FIFO_BRAM/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gcx.clkx/*gsync_stage[1].wr_stg_inst/Q_reg_reg[*]}] -datapath_only [get_property -min PERIOD $clk_domain_axi_full]
-        set_max_delay -from [get_cells -hierarchical -filter {NAME =~*XIP_RECEIVE_FIFO_II/USE_2N_DEPTH.V6_S6_AND_LATER.I_ASYNC_FIFO_BRAM/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gcx.clkx/*wr_pntr_gc_reg[*]}] -to [get_cells -hierarchical -filter {NAME =~*XIP_RECEIVE_FIFO_II/USE_2N_DEPTH.V6_S6_AND_LATER.I_ASYNC_FIFO_BRAM/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.gcx.clkx/*gsync_stage[1].rd_stg_inst/Q_reg_reg[*]}] -datapath_only [get_property -min PERIOD $clk_domain_ext_spi_clk]
+        set_false_path -from [filter [all_fanout -from [get_ports ext_spi_clk] -flat -endpoints_only] {IS_LEAF}] -to [get_cells -hierarchical -filter {NAME =~*XIP_RECEIVE_FIFO_II/*.I_ASYNC_FIFO_BRAM/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gdm.dm*/gpr1.dout_i_reg*}]
 	
 	
 

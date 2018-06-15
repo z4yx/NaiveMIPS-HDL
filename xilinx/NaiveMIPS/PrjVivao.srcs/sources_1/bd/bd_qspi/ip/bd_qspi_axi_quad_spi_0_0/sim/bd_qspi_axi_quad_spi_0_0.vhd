@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2018 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -47,14 +47,14 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:axi_quad_spi:3.2
--- IP Revision: 10
+-- IP Revision: 13
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-LIBRARY axi_quad_spi_v3_2_10;
-USE axi_quad_spi_v3_2_10.axi_quad_spi;
+LIBRARY axi_quad_spi_v3_2_13;
+USE axi_quad_spi_v3_2_13.axi_quad_spi;
 
 ENTITY bd_qspi_axi_quad_spi_0_0 IS
   PORT (
@@ -269,73 +269,83 @@ ARCHITECTURE bd_qspi_axi_quad_spi_0_0_arch OF bd_qspi_axi_quad_spi_0_0 IS
     );
   END COMPONENT axi_quad_spi;
   ATTRIBUTE X_INTERFACE_INFO : STRING;
-  ATTRIBUTE X_INTERFACE_INFO OF ext_spi_clk: SIGNAL IS "xilinx.com:signal:clock:1.0 spi_clk CLK";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_aclk: SIGNAL IS "xilinx.com:signal:clock:1.0 lite_clk CLK";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_aresetn: SIGNAL IS "xilinx.com:signal:reset:1.0 lite_reset RST";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_aclk: SIGNAL IS "xilinx.com:signal:clock:1.0 full_clk CLK";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_aresetn: SIGNAL IS "xilinx.com:signal:reset:1.0 full_reset RST";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_awaddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE AWADDR";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_awvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE AWVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_awready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE AWREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WDATA";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wstrb: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WSTRB";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_bresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE BRESP";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_bvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE BVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_bready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE BREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_araddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE ARADDR";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_arvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE ARVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_arready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE ARREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RDATA";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RRESP";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awaddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWADDR";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awlen: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWLEN";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awsize: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWSIZE";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awburst: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWBURST";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awlock: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWLOCK";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awcache: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWCACHE";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awprot: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWPROT";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WDATA";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wstrb: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WSTRB";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wlast: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WLAST";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_bresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL BRESP";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_bvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL BVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_bready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL BREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_araddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARADDR";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arlen: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARLEN";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arsize: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARSIZE";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arburst: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARBURST";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arlock: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARLOCK";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arcache: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARCACHE";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arprot: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARPROT";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RDATA";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RRESP";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rlast: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RLAST";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RVALID";
-  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RREADY";
-  ATTRIBUTE X_INTERFACE_INFO OF io0_i: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO0_I";
-  ATTRIBUTE X_INTERFACE_INFO OF io0_o: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO0_O";
-  ATTRIBUTE X_INTERFACE_INFO OF io0_t: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO0_T";
-  ATTRIBUTE X_INTERFACE_INFO OF io1_i: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO1_I";
-  ATTRIBUTE X_INTERFACE_INFO OF io1_o: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO1_O";
-  ATTRIBUTE X_INTERFACE_INFO OF io1_t: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO1_T";
-  ATTRIBUTE X_INTERFACE_INFO OF ss_i: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 SS_I";
-  ATTRIBUTE X_INTERFACE_INFO OF ss_o: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 SS_O";
-  ATTRIBUTE X_INTERFACE_INFO OF ss_t: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 SS_T";
-  ATTRIBUTE X_INTERFACE_INFO OF cfgclk: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO cfgclk";
-  ATTRIBUTE X_INTERFACE_INFO OF cfgmclk: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO cfgmclk";
-  ATTRIBUTE X_INTERFACE_INFO OF eos: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO eos";
-  ATTRIBUTE X_INTERFACE_INFO OF preq: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO preq";
+  ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
+  ATTRIBUTE X_INTERFACE_PARAMETER OF ip2intc_irpt: SIGNAL IS "XIL_INTERFACENAME interrupt, SENSITIVITY EDGE_RISING, PortWidth 1";
   ATTRIBUTE X_INTERFACE_INFO OF ip2intc_irpt: SIGNAL IS "xilinx.com:signal:interrupt:1.0 interrupt INTERRUPT";
+  ATTRIBUTE X_INTERFACE_INFO OF preq: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO preq";
+  ATTRIBUTE X_INTERFACE_INFO OF eos: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO eos";
+  ATTRIBUTE X_INTERFACE_INFO OF cfgmclk: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO cfgmclk";
+  ATTRIBUTE X_INTERFACE_INFO OF cfgclk: SIGNAL IS "xilinx.com:display_startup_io:startup_io:1.0 STARTUP_IO cfgclk";
+  ATTRIBUTE X_INTERFACE_INFO OF ss_t: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 SS_T";
+  ATTRIBUTE X_INTERFACE_INFO OF ss_o: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 SS_O";
+  ATTRIBUTE X_INTERFACE_INFO OF ss_i: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 SS_I";
+  ATTRIBUTE X_INTERFACE_INFO OF io1_t: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO1_T";
+  ATTRIBUTE X_INTERFACE_INFO OF io1_o: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO1_O";
+  ATTRIBUTE X_INTERFACE_INFO OF io1_i: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO1_I";
+  ATTRIBUTE X_INTERFACE_INFO OF io0_t: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO0_T";
+  ATTRIBUTE X_INTERFACE_INFO OF io0_o: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO0_O";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF io0_i: SIGNAL IS "XIL_INTERFACENAME SPI_0, BOARD.ASSOCIATED_PARAM QSPI_BOARD_INTERFACE";
+  ATTRIBUTE X_INTERFACE_INFO OF io0_i: SIGNAL IS "xilinx.com:interface:spi:1.0 SPI_0 IO0_I";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rlast: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RLAST";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RRESP";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_rdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL RDATA";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arprot: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARPROT";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arcache: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARCACHE";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arlock: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARLOCK";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arburst: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARBURST";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arsize: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARSIZE";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_arlen: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARLEN";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_araddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL ARADDR";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_bready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL BREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_bvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL BVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_bresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL BRESP";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wlast: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WLAST";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wstrb: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WSTRB";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_wdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL WDATA";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awprot: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWPROT";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awcache: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWCACHE";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awlock: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWLOCK";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awburst: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWBURST";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awsize: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWSIZE";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awlen: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWLEN";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF s_axi4_awaddr: SIGNAL IS "XIL_INTERFACENAME AXI_FULL, DATA_WIDTH 32, PROTOCOL AXI4, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 24, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 1, HAS_LOCK 1, HAS_PROT 1, HAS_CACHE 1, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 2, NUM_WRITE_OUTSTANDING 2, MAX_BURST_LENGTH 256, PHASE 0.000, CLK_DOMAIN bd_qspi_axi_clk, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSER_BITS_PER_BYTE 0, WUSER_BITS_PER_BYTE 0";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_awaddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_FULL AWADDR";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RRESP";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_rdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE RDATA";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_arready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE ARREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_arvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE ARVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_araddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE ARADDR";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_bready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE BREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_bvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE BVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_bresp: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE BRESP";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wstrb: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WSTRB";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_wdata: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE WDATA";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_awready: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE AWREADY";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_awvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE AWVALID";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF s_axi_awaddr: SIGNAL IS "XIL_INTERFACENAME AXI_LITE, DATA_WIDTH 32, PROTOCOL AXI4LITE, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 7, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 0, HAS_PROT 0, HAS_CACHE 0, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 1, NUM_WRITE_OUTSTANDING 1, MAX_BURST_LENGTH 1, PHASE 0.000, CLK_DOMAIN bd_qspi_axi_clk, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSER_BITS_PER_BYTE 0, WUSER_BITS_PER_BYTE 0";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_awaddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 AXI_LITE AWADDR";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF s_axi4_aresetn: SIGNAL IS "XIL_INTERFACENAME full_reset, POLARITY ACTIVE_LOW";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_aresetn: SIGNAL IS "xilinx.com:signal:reset:1.0 full_reset RST";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF s_axi4_aclk: SIGNAL IS "XIL_INTERFACENAME full_clk, ASSOCIATED_BUSIF AXI_FULL, ASSOCIATED_RESET s_axi4_aresetn, FREQ_HZ 100000000, PHASE 0.000, CLK_DOMAIN bd_qspi_axi_clk";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi4_aclk: SIGNAL IS "xilinx.com:signal:clock:1.0 full_clk CLK";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF s_axi_aresetn: SIGNAL IS "XIL_INTERFACENAME lite_reset, POLARITY ACTIVE_LOW";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_aresetn: SIGNAL IS "xilinx.com:signal:reset:1.0 lite_reset RST";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF s_axi_aclk: SIGNAL IS "XIL_INTERFACENAME lite_clk, ASSOCIATED_BUSIF AXI_LITE, ASSOCIATED_RESET s_axi_aresetn, FREQ_HZ 100000000, PHASE 0.000, CLK_DOMAIN bd_qspi_axi_clk";
+  ATTRIBUTE X_INTERFACE_INFO OF s_axi_aclk: SIGNAL IS "xilinx.com:signal:clock:1.0 lite_clk CLK";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF ext_spi_clk: SIGNAL IS "XIL_INTERFACENAME spi_clk, ASSOCIATED_BUSIF SPI_0, FREQ_HZ 40000000, PHASE 0.000, CLK_DOMAIN bd_qspi_ext_spi_clk";
+  ATTRIBUTE X_INTERFACE_INFO OF ext_spi_clk: SIGNAL IS "xilinx.com:signal:clock:1.0 spi_clk CLK";
 BEGIN
   U0 : axi_quad_spi
     GENERIC MAP (

@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2016.4
+set scripts_vivado_version 2017.3
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -48,6 +48,7 @@ if { $list_projs eq "" } {
 
 
 # CHANGE DESIGN NAME HERE
+variable design_name
 set design_name bd_qspi
 
 # If you do not already have an existing IP Integrator design open,
@@ -126,6 +127,7 @@ if { $nRet != 0 } {
 proc create_root_design { parentCell } {
 
   variable script_folder
+  variable design_name
 
   if { $parentCell eq "" } {
      set parentCell [get_bd_cells /]
@@ -160,23 +162,23 @@ proc create_root_design { parentCell } {
   # Create ports
   set axi_clk [ create_bd_port -dir I -type clk axi_clk ]
   set_property -dict [ list \
-CONFIG.FREQ_HZ {100000000} \
+   CONFIG.FREQ_HZ {100000000} \
  ] $axi_clk
   set axi_clk_rstn [ create_bd_port -dir I -type rst axi_clk_rstn ]
   set clk_bus [ create_bd_port -dir I -type clk clk_bus ]
   set_property -dict [ list \
-CONFIG.FREQ_HZ {8000000} \
+   CONFIG.FREQ_HZ {8000000} \
  ] $clk_bus
   set ext_spi_clk [ create_bd_port -dir I -type clk ext_spi_clk ]
   set_property -dict [ list \
-CONFIG.FREQ_HZ {40000000} \
+   CONFIG.FREQ_HZ {40000000} \
  ] $ext_spi_clk
   set rst_n [ create_bd_port -dir I -type rst rst_n ]
 
   # Create instance: ahblite_axi_bridge_0, and set properties
   set ahblite_axi_bridge_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:ahblite_axi_bridge:3.0 ahblite_axi_bridge_0 ]
   set_property -dict [ list \
-CONFIG.C_M_AXI_THREAD_ID_WIDTH {0} \
+   CONFIG.C_M_AXI_THREAD_ID_WIDTH {0} \
  ] $ahblite_axi_bridge_0
 
   # Create instance: axi_clock_converter_0, and set properties
@@ -185,11 +187,11 @@ CONFIG.C_M_AXI_THREAD_ID_WIDTH {0} \
   # Create instance: axi_quad_spi_0, and set properties
   set axi_quad_spi_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_quad_spi:3.2 axi_quad_spi_0 ]
   set_property -dict [ list \
-CONFIG.C_SCK_RATIO {2} \
-CONFIG.C_SHARED_STARTUP {0} \
-CONFIG.C_SPI_MEMORY {3} \
-CONFIG.C_TYPE_OF_AXI4_INTERFACE {1} \
-CONFIG.C_XIP_MODE {1} \
+   CONFIG.C_SCK_RATIO {2} \
+   CONFIG.C_SHARED_STARTUP {0} \
+   CONFIG.C_SPI_MEMORY {3} \
+   CONFIG.C_TYPE_OF_AXI4_INTERFACE {1} \
+   CONFIG.C_XIP_MODE {1} \
  ] $axi_quad_spi_0
 
   # Create interface connections
@@ -209,34 +211,6 @@ CONFIG.C_XIP_MODE {1} \
   # Create address segments
   create_bd_addr_seg -range 0x01000000 -offset 0x00000000 [get_bd_addr_spaces AHB] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0] SEG_axi_quad_spi_0_MEM0
 
-  # Perform GUI Layout
-  regenerate_bd_layout -layout_string {
-   guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
-#  -string -flagsOSRD
-preplace port AHB -pg 1 -y 40 -defaultsOSRD
-preplace port axi_clk_rstn -pg 1 -y 160 -defaultsOSRD
-preplace port ext_spi_clk -pg 1 -y 210 -defaultsOSRD
-preplace port STARTUP_IO -pg 1 -y 140 -defaultsOSRD
-preplace port clk_bus -pg 1 -y 60 -defaultsOSRD
-preplace port SPI_0 -pg 1 -y 120 -defaultsOSRD
-preplace port axi_clk -pg 1 -y 190 -defaultsOSRD
-preplace port rst_n -pg 1 -y 80 -defaultsOSRD
-preplace inst axi_clock_converter_0 -pg 1 -lvl 2 -y 100 -defaultsOSRD
-preplace inst ahblite_axi_bridge_0 -pg 1 -lvl 1 -y 60 -defaultsOSRD
-preplace inst axi_quad_spi_0 -pg 1 -lvl 3 -y 140 -defaultsOSRD
-preplace netloc axi_quad_spi_0_SPI_0 1 3 1 NJ
-preplace netloc s_ahb_hresetn_1 1 0 2 20 140 260J
-preplace netloc axi_quad_spi_0_STARTUP_IO 1 3 1 NJ
-preplace netloc AHB_INTERFACE_1 1 0 1 NJ
-preplace netloc s_ahb_hclk_1 1 0 2 30 130 250J
-preplace netloc m_axi_aresetn_1 1 0 3 NJ 160 280 200 580
-preplace netloc ahblite_axi_bridge_0_M_AXI 1 1 1 N
-preplace netloc axi_clock_converter_0_M_AXI 1 2 1 N
-preplace netloc m_axi_aclk_1 1 0 3 NJ 190 270 190 570
-preplace netloc ext_spi_clk_1 1 0 3 NJ 210 NJ 210 560J
-levelinfo -pg 1 0 140 420 700 840 -top 0 -bot 240
-",
-}
 
   # Restore current instance
   current_bd_instance $oldCurInst

@@ -1,10 +1,10 @@
--- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2016.4 (win64) Build 1756540 Mon Jan 23 19:11:23 MST 2017
--- Date        : Fri Jul 21 08:43:37 2017
--- Host        : DESKTOP-N4A9BEN running 64-bit major release  (build 9200)
+-- Tool Version: Vivado v.2017.3 (lin64) Build 2018833 Wed Oct  4 19:58:07 MDT 2017
+-- Date        : Fri Jun 15 16:38:51 2018
+-- Host        : nuc6i7 running 64-bit Ubuntu 18.04 LTS
 -- Command     : write_vhdl -force -mode funcsim
---               C:/Users/zz/Documents/NaiveMIPS-HDL-ees/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_qspi/ip/bd_qspi_ahblite_axi_bridge_0_0/bd_qspi_ahblite_axi_bridge_0_0_sim_netlist.vhdl
+--               /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/bd_qspi/ip/bd_qspi_ahblite_axi_bridge_0_0/bd_qspi_ahblite_axi_bridge_0_0_sim_netlist.vhdl
 -- Design      : bd_qspi_ahblite_axi_bridge_0_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -16,45 +16,43 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity bd_qspi_ahblite_axi_bridge_0_0_ahb_if is
   port (
+    m_axi_arprot : out STD_LOGIC_VECTOR ( 2 downto 0 );
+    SR : out STD_LOGIC_VECTOR ( 0 to 0 );
+    AXI_ALEN_i0 : out STD_LOGIC;
     idle_txfer_pending : out STD_LOGIC;
     ahb_hburst_single : out STD_LOGIC;
-    SR : out STD_LOGIC_VECTOR ( 0 to 0 );
     ahb_penult_beat_reg_0 : out STD_LOGIC;
     ahb_done_axi_in_progress : out STD_LOGIC;
+    ahb_hburst_incr : out STD_LOGIC;
     nonseq_txfer_pending : out STD_LOGIC;
     s_ahb_hready_out : out STD_LOGIC;
     s_ahb_hresp : out STD_LOGIC;
     burst_term_hwrite : out STD_LOGIC;
     burst_term_single_incr : out STD_LOGIC;
     burst_term : out STD_LOGIC;
+    dummy_txfer_in_progress_reg_0 : out STD_LOGIC;
     ahb_data_valid : out STD_LOGIC;
-    set_axi_waddr : out STD_LOGIC;
-    ctl_sm_ns14_out : out STD_LOGIC;
-    ctl_sm_ns132_out : out STD_LOGIC;
-    AXI_ALEN_i0 : out STD_LOGIC;
     S_AHB_HRESP_i_reg_0 : out STD_LOGIC;
+    ctl_sm_ns14_out : out STD_LOGIC;
+    S_AHB_HREADY_OUT_i_reg_0 : out STD_LOGIC;
+    S_AHB_HREADY_OUT_i_reg_1 : out STD_LOGIC;
+    ahb_wnr_i_reg : out STD_LOGIC;
+    M_AXI_ARVALID_i_reg : out STD_LOGIC;
+    \FSM_sequential_ctl_sm_cs_reg[1]\ : out STD_LOGIC;
     nonseq_detected : out STD_LOGIC;
     \FSM_sequential_ctl_sm_cs_reg[2]\ : out STD_LOGIC;
-    \FSM_sequential_ctl_sm_cs_reg[2]_0\ : out STD_LOGIC;
     S_AHB_HREADY_OUT_i116_out : out STD_LOGIC;
     ahb_burst_done : out STD_LOGIC;
-    \FSM_sequential_ctl_sm_cs_reg[0]\ : out STD_LOGIC;
-    idle_txfer_pending_reg_0 : out STD_LOGIC;
-    S_AHB_HREADY_OUT_i_reg_0 : out STD_LOGIC;
+    p_27_in : out STD_LOGIC;
     reset_hready010_out : out STD_LOGIC;
     M_AXI_WLAST_i110_out : out STD_LOGIC;
-    \reset_hready2__0\ : out STD_LOGIC;
+    busy_detected : out STD_LOGIC;
     E : out STD_LOGIC_VECTOR ( 0 to 0 );
-    p_27_in : out STD_LOGIC;
-    \M_AXI_WVALID_i3__0\ : out STD_LOGIC;
     dummy_on_axi_progress_reg : out STD_LOGIC;
     Q : out STD_LOGIC_VECTOR ( 4 downto 0 );
     eqOp6_out : out STD_LOGIC;
-    S_AHB_HREADY_OUT_i_reg_1 : out STD_LOGIC;
     ahb_data_valid_burst_term_reg : out STD_LOGIC;
-    D : out STD_LOGIC_VECTOR ( 0 to 0 );
-    M_AXI_AWVALID_i_reg : out STD_LOGIC;
-    M_AXI_ARVALID_i_reg : out STD_LOGIC;
+    S_AHB_HREADY_OUT_i_reg_2 : out STD_LOGIC;
     valid_cnt_required : out STD_LOGIC_VECTOR ( 2 downto 0 );
     s_ahb_hrdata : out STD_LOGIC_VECTOR ( 31 downto 0 );
     m_axi_arlen : out STD_LOGIC_VECTOR ( 2 downto 0 );
@@ -62,89 +60,78 @@ entity bd_qspi_ahblite_axi_bridge_0_0_ahb_if is
     m_axi_arburst : out STD_LOGIC_VECTOR ( 1 downto 0 );
     m_axi_arcache : out STD_LOGIC_VECTOR ( 1 downto 0 );
     m_axi_araddr : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    m_axi_arprot : out STD_LOGIC_VECTOR ( 2 downto 0 );
     axi_last_beat_reg : out STD_LOGIC_VECTOR ( 2 downto 0 );
-    idle_txfer_pending_reg_1 : in STD_LOGIC;
     s_ahb_hclk : in STD_LOGIC;
+    s_ahb_hprot : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    idle_txfer_pending_reg_0 : in STD_LOGIC;
     nonseq_txfer_pending_i_reg_0 : in STD_LOGIC;
-    S_AHB_HREADY_OUT_i_reg_2 : in STD_LOGIC;
+    S_AHB_HREADY_OUT_i_reg_3 : in STD_LOGIC;
     S_AHB_HRESP_i_reg_1 : in STD_LOGIC;
     burst_term_hwrite_reg_0 : in STD_LOGIC;
     burst_term_single_incr_reg_0 : in STD_LOGIC;
+    burst_term_i_reg_0 : in STD_LOGIC;
     local_en_reg : in STD_LOGIC;
-    ctl_sm_ns033_out : in STD_LOGIC;
-    s_ahb_hwrite : in STD_LOGIC;
-    \FSM_sequential_ctl_sm_cs_reg[1]\ : in STD_LOGIC;
-    \FSM_sequential_ctl_sm_cs_reg[2]_1\ : in STD_LOGIC;
-    core_is_idle : in STD_LOGIC;
-    ctl_sm_ns1 : in STD_LOGIC;
-    m_axi_bresp : in STD_LOGIC_VECTOR ( 0 to 0 );
     m_axi_bvalid : in STD_LOGIC;
-    burst_term_with_nonseq : in STD_LOGIC;
-    s_ahb_hsel : in STD_LOGIC;
-    s_ahb_hready_in : in STD_LOGIC;
-    s_ahb_htrans : in STD_LOGIC_VECTOR ( 1 downto 0 );
+    m_axi_bresp : in STD_LOGIC_VECTOR ( 0 to 0 );
+    \out\ : in STD_LOGIC_VECTOR ( 1 downto 0 );
     axi_waddr_done_i : in STD_LOGIC;
-    local_en : in STD_LOGIC;
+    s_ahb_hwrite : in STD_LOGIC;
+    M_AXI_WVALID_i_reg : in STD_LOGIC;
+    ctl_sm_ns1 : in STD_LOGIC;
     s_ahb_hresetn : in STD_LOGIC;
-    s_ahb_hburst : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    \INFERRED_GEN.icount_out_reg[4]\ : in STD_LOGIC_VECTOR ( 4 downto 0 );
-    p_12_in : in STD_LOGIC;
     init_pending_txfer : in STD_LOGIC;
     M_AXI_WLAST_i_reg : in STD_LOGIC;
     m_axi_wready : in STD_LOGIC;
-    ahb_data_valid_burst_term : in STD_LOGIC;
-    \FSM_sequential_ctl_sm_cs_reg[0]_0\ : in STD_LOGIC;
-    axi_wdata_done_i0 : in STD_LOGIC;
-    ahb_rd_txer_pending_reg : in STD_LOGIC;
-    m_axi_awready : in STD_LOGIC;
-    m_axi_awvalid : in STD_LOGIC;
-    m_axi_arready : in STD_LOGIC;
-    M_AXI_ARVALID_i_reg_0 : in STD_LOGIC;
-    s_ahb_hprot : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    burst_term_with_nonseq : in STD_LOGIC;
     \INFERRED_GEN.icount_out_reg[3]\ : in STD_LOGIC;
+    s_ahb_htrans : in STD_LOGIC_VECTOR ( 1 downto 0 );
+    s_ahb_hsel : in STD_LOGIC;
+    s_ahb_hready_in : in STD_LOGIC;
+    s_ahb_hburst : in STD_LOGIC_VECTOR ( 2 downto 0 );
+    \INFERRED_GEN.icount_out_reg[4]\ : in STD_LOGIC_VECTOR ( 4 downto 0 );
+    p_12_in : in STD_LOGIC;
+    ahb_data_valid_burst_term : in STD_LOGIC;
     seq_detected : in STD_LOGIC;
     rd_load_timeout_cntr : in STD_LOGIC;
     m_axi_rdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
     s_ahb_hsize : in STD_LOGIC_VECTOR ( 2 downto 0 );
     s_ahb_haddr : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    \INFERRED_GEN.icount_out_reg[4]_0\ : in STD_LOGIC_VECTOR ( 4 downto 0 )
+    D : in STD_LOGIC_VECTOR ( 4 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of bd_qspi_ahblite_axi_bridge_0_0_ahb_if : entity is "ahb_if";
 end bd_qspi_ahblite_axi_bridge_0_0_ahb_if;
 
 architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_ahb_if is
+  signal \AHBLITE_AXI_CONTROL/ctl_sm_ns132_out\ : STD_LOGIC;
+  signal \AHBLITE_AXI_CONTROL/hburst_single_incr\ : STD_LOGIC;
+  signal \AHBLITE_AXI_CONTROL/reset_hready2__0\ : STD_LOGIC;
   signal \AXI_ABURST_i[0]_i_1_n_0\ : STD_LOGIC;
   signal \AXI_ABURST_i[1]_i_1_n_0\ : STD_LOGIC;
   signal AXI_ALEN_i : STD_LOGIC_VECTOR ( 3 downto 1 );
   signal \^axi_alen_i0\ : STD_LOGIC;
   signal \GEN_1_PROT_CACHE_REG_NON_SECURE.AXI_APROT_i[1]_i_1_n_0\ : STD_LOGIC;
-  signal M_AXI_ARVALID_i_i_3_n_0 : STD_LOGIC;
   signal \^q\ : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal \^sr\ : STD_LOGIC_VECTOR ( 0 to 0 );
-  signal S_AHB_HREADY_OUT_i_i_13_n_0 : STD_LOGIC;
+  signal S_AHB_HREADY_OUT_i_i_17_n_0 : STD_LOGIC;
+  signal S_AHB_HREADY_OUT_i_i_8_n_0 : STD_LOGIC;
   signal \^ahb_burst_done\ : STD_LOGIC;
-  signal \^ahb_data_valid\ : STD_LOGIC;
   signal \^ahb_done_axi_in_progress\ : STD_LOGIC;
   signal ahb_done_axi_in_progress_i_1_n_0 : STD_LOGIC;
-  signal ahb_hburst_incr : STD_LOGIC;
+  signal \^ahb_hburst_incr\ : STD_LOGIC;
   signal ahb_hburst_incr_i_i_1_n_0 : STD_LOGIC;
   signal \^ahb_hburst_single\ : STD_LOGIC;
   signal ahb_hburst_single_i_i_1_n_0 : STD_LOGIC;
   signal ahb_penult_beat_i_1_n_0 : STD_LOGIC;
   signal \^ahb_penult_beat_reg_0\ : STD_LOGIC;
-  signal ahb_wnr_i_i_2_n_0 : STD_LOGIC;
   signal \^burst_term\ : STD_LOGIC;
   signal \^burst_term_hwrite\ : STD_LOGIC;
-  signal burst_term_i_i_1_n_0 : STD_LOGIC;
   signal \^burst_term_single_incr\ : STD_LOGIC;
   signal burst_term_txer_cnt_i0 : STD_LOGIC;
-  signal \^ctl_sm_ns132_out\ : STD_LOGIC;
   signal \^ctl_sm_ns14_out\ : STD_LOGIC;
   signal dummy_on_axi_progress_i_5_n_0 : STD_LOGIC;
   signal dummy_txfer_in_progress_i_1_n_0 : STD_LOGIC;
-  signal dummy_txfer_in_progress_reg_n_0 : STD_LOGIC;
+  signal \^dummy_txfer_in_progress_reg_0\ : STD_LOGIC;
   signal eqOp : STD_LOGIC;
   signal eqOp0_in : STD_LOGIC;
   signal \^idle_txfer_pending\ : STD_LOGIC;
@@ -156,45 +143,41 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_ahb_if is
   signal \^p_27_in\ : STD_LOGIC;
   signal \^reset_hready010_out\ : STD_LOGIC;
   signal \^s_ahb_hready_out\ : STD_LOGIC;
-  signal set_axi_raddr : STD_LOGIC;
-  signal \^set_axi_waddr\ : STD_LOGIC;
   signal \^valid_cnt_required\ : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal \valid_cnt_required_i[1]_i_1_n_0\ : STD_LOGIC;
   signal \valid_cnt_required_i[2]_i_1_n_0\ : STD_LOGIC;
   signal \valid_cnt_required_i[3]_i_1_n_0\ : STD_LOGIC;
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \AXI_ALEN_i[1]_i_1\ : label is "soft_lutpair8";
+  attribute SOFT_HLUTNM of \AXI_ALEN_i[1]_i_1\ : label is "soft_lutpair12";
   attribute SOFT_HLUTNM of \AXI_ALEN_i[3]_i_2\ : label is "soft_lutpair5";
-  attribute SOFT_HLUTNM of \FSM_sequential_ctl_sm_cs[0]_i_5\ : label is "soft_lutpair3";
-  attribute SOFT_HLUTNM of \FSM_sequential_ctl_sm_cs[2]_i_6\ : label is "soft_lutpair6";
-  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[0]_i_1\ : label is "soft_lutpair10";
-  attribute SOFT_HLUTNM of M_AXI_AWVALID_i_i_1 : label is "soft_lutpair10";
-  attribute SOFT_HLUTNM of M_AXI_WLAST_i_i_3 : label is "soft_lutpair9";
-  attribute SOFT_HLUTNM of M_AXI_WVALID_i_i_3 : label is "soft_lutpair9";
-  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_14 : label is "soft_lutpair4";
-  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_16 : label is "soft_lutpair8";
-  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_18 : label is "soft_lutpair5";
-  attribute SOFT_HLUTNM of ahb_hburst_incr_i_i_2 : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of ahb_hburst_single_i_i_2 : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of ahb_penult_beat_i_3 : label is "soft_lutpair4";
-  attribute SOFT_HLUTNM of idle_txfer_pending_i_3 : label is "soft_lutpair6";
-  attribute SOFT_HLUTNM of \valid_cnt_required_i[1]_i_1\ : label is "soft_lutpair7";
-  attribute SOFT_HLUTNM of \valid_cnt_required_i[3]_i_1\ : label is "soft_lutpair7";
-  attribute SOFT_HLUTNM of \valid_cnt_required_i[3]_i_2\ : label is "soft_lutpair3";
+  attribute SOFT_HLUTNM of M_AXI_WLAST_i_i_3 : label is "soft_lutpair11";
+  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_15 : label is "soft_lutpair5";
+  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_18 : label is "soft_lutpair11";
+  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_19 : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_3 : label is "soft_lutpair6";
+  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_8 : label is "soft_lutpair8";
+  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_9 : label is "soft_lutpair7";
+  attribute SOFT_HLUTNM of S_AHB_HRESP_i_i_9 : label is "soft_lutpair6";
+  attribute SOFT_HLUTNM of ahb_hburst_incr_i_i_2 : label is "soft_lutpair10";
+  attribute SOFT_HLUTNM of ahb_hburst_single_i_i_2 : label is "soft_lutpair10";
+  attribute SOFT_HLUTNM of ahb_penult_beat_i_3 : label is "soft_lutpair8";
+  attribute SOFT_HLUTNM of \valid_cnt_required_i[1]_i_1\ : label is "soft_lutpair9";
+  attribute SOFT_HLUTNM of \valid_cnt_required_i[3]_i_1\ : label is "soft_lutpair9";
+  attribute SOFT_HLUTNM of \valid_cnt_required_i[3]_i_2\ : label is "soft_lutpair7";
 begin
   AXI_ALEN_i0 <= \^axi_alen_i0\;
   Q(4 downto 0) <= \^q\(4 downto 0);
   SR(0) <= \^sr\(0);
   ahb_burst_done <= \^ahb_burst_done\;
-  ahb_data_valid <= \^ahb_data_valid\;
   ahb_done_axi_in_progress <= \^ahb_done_axi_in_progress\;
+  ahb_hburst_incr <= \^ahb_hburst_incr\;
   ahb_hburst_single <= \^ahb_hburst_single\;
   ahb_penult_beat_reg_0 <= \^ahb_penult_beat_reg_0\;
   burst_term <= \^burst_term\;
   burst_term_hwrite <= \^burst_term_hwrite\;
   burst_term_single_incr <= \^burst_term_single_incr\;
-  ctl_sm_ns132_out <= \^ctl_sm_ns132_out\;
   ctl_sm_ns14_out <= \^ctl_sm_ns14_out\;
+  dummy_txfer_in_progress_reg_0 <= \^dummy_txfer_in_progress_reg_0\;
   idle_txfer_pending <= \^idle_txfer_pending\;
   m_axi_arburst(1 downto 0) <= \^m_axi_arburst\(1 downto 0);
   m_axi_arprot(2 downto 0) <= \^m_axi_arprot\(2 downto 0);
@@ -203,7 +186,6 @@ begin
   p_27_in <= \^p_27_in\;
   reset_hready010_out <= \^reset_hready010_out\;
   s_ahb_hready_out <= \^s_ahb_hready_out\;
-  set_axi_waddr <= \^set_axi_waddr\;
   valid_cnt_required(2 downto 0) <= \^valid_cnt_required\(2 downto 0);
 \AXI_AADDR_i_reg[0]\: unisim.vcomponents.FDRE
      port map (
@@ -517,7 +499,7 @@ begin
       INIT => X"B0000000"
     )
         port map (
-      I0 => ahb_hburst_incr,
+      I0 => \^ahb_hburst_incr\,
       I1 => s_ahb_htrans(0),
       I2 => s_ahb_hready_in,
       I3 => s_ahb_hsel,
@@ -581,66 +563,30 @@ begin
       Q => m_axi_arsize(2),
       R => \^sr\(0)
     );
-\FSM_sequential_ctl_sm_cs[0]_i_5\: unisim.vcomponents.LUT5
+\FSM_sequential_ctl_sm_cs[1]_i_2\: unisim.vcomponents.LUT5
     generic map(
-      INIT => X"AEAAAAAA"
+      INIT => X"00000002"
     )
         port map (
-      I0 => \^nonseq_txfer_pending\,
-      I1 => s_ahb_htrans(1),
-      I2 => s_ahb_htrans(0),
-      I3 => s_ahb_hready_in,
-      I4 => s_ahb_hsel,
-      O => \^ctl_sm_ns14_out\
-    );
-\FSM_sequential_ctl_sm_cs[0]_i_6\: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"AAAAAAAA00800000"
-    )
-        port map (
-      I0 => m_axi_bvalid,
-      I1 => s_ahb_hsel,
-      I2 => s_ahb_hready_in,
-      I3 => s_ahb_htrans(0),
-      I4 => s_ahb_htrans(1),
-      I5 => \^nonseq_txfer_pending\,
-      O => \^ctl_sm_ns132_out\
-    );
-\FSM_sequential_ctl_sm_cs[2]_i_5\: unisim.vcomponents.LUT4
-    generic map(
-      INIT => X"0100"
-    )
-        port map (
-      I0 => \^nonseq_detected\,
-      I1 => \^nonseq_txfer_pending\,
-      I2 => \^idle_txfer_pending\,
-      I3 => ctl_sm_ns1,
-      O => \FSM_sequential_ctl_sm_cs_reg[2]\
-    );
-\FSM_sequential_ctl_sm_cs[2]_i_6\: unisim.vcomponents.LUT5
-    generic map(
-      INIT => X"01000000"
-    )
-        port map (
-      I0 => \^nonseq_txfer_pending\,
+      I0 => ctl_sm_ns1,
       I1 => \^nonseq_detected\,
-      I2 => \^idle_txfer_pending\,
-      I3 => m_axi_bresp(0),
-      I4 => m_axi_bvalid,
-      O => \FSM_sequential_ctl_sm_cs_reg[2]_0\
+      I2 => \^nonseq_txfer_pending\,
+      I3 => \^idle_txfer_pending\,
+      I4 => \out\(1),
+      O => \FSM_sequential_ctl_sm_cs_reg[1]\
     );
-\FSM_sequential_ctl_sm_cs[2]_i_8\: unisim.vcomponents.LUT6
+\FSM_sequential_ctl_sm_cs[2]_i_3\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFFFFFFFFFFF0800"
+      INIT => X"040000000400FFFF"
     )
         port map (
-      I0 => s_ahb_hsel,
-      I1 => s_ahb_hready_in,
-      I2 => s_ahb_htrans(0),
-      I3 => s_ahb_htrans(1),
-      I4 => \^nonseq_txfer_pending\,
-      I5 => \^idle_txfer_pending\,
-      O => \FSM_sequential_ctl_sm_cs_reg[0]\
+      I0 => \^idle_txfer_pending\,
+      I1 => m_axi_bresp(0),
+      I2 => \^ctl_sm_ns14_out\,
+      I3 => m_axi_bvalid,
+      I4 => \out\(1),
+      I5 => axi_waddr_done_i,
+      O => \FSM_sequential_ctl_sm_cs_reg[2]\
     );
 \GEN_1_PROT_CACHE_REG_NON_SECURE.AXI_ACACHE_i_reg[0]\: unisim.vcomponents.FDSE
      port map (
@@ -700,73 +646,31 @@ begin
       Q => \^m_axi_arprot\(2),
       R => \^sr\(0)
     );
-\INFERRED_GEN.icount_out[0]_i_1\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => \^set_axi_waddr\,
-      I1 => \INFERRED_GEN.icount_out_reg[4]\(0),
-      O => D(0)
-    );
 \INFERRED_GEN.icount_out[4]_i_1__0\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"20F0000000000000"
+      INIT => X"0080008080800080"
     )
         port map (
-      I0 => s_ahb_hwrite,
-      I1 => ahb_hburst_incr,
-      I2 => s_ahb_htrans(1),
+      I0 => s_ahb_htrans(1),
+      I1 => s_ahb_hsel,
+      I2 => s_ahb_hready_in,
       I3 => s_ahb_htrans(0),
-      I4 => s_ahb_hready_in,
-      I5 => s_ahb_hsel,
+      I4 => s_ahb_hwrite,
+      I5 => \^ahb_hburst_incr\,
       O => E(0)
-    );
-M_AXI_ARVALID_i_i_1: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"BA"
-    )
-        port map (
-      I0 => set_axi_raddr,
-      I1 => m_axi_arready,
-      I2 => M_AXI_ARVALID_i_reg_0,
-      O => M_AXI_ARVALID_i_reg
-    );
-M_AXI_ARVALID_i_i_2: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"ABAAAAAAAAAAAAAA"
-    )
-        port map (
-      I0 => M_AXI_ARVALID_i_i_3_n_0,
-      I1 => s_ahb_hwrite,
-      I2 => \^burst_term_hwrite\,
-      I3 => \^ctl_sm_ns14_out\,
-      I4 => ctl_sm_ns033_out,
-      I5 => \FSM_sequential_ctl_sm_cs_reg[1]\,
-      O => set_axi_raddr
     );
 M_AXI_ARVALID_i_i_3: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"2020FFA02020A0A0"
+      INIT => X"40C040C0000F0000"
     )
         port map (
-      I0 => \^ctl_sm_ns132_out\,
-      I1 => \^burst_term_hwrite\,
-      I2 => \FSM_sequential_ctl_sm_cs_reg[2]_1\,
-      I3 => \^axi_alen_i0\,
-      I4 => s_ahb_hwrite,
-      I5 => core_is_idle,
-      O => M_AXI_ARVALID_i_i_3_n_0
-    );
-M_AXI_AWVALID_i_i_1: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"BA"
-    )
-        port map (
-      I0 => \^set_axi_waddr\,
-      I1 => m_axi_awready,
-      I2 => m_axi_awvalid,
-      O => M_AXI_AWVALID_i_reg
+      I0 => \^burst_term_hwrite\,
+      I1 => \AHBLITE_AXI_CONTROL/ctl_sm_ns132_out\,
+      I2 => \out\(0),
+      I3 => s_ahb_hwrite,
+      I4 => \^axi_alen_i0\,
+      I5 => \out\(1),
+      O => M_AXI_ARVALID_i_reg
     );
 M_AXI_WLAST_i_i_3: unisim.vcomponents.LUT3
     generic map(
@@ -774,27 +678,9 @@ M_AXI_WLAST_i_i_3: unisim.vcomponents.LUT3
     )
         port map (
       I0 => axi_waddr_done_i,
-      I1 => ahb_hburst_incr,
+      I1 => \^ahb_hburst_incr\,
       I2 => \^ahb_hburst_single\,
       O => M_AXI_WLAST_i110_out
-    );
-M_AXI_WVALID_i_i_3: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"E"
-    )
-        port map (
-      I0 => \^ahb_hburst_single\,
-      I1 => ahb_hburst_incr,
-      O => \reset_hready2__0\
-    );
-M_AXI_WVALID_i_i_4: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"E"
-    )
-        port map (
-      I0 => \^ahb_data_valid\,
-      I1 => local_en,
-      O => \M_AXI_WVALID_i3__0\
     );
 \S_AHB_HRDATA_i_reg[0]\: unisim.vcomponents.FDRE
      port map (
@@ -1060,40 +946,43 @@ S_AHB_HREADY_OUT_i_i_1: unisim.vcomponents.LUT1
       I0 => s_ahb_hresetn,
       O => \^sr\(0)
     );
-S_AHB_HREADY_OUT_i_i_13: unisim.vcomponents.LUT5
+S_AHB_HREADY_OUT_i_i_11: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"80000000"
+      INIT => X"B8B8B8B8B8B888B8"
     )
         port map (
-      I0 => s_ahb_htrans(1),
-      I1 => s_ahb_hsel,
-      I2 => s_ahb_hready_in,
-      I3 => s_ahb_htrans(0),
-      I4 => ahb_hburst_incr,
-      O => S_AHB_HREADY_OUT_i_i_13_n_0
+      I0 => S_AHB_HREADY_OUT_i_i_17_n_0,
+      I1 => \out\(1),
+      I2 => axi_waddr_done_i,
+      I3 => s_ahb_hwrite,
+      I4 => \^ahb_hburst_single\,
+      I5 => \^ahb_hburst_incr\,
+      O => S_AHB_HREADY_OUT_i_reg_0
     );
-S_AHB_HREADY_OUT_i_i_14: unisim.vcomponents.LUT5
+S_AHB_HREADY_OUT_i_i_12: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"80000000"
+      INIT => X"BFB0BFB0B0B0BFB0"
     )
         port map (
-      I0 => \^ahb_penult_beat_reg_0\,
-      I1 => s_ahb_htrans(1),
-      I2 => s_ahb_hsel,
-      I3 => s_ahb_hready_in,
-      I4 => s_ahb_htrans(0),
-      O => \^ahb_burst_done\
-    );
-S_AHB_HREADY_OUT_i_i_16: unisim.vcomponents.LUT4
-    generic map(
-      INIT => X"222A"
-    )
-        port map (
-      I0 => \^axi_alen_i0\,
-      I1 => s_ahb_hwrite,
-      I2 => s_ahb_hburst(1),
-      I3 => s_ahb_hburst(2),
+      I0 => \AHBLITE_AXI_CONTROL/reset_hready2__0\,
+      I1 => M_AXI_WVALID_i_reg,
+      I2 => \out\(1),
+      I3 => \^axi_alen_i0\,
+      I4 => s_ahb_hwrite,
+      I5 => \AHBLITE_AXI_CONTROL/hburst_single_incr\,
       O => S_AHB_HREADY_OUT_i_reg_1
+    );
+S_AHB_HREADY_OUT_i_i_15: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"ABFFFFFF"
+    )
+        port map (
+      I0 => \^burst_term_single_incr\,
+      I1 => s_ahb_hburst(2),
+      I2 => s_ahb_hburst(1),
+      I3 => \^burst_term_hwrite\,
+      I4 => s_ahb_hwrite,
+      O => \^reset_hready010_out\
     );
 S_AHB_HREADY_OUT_i_i_17: unisim.vcomponents.LUT6
     generic map(
@@ -1106,21 +995,50 @@ S_AHB_HREADY_OUT_i_i_17: unisim.vcomponents.LUT6
       I3 => \^nonseq_txfer_pending\,
       I4 => m_axi_bresp(0),
       I5 => \^idle_txfer_pending\,
-      O => S_AHB_HREADY_OUT_i_reg_0
+      O => S_AHB_HREADY_OUT_i_i_17_n_0
     );
-S_AHB_HREADY_OUT_i_i_18: unisim.vcomponents.LUT5
+S_AHB_HREADY_OUT_i_i_18: unisim.vcomponents.LUT2
     generic map(
-      INIT => X"ABFFFFFF"
+      INIT => X"E"
     )
         port map (
-      I0 => \^burst_term_single_incr\,
-      I1 => s_ahb_hburst(2),
-      I2 => s_ahb_hburst(1),
-      I3 => \^burst_term_hwrite\,
-      I4 => s_ahb_hwrite,
-      O => \^reset_hready010_out\
+      I0 => \^ahb_hburst_single\,
+      I1 => \^ahb_hburst_incr\,
+      O => \AHBLITE_AXI_CONTROL/reset_hready2__0\
     );
-S_AHB_HREADY_OUT_i_i_6: unisim.vcomponents.LUT6
+S_AHB_HREADY_OUT_i_i_19: unisim.vcomponents.LUT2
+    generic map(
+      INIT => X"1"
+    )
+        port map (
+      I0 => s_ahb_hburst(1),
+      I1 => s_ahb_hburst(2),
+      O => \AHBLITE_AXI_CONTROL/hburst_single_incr\
+    );
+S_AHB_HREADY_OUT_i_i_20: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"000D0000"
+    )
+        port map (
+      I0 => m_axi_bresp(0),
+      I1 => \^idle_txfer_pending\,
+      I2 => \^nonseq_txfer_pending\,
+      I3 => \^nonseq_detected\,
+      I4 => m_axi_bvalid,
+      O => S_AHB_HREADY_OUT_i_reg_2
+    );
+S_AHB_HREADY_OUT_i_i_3: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"4000"
+    )
+        port map (
+      I0 => s_ahb_htrans(1),
+      I1 => s_ahb_hready_in,
+      I2 => s_ahb_hsel,
+      I3 => s_ahb_htrans(0),
+      O => busy_detected
+    );
+S_AHB_HREADY_OUT_i_i_4: unisim.vcomponents.LUT6
     generic map(
       INIT => X"FFFFFFFEFEFEFFFE"
     )
@@ -1128,31 +1046,67 @@ S_AHB_HREADY_OUT_i_i_6: unisim.vcomponents.LUT6
       I0 => \^nonseq_txfer_pending\,
       I1 => burst_term_with_nonseq,
       I2 => \^ahb_done_axi_in_progress\,
-      I3 => S_AHB_HREADY_OUT_i_i_13_n_0,
+      I3 => S_AHB_HREADY_OUT_i_i_8_n_0,
       I4 => s_ahb_hwrite,
       I5 => \^ahb_burst_done\,
       O => S_AHB_HREADY_OUT_i116_out
+    );
+S_AHB_HREADY_OUT_i_i_8: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"80000000"
+    )
+        port map (
+      I0 => s_ahb_htrans(1),
+      I1 => s_ahb_hsel,
+      I2 => s_ahb_hready_in,
+      I3 => s_ahb_htrans(0),
+      I4 => \^ahb_hburst_incr\,
+      O => S_AHB_HREADY_OUT_i_i_8_n_0
+    );
+S_AHB_HREADY_OUT_i_i_9: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"80000000"
+    )
+        port map (
+      I0 => \^ahb_penult_beat_reg_0\,
+      I1 => s_ahb_htrans(1),
+      I2 => s_ahb_hsel,
+      I3 => s_ahb_hready_in,
+      I4 => s_ahb_htrans(0),
+      O => \^ahb_burst_done\
     );
 S_AHB_HREADY_OUT_i_reg: unisim.vcomponents.FDSE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => S_AHB_HREADY_OUT_i_reg_2,
+      D => S_AHB_HREADY_OUT_i_reg_3,
       Q => \^s_ahb_hready_out\,
       S => \^sr\(0)
     );
-S_AHB_HRESP_i_i_5: unisim.vcomponents.LUT6
+S_AHB_HRESP_i_i_4: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"0200000002000202"
+      INIT => X"202200000000FFFF"
     )
         port map (
-      I0 => \FSM_sequential_ctl_sm_cs_reg[1]\,
-      I1 => \^nonseq_txfer_pending\,
-      I2 => \^nonseq_detected\,
-      I3 => ctl_sm_ns033_out,
-      I4 => \^idle_txfer_pending\,
-      I5 => ctl_sm_ns1,
+      I0 => m_axi_bvalid,
+      I1 => \^ctl_sm_ns14_out\,
+      I2 => \^idle_txfer_pending\,
+      I3 => m_axi_bresp(0),
+      I4 => \out\(0),
+      I5 => \out\(1),
       O => S_AHB_HRESP_i_reg_0
+    );
+S_AHB_HRESP_i_i_9: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"AEAAAAAA"
+    )
+        port map (
+      I0 => \^nonseq_txfer_pending\,
+      I1 => s_ahb_htrans(1),
+      I2 => s_ahb_htrans(0),
+      I3 => s_ahb_hready_in,
+      I4 => s_ahb_hsel,
+      O => \^ctl_sm_ns14_out\
     );
 S_AHB_HRESP_i_reg: unisim.vcomponents.FDRE
      port map (
@@ -1177,7 +1131,7 @@ ahb_data_valid_i_reg: unisim.vcomponents.FDRE
       C => s_ahb_hclk,
       CE => '1',
       D => local_en_reg,
-      Q => \^ahb_data_valid\,
+      Q => ahb_data_valid,
       R => \^sr\(0)
     );
 ahb_done_axi_in_progress_i_1: unisim.vcomponents.LUT5
@@ -1209,7 +1163,7 @@ ahb_hburst_incr_i_i_1: unisim.vcomponents.LUT5
       I1 => s_ahb_htrans(0),
       I2 => s_ahb_htrans(1),
       I3 => \^s_ahb_hready_out\,
-      I4 => ahb_hburst_incr,
+      I4 => \^ahb_hburst_incr\,
       O => ahb_hburst_incr_i_i_1_n_0
     );
 ahb_hburst_incr_i_i_2: unisim.vcomponents.LUT3
@@ -1227,7 +1181,7 @@ ahb_hburst_incr_i_reg: unisim.vcomponents.FDRE
       C => s_ahb_hclk,
       CE => '1',
       D => ahb_hburst_incr_i_i_1_n_0,
-      Q => ahb_hburst_incr,
+      Q => \^ahb_hburst_incr\,
       R => \^sr\(0)
     );
 ahb_hburst_single_i_i_1: unisim.vcomponents.LUT5
@@ -1290,37 +1244,37 @@ ahb_penult_beat_reg: unisim.vcomponents.FDRE
       Q => \^ahb_penult_beat_reg_0\,
       R => '0'
     );
-ahb_wnr_i_i_1: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"EAEAEAAAAAAAAAAA"
-    )
-        port map (
-      I0 => ahb_wnr_i_i_2_n_0,
-      I1 => ctl_sm_ns033_out,
-      I2 => \^ctl_sm_ns14_out\,
-      I3 => \^burst_term_hwrite\,
-      I4 => s_ahb_hwrite,
-      I5 => \FSM_sequential_ctl_sm_cs_reg[1]\,
-      O => \^set_axi_waddr\
-    );
 ahb_wnr_i_i_2: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFA08080A0A08080"
+      INIT => X"C080C0800F000000"
     )
         port map (
-      I0 => \^ctl_sm_ns132_out\,
-      I1 => \^burst_term_hwrite\,
-      I2 => \FSM_sequential_ctl_sm_cs_reg[2]_1\,
-      I3 => \^axi_alen_i0\,
-      I4 => s_ahb_hwrite,
-      I5 => core_is_idle,
-      O => ahb_wnr_i_i_2_n_0
+      I0 => \^burst_term_hwrite\,
+      I1 => \AHBLITE_AXI_CONTROL/ctl_sm_ns132_out\,
+      I2 => \out\(0),
+      I3 => s_ahb_hwrite,
+      I4 => \^axi_alen_i0\,
+      I5 => \out\(1),
+      O => ahb_wnr_i_reg
+    );
+ahb_wnr_i_i_4: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"AAAAAAAA00800000"
+    )
+        port map (
+      I0 => m_axi_bvalid,
+      I1 => s_ahb_hsel,
+      I2 => s_ahb_hready_in,
+      I3 => s_ahb_htrans(0),
+      I4 => s_ahb_htrans(1),
+      I5 => \^nonseq_txfer_pending\,
+      O => \AHBLITE_AXI_CONTROL/ctl_sm_ns132_out\
     );
 \burst_term_cur_cnt_i_reg[0]\: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => burst_term_txer_cnt_i0,
-      D => \INFERRED_GEN.icount_out_reg[4]_0\(0),
+      D => D(0),
       Q => \^q\(0),
       R => \^sr\(0)
     );
@@ -1328,7 +1282,7 @@ ahb_wnr_i_i_2: unisim.vcomponents.LUT6
      port map (
       C => s_ahb_hclk,
       CE => burst_term_txer_cnt_i0,
-      D => \INFERRED_GEN.icount_out_reg[4]_0\(1),
+      D => D(1),
       Q => \^q\(1),
       R => \^sr\(0)
     );
@@ -1336,7 +1290,7 @@ ahb_wnr_i_i_2: unisim.vcomponents.LUT6
      port map (
       C => s_ahb_hclk,
       CE => burst_term_txer_cnt_i0,
-      D => \INFERRED_GEN.icount_out_reg[4]_0\(2),
+      D => D(2),
       Q => \^q\(2),
       R => \^sr\(0)
     );
@@ -1344,7 +1298,7 @@ ahb_wnr_i_i_2: unisim.vcomponents.LUT6
      port map (
       C => s_ahb_hclk,
       CE => burst_term_txer_cnt_i0,
-      D => \INFERRED_GEN.icount_out_reg[4]_0\(3),
+      D => D(3),
       Q => \^q\(3),
       R => \^sr\(0)
     );
@@ -1352,7 +1306,7 @@ ahb_wnr_i_i_2: unisim.vcomponents.LUT6
      port map (
       C => s_ahb_hclk,
       CE => burst_term_txer_cnt_i0,
-      D => \INFERRED_GEN.icount_out_reg[4]_0\(4),
+      D => D(4),
       Q => \^q\(4),
       R => \^sr\(0)
     );
@@ -1364,24 +1318,11 @@ burst_term_hwrite_reg: unisim.vcomponents.FDRE
       Q => \^burst_term_hwrite\,
       R => \^sr\(0)
     );
-burst_term_i_i_1: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"00000000000000D0"
-    )
-        port map (
-      I0 => \FSM_sequential_ctl_sm_cs_reg[0]_0\,
-      I1 => \^burst_term\,
-      I2 => s_ahb_hresetn,
-      I3 => dummy_txfer_in_progress_reg_n_0,
-      I4 => axi_wdata_done_i0,
-      I5 => ahb_rd_txer_pending_reg,
-      O => burst_term_i_i_1_n_0
-    );
 burst_term_i_reg: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => burst_term_i_i_1_n_0,
+      D => burst_term_i_reg_0,
       Q => \^burst_term\,
       R => '0'
     );
@@ -1469,7 +1410,7 @@ dummy_txfer_in_progress_i_1: unisim.vcomponents.LUT6
       INIT => X"C0C000A000A000A0"
     )
         port map (
-      I0 => dummy_txfer_in_progress_reg_n_0,
+      I0 => \^dummy_txfer_in_progress_reg_0\,
       I1 => \^burst_term\,
       I2 => s_ahb_hresetn,
       I3 => init_pending_txfer,
@@ -1482,25 +1423,14 @@ dummy_txfer_in_progress_reg: unisim.vcomponents.FDRE
       C => s_ahb_hclk,
       CE => '1',
       D => dummy_txfer_in_progress_i_1_n_0,
-      Q => dummy_txfer_in_progress_reg_n_0,
+      Q => \^dummy_txfer_in_progress_reg_0\,
       R => '0'
-    );
-idle_txfer_pending_i_3: unisim.vcomponents.LUT4
-    generic map(
-      INIT => X"FE00"
-    )
-        port map (
-      I0 => \^nonseq_txfer_pending\,
-      I1 => \^nonseq_detected\,
-      I2 => \^idle_txfer_pending\,
-      I3 => m_axi_bvalid,
-      O => idle_txfer_pending_reg_0
     );
 idle_txfer_pending_reg: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => idle_txfer_pending_reg_1,
+      D => idle_txfer_pending_reg_0,
       Q => \^idle_txfer_pending\,
       R => '0'
     );
@@ -1589,51 +1519,59 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_control is
   port (
+    \out\ : out STD_LOGIC_VECTOR ( 1 downto 0 );
     axi_waddr_done_i : out STD_LOGIC;
-    set_hresp_err : out STD_LOGIC;
+    set_axi_waddr : out STD_LOGIC;
     init_pending_txfer : out STD_LOGIC;
-    core_is_idle : out STD_LOGIC;
-    \FSM_sequential_ctl_sm_cs_reg[0]_0\ : out STD_LOGIC;
-    ahb_wnr_i_reg_0 : out STD_LOGIC;
+    E : out STD_LOGIC_VECTOR ( 0 to 0 );
+    idle_txfer_pending_reg : out STD_LOGIC;
+    burst_term_i_reg : out STD_LOGIC;
+    S_AHB_HRESP_i_reg : out STD_LOGIC;
+    M_AXI_RREADY_i_reg : out STD_LOGIC;
     burst_term_with_nonseq : out STD_LOGIC;
     p_12_in : out STD_LOGIC;
     M_AXI_WVALID_i_reg : out STD_LOGIC;
-    burst_term_i_reg : out STD_LOGIC;
+    M_AXI_ARVALID_i_reg : out STD_LOGIC;
+    D : out STD_LOGIC_VECTOR ( 0 to 0 );
+    M_AXI_AWVALID_i_reg : out STD_LOGIC;
     S_AHB_HREADY_OUT_i_reg : out STD_LOGIC;
-    S_AHB_HRESP_i_reg : out STD_LOGIC;
-    idle_txfer_pending_reg : out STD_LOGIC;
     nonseq_txfer_pending_i_reg : out STD_LOGIC;
     burst_term_hwrite_reg : out STD_LOGIC;
     M_AXI_BREADY_i_reg : out STD_LOGIC;
     burst_term_single_incr_reg : out STD_LOGIC;
     cntr_rst : in STD_LOGIC;
-    set_axi_waddr : in STD_LOGIC;
     s_ahb_hclk : in STD_LOGIC;
     last_axi_rd_sample : in STD_LOGIC;
-    idle_txfer_pending_reg_0 : in STD_LOGIC;
-    ahb_hburst_single : in STD_LOGIC;
-    M_AXI_WVALID_i_reg_0 : in STD_LOGIC;
-    idle_txfer_pending : in STD_LOGIC;
-    ctl_sm_ns1 : in STD_LOGIC;
-    ctl_sm_ns14_out : in STD_LOGIC;
+    burst_term_hwrite_reg_0 : in STD_LOGIC;
     ctl_sm_ns033_out : in STD_LOGIC;
-    nonseq_txfer_pending_i_reg_0 : in STD_LOGIC;
-    AXI_ALEN_i0 : in STD_LOGIC;
-    M_AXI_WLAST_i_reg : in STD_LOGIC;
-    m_axi_wready : in STD_LOGIC;
-    nonseq_txfer_pending_i_reg_1 : in STD_LOGIC;
-    nonseq_txfer_pending_i_reg_2 : in STD_LOGIC;
-    nonseq_txfer_pending_i_reg_3 : in STD_LOGIC;
-    idle_txfer_pending_reg_1 : in STD_LOGIC;
-    nonseq_txfer_pending_i_reg_4 : in STD_LOGIC;
+    ctl_sm_ns14_out : in STD_LOGIC;
+    burst_term_hwrite : in STD_LOGIC;
     s_ahb_hwrite : in STD_LOGIC;
-    \reset_hready2__0\ : in STD_LOGIC;
-    ahb_hburst_incr_i_reg : in STD_LOGIC;
-    m_axi_bvalid : in STD_LOGIC;
-    m_axi_bresp : in STD_LOGIC_VECTOR ( 0 to 0 );
-    ctl_sm_ns132_out : in STD_LOGIC;
+    burst_term_hwrite_reg_1 : in STD_LOGIC;
+    idle_txfer_pending_reg_0 : in STD_LOGIC;
+    \FSM_sequential_ctl_sm_cs_reg[1]_0\ : in STD_LOGIC;
+    \FSM_sequential_ctl_sm_cs_reg[1]_1\ : in STD_LOGIC;
+    idle_txfer_pending : in STD_LOGIC;
+    ahb_rd_txer_pending_reg : in STD_LOGIC;
+    ctl_sm_ns1 : in STD_LOGIC;
     nonseq_txfer_pending : in STD_LOGIC;
     nonseq_detected : in STD_LOGIC;
+    m_axi_bvalid : in STD_LOGIC;
+    m_axi_bresp : in STD_LOGIC_VECTOR ( 0 to 0 );
+    idle_txfer_pending_reg_1 : in STD_LOGIC;
+    ahb_hburst_single : in STD_LOGIC;
+    M_AXI_WVALID_i_reg_0 : in STD_LOGIC;
+    ahb_hburst_incr : in STD_LOGIC;
+    m_axi_wready : in STD_LOGIC;
+    M_AXI_WVALID_i_reg_1 : in STD_LOGIC;
+    s_ahb_hresetn : in STD_LOGIC;
+    M_AXI_WLAST_i_reg : in STD_LOGIC;
+    burst_term : in STD_LOGIC;
+    s_ahb_hresp : in STD_LOGIC;
+    idle_txfer_pending_reg_2 : in STD_LOGIC;
+    \M_AXI_RREADY_i5__0\ : in STD_LOGIC;
+    axi_rd_avlbl_reg : in STD_LOGIC;
+    busy_detected : in STD_LOGIC;
     ahb_burst_done : in STD_LOGIC;
     ahb_done_axi_in_progress : in STD_LOGIC;
     s_ahb_htrans : in STD_LOGIC_VECTOR ( 1 downto 0 );
@@ -1642,17 +1580,22 @@ entity bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_control is
     ahb_penult_beat_reg : in STD_LOGIC;
     seq_detected : in STD_LOGIC;
     ahb_data_valid_burst_term : in STD_LOGIC;
-    \M_AXI_WVALID_i3__0\ : in STD_LOGIC;
-    busy_detected : in STD_LOGIC;
+    local_en : in STD_LOGIC;
+    ahb_data_valid : in STD_LOGIC;
+    m_axi_arready : in STD_LOGIC;
+    M_AXI_ARVALID_i_reg_0 : in STD_LOGIC;
+    Q : in STD_LOGIC_VECTOR ( 0 to 0 );
+    m_axi_awready : in STD_LOGIC;
+    m_axi_awvalid : in STD_LOGIC;
     S_AHB_HREADY_OUT_i116_out : in STD_LOGIC;
     S_AHB_HREADY_OUT_i_reg_0 : in STD_LOGIC;
-    s_ahb_hresp : in STD_LOGIC;
-    s_ahb_hresetn : in STD_LOGIC;
-    nonseq_txfer_pending_i_reg_5 : in STD_LOGIC;
-    burst_term_hwrite : in STD_LOGIC;
     m_axi_bready : in STD_LOGIC;
     s_ahb_hburst : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    burst_term_single_incr : in STD_LOGIC
+    burst_term_single_incr : in STD_LOGIC;
+    M_AXI_WLAST_i_reg_0 : in STD_LOGIC;
+    AXI_ALEN_i0 : in STD_LOGIC;
+    idle_txfer_pending_reg_3 : in STD_LOGIC;
+    nonseq_txfer_pending_i_reg_0 : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_control : entity is "ahblite_axi_control";
@@ -1664,197 +1607,178 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_control is
   signal \FSM_sequential_ctl_sm_cs[0]_i_2_n_0\ : STD_LOGIC;
   signal \FSM_sequential_ctl_sm_cs[0]_i_3_n_0\ : STD_LOGIC;
   signal \FSM_sequential_ctl_sm_cs[1]_i_1_n_0\ : STD_LOGIC;
-  signal \FSM_sequential_ctl_sm_cs[1]_i_2_n_0\ : STD_LOGIC;
+  signal \FSM_sequential_ctl_sm_cs[1]_i_3_n_0\ : STD_LOGIC;
   signal \FSM_sequential_ctl_sm_cs[2]_i_1_n_0\ : STD_LOGIC;
   signal \FSM_sequential_ctl_sm_cs[2]_i_2_n_0\ : STD_LOGIC;
-  signal \FSM_sequential_ctl_sm_cs[2]_i_3_n_0\ : STD_LOGIC;
-  signal \FSM_sequential_ctl_sm_cs[2]_i_4_n_0\ : STD_LOGIC;
-  signal \FSM_sequential_ctl_sm_cs[2]_i_7_n_0\ : STD_LOGIC;
-  signal \FSM_sequential_ctl_sm_cs[2]_i_9_n_0\ : STD_LOGIC;
-  signal \^fsm_sequential_ctl_sm_cs_reg[0]_0\ : STD_LOGIC;
+  signal \FSM_sequential_ctl_sm_cs[2]_i_5_n_0\ : STD_LOGIC;
+  signal \FSM_sequential_ctl_sm_cs[2]_i_6_n_0\ : STD_LOGIC;
+  signal \FSM_sequential_ctl_sm_cs_reg[2]_i_4_n_0\ : STD_LOGIC;
+  signal M_AXI_ARVALID_i_i_4_n_0 : STD_LOGIC;
   signal M_AXI_RLAST_reg : STD_LOGIC;
-  signal S_AHB_HREADY_OUT_i_i_10_n_0 : STD_LOGIC;
-  signal S_AHB_HREADY_OUT_i_i_11_n_0 : STD_LOGIC;
-  signal S_AHB_HREADY_OUT_i_i_8_n_0 : STD_LOGIC;
-  signal S_AHB_HRESP_i_i_4_n_0 : STD_LOGIC;
+  signal S_AHB_HREADY_OUT_i_i_13_n_0 : STD_LOGIC;
+  signal S_AHB_HREADY_OUT_i_i_14_n_0 : STD_LOGIC;
+  signal S_AHB_HRESP_i_i_3_n_0 : STD_LOGIC;
+  signal S_AHB_HRESP_i_i_5_n_0 : STD_LOGIC;
   signal S_AHB_HRESP_i_i_6_n_0 : STD_LOGIC;
-  signal S_AHB_HRESP_i_i_8_n_0 : STD_LOGIC;
-  signal S_AHB_HRESP_i_i_9_n_0 : STD_LOGIC;
+  signal ahb_wnr_i_i_3_n_0 : STD_LOGIC;
   signal \^axi_waddr_done_i\ : STD_LOGIC;
+  signal burst_term_i_i_2_n_0 : STD_LOGIC;
   signal \^burst_term_with_nonseq\ : STD_LOGIC;
-  signal \^core_is_idle\ : STD_LOGIC;
-  signal ctl_sm_cs : STD_LOGIC_VECTOR ( 2 downto 0 );
+  signal ctl_sm_cs : STD_LOGIC_VECTOR ( 2 to 2 );
   attribute RTL_KEEP : string;
   attribute RTL_KEEP of ctl_sm_cs : signal is "yes";
+  signal idle_txfer_pending_i_3_n_0 : STD_LOGIC;
+  signal idle_txfer_pending_i_4_n_0 : STD_LOGIC;
   signal \^init_pending_txfer\ : STD_LOGIC;
+  signal \^out\ : STD_LOGIC_VECTOR ( 1 downto 0 );
+  attribute RTL_KEEP of \^out\ : signal is "yes";
   signal \^p_12_in\ : STD_LOGIC;
   signal reset_hready : STD_LOGIC;
+  signal set_axi_raddr : STD_LOGIC;
+  signal \^set_axi_waddr\ : STD_LOGIC;
+  signal set_axi_wdata_burst : STD_LOGIC;
   signal set_hready : STD_LOGIC;
-  signal \^set_hresp_err\ : STD_LOGIC;
+  signal set_hresp_err : STD_LOGIC;
+  attribute FSM_ENCODED_STATES : string;
+  attribute FSM_ENCODED_STATES of \FSM_sequential_ctl_sm_cs_reg[0]\ : label is "ctl_idle:000,ctl_addr:001,ctl_write:010,ctl_read:101,ctl_read_err:110,ctl_bresp:011,ctl_bresp_err:100";
   attribute KEEP : string;
   attribute KEEP of \FSM_sequential_ctl_sm_cs_reg[0]\ : label is "yes";
+  attribute FSM_ENCODED_STATES of \FSM_sequential_ctl_sm_cs_reg[1]\ : label is "ctl_idle:000,ctl_addr:001,ctl_write:010,ctl_read:101,ctl_read_err:110,ctl_bresp:011,ctl_bresp_err:100";
   attribute KEEP of \FSM_sequential_ctl_sm_cs_reg[1]\ : label is "yes";
+  attribute FSM_ENCODED_STATES of \FSM_sequential_ctl_sm_cs_reg[2]\ : label is "ctl_idle:000,ctl_addr:001,ctl_write:010,ctl_read:101,ctl_read_err:110,ctl_bresp:011,ctl_bresp_err:100";
   attribute KEEP of \FSM_sequential_ctl_sm_cs_reg[2]\ : label is "yes";
   attribute SOFT_HLUTNM : string;
+  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[4]_i_1\ : label is "soft_lutpair1";
+  attribute SOFT_HLUTNM of M_AXI_AWVALID_i_i_1 : label is "soft_lutpair1";
   attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_7 : label is "soft_lutpair0";
-  attribute SOFT_HLUTNM of burst_term_hwrite_i_1 : label is "soft_lutpair1";
+  attribute SOFT_HLUTNM of burst_term_hwrite_i_1 : label is "soft_lutpair2";
   attribute SOFT_HLUTNM of burst_term_i_i_2 : label is "soft_lutpair0";
-  attribute SOFT_HLUTNM of nonseq_txfer_pending_i_i_1 : label is "soft_lutpair1";
+  attribute SOFT_HLUTNM of nonseq_txfer_pending_i_i_1 : label is "soft_lutpair2";
 begin
-  \FSM_sequential_ctl_sm_cs_reg[0]_0\ <= \^fsm_sequential_ctl_sm_cs_reg[0]_0\;
   axi_waddr_done_i <= \^axi_waddr_done_i\;
   burst_term_with_nonseq <= \^burst_term_with_nonseq\;
-  core_is_idle <= \^core_is_idle\;
   init_pending_txfer <= \^init_pending_txfer\;
+  \out\(1 downto 0) <= \^out\(1 downto 0);
   p_12_in <= \^p_12_in\;
-  set_hresp_err <= \^set_hresp_err\;
-\FSM_sequential_ctl_sm_cs[0]_i_1\: unisim.vcomponents.LUT6
+  set_axi_waddr <= \^set_axi_waddr\;
+\FSM_sequential_ctl_sm_cs[0]_i_1\: unisim.vcomponents.LUT5
     generic map(
-      INIT => X"EAAAFFFFEAAA0000"
+      INIT => X"B8FFB800"
     )
         port map (
       I0 => \FSM_sequential_ctl_sm_cs[0]_i_2_n_0\,
-      I1 => \FSM_sequential_ctl_sm_cs[0]_i_3_n_0\,
-      I2 => \^fsm_sequential_ctl_sm_cs_reg[0]_0\,
-      I3 => ctl_sm_ns14_out,
-      I4 => \FSM_sequential_ctl_sm_cs[2]_i_4_n_0\,
-      I5 => ctl_sm_cs(0),
+      I1 => ctl_sm_cs(2),
+      I2 => \FSM_sequential_ctl_sm_cs[0]_i_3_n_0\,
+      I3 => \FSM_sequential_ctl_sm_cs_reg[2]_i_4_n_0\,
+      I4 => \^out\(0),
       O => \FSM_sequential_ctl_sm_cs[0]_i_1_n_0\
     );
-\FSM_sequential_ctl_sm_cs[0]_i_2\: unisim.vcomponents.LUT6
+\FSM_sequential_ctl_sm_cs[0]_i_2\: unisim.vcomponents.LUT5
     generic map(
-      INIT => X"0A0A03030FFF0F0F"
+      INIT => X"00E00FE0"
     )
         port map (
-      I0 => ctl_sm_ns132_out,
-      I1 => \^axi_waddr_done_i\,
-      I2 => ctl_sm_cs(2),
-      I3 => M_AXI_RLAST_reg,
-      I4 => ctl_sm_cs(1),
-      I5 => ctl_sm_cs(0),
+      I0 => nonseq_detected,
+      I1 => nonseq_txfer_pending,
+      I2 => \^out\(0),
+      I3 => \^out\(1),
+      I4 => M_AXI_RLAST_reg,
       O => \FSM_sequential_ctl_sm_cs[0]_i_2_n_0\
     );
-\FSM_sequential_ctl_sm_cs[0]_i_3\: unisim.vcomponents.LUT5
+\FSM_sequential_ctl_sm_cs[0]_i_3\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFF77777"
-    )
-        port map (
-      I0 => ctl_sm_cs(1),
-      I1 => ctl_sm_cs(0),
-      I2 => nonseq_txfer_pending,
-      I3 => nonseq_detected,
-      I4 => m_axi_bvalid,
-      O => \FSM_sequential_ctl_sm_cs[0]_i_3_n_0\
-    );
-\FSM_sequential_ctl_sm_cs[0]_i_4\: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"40"
-    )
-        port map (
-      I0 => ctl_sm_cs(1),
-      I1 => ctl_sm_cs(2),
-      I2 => ctl_sm_cs(0),
-      O => \^fsm_sequential_ctl_sm_cs_reg[0]_0\
-    );
-\FSM_sequential_ctl_sm_cs[1]_i_1\: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"B8"
-    )
-        port map (
-      I0 => \FSM_sequential_ctl_sm_cs[1]_i_2_n_0\,
-      I1 => \FSM_sequential_ctl_sm_cs[2]_i_4_n_0\,
-      I2 => ctl_sm_cs(1),
-      O => \FSM_sequential_ctl_sm_cs[1]_i_1_n_0\
-    );
-\FSM_sequential_ctl_sm_cs[1]_i_2\: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"003000AA0000FF00"
+      INIT => X"DDD11111FFFFFFFF"
     )
         port map (
       I0 => \^axi_waddr_done_i\,
-      I1 => nonseq_txfer_pending_i_reg_0,
-      I2 => ctl_sm_ns1,
-      I3 => ctl_sm_cs(1),
-      I4 => ctl_sm_cs(2),
-      I5 => ctl_sm_cs(0),
-      O => \FSM_sequential_ctl_sm_cs[1]_i_2_n_0\
+      I1 => \^out\(1),
+      I2 => nonseq_txfer_pending,
+      I3 => nonseq_detected,
+      I4 => m_axi_bvalid,
+      I5 => \^out\(0),
+      O => \FSM_sequential_ctl_sm_cs[0]_i_3_n_0\
+    );
+\FSM_sequential_ctl_sm_cs[1]_i_1\: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"8F80FFFF8F800000"
+    )
+        port map (
+      I0 => nonseq_txfer_pending_i_reg_0,
+      I1 => \^out\(0),
+      I2 => ctl_sm_cs(2),
+      I3 => \FSM_sequential_ctl_sm_cs[1]_i_3_n_0\,
+      I4 => \FSM_sequential_ctl_sm_cs_reg[2]_i_4_n_0\,
+      I5 => \^out\(1),
+      O => \FSM_sequential_ctl_sm_cs[1]_i_1_n_0\
+    );
+\FSM_sequential_ctl_sm_cs[1]_i_3\: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"38"
+    )
+        port map (
+      I0 => \^axi_waddr_done_i\,
+      I1 => \^out\(0),
+      I2 => \^out\(1),
+      O => \FSM_sequential_ctl_sm_cs[1]_i_3_n_0\
     );
 \FSM_sequential_ctl_sm_cs[2]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"AAEAFFFFAAEA0000"
+      INIT => X"B888FFFFB8880000"
     )
         port map (
       I0 => \FSM_sequential_ctl_sm_cs[2]_i_2_n_0\,
-      I1 => \FSM_sequential_ctl_sm_cs[2]_i_3_n_0\,
-      I2 => ctl_sm_cs(1),
-      I3 => M_AXI_RLAST_reg,
-      I4 => \FSM_sequential_ctl_sm_cs[2]_i_4_n_0\,
+      I1 => ctl_sm_cs(2),
+      I2 => idle_txfer_pending_reg_3,
+      I3 => \^out\(0),
+      I4 => \FSM_sequential_ctl_sm_cs_reg[2]_i_4_n_0\,
       I5 => ctl_sm_cs(2),
       O => \FSM_sequential_ctl_sm_cs[2]_i_1_n_0\
     );
 \FSM_sequential_ctl_sm_cs[2]_i_2\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"6240735100000000"
+      INIT => X"0000020000FF0200"
     )
         port map (
-      I0 => ctl_sm_cs(1),
-      I1 => ctl_sm_cs(2),
-      I2 => nonseq_txfer_pending_i_reg_2,
-      I3 => nonseq_txfer_pending_i_reg_3,
-      I4 => \^axi_waddr_done_i\,
-      I5 => ctl_sm_cs(0),
+      I0 => ctl_sm_ns1,
+      I1 => ctl_sm_ns14_out,
+      I2 => idle_txfer_pending,
+      I3 => \^out\(0),
+      I4 => \^out\(1),
+      I5 => M_AXI_RLAST_reg,
       O => \FSM_sequential_ctl_sm_cs[2]_i_2_n_0\
     );
-\FSM_sequential_ctl_sm_cs[2]_i_3\: unisim.vcomponents.LUT2
+\FSM_sequential_ctl_sm_cs[2]_i_5\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"2"
-    )
-        port map (
-      I0 => ctl_sm_cs(2),
-      I1 => ctl_sm_cs(0),
-      O => \FSM_sequential_ctl_sm_cs[2]_i_3_n_0\
-    );
-\FSM_sequential_ctl_sm_cs[2]_i_4\: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"FFFFFFFFA2A2AAA2"
-    )
-        port map (
-      I0 => \FSM_sequential_ctl_sm_cs[2]_i_7_n_0\,
-      I1 => ctl_sm_cs(2),
-      I2 => ctl_sm_ns033_out,
-      I3 => ctl_sm_ns1,
-      I4 => nonseq_txfer_pending_i_reg_0,
-      I5 => \FSM_sequential_ctl_sm_cs[2]_i_9_n_0\,
-      O => \FSM_sequential_ctl_sm_cs[2]_i_4_n_0\
-    );
-\FSM_sequential_ctl_sm_cs[2]_i_7\: unisim.vcomponents.LUT5
-    generic map(
-      INIT => X"3333E222"
-    )
-        port map (
-      I0 => AXI_ALEN_i0,
-      I1 => ctl_sm_cs(1),
-      I2 => M_AXI_WLAST_i_reg,
-      I3 => m_axi_wready,
-      I4 => ctl_sm_cs(0),
-      O => \FSM_sequential_ctl_sm_cs[2]_i_7_n_0\
-    );
-\FSM_sequential_ctl_sm_cs[2]_i_9\: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"38"
+      INIT => X"BFB3B3B3BCB0B0B0"
     )
         port map (
       I0 => m_axi_bvalid,
-      I1 => ctl_sm_cs(0),
-      I2 => ctl_sm_cs(2),
-      O => \FSM_sequential_ctl_sm_cs[2]_i_9_n_0\
+      I1 => \^out\(1),
+      I2 => \^out\(0),
+      I3 => m_axi_wready,
+      I4 => M_AXI_WLAST_i_reg_0,
+      I5 => AXI_ALEN_i0,
+      O => \FSM_sequential_ctl_sm_cs[2]_i_5_n_0\
+    );
+\FSM_sequential_ctl_sm_cs[2]_i_6\: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FDFDFDFDFDFDFFFD"
+    )
+        port map (
+      I0 => \^out\(0),
+      I1 => \^out\(1),
+      I2 => ctl_sm_ns033_out,
+      I3 => ctl_sm_ns1,
+      I4 => idle_txfer_pending,
+      I5 => ctl_sm_ns14_out,
+      O => \FSM_sequential_ctl_sm_cs[2]_i_6_n_0\
     );
 \FSM_sequential_ctl_sm_cs_reg[0]\: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
       D => \FSM_sequential_ctl_sm_cs[0]_i_1_n_0\,
-      Q => ctl_sm_cs(0),
+      Q => \^out\(0),
       R => cntr_rst
     );
 \FSM_sequential_ctl_sm_cs_reg[1]\: unisim.vcomponents.FDRE
@@ -1862,7 +1786,7 @@ begin
       C => s_ahb_hclk,
       CE => '1',
       D => \FSM_sequential_ctl_sm_cs[1]_i_1_n_0\,
-      Q => ctl_sm_cs(1),
+      Q => \^out\(1),
       R => cntr_rst
     );
 \FSM_sequential_ctl_sm_cs_reg[2]\: unisim.vcomponents.FDRE
@@ -1872,6 +1796,72 @@ begin
       D => \FSM_sequential_ctl_sm_cs[2]_i_1_n_0\,
       Q => ctl_sm_cs(2),
       R => cntr_rst
+    );
+\FSM_sequential_ctl_sm_cs_reg[2]_i_4\: unisim.vcomponents.MUXF7
+     port map (
+      I0 => \FSM_sequential_ctl_sm_cs[2]_i_5_n_0\,
+      I1 => \FSM_sequential_ctl_sm_cs[2]_i_6_n_0\,
+      O => \FSM_sequential_ctl_sm_cs_reg[2]_i_4_n_0\,
+      S => ctl_sm_cs(2)
+    );
+\INFERRED_GEN.icount_out[0]_i_1\: unisim.vcomponents.LUT2
+    generic map(
+      INIT => X"1"
+    )
+        port map (
+      I0 => \^set_axi_waddr\,
+      I1 => Q(0),
+      O => D(0)
+    );
+\INFERRED_GEN.icount_out[4]_i_1\: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"EA"
+    )
+        port map (
+      I0 => \^set_axi_waddr\,
+      I1 => m_axi_wready,
+      I2 => M_AXI_WVALID_i_reg_1,
+      O => E(0)
+    );
+M_AXI_ARVALID_i_i_1: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"BA"
+    )
+        port map (
+      I0 => set_axi_raddr,
+      I1 => m_axi_arready,
+      I2 => M_AXI_ARVALID_i_reg_0,
+      O => M_AXI_ARVALID_i_reg
+    );
+M_AXI_ARVALID_i_i_4: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"0000000000004000"
+    )
+        port map (
+      I0 => \^out\(1),
+      I1 => \^out\(0),
+      I2 => ctl_sm_ns033_out,
+      I3 => ctl_sm_ns14_out,
+      I4 => burst_term_hwrite,
+      I5 => s_ahb_hwrite,
+      O => M_AXI_ARVALID_i_i_4_n_0
+    );
+M_AXI_ARVALID_i_reg_i_2: unisim.vcomponents.MUXF7
+     port map (
+      I0 => burst_term_hwrite_reg_0,
+      I1 => M_AXI_ARVALID_i_i_4_n_0,
+      O => set_axi_raddr,
+      S => ctl_sm_cs(2)
+    );
+M_AXI_AWVALID_i_i_1: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"BA"
+    )
+        port map (
+      I0 => \^set_axi_waddr\,
+      I1 => m_axi_awready,
+      I2 => m_axi_awvalid,
+      O => M_AXI_AWVALID_i_reg
     );
 M_AXI_BREADY_i_i_1: unisim.vcomponents.LUT3
     generic map(
@@ -1891,82 +1881,93 @@ M_AXI_RLAST_reg_reg: unisim.vcomponents.FDRE
       Q => M_AXI_RLAST_reg,
       R => cntr_rst
     );
-M_AXI_WVALID_i_i_2: unisim.vcomponents.LUT6
+M_AXI_RREADY_i_i_2: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFFFFF0010100000"
+      INIT => X"FFFFFFFEFEFEFFFE"
     )
         port map (
-      I0 => ctl_sm_cs(0),
-      I1 => \reset_hready2__0\,
-      I2 => S_AHB_HRESP_i_i_9_n_0,
-      I3 => ahb_data_valid_burst_term,
-      I4 => \M_AXI_WVALID_i3__0\,
-      I5 => \^axi_waddr_done_i\,
+      I0 => \M_AXI_RREADY_i5__0\,
+      I1 => axi_rd_avlbl_reg,
+      I2 => busy_detected,
+      I3 => S_AHB_HRESP_i_i_5_n_0,
+      I4 => ctl_sm_cs(2),
+      I5 => S_AHB_HRESP_i_i_6_n_0,
+      O => M_AXI_RREADY_i_reg
+    );
+M_AXI_WVALID_i_i_2: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"FFFCAAA0"
+    )
+        port map (
+      I0 => set_axi_wdata_burst,
+      I1 => ahb_data_valid_burst_term,
+      I2 => local_en,
+      I3 => ahb_data_valid,
+      I4 => \^axi_waddr_done_i\,
       O => M_AXI_WVALID_i_reg
     );
-S_AHB_HREADY_OUT_i_i_10: unisim.vcomponents.LUT6
+M_AXI_WVALID_i_i_3: unisim.vcomponents.LUT5
     generic map(
-      INIT => X"000000000000DDF0"
+      INIT => X"00000004"
     )
         port map (
-      I0 => M_AXI_WVALID_i_reg_0,
-      I1 => \reset_hready2__0\,
-      I2 => ahb_hburst_incr_i_reg,
-      I3 => ctl_sm_cs(1),
+      I0 => \^out\(0),
+      I1 => \^out\(1),
+      I2 => ahb_hburst_single,
+      I3 => ahb_hburst_incr,
       I4 => ctl_sm_cs(2),
-      I5 => ctl_sm_cs(0),
-      O => S_AHB_HREADY_OUT_i_i_10_n_0
+      O => set_axi_wdata_burst
     );
-S_AHB_HREADY_OUT_i_i_11: unisim.vcomponents.LUT6
+S_AHB_HREADY_OUT_i_i_13: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"0000AAAA0000CC0C"
+      INIT => X"A0C0AFC0A0C0A0C0"
     )
         port map (
-      I0 => nonseq_txfer_pending_i_reg_4,
+      I0 => idle_txfer_pending_reg_1,
       I1 => \^axi_waddr_done_i\,
-      I2 => s_ahb_hwrite,
-      I3 => \reset_hready2__0\,
-      I4 => ctl_sm_cs(2),
-      I5 => ctl_sm_cs(1),
-      O => S_AHB_HREADY_OUT_i_i_11_n_0
+      I2 => \^out\(0),
+      I3 => \^out\(1),
+      I4 => ahb_hburst_single,
+      I5 => M_AXI_WVALID_i_reg_0,
+      O => S_AHB_HREADY_OUT_i_i_13_n_0
+    );
+S_AHB_HREADY_OUT_i_i_14: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"DFDDDFDFDFDDDDDD"
+    )
+        port map (
+      I0 => \^out\(0),
+      I1 => \^out\(1),
+      I2 => ctl_sm_ns14_out,
+      I3 => ctl_sm_ns033_out,
+      I4 => idle_txfer_pending,
+      I5 => ahb_rd_txer_pending_reg,
+      O => S_AHB_HREADY_OUT_i_i_14_n_0
     );
 S_AHB_HREADY_OUT_i_i_2: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"00FF00AF00FF00AC"
+      INIT => X"3333232333332320"
     )
         port map (
       I0 => busy_detected,
-      I1 => set_hready,
+      I1 => S_AHB_HREADY_OUT_i116_out,
       I2 => reset_hready,
-      I3 => S_AHB_HREADY_OUT_i116_out,
+      I3 => set_hready,
       I4 => \AHB_IF/p_9_in\,
       I5 => S_AHB_HREADY_OUT_i_reg_0,
       O => S_AHB_HREADY_OUT_i_reg
     );
-S_AHB_HREADY_OUT_i_i_4: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"BBBABABAABAAAAAA"
-    )
-        port map (
-      I0 => S_AHB_HREADY_OUT_i_i_8_n_0,
-      I1 => ctl_sm_cs(1),
-      I2 => ctl_sm_cs(2),
-      I3 => ctl_sm_cs(0),
-      I4 => \^axi_waddr_done_i\,
-      I5 => idle_txfer_pending_reg_0,
-      O => set_hready
-    );
 S_AHB_HREADY_OUT_i_i_5: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"EAEAEAEAEEEAEAEA"
+      INIT => X"4F400F0F4F400000"
     )
         port map (
-      I0 => S_AHB_HREADY_OUT_i_i_10_n_0,
-      I1 => ctl_sm_cs(0),
-      I2 => S_AHB_HREADY_OUT_i_i_11_n_0,
-      I3 => idle_txfer_pending_reg_1,
-      I4 => ctl_sm_cs(2),
-      I5 => ctl_sm_cs(1),
+      I0 => \^out\(1),
+      I1 => idle_txfer_pending_reg_0,
+      I2 => ctl_sm_cs(2),
+      I3 => \FSM_sequential_ctl_sm_cs_reg[1]_0\,
+      I4 => \^out\(0),
+      I5 => \FSM_sequential_ctl_sm_cs_reg[1]_1\,
       O => reset_hready
     );
 S_AHB_HREADY_OUT_i_i_7: unisim.vcomponents.LUT5
@@ -1981,116 +1982,99 @@ S_AHB_HREADY_OUT_i_i_7: unisim.vcomponents.LUT5
       I4 => s_ahb_hsel,
       O => \AHB_IF/p_9_in\
     );
-S_AHB_HREADY_OUT_i_i_8: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"FFFFFFFF22322222"
-    )
-        port map (
-      I0 => ctl_sm_cs(2),
-      I1 => ctl_sm_cs(0),
-      I2 => ctl_sm_cs(1),
-      I3 => ahb_hburst_single,
-      I4 => M_AXI_WVALID_i_reg_0,
-      I5 => S_AHB_HRESP_i_i_4_n_0,
-      O => S_AHB_HREADY_OUT_i_i_8_n_0
+S_AHB_HREADY_OUT_i_reg_i_6: unisim.vcomponents.MUXF7
+     port map (
+      I0 => S_AHB_HREADY_OUT_i_i_13_n_0,
+      I1 => S_AHB_HREADY_OUT_i_i_14_n_0,
+      O => set_hready,
+      S => ctl_sm_cs(2)
     );
 S_AHB_HRESP_i_i_1: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"00000000000000E0"
+      INIT => X"00E0000000E0E0E0"
     )
         port map (
       I0 => s_ahb_hresp,
-      I1 => \^set_hresp_err\,
+      I1 => set_hresp_err,
       I2 => s_ahb_hresetn,
-      I3 => \^core_is_idle\,
-      I4 => S_AHB_HRESP_i_i_4_n_0,
-      I5 => nonseq_txfer_pending_i_reg_5,
+      I3 => S_AHB_HRESP_i_i_3_n_0,
+      I4 => ctl_sm_cs(2),
+      I5 => idle_txfer_pending_reg_2,
       O => S_AHB_HRESP_i_reg
     );
-S_AHB_HRESP_i_i_2: unisim.vcomponents.LUT6
+S_AHB_HRESP_i_i_3: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFFFFFFFAAAAAEAA"
+      INIT => X"0000510100000000"
     )
         port map (
-      I0 => \FSM_sequential_ctl_sm_cs[2]_i_3_n_0\,
-      I1 => S_AHB_HRESP_i_i_6_n_0,
+      I0 => \^out\(1),
+      I1 => ctl_sm_ns1,
       I2 => idle_txfer_pending,
-      I3 => ctl_sm_ns1,
+      I3 => ctl_sm_ns033_out,
       I4 => ctl_sm_ns14_out,
-      I5 => S_AHB_HRESP_i_i_8_n_0,
-      O => \^set_hresp_err\
+      I5 => \^out\(0),
+      O => S_AHB_HRESP_i_i_3_n_0
     );
-S_AHB_HRESP_i_i_3: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"01"
-    )
-        port map (
-      I0 => ctl_sm_cs(1),
-      I1 => ctl_sm_cs(2),
-      I2 => ctl_sm_cs(0),
-      O => \^core_is_idle\
-    );
-S_AHB_HRESP_i_i_4: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"0080000000800080"
-    )
-        port map (
-      I0 => ctl_sm_cs(0),
-      I1 => S_AHB_HRESP_i_i_9_n_0,
-      I2 => m_axi_bvalid,
-      I3 => ctl_sm_ns14_out,
-      I4 => idle_txfer_pending,
-      I5 => m_axi_bresp(0),
-      O => S_AHB_HRESP_i_i_4_n_0
-    );
-S_AHB_HRESP_i_i_6: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"2"
-    )
-        port map (
-      I0 => ctl_sm_cs(2),
-      I1 => ctl_sm_cs(1),
-      O => S_AHB_HRESP_i_i_6_n_0
-    );
-S_AHB_HRESP_i_i_8: unisim.vcomponents.LUT6
+S_AHB_HRESP_i_i_5: unisim.vcomponents.LUT6
     generic map(
       INIT => X"0000000000800000"
     )
         port map (
-      I0 => ctl_sm_cs(0),
-      I1 => S_AHB_HRESP_i_i_9_n_0,
+      I0 => \^out\(0),
+      I1 => \^out\(1),
       I2 => m_axi_bvalid,
       I3 => ctl_sm_ns14_out,
       I4 => m_axi_bresp(0),
       I5 => idle_txfer_pending,
-      O => S_AHB_HRESP_i_i_8_n_0
+      O => S_AHB_HRESP_i_i_5_n_0
     );
-S_AHB_HRESP_i_i_9: unisim.vcomponents.LUT2
+S_AHB_HRESP_i_i_6: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"2"
+      INIT => X"00000100FFFFFFFF"
     )
         port map (
-      I0 => ctl_sm_cs(1),
-      I1 => ctl_sm_cs(2),
-      O => S_AHB_HRESP_i_i_9_n_0
+      I0 => \^out\(1),
+      I1 => nonseq_txfer_pending,
+      I2 => nonseq_detected,
+      I3 => ctl_sm_ns1,
+      I4 => idle_txfer_pending,
+      I5 => \^out\(0),
+      O => S_AHB_HRESP_i_i_6_n_0
     );
-ahb_wnr_i_i_4: unisim.vcomponents.LUT3
+S_AHB_HRESP_i_reg_i_2: unisim.vcomponents.MUXF7
+     port map (
+      I0 => S_AHB_HRESP_i_i_5_n_0,
+      I1 => S_AHB_HRESP_i_i_6_n_0,
+      O => set_hresp_err,
+      S => ctl_sm_cs(2)
+    );
+ahb_wnr_i_i_3: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"40"
+      INIT => X"4440000000000000"
     )
         port map (
-      I0 => ctl_sm_cs(2),
-      I1 => ctl_sm_cs(1),
-      I2 => ctl_sm_cs(0),
-      O => ahb_wnr_i_reg_0
+      I0 => \^out\(1),
+      I1 => \^out\(0),
+      I2 => s_ahb_hwrite,
+      I3 => burst_term_hwrite,
+      I4 => ctl_sm_ns14_out,
+      I5 => ctl_sm_ns033_out,
+      O => ahb_wnr_i_i_3_n_0
     );
 ahb_wnr_i_reg: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => set_axi_waddr,
+      D => \^set_axi_waddr\,
       Q => \^axi_waddr_done_i\,
       R => cntr_rst
+    );
+ahb_wnr_i_reg_i_1: unisim.vcomponents.MUXF7
+     port map (
+      I0 => burst_term_hwrite_reg_1,
+      I1 => ahb_wnr_i_i_3_n_0,
+      O => \^set_axi_waddr\,
+      S => ctl_sm_cs(2)
     );
 burst_term_hwrite_i_1: unisim.vcomponents.LUT3
     generic map(
@@ -2102,6 +2086,19 @@ burst_term_hwrite_i_1: unisim.vcomponents.LUT3
       I2 => burst_term_hwrite,
       O => burst_term_hwrite_reg
     );
+burst_term_i_i_1: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"00000000000C0404"
+    )
+        port map (
+      I0 => burst_term_i_i_2_n_0,
+      I1 => s_ahb_hresetn,
+      I2 => M_AXI_WLAST_i_reg,
+      I3 => \^init_pending_txfer\,
+      I4 => burst_term,
+      I5 => last_axi_rd_sample,
+      O => burst_term_i_reg
+    );
 burst_term_i_i_2: unisim.vcomponents.LUT4
     generic map(
       INIT => X"F7FF"
@@ -2111,7 +2108,7 @@ burst_term_i_i_2: unisim.vcomponents.LUT4
       I1 => s_ahb_hready_in,
       I2 => s_ahb_htrans(0),
       I3 => \^p_12_in\,
-      O => burst_term_i_reg
+      O => burst_term_i_i_2_n_0
     );
 burst_term_single_incr_i_1: unisim.vcomponents.LUT4
     generic map(
@@ -2129,9 +2126,9 @@ burst_term_single_incr_i_1: unisim.vcomponents.LUT4
       INIT => X"00FEFEFEFEFEFEFE"
     )
         port map (
-      I0 => ctl_sm_cs(0),
-      I1 => ctl_sm_cs(2),
-      I2 => ctl_sm_cs(1),
+      I0 => ctl_sm_cs(2),
+      I1 => \^out\(1),
+      I2 => \^out\(0),
       I3 => ahb_done_axi_in_progress,
       I4 => ahb_penult_beat_reg,
       I5 => seq_detected,
@@ -2148,18 +2145,38 @@ idle_txfer_pending_i_1: unisim.vcomponents.LUT4
       I3 => \^init_pending_txfer\,
       O => idle_txfer_pending_reg
     );
-idle_txfer_pending_i_2: unisim.vcomponents.LUT6
+idle_txfer_pending_i_3: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"00800080AAAA00AA"
+      INIT => X"FFFD555500000000"
     )
         port map (
-      I0 => ctl_sm_cs(0),
-      I1 => nonseq_txfer_pending_i_reg_0,
-      I2 => ctl_sm_ns033_out,
-      I3 => ctl_sm_cs(1),
-      I4 => nonseq_txfer_pending_i_reg_1,
-      I5 => ctl_sm_cs(2),
-      O => \^init_pending_txfer\
+      I0 => \^out\(1),
+      I1 => nonseq_txfer_pending,
+      I2 => nonseq_detected,
+      I3 => idle_txfer_pending,
+      I4 => m_axi_bvalid,
+      I5 => \^out\(0),
+      O => idle_txfer_pending_i_3_n_0
+    );
+idle_txfer_pending_i_4: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"5554000000000000"
+    )
+        port map (
+      I0 => \^out\(1),
+      I1 => nonseq_txfer_pending,
+      I2 => nonseq_detected,
+      I3 => idle_txfer_pending,
+      I4 => ctl_sm_ns033_out,
+      I5 => \^out\(0),
+      O => idle_txfer_pending_i_4_n_0
+    );
+idle_txfer_pending_reg_i_2: unisim.vcomponents.MUXF7
+     port map (
+      I0 => idle_txfer_pending_i_3_n_0,
+      I1 => idle_txfer_pending_i_4_n_0,
+      O => \^init_pending_txfer\,
+      S => ctl_sm_cs(2)
     );
 nonseq_txfer_pending_i_i_1: unisim.vcomponents.LUT3
     generic map(
@@ -2178,9 +2195,9 @@ nonseq_txfer_pending_i_i_2: unisim.vcomponents.LUT6
         port map (
       I0 => ahb_burst_done,
       I1 => ahb_done_axi_in_progress,
-      I2 => ctl_sm_cs(1),
-      I3 => ctl_sm_cs(2),
-      I4 => ctl_sm_cs(0),
+      I2 => \^out\(0),
+      I3 => \^out\(1),
+      I4 => ctl_sm_cs(2),
       I5 => nonseq_detected,
       O => \^burst_term_with_nonseq\
     );
@@ -2194,42 +2211,37 @@ entity bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel is
     seq_detected : out STD_LOGIC;
     m_axi_arvalid : out STD_LOGIC;
     m_axi_rready : out STD_LOGIC;
-    rd_load_timeout_cntr : out STD_LOGIC;
-    busy_detected : out STD_LOGIC;
-    burst_term_i_reg : out STD_LOGIC;
     S_AHB_HREADY_OUT_i_reg : out STD_LOGIC;
     ctl_sm_ns033_out : out STD_LOGIC;
     ctl_sm_ns1 : out STD_LOGIC;
+    rd_load_timeout_cntr : out STD_LOGIC;
     last_axi_rd_sample : out STD_LOGIC;
+    \M_AXI_RREADY_i5__0\ : out STD_LOGIC;
+    M_AXI_RREADY_i_reg_0 : out STD_LOGIC;
     S_AHB_HREADY_OUT_i_reg_0 : out STD_LOGIC;
     SR : in STD_LOGIC_VECTOR ( 0 to 0 );
     s_ahb_hclk : in STD_LOGIC;
     M_AXI_ARVALID_i_reg_0 : in STD_LOGIC;
-    set_hresp_err : in STD_LOGIC;
-    m_axi_rvalid : in STD_LOGIC;
-    m_axi_rlast : in STD_LOGIC;
-    burst_term : in STD_LOGIC;
-    init_pending_txfer : in STD_LOGIC;
+    s_ahb_hresetn : in STD_LOGIC;
     reset_hready010_out : in STD_LOGIC;
     ctl_sm_ns14_out : in STD_LOGIC;
     idle_txfer_pending : in STD_LOGIC;
+    busy_detected : in STD_LOGIC;
     m_axi_rresp : in STD_LOGIC_VECTOR ( 0 to 0 );
+    m_axi_rvalid : in STD_LOGIC;
     s_ahb_htrans : in STD_LOGIC_VECTOR ( 1 downto 0 );
     s_ahb_hready_in : in STD_LOGIC;
     s_ahb_hsel : in STD_LOGIC;
+    m_axi_rlast : in STD_LOGIC;
     m_axi_arready : in STD_LOGIC;
-    s_ahb_hresetn : in STD_LOGIC;
-    nonseq_detected : in STD_LOGIC;
-    nonseq_txfer_pending : in STD_LOGIC
+    \FSM_sequential_ctl_sm_cs_reg[2]\ : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel : entity is "axi_rchannel";
 end bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel;
 
 architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel is
-  signal \M_AXI_RREADY_i5__0\ : STD_LOGIC;
   signal M_AXI_RREADY_i_i_1_n_0 : STD_LOGIC;
-  signal M_AXI_RREADY_i_i_2_n_0 : STD_LOGIC;
   signal ahb_rd_req : STD_LOGIC;
   signal ahb_rd_req_i_1_n_0 : STD_LOGIC;
   signal ahb_rd_txer_pending : STD_LOGIC;
@@ -2245,7 +2257,6 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel is
   signal \axi_rresp_avlbl[1]_i_2_n_0\ : STD_LOGIC;
   signal bridge_rd_in_progress : STD_LOGIC;
   signal bridge_rd_in_progress_i_1_n_0 : STD_LOGIC;
-  signal \^busy_detected\ : STD_LOGIC;
   signal \^ctl_sm_ns033_out\ : STD_LOGIC;
   signal \^ctl_sm_ns1\ : STD_LOGIC;
   signal \^last_axi_rd_sample\ : STD_LOGIC;
@@ -2256,14 +2267,11 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel is
   signal \^seq_detected\ : STD_LOGIC;
   signal seq_detected_d1 : STD_LOGIC;
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of M_AXI_RLAST_reg_i_1 : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of M_AXI_RREADY_i_i_3 : label is "soft_lutpair12";
-  attribute SOFT_HLUTNM of \S_AHB_HRDATA_i[31]_i_1\ : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of S_AHB_HREADY_OUT_i_i_3 : label is "soft_lutpair14";
-  attribute SOFT_HLUTNM of bridge_rd_in_progress_i_1 : label is "soft_lutpair12";
-  attribute SOFT_HLUTNM of seq_detected_d1_i_1 : label is "soft_lutpair14";
+  attribute SOFT_HLUTNM of M_AXI_RREADY_i_i_3 : label is "soft_lutpair13";
+  attribute SOFT_HLUTNM of M_AXI_RREADY_i_i_4 : label is "soft_lutpair14";
+  attribute SOFT_HLUTNM of \S_AHB_HRDATA_i[31]_i_1\ : label is "soft_lutpair14";
+  attribute SOFT_HLUTNM of bridge_rd_in_progress_i_1 : label is "soft_lutpair13";
 begin
-  busy_detected <= \^busy_detected\;
   ctl_sm_ns033_out <= \^ctl_sm_ns033_out\;
   ctl_sm_ns1 <= \^ctl_sm_ns1\;
   last_axi_rd_sample <= \^last_axi_rd_sample\;
@@ -2292,29 +2300,16 @@ M_AXI_RLAST_reg_i_1: unisim.vcomponents.LUT4
     );
 M_AXI_RREADY_i_i_1: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"D5D5D5D5D5D5D5C0"
+      INIT => X"8888FFFF8888FFF8"
     )
         port map (
-      I0 => M_AXI_RREADY_i_i_2_n_0,
+      I0 => \^m_axi_arvalid\,
       I1 => m_axi_arready,
-      I2 => \^m_axi_arvalid\,
-      I3 => \^seq_detected\,
-      I4 => ahb_rd_txer_pending,
+      I2 => \^seq_detected\,
+      I3 => ahb_rd_txer_pending,
+      I4 => \FSM_sequential_ctl_sm_cs_reg[2]\,
       I5 => \^m_axi_rready\,
       O => M_AXI_RREADY_i_i_1_n_0
-    );
-M_AXI_RREADY_i_i_2: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"FFFFFFFFFFFFFEEE"
-    )
-        port map (
-      I0 => \M_AXI_RREADY_i5__0\,
-      I1 => axi_rd_avlbl,
-      I2 => ahb_rd_txer_pending,
-      I3 => \^rd_load_timeout_cntr\,
-      I4 => \^busy_detected\,
-      I5 => set_hresp_err,
-      O => M_AXI_RREADY_i_i_2_n_0
     );
 M_AXI_RREADY_i_i_3: unisim.vcomponents.LUT3
     generic map(
@@ -2325,6 +2320,17 @@ M_AXI_RREADY_i_i_3: unisim.vcomponents.LUT3
       I1 => m_axi_rvalid,
       I2 => m_axi_rlast,
       O => \M_AXI_RREADY_i5__0\
+    );
+M_AXI_RREADY_i_i_4: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"EAAA"
+    )
+        port map (
+      I0 => axi_rd_avlbl,
+      I1 => ahb_rd_txer_pending,
+      I2 => m_axi_rvalid,
+      I3 => \^m_axi_rready\,
+      O => M_AXI_RREADY_i_reg_0
     );
 M_AXI_RREADY_i_reg: unisim.vcomponents.FDRE
      port map (
@@ -2343,7 +2349,7 @@ M_AXI_RREADY_i_reg: unisim.vcomponents.FDRE
       I1 => \^m_axi_rready\,
       O => \^rd_load_timeout_cntr\
     );
-S_AHB_HREADY_OUT_i_i_12: unisim.vcomponents.LUT6
+S_AHB_HREADY_OUT_i_i_10: unisim.vcomponents.LUT6
     generic map(
       INIT => X"808080808F8F808F"
     )
@@ -2356,7 +2362,7 @@ S_AHB_HREADY_OUT_i_i_12: unisim.vcomponents.LUT6
       I5 => idle_txfer_pending,
       O => S_AHB_HREADY_OUT_i_reg
     );
-S_AHB_HREADY_OUT_i_i_15: unisim.vcomponents.LUT6
+S_AHB_HREADY_OUT_i_i_16: unisim.vcomponents.LUT6
     generic map(
       INIT => X"888888888F888888"
     )
@@ -2366,31 +2372,20 @@ S_AHB_HREADY_OUT_i_i_15: unisim.vcomponents.LUT6
       I2 => ahb_rd_txer_pending,
       I3 => \^m_axi_rready\,
       I4 => m_axi_rvalid,
-      I5 => \^busy_detected\,
+      I5 => busy_detected,
       O => rvalid_rready
     );
-S_AHB_HREADY_OUT_i_i_3: unisim.vcomponents.LUT4
+S_AHB_HREADY_OUT_i_i_21: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"4000"
+      INIT => X"00040004FFF70004"
     )
         port map (
-      I0 => s_ahb_htrans(1),
-      I1 => s_ahb_hready_in,
-      I2 => s_ahb_hsel,
-      I3 => s_ahb_htrans(0),
-      O => \^busy_detected\
-    );
-S_AHB_HREADY_OUT_i_i_9: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"000000000000F404"
-    )
-        port map (
-      I0 => \^ctl_sm_ns1\,
-      I1 => rvalid_rready,
-      I2 => idle_txfer_pending,
-      I3 => \^ctl_sm_ns033_out\,
-      I4 => nonseq_detected,
-      I5 => nonseq_txfer_pending,
+      I0 => m_axi_rresp(0),
+      I1 => \^rd_load_timeout_cntr\,
+      I2 => ahb_rd_txer_pending,
+      I3 => busy_detected,
+      I4 => \ahb_rd_txer_pending07_out__0\,
+      I5 => axi_rresp_avlbl(1),
       O => S_AHB_HREADY_OUT_i_reg_0
     );
 S_AHB_HRESP_i_i_10: unisim.vcomponents.LUT2
@@ -2409,11 +2404,24 @@ S_AHB_HRESP_i_i_7: unisim.vcomponents.LUT6
         port map (
       I0 => axi_rresp_avlbl(1),
       I1 => \ahb_rd_txer_pending07_out__0\,
-      I2 => \^busy_detected\,
+      I2 => busy_detected,
       I3 => ahb_rd_txer_pending,
       I4 => \^rd_load_timeout_cntr\,
       I5 => m_axi_rresp(0),
       O => \^ctl_sm_ns1\
+    );
+S_AHB_HRESP_i_i_8: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FF04040400000000"
+    )
+        port map (
+      I0 => busy_detected,
+      I1 => \^rd_load_timeout_cntr\,
+      I2 => ahb_rd_txer_pending,
+      I3 => ahb_rd_req,
+      I4 => axi_rd_avlbl,
+      I5 => \^last_axi_rd_sample\,
+      O => \^ctl_sm_ns033_out\
     );
 ahb_rd_req_i_1: unisim.vcomponents.LUT6
     generic map(
@@ -2443,7 +2451,7 @@ ahb_rd_txer_pending_i_1: unisim.vcomponents.LUT6
         port map (
       I0 => ahb_rd_txer_pending,
       I1 => bridge_rd_in_progress,
-      I2 => \^busy_detected\,
+      I2 => busy_detected,
       I3 => s_ahb_hresetn,
       I4 => ahb_rd_req,
       I5 => axi_rd_avlbl,
@@ -2456,19 +2464,6 @@ ahb_rd_txer_pending_reg: unisim.vcomponents.FDRE
       D => ahb_rd_txer_pending_i_1_n_0,
       Q => ahb_rd_txer_pending,
       R => '0'
-    );
-ahb_wnr_i_i_3: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"FF04040400000000"
-    )
-        port map (
-      I0 => \^busy_detected\,
-      I1 => \^rd_load_timeout_cntr\,
-      I2 => ahb_rd_txer_pending,
-      I3 => ahb_rd_req,
-      I4 => axi_rd_avlbl,
-      I5 => \^last_axi_rd_sample\,
-      O => \^ctl_sm_ns033_out\
     );
 axi_last_avlbl_i_1: unisim.vcomponents.LUT3
     generic map(
@@ -2489,7 +2484,7 @@ axi_last_avlbl_i_2: unisim.vcomponents.LUT6
       I1 => \^m_axi_rready\,
       I2 => m_axi_rvalid,
       I3 => ahb_rd_txer_pending,
-      I4 => \^busy_detected\,
+      I4 => busy_detected,
       I5 => axi_last_avlbl_reg_n_0,
       O => axi_last_avlbl_i_2_n_0
     );
@@ -2508,7 +2503,7 @@ axi_rd_avlbl_i_1: unisim.vcomponents.LUT6
         port map (
       I0 => \^rd_load_timeout_cntr\,
       I1 => ahb_rd_txer_pending,
-      I2 => \^busy_detected\,
+      I2 => busy_detected,
       I3 => s_ahb_hresetn,
       I4 => ahb_rd_req,
       I5 => axi_rd_avlbl,
@@ -2576,19 +2571,6 @@ bridge_rd_in_progress_reg: unisim.vcomponents.FDRE
       Q => bridge_rd_in_progress,
       R => SR(0)
     );
-burst_term_i_i_4: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"FFFFFF08FF08FF08"
-    )
-        port map (
-      I0 => m_axi_rvalid,
-      I1 => m_axi_rlast,
-      I2 => ahb_rd_txer_pending,
-      I3 => axi_last_avlbl_reg_n_0,
-      I4 => burst_term,
-      I5 => init_pending_txfer,
-      O => burst_term_i_reg
-    );
 seq_detected_d1_i_1: unisim.vcomponents.LUT4
     generic map(
       INIT => X"8000"
@@ -2615,15 +2597,19 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity bd_qspi_ahblite_axi_bridge_0_0_counter_f is
   port (
-    \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3]\ : out STD_LOGIC;
-    \dummy_on_axi__0\ : out STD_LOGIC;
-    Q : out STD_LOGIC_VECTOR ( 4 downto 0 );
+    M_AXI_WVALID_i_reg : out STD_LOGIC;
     axi_penult_beat_reg : out STD_LOGIC;
     axi_last_beat_reg : out STD_LOGIC;
+    \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3]\ : out STD_LOGIC;
+    Q : out STD_LOGIC_VECTOR ( 4 downto 0 );
     dummy_on_axi_progress_reg : out STD_LOGIC;
+    M_AXI_WVALID_i_reg_0 : in STD_LOGIC;
+    ahb_data_valid_burst_term_reg : in STD_LOGIC;
+    s_ahb_hresetn : in STD_LOGIC;
     m_axi_wready : in STD_LOGIC;
-    M_AXI_WVALID_i_reg : in STD_LOGIC;
-    set_axi_waddr : in STD_LOGIC;
+    M_AXI_WLAST_i_reg : in STD_LOGIC;
+    axi_penult_beat_reg_0 : in STD_LOGIC;
+    axi_last_beat_reg_0 : in STD_LOGIC;
     burst_term : in STD_LOGIC;
     dummy_on_axi_progress : in STD_LOGIC;
     eqOp6_out : in STD_LOGIC;
@@ -2631,11 +2617,9 @@ entity bd_qspi_ahblite_axi_bridge_0_0_counter_f is
     axi_cnt_required : in STD_LOGIC_VECTOR ( 2 downto 0 );
     \burst_term_cur_cnt_i_reg[4]\ : in STD_LOGIC_VECTOR ( 4 downto 0 );
     \burst_term_cur_cnt_i_reg[1]\ : in STD_LOGIC;
-    axi_penult_beat_reg_0 : in STD_LOGIC;
-    s_ahb_hresetn : in STD_LOGIC;
-    axi_last_beat_reg_0 : in STD_LOGIC;
-    M_AXI_WLAST_i_reg : in STD_LOGIC;
+    set_axi_waddr : in STD_LOGIC;
     SR : in STD_LOGIC_VECTOR ( 0 to 0 );
+    E : in STD_LOGIC_VECTOR ( 0 to 0 );
     s_ahb_hclk : in STD_LOGIC;
     D : in STD_LOGIC_VECTOR ( 0 to 0 )
   );
@@ -2647,7 +2631,6 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_counter_f is
   signal \INFERRED_GEN.icount_out[1]_i_1_n_0\ : STD_LOGIC;
   signal \INFERRED_GEN.icount_out[2]_i_1_n_0\ : STD_LOGIC;
   signal \INFERRED_GEN.icount_out[3]_i_1_n_0\ : STD_LOGIC;
-  signal \INFERRED_GEN.icount_out[4]_i_1_n_0\ : STD_LOGIC;
   signal \INFERRED_GEN.icount_out[4]_i_2_n_0\ : STD_LOGIC;
   signal \^q\ : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal axi_last_beat_i_2_n_0 : STD_LOGIC;
@@ -2656,7 +2639,7 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_counter_f is
   signal axi_penult_beat_i_2_n_0 : STD_LOGIC;
   signal axi_penult_beat_i_5_n_0 : STD_LOGIC;
   signal axi_penult_beat_i_6_n_0 : STD_LOGIC;
-  signal \^dummy_on_axi__0\ : STD_LOGIC;
+  signal \dummy_on_axi__0\ : STD_LOGIC;
   signal dummy_on_axi_init : STD_LOGIC;
   signal dummy_on_axi_progress_i_6_n_0 : STD_LOGIC;
   signal eqOp1_out : STD_LOGIC;
@@ -2677,7 +2660,6 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_counter_f is
   attribute SOFT_HLUTNM of dummy_on_axi_progress_i_1 : label is "soft_lutpair18";
 begin
   Q(4 downto 0) <= \^q\(4 downto 0);
-  \dummy_on_axi__0\ <= \^dummy_on_axi__0\;
 \INFERRED_GEN.icount_out[1]_i_1\: unisim.vcomponents.LUT3
     generic map(
       INIT => X"14"
@@ -2711,16 +2693,6 @@ begin
       I4 => set_axi_waddr,
       O => \INFERRED_GEN.icount_out[3]_i_1_n_0\
     );
-\INFERRED_GEN.icount_out[4]_i_1\: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"F8"
-    )
-        port map (
-      I0 => m_axi_wready,
-      I1 => M_AXI_WVALID_i_reg,
-      I2 => set_axi_waddr,
-      O => \INFERRED_GEN.icount_out[4]_i_1_n_0\
-    );
 \INFERRED_GEN.icount_out[4]_i_2\: unisim.vcomponents.LUT6
     generic map(
       INIT => X"000000006CCCCCCC"
@@ -2737,7 +2709,7 @@ begin
 \INFERRED_GEN.icount_out_reg[0]\: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
-      CE => \INFERRED_GEN.icount_out[4]_i_1_n_0\,
+      CE => E(0),
       D => D(0),
       Q => \^q\(0),
       R => SR(0)
@@ -2745,7 +2717,7 @@ begin
 \INFERRED_GEN.icount_out_reg[1]\: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
-      CE => \INFERRED_GEN.icount_out[4]_i_1_n_0\,
+      CE => E(0),
       D => \INFERRED_GEN.icount_out[1]_i_1_n_0\,
       Q => \^q\(1),
       R => SR(0)
@@ -2753,7 +2725,7 @@ begin
 \INFERRED_GEN.icount_out_reg[2]\: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
-      CE => \INFERRED_GEN.icount_out[4]_i_1_n_0\,
+      CE => E(0),
       D => \INFERRED_GEN.icount_out[2]_i_1_n_0\,
       Q => \^q\(2),
       R => SR(0)
@@ -2761,7 +2733,7 @@ begin
 \INFERRED_GEN.icount_out_reg[3]\: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
-      CE => \INFERRED_GEN.icount_out[4]_i_1_n_0\,
+      CE => E(0),
       D => \INFERRED_GEN.icount_out[3]_i_1_n_0\,
       Q => \^q\(3),
       R => SR(0)
@@ -2769,17 +2741,30 @@ begin
 \INFERRED_GEN.icount_out_reg[4]\: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
-      CE => \INFERRED_GEN.icount_out[4]_i_1_n_0\,
+      CE => E(0),
       D => \INFERRED_GEN.icount_out[4]_i_2_n_0\,
       Q => \^q\(4),
       R => SR(0)
+    );
+M_AXI_WVALID_i_i_1: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"0000FE00FC00FE00"
+    )
+        port map (
+      I0 => M_AXI_WVALID_i_reg_0,
+      I1 => \dummy_on_axi__0\,
+      I2 => ahb_data_valid_burst_term_reg,
+      I3 => s_ahb_hresetn,
+      I4 => m_axi_wready,
+      I5 => M_AXI_WLAST_i_reg,
+      O => M_AXI_WVALID_i_reg
     );
 \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i[3]_i_1\: unisim.vcomponents.LUT1
     generic map(
       INIT => X"1"
     )
         port map (
-      I0 => \^dummy_on_axi__0\,
+      I0 => \dummy_on_axi__0\,
       O => \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3]\
     );
 \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i[3]_i_2\: unisim.vcomponents.LUT2
@@ -2789,7 +2774,7 @@ begin
         port map (
       I0 => dummy_on_axi_init,
       I1 => dummy_on_axi_progress,
-      O => \^dummy_on_axi__0\
+      O => \dummy_on_axi__0\
     );
 axi_last_beat_i_1: unisim.vcomponents.LUT5
     generic map(
@@ -2799,7 +2784,7 @@ axi_last_beat_i_1: unisim.vcomponents.LUT5
       I0 => axi_last_beat_reg_0,
       I1 => s_ahb_hresetn,
       I2 => m_axi_wready,
-      I3 => M_AXI_WVALID_i_reg,
+      I3 => M_AXI_WVALID_i_reg_0,
       I4 => axi_last_beat_i_2_n_0,
       O => axi_last_beat_reg
     );
@@ -2871,7 +2856,7 @@ axi_penult_beat_i_1: unisim.vcomponents.LUT5
       I0 => axi_penult_beat_reg_0,
       I1 => s_ahb_hresetn,
       I2 => m_axi_wready,
-      I3 => M_AXI_WVALID_i_reg,
+      I3 => M_AXI_WVALID_i_reg_0,
       I4 => axi_penult_beat_i_2_n_0,
       O => axi_penult_beat_reg
     );
@@ -2953,7 +2938,7 @@ dummy_on_axi_progress_i_2: unisim.vcomponents.LUT6
         port map (
       I0 => dummy_on_axi_progress,
       I1 => eqOp6_out,
-      I2 => M_AXI_WVALID_i_reg,
+      I2 => M_AXI_WVALID_i_reg_0,
       I3 => m_axi_wready,
       I4 => eqOp8_out,
       I5 => burst_term,
@@ -2995,10 +2980,8 @@ entity bd_qspi_ahblite_axi_bridge_0_0_counter_f_0 is
     ahb_penult_beat_reg : out STD_LOGIC;
     Q : out STD_LOGIC_VECTOR ( 4 downto 0 );
     valid_cnt_required : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    s_ahb_htrans : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    s_ahb_hready_in : in STD_LOGIC;
-    s_ahb_hsel : in STD_LOGIC;
     nonseq_detected : in STD_LOGIC;
+    s_ahb_htrans : in STD_LOGIC_VECTOR ( 0 to 0 );
     SR : in STD_LOGIC_VECTOR ( 0 to 0 );
     E : in STD_LOGIC_VECTOR ( 0 to 0 );
     s_ahb_hclk : in STD_LOGIC
@@ -3016,33 +2999,29 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_counter_f_0 is
   signal \^q\ : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal ahb_penult_beat_i_4_n_0 : STD_LOGIC;
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[2]_i_1__0\ : label is "soft_lutpair2";
-  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[3]_i_1__0\ : label is "soft_lutpair2";
+  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[0]_i_1__0\ : label is "soft_lutpair4";
+  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[1]_i_1__0\ : label is "soft_lutpair4";
+  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[2]_i_1__0\ : label is "soft_lutpair3";
+  attribute SOFT_HLUTNM of \INFERRED_GEN.icount_out[3]_i_1__0\ : label is "soft_lutpair3";
 begin
   Q(4 downto 0) <= \^q\(4 downto 0);
-\INFERRED_GEN.icount_out[0]_i_1__0\: unisim.vcomponents.LUT5
+\INFERRED_GEN.icount_out[0]_i_1__0\: unisim.vcomponents.LUT2
     generic map(
-      INIT => X"2000FFFF"
+      INIT => X"7"
     )
         port map (
-      I0 => s_ahb_htrans(1),
-      I1 => s_ahb_htrans(0),
-      I2 => s_ahb_hready_in,
-      I3 => s_ahb_hsel,
-      I4 => \^q\(0),
+      I0 => s_ahb_htrans(0),
+      I1 => \^q\(0),
       O => \INFERRED_GEN.icount_out[0]_i_1__0_n_0\
     );
-\INFERRED_GEN.icount_out[1]_i_1__0\: unisim.vcomponents.LUT6
+\INFERRED_GEN.icount_out[1]_i_1__0\: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"0000DFFFDFFF0000"
+      INIT => X"28"
     )
         port map (
-      I0 => s_ahb_htrans(1),
-      I1 => s_ahb_htrans(0),
-      I2 => s_ahb_hready_in,
-      I3 => s_ahb_hsel,
-      I4 => \^q\(1),
-      I5 => \^q\(0),
+      I0 => s_ahb_htrans(0),
+      I1 => \^q\(1),
+      I2 => \^q\(0),
       O => \INFERRED_GEN.icount_out[1]_i_1__0_n_0\
     );
 \INFERRED_GEN.icount_out[2]_i_1__0\: unisim.vcomponents.LUT4
@@ -3156,10 +3135,8 @@ entity bd_qspi_ahblite_axi_bridge_0_0_ahb_data_counter is
     ahb_penult_beat_reg : out STD_LOGIC;
     Q : out STD_LOGIC_VECTOR ( 4 downto 0 );
     valid_cnt_required : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    s_ahb_htrans : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    s_ahb_hready_in : in STD_LOGIC;
-    s_ahb_hsel : in STD_LOGIC;
     nonseq_detected : in STD_LOGIC;
+    s_ahb_htrans : in STD_LOGIC_VECTOR ( 0 to 0 );
     SR : in STD_LOGIC_VECTOR ( 0 to 0 );
     E : in STD_LOGIC_VECTOR ( 0 to 0 );
     s_ahb_hclk : in STD_LOGIC
@@ -3178,9 +3155,7 @@ AHB_SAMPLE_CNT_MODULE: entity work.bd_qspi_ahblite_axi_bridge_0_0_counter_f_0
       ahb_penult_beat_reg => ahb_penult_beat_reg,
       nonseq_detected => nonseq_detected,
       s_ahb_hclk => s_ahb_hclk,
-      s_ahb_hready_in => s_ahb_hready_in,
-      s_ahb_hsel => s_ahb_hsel,
-      s_ahb_htrans(1 downto 0) => s_ahb_htrans(1 downto 0),
+      s_ahb_htrans(0) => s_ahb_htrans(0),
       valid_cnt_required(2 downto 0) => valid_cnt_required(2 downto 0)
     );
 end STRUCTURE;
@@ -3195,9 +3170,9 @@ entity bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel is
     local_en : out STD_LOGIC;
     m_axi_wlast : out STD_LOGIC;
     ahb_data_valid_burst_term : out STD_LOGIC;
-    m_axi_bready : out STD_LOGIC;
     m_axi_wvalid : out STD_LOGIC;
-    axi_wdata_done_i0 : out STD_LOGIC;
+    m_axi_bready : out STD_LOGIC;
+    burst_term_i_reg : out STD_LOGIC;
     Q : out STD_LOGIC_VECTOR ( 4 downto 0 );
     ahb_data_valid_i_reg : out STD_LOGIC;
     ahb_data_valid_i_reg_0 : out STD_LOGIC;
@@ -3207,23 +3182,25 @@ entity bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel is
     M_AXI_AWVALID_i_reg_0 : in STD_LOGIC;
     nonseq_txfer_pending_i_reg : in STD_LOGIC;
     ahb_wnr_i_reg : in STD_LOGIC;
+    ahb_data_valid_burst_term_reg_0 : in STD_LOGIC;
+    s_ahb_hresetn : in STD_LOGIC;
     m_axi_wready : in STD_LOGIC;
-    set_axi_waddr : in STD_LOGIC;
     burst_term : in STD_LOGIC;
-    ahb_data_valid : in STD_LOGIC;
     eqOp6_out : in STD_LOGIC;
+    ahb_data_valid : in STD_LOGIC;
+    dummy_txfer_in_progress_reg : in STD_LOGIC;
     s_ahb_hwdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
     \burst_term_txer_cnt_i_reg[3]\ : in STD_LOGIC_VECTOR ( 2 downto 0 );
     \burst_term_cur_cnt_i_reg[4]\ : in STD_LOGIC_VECTOR ( 4 downto 0 );
     \burst_term_cur_cnt_i_reg[1]\ : in STD_LOGIC;
-    s_ahb_hresetn : in STD_LOGIC;
+    set_axi_waddr : in STD_LOGIC;
     M_AXI_WLAST_i110_out : in STD_LOGIC;
     p_27_in : in STD_LOGIC;
     s_ahb_htrans : in STD_LOGIC_VECTOR ( 0 to 0 );
+    E : in STD_LOGIC_VECTOR ( 0 to 0 );
     D : in STD_LOGIC_VECTOR ( 0 to 0 );
     valid_cnt_required : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    axi_waddr_done_i : in STD_LOGIC;
-    \FSM_sequential_ctl_sm_cs_reg[0]\ : in STD_LOGIC
+    axi_waddr_done_i : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel : entity is "axi_wchannel";
@@ -3231,13 +3208,13 @@ end bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel;
 
 architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel is
   signal AXI_WRITE_CNT_MODULE_n_0 : STD_LOGIC;
-  signal AXI_WRITE_CNT_MODULE_n_7 : STD_LOGIC;
-  signal AXI_WRITE_CNT_MODULE_n_8 : STD_LOGIC;
+  signal AXI_WRITE_CNT_MODULE_n_1 : STD_LOGIC;
+  signal AXI_WRITE_CNT_MODULE_n_2 : STD_LOGIC;
+  signal AXI_WRITE_CNT_MODULE_n_3 : STD_LOGIC;
   signal AXI_WRITE_CNT_MODULE_n_9 : STD_LOGIC;
   signal \M_AXI_WDATA_i[31]_i_1_n_0\ : STD_LOGIC;
-  signal \M_AXI_WLAST_i__2\ : STD_LOGIC;
+  signal \M_AXI_WLAST_i__1\ : STD_LOGIC;
   signal M_AXI_WLAST_i_i_1_n_0 : STD_LOGIC;
-  signal M_AXI_WVALID_i_i_1_n_0 : STD_LOGIC;
   signal \^ahb_data_valid_i_reg\ : STD_LOGIC;
   signal axi_cnt_required : STD_LOGIC_VECTOR ( 3 downto 1 );
   signal \axi_cnt_required[1]_i_1_n_0\ : STD_LOGIC;
@@ -3245,7 +3222,6 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel is
   signal \axi_cnt_required[3]_i_1_n_0\ : STD_LOGIC;
   signal axi_last_beat_reg_n_0 : STD_LOGIC;
   signal axi_penult_beat_reg_n_0 : STD_LOGIC;
-  signal \dummy_on_axi__0\ : STD_LOGIC;
   signal dummy_on_axi_progress : STD_LOGIC;
   signal \^local_en\ : STD_LOGIC;
   signal local_en_i_1_n_0 : STD_LOGIC;
@@ -3257,10 +3233,8 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel is
   attribute SOFT_HLUTNM : string;
   attribute SOFT_HLUTNM of \M_AXI_WDATA_i[15]_i_1\ : label is "soft_lutpair20";
   attribute SOFT_HLUTNM of ahb_data_valid_i_i_2 : label is "soft_lutpair20";
-  attribute SOFT_HLUTNM of \axi_cnt_required[1]_i_1\ : label is "soft_lutpair22";
-  attribute SOFT_HLUTNM of \axi_cnt_required[3]_i_1\ : label is "soft_lutpair22";
-  attribute SOFT_HLUTNM of burst_term_i_i_3 : label is "soft_lutpair21";
-  attribute SOFT_HLUTNM of local_en_i_1 : label is "soft_lutpair21";
+  attribute SOFT_HLUTNM of \axi_cnt_required[1]_i_1\ : label is "soft_lutpair21";
+  attribute SOFT_HLUTNM of \axi_cnt_required[3]_i_1\ : label is "soft_lutpair21";
 begin
   ahb_data_valid_i_reg <= \^ahb_data_valid_i_reg\;
   local_en <= \^local_en\;
@@ -3269,21 +3243,23 @@ begin
 AXI_WRITE_CNT_MODULE: entity work.bd_qspi_ahblite_axi_bridge_0_0_counter_f
      port map (
       D(0) => D(0),
+      E(0) => E(0),
       M_AXI_WLAST_i_reg => \^m_axi_wlast\,
-      M_AXI_WVALID_i_reg => \^m_axi_wvalid\,
-      \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3]\ => AXI_WRITE_CNT_MODULE_n_0,
+      M_AXI_WVALID_i_reg => AXI_WRITE_CNT_MODULE_n_0,
+      M_AXI_WVALID_i_reg_0 => \^m_axi_wvalid\,
+      \NARROW_TRANSFER_OFF.M_AXI_WSTRB_i_reg[3]\ => AXI_WRITE_CNT_MODULE_n_3,
       Q(4 downto 0) => Q(4 downto 0),
       SR(0) => SR(0),
+      ahb_data_valid_burst_term_reg => ahb_data_valid_burst_term_reg_0,
       axi_cnt_required(2 downto 0) => axi_cnt_required(3 downto 1),
-      axi_last_beat_reg => AXI_WRITE_CNT_MODULE_n_8,
+      axi_last_beat_reg => AXI_WRITE_CNT_MODULE_n_2,
       axi_last_beat_reg_0 => axi_last_beat_reg_n_0,
-      axi_penult_beat_reg => AXI_WRITE_CNT_MODULE_n_7,
+      axi_penult_beat_reg => AXI_WRITE_CNT_MODULE_n_1,
       axi_penult_beat_reg_0 => axi_penult_beat_reg_n_0,
       burst_term => burst_term,
       \burst_term_cur_cnt_i_reg[1]\ => \burst_term_cur_cnt_i_reg[1]\,
       \burst_term_cur_cnt_i_reg[4]\(4 downto 0) => \burst_term_cur_cnt_i_reg[4]\(4 downto 0),
       \burst_term_txer_cnt_i_reg[3]\(2 downto 0) => \burst_term_txer_cnt_i_reg[3]\(2 downto 0),
-      \dummy_on_axi__0\ => \dummy_on_axi__0\,
       dummy_on_axi_progress => dummy_on_axi_progress,
       dummy_on_axi_progress_reg => AXI_WRITE_CNT_MODULE_n_9,
       eqOp6_out => eqOp6_out,
@@ -3962,7 +3938,7 @@ M_AXI_WLAST_i_i_1: unisim.vcomponents.LUT6
       INIT => X"CEFECEFECEFECCFC"
     )
         port map (
-      I0 => \M_AXI_WLAST_i__2\,
+      I0 => \M_AXI_WLAST_i__1\,
       I1 => M_AXI_WLAST_i110_out,
       I2 => \^m_axi_wlast\,
       I3 => m_axi_wready,
@@ -3972,16 +3948,16 @@ M_AXI_WLAST_i_i_1: unisim.vcomponents.LUT6
     );
 M_AXI_WLAST_i_i_2: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FEFE00FE00FE00FE"
+      INIT => X"8F8F8F8F8F8F8F00"
     )
         port map (
-      I0 => burst_term,
-      I1 => ahb_data_valid,
-      I2 => \^local_en\,
-      I3 => axi_penult_beat_reg_n_0,
-      I4 => \^m_axi_wvalid\,
-      I5 => m_axi_wready,
-      O => \M_AXI_WLAST_i__2\
+      I0 => m_axi_wready,
+      I1 => \^m_axi_wvalid\,
+      I2 => axi_penult_beat_reg_n_0,
+      I3 => \^local_en\,
+      I4 => ahb_data_valid,
+      I5 => burst_term,
+      O => \M_AXI_WLAST_i__1\
     );
 M_AXI_WLAST_i_reg: unisim.vcomponents.FDRE
      port map (
@@ -3991,24 +3967,11 @@ M_AXI_WLAST_i_reg: unisim.vcomponents.FDRE
       Q => \^m_axi_wlast\,
       R => SR(0)
     );
-M_AXI_WVALID_i_i_1: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"0000FE00FC00FE00"
-    )
-        port map (
-      I0 => \^m_axi_wvalid\,
-      I1 => \dummy_on_axi__0\,
-      I2 => \FSM_sequential_ctl_sm_cs_reg[0]\,
-      I3 => s_ahb_hresetn,
-      I4 => m_axi_wready,
-      I5 => \^m_axi_wlast\,
-      O => M_AXI_WVALID_i_i_1_n_0
-    );
 M_AXI_WVALID_i_reg: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => M_AXI_WVALID_i_i_1_n_0,
+      D => AXI_WRITE_CNT_MODULE_n_0,
       Q => \^m_axi_wvalid\,
       R => '0'
     );
@@ -4016,7 +3979,7 @@ M_AXI_WVALID_i_reg: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => AXI_WRITE_CNT_MODULE_n_0,
+      D => AXI_WRITE_CNT_MODULE_n_3,
       Q => m_axi_wstrb(0),
       S => SR(0)
     );
@@ -4107,7 +4070,7 @@ axi_last_beat_reg: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => AXI_WRITE_CNT_MODULE_n_8,
+      D => AXI_WRITE_CNT_MODULE_n_2,
       Q => axi_last_beat_reg_n_0,
       R => '0'
     );
@@ -4115,18 +4078,19 @@ axi_penult_beat_reg: unisim.vcomponents.FDRE
      port map (
       C => s_ahb_hclk,
       CE => '1',
-      D => AXI_WRITE_CNT_MODULE_n_7,
+      D => AXI_WRITE_CNT_MODULE_n_1,
       Q => axi_penult_beat_reg_n_0,
       R => '0'
     );
-burst_term_i_i_3: unisim.vcomponents.LUT2
+burst_term_i_i_3: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"8"
+      INIT => X"F8"
     )
         port map (
-      I0 => m_axi_wready,
-      I1 => \^m_axi_wlast\,
-      O => axi_wdata_done_i0
+      I0 => \^m_axi_wlast\,
+      I1 => m_axi_wready,
+      I2 => dummy_txfer_in_progress_reg,
+      O => burst_term_i_reg
     );
 dummy_on_axi_progress_reg: unisim.vcomponents.FDRE
      port map (
@@ -4509,15 +4473,20 @@ end bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_bridge;
 
 architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_bridge is
   signal \<const0>\ : STD_LOGIC;
-  signal AHBLITE_AXI_CONTROL_n_10 : STD_LOGIC;
-  signal AHBLITE_AXI_CONTROL_n_11 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_0 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_1 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_12 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_13 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_14 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_15 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_16 : STD_LOGIC;
-  signal AHBLITE_AXI_CONTROL_n_4 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_17 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_18 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_19 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_20 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_5 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_6 : STD_LOGIC;
+  signal AHBLITE_AXI_CONTROL_n_7 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_8 : STD_LOGIC;
   signal AHBLITE_AXI_CONTROL_n_9 : STD_LOGIC;
   signal AHB_DATA_COUNTER_n_0 : STD_LOGIC;
@@ -4528,39 +4497,39 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_bridge is
   signal AHB_DATA_COUNTER_n_5 : STD_LOGIC;
   signal AHB_IF_n_16 : STD_LOGIC;
   signal AHB_IF_n_18 : STD_LOGIC;
-  signal AHB_IF_n_19 : STD_LOGIC;
+  signal AHB_IF_n_20 : STD_LOGIC;
+  signal AHB_IF_n_21 : STD_LOGIC;
   signal AHB_IF_n_22 : STD_LOGIC;
   signal AHB_IF_n_23 : STD_LOGIC;
   signal AHB_IF_n_24 : STD_LOGIC;
-  signal AHB_IF_n_28 : STD_LOGIC;
-  signal AHB_IF_n_3 : STD_LOGIC;
-  signal AHB_IF_n_31 : STD_LOGIC;
-  signal AHB_IF_n_38 : STD_LOGIC;
-  signal AHB_IF_n_39 : STD_LOGIC;
-  signal AHB_IF_n_40 : STD_LOGIC;
+  signal AHB_IF_n_26 : STD_LOGIC;
+  signal AHB_IF_n_33 : STD_LOGIC;
+  signal AHB_IF_n_34 : STD_LOGIC;
   signal AHB_IF_n_41 : STD_LOGIC;
   signal AHB_IF_n_42 : STD_LOGIC;
+  signal AHB_IF_n_7 : STD_LOGIC;
   signal AXI_ALEN_i0 : STD_LOGIC;
   signal AXI_RCHANNEL_n_10 : STD_LOGIC;
-  signal AXI_RCHANNEL_n_5 : STD_LOGIC;
-  signal AXI_RCHANNEL_n_6 : STD_LOGIC;
+  signal AXI_RCHANNEL_n_3 : STD_LOGIC;
+  signal AXI_RCHANNEL_n_9 : STD_LOGIC;
   signal AXI_WCHANNEL_n_10 : STD_LOGIC;
   signal AXI_WCHANNEL_n_11 : STD_LOGIC;
   signal AXI_WCHANNEL_n_12 : STD_LOGIC;
   signal AXI_WCHANNEL_n_13 : STD_LOGIC;
   signal AXI_WCHANNEL_n_14 : STD_LOGIC;
+  signal AXI_WCHANNEL_n_7 : STD_LOGIC;
   signal AXI_WCHANNEL_n_8 : STD_LOGIC;
   signal AXI_WCHANNEL_n_9 : STD_LOGIC;
+  signal \M_AXI_RREADY_i5__0\ : STD_LOGIC;
   signal M_AXI_WLAST_i110_out : STD_LOGIC;
-  signal \M_AXI_WVALID_i3__0\ : STD_LOGIC;
   signal S_AHB_HREADY_OUT_i116_out : STD_LOGIC;
   signal ahb_burst_done : STD_LOGIC;
   signal ahb_data_valid : STD_LOGIC;
   signal ahb_data_valid_burst_term : STD_LOGIC;
   signal ahb_done_axi_in_progress : STD_LOGIC;
+  signal ahb_hburst_incr : STD_LOGIC;
   signal ahb_hburst_single : STD_LOGIC;
   signal axi_waddr_done_i : STD_LOGIC;
-  signal axi_wdata_done_i0 : STD_LOGIC;
   signal burst_term : STD_LOGIC;
   signal burst_term_cur_cnt : STD_LOGIC_VECTOR ( 4 downto 0 );
   signal burst_term_hwrite : STD_LOGIC;
@@ -4569,10 +4538,8 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_bridge is
   signal burst_term_with_nonseq : STD_LOGIC;
   signal busy_detected : STD_LOGIC;
   signal cntr_rst : STD_LOGIC;
-  signal core_is_idle : STD_LOGIC;
   signal ctl_sm_ns033_out : STD_LOGIC;
   signal ctl_sm_ns1 : STD_LOGIC;
-  signal ctl_sm_ns132_out : STD_LOGIC;
   signal ctl_sm_ns14_out : STD_LOGIC;
   signal eqOp6_out : STD_LOGIC;
   signal idle_txfer_pending : STD_LOGIC;
@@ -4591,18 +4558,17 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_bridge is
   signal \^m_axi_bready\ : STD_LOGIC;
   signal \^m_axi_wlast\ : STD_LOGIC;
   signal \^m_axi_wstrb\ : STD_LOGIC_VECTOR ( 2 to 2 );
+  signal \^m_axi_wvalid\ : STD_LOGIC;
   signal nonseq_detected : STD_LOGIC;
   signal nonseq_txfer_pending : STD_LOGIC;
   signal p_12_in : STD_LOGIC;
   signal p_27_in : STD_LOGIC;
   signal rd_load_timeout_cntr : STD_LOGIC;
   signal reset_hready010_out : STD_LOGIC;
-  signal \reset_hready2__0\ : STD_LOGIC;
   signal \^s_ahb_hready_out\ : STD_LOGIC;
   signal \^s_ahb_hresp\ : STD_LOGIC;
   signal seq_detected : STD_LOGIC;
   signal set_axi_waddr : STD_LOGIC;
-  signal set_hresp_err : STD_LOGIC;
   signal valid_cnt_required : STD_LOGIC_VECTOR ( 3 downto 1 );
 begin
   m_axi_araddr(31 downto 0) <= \^m_axi_araddr\(31 downto 0);
@@ -4645,63 +4611,79 @@ begin
   m_axi_wstrb(2) <= \^m_axi_wstrb\(2);
   m_axi_wstrb(1) <= \^m_axi_wstrb\(2);
   m_axi_wstrb(0) <= \^m_axi_wstrb\(2);
+  m_axi_wvalid <= \^m_axi_wvalid\;
   s_ahb_hready_out <= \^s_ahb_hready_out\;
   s_ahb_hresp <= \^s_ahb_hresp\;
 AHBLITE_AXI_CONTROL: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_control
      port map (
       AXI_ALEN_i0 => AXI_ALEN_i0,
-      \FSM_sequential_ctl_sm_cs_reg[0]_0\ => AHBLITE_AXI_CONTROL_n_4,
-      M_AXI_BREADY_i_reg => AHBLITE_AXI_CONTROL_n_15,
-      M_AXI_WLAST_i_reg => \^m_axi_wlast\,
-      \M_AXI_WVALID_i3__0\ => \M_AXI_WVALID_i3__0\,
-      M_AXI_WVALID_i_reg => AHBLITE_AXI_CONTROL_n_8,
+      D(0) => AHBLITE_AXI_CONTROL_n_14,
+      E(0) => AHBLITE_AXI_CONTROL_n_5,
+      \FSM_sequential_ctl_sm_cs_reg[1]_0\ => AHB_IF_n_20,
+      \FSM_sequential_ctl_sm_cs_reg[1]_1\ => AHB_IF_n_21,
+      M_AXI_ARVALID_i_reg => AHBLITE_AXI_CONTROL_n_13,
+      M_AXI_ARVALID_i_reg_0 => \^m_axi_arvalid\,
+      M_AXI_AWVALID_i_reg => AHBLITE_AXI_CONTROL_n_15,
+      M_AXI_BREADY_i_reg => AHBLITE_AXI_CONTROL_n_19,
+      \M_AXI_RREADY_i5__0\ => \M_AXI_RREADY_i5__0\,
+      M_AXI_RREADY_i_reg => AHBLITE_AXI_CONTROL_n_9,
+      M_AXI_WLAST_i_reg => AXI_WCHANNEL_n_7,
+      M_AXI_WLAST_i_reg_0 => \^m_axi_wlast\,
+      M_AXI_WVALID_i_reg => AHBLITE_AXI_CONTROL_n_12,
       M_AXI_WVALID_i_reg_0 => AXI_WCHANNEL_n_13,
+      M_AXI_WVALID_i_reg_1 => \^m_axi_wvalid\,
+      Q(0) => AXI_WCHANNEL_n_12,
       S_AHB_HREADY_OUT_i116_out => S_AHB_HREADY_OUT_i116_out,
-      S_AHB_HREADY_OUT_i_reg => AHBLITE_AXI_CONTROL_n_10,
+      S_AHB_HREADY_OUT_i_reg => AHBLITE_AXI_CONTROL_n_16,
       S_AHB_HREADY_OUT_i_reg_0 => \^s_ahb_hready_out\,
-      S_AHB_HRESP_i_reg => AHBLITE_AXI_CONTROL_n_11,
+      S_AHB_HRESP_i_reg => AHBLITE_AXI_CONTROL_n_8,
       ahb_burst_done => ahb_burst_done,
+      ahb_data_valid => ahb_data_valid,
       ahb_data_valid_burst_term => ahb_data_valid_burst_term,
       ahb_done_axi_in_progress => ahb_done_axi_in_progress,
-      ahb_hburst_incr_i_reg => AHB_IF_n_38,
+      ahb_hburst_incr => ahb_hburst_incr,
       ahb_hburst_single => ahb_hburst_single,
-      ahb_penult_beat_reg => AHB_IF_n_3,
-      ahb_wnr_i_reg_0 => AHBLITE_AXI_CONTROL_n_5,
+      ahb_penult_beat_reg => AHB_IF_n_7,
+      ahb_rd_txer_pending_reg => AXI_RCHANNEL_n_10,
+      axi_rd_avlbl_reg => AXI_RCHANNEL_n_9,
       axi_waddr_done_i => axi_waddr_done_i,
+      burst_term => burst_term,
       burst_term_hwrite => burst_term_hwrite,
-      burst_term_hwrite_reg => AHBLITE_AXI_CONTROL_n_14,
-      burst_term_i_reg => AHBLITE_AXI_CONTROL_n_9,
+      burst_term_hwrite_reg => AHBLITE_AXI_CONTROL_n_18,
+      burst_term_hwrite_reg_0 => AHB_IF_n_23,
+      burst_term_hwrite_reg_1 => AHB_IF_n_22,
+      burst_term_i_reg => AHBLITE_AXI_CONTROL_n_7,
       burst_term_single_incr => burst_term_single_incr,
-      burst_term_single_incr_reg => AHBLITE_AXI_CONTROL_n_16,
+      burst_term_single_incr_reg => AHBLITE_AXI_CONTROL_n_20,
       burst_term_with_nonseq => burst_term_with_nonseq,
       busy_detected => busy_detected,
       cntr_rst => cntr_rst,
-      core_is_idle => core_is_idle,
       ctl_sm_ns033_out => ctl_sm_ns033_out,
       ctl_sm_ns1 => ctl_sm_ns1,
-      ctl_sm_ns132_out => ctl_sm_ns132_out,
       ctl_sm_ns14_out => ctl_sm_ns14_out,
       idle_txfer_pending => idle_txfer_pending,
-      idle_txfer_pending_reg => AHBLITE_AXI_CONTROL_n_12,
-      idle_txfer_pending_reg_0 => AXI_RCHANNEL_n_10,
-      idle_txfer_pending_reg_1 => AXI_RCHANNEL_n_6,
+      idle_txfer_pending_reg => AHBLITE_AXI_CONTROL_n_6,
+      idle_txfer_pending_reg_0 => AXI_RCHANNEL_n_3,
+      idle_txfer_pending_reg_1 => AHB_IF_n_42,
+      idle_txfer_pending_reg_2 => AHB_IF_n_18,
+      idle_txfer_pending_reg_3 => AHB_IF_n_26,
       init_pending_txfer => init_pending_txfer,
       last_axi_rd_sample => last_axi_rd_sample,
+      local_en => local_en,
+      m_axi_arready => m_axi_arready,
+      m_axi_awready => m_axi_awready,
+      m_axi_awvalid => \^m_axi_awvalid\,
       m_axi_bready => \^m_axi_bready\,
       m_axi_bresp(0) => m_axi_bresp(1),
       m_axi_bvalid => m_axi_bvalid,
       m_axi_wready => m_axi_wready,
       nonseq_detected => nonseq_detected,
       nonseq_txfer_pending => nonseq_txfer_pending,
-      nonseq_txfer_pending_i_reg => AHBLITE_AXI_CONTROL_n_13,
-      nonseq_txfer_pending_i_reg_0 => AHB_IF_n_22,
-      nonseq_txfer_pending_i_reg_1 => AHB_IF_n_23,
-      nonseq_txfer_pending_i_reg_2 => AHB_IF_n_18,
-      nonseq_txfer_pending_i_reg_3 => AHB_IF_n_19,
-      nonseq_txfer_pending_i_reg_4 => AHB_IF_n_24,
-      nonseq_txfer_pending_i_reg_5 => AHB_IF_n_16,
+      nonseq_txfer_pending_i_reg => AHBLITE_AXI_CONTROL_n_17,
+      nonseq_txfer_pending_i_reg_0 => AHB_IF_n_24,
+      \out\(1) => AHBLITE_AXI_CONTROL_n_0,
+      \out\(0) => AHBLITE_AXI_CONTROL_n_1,
       p_12_in => p_12_in,
-      \reset_hready2__0\ => \reset_hready2__0\,
       s_ahb_hburst(1 downto 0) => s_ahb_hburst(2 downto 1),
       s_ahb_hclk => s_ahb_hclk,
       s_ahb_hready_in => s_ahb_hready_in,
@@ -4711,12 +4693,11 @@ AHBLITE_AXI_CONTROL: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_cont
       s_ahb_htrans(1 downto 0) => s_ahb_htrans(1 downto 0),
       s_ahb_hwrite => s_ahb_hwrite,
       seq_detected => seq_detected,
-      set_axi_waddr => set_axi_waddr,
-      set_hresp_err => set_hresp_err
+      set_axi_waddr => set_axi_waddr
     );
 AHB_DATA_COUNTER: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahb_data_counter
      port map (
-      E(0) => AHB_IF_n_28,
+      E(0) => AHB_IF_n_33,
       Q(4) => AHB_DATA_COUNTER_n_1,
       Q(3) => AHB_DATA_COUNTER_n_2,
       Q(2) => AHB_DATA_COUNTER_n_3,
@@ -4726,76 +4707,66 @@ AHB_DATA_COUNTER: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahb_data_counter
       ahb_penult_beat_reg => AHB_DATA_COUNTER_n_0,
       nonseq_detected => nonseq_detected,
       s_ahb_hclk => s_ahb_hclk,
-      s_ahb_hready_in => s_ahb_hready_in,
-      s_ahb_hsel => s_ahb_hsel,
-      s_ahb_htrans(1 downto 0) => s_ahb_htrans(1 downto 0),
+      s_ahb_htrans(0) => s_ahb_htrans(0),
       valid_cnt_required(2 downto 0) => valid_cnt_required(3 downto 1)
     );
 AHB_IF: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahb_if
      port map (
       AXI_ALEN_i0 => AXI_ALEN_i0,
-      D(0) => AHB_IF_n_40,
-      E(0) => AHB_IF_n_28,
-      \FSM_sequential_ctl_sm_cs_reg[0]\ => AHB_IF_n_22,
-      \FSM_sequential_ctl_sm_cs_reg[0]_0\ => AHBLITE_AXI_CONTROL_n_9,
-      \FSM_sequential_ctl_sm_cs_reg[1]\ => AHBLITE_AXI_CONTROL_n_4,
-      \FSM_sequential_ctl_sm_cs_reg[2]\ => AHB_IF_n_18,
-      \FSM_sequential_ctl_sm_cs_reg[2]_0\ => AHB_IF_n_19,
-      \FSM_sequential_ctl_sm_cs_reg[2]_1\ => AHBLITE_AXI_CONTROL_n_5,
+      D(4) => AHB_DATA_COUNTER_n_1,
+      D(3) => AHB_DATA_COUNTER_n_2,
+      D(2) => AHB_DATA_COUNTER_n_3,
+      D(1) => AHB_DATA_COUNTER_n_4,
+      D(0) => AHB_DATA_COUNTER_n_5,
+      E(0) => AHB_IF_n_33,
+      \FSM_sequential_ctl_sm_cs_reg[1]\ => AHB_IF_n_24,
+      \FSM_sequential_ctl_sm_cs_reg[2]\ => AHB_IF_n_26,
       \INFERRED_GEN.icount_out_reg[3]\ => AHB_DATA_COUNTER_n_0,
       \INFERRED_GEN.icount_out_reg[4]\(4) => AXI_WCHANNEL_n_8,
       \INFERRED_GEN.icount_out_reg[4]\(3) => AXI_WCHANNEL_n_9,
       \INFERRED_GEN.icount_out_reg[4]\(2) => AXI_WCHANNEL_n_10,
       \INFERRED_GEN.icount_out_reg[4]\(1) => AXI_WCHANNEL_n_11,
       \INFERRED_GEN.icount_out_reg[4]\(0) => AXI_WCHANNEL_n_12,
-      \INFERRED_GEN.icount_out_reg[4]_0\(4) => AHB_DATA_COUNTER_n_1,
-      \INFERRED_GEN.icount_out_reg[4]_0\(3) => AHB_DATA_COUNTER_n_2,
-      \INFERRED_GEN.icount_out_reg[4]_0\(2) => AHB_DATA_COUNTER_n_3,
-      \INFERRED_GEN.icount_out_reg[4]_0\(1) => AHB_DATA_COUNTER_n_4,
-      \INFERRED_GEN.icount_out_reg[4]_0\(0) => AHB_DATA_COUNTER_n_5,
-      M_AXI_ARVALID_i_reg => AHB_IF_n_42,
-      M_AXI_ARVALID_i_reg_0 => \^m_axi_arvalid\,
-      M_AXI_AWVALID_i_reg => AHB_IF_n_41,
+      M_AXI_ARVALID_i_reg => AHB_IF_n_23,
       M_AXI_WLAST_i110_out => M_AXI_WLAST_i110_out,
       M_AXI_WLAST_i_reg => \^m_axi_wlast\,
-      \M_AXI_WVALID_i3__0\ => \M_AXI_WVALID_i3__0\,
+      M_AXI_WVALID_i_reg => AXI_WCHANNEL_n_13,
       Q(4 downto 0) => burst_term_cur_cnt(4 downto 0),
       SR(0) => cntr_rst,
       S_AHB_HREADY_OUT_i116_out => S_AHB_HREADY_OUT_i116_out,
-      S_AHB_HREADY_OUT_i_reg_0 => AHB_IF_n_24,
-      S_AHB_HREADY_OUT_i_reg_1 => AHB_IF_n_38,
-      S_AHB_HREADY_OUT_i_reg_2 => AHBLITE_AXI_CONTROL_n_10,
-      S_AHB_HRESP_i_reg_0 => AHB_IF_n_16,
-      S_AHB_HRESP_i_reg_1 => AHBLITE_AXI_CONTROL_n_11,
+      S_AHB_HREADY_OUT_i_reg_0 => AHB_IF_n_20,
+      S_AHB_HREADY_OUT_i_reg_1 => AHB_IF_n_21,
+      S_AHB_HREADY_OUT_i_reg_2 => AHB_IF_n_42,
+      S_AHB_HREADY_OUT_i_reg_3 => AHBLITE_AXI_CONTROL_n_16,
+      S_AHB_HRESP_i_reg_0 => AHB_IF_n_18,
+      S_AHB_HRESP_i_reg_1 => AHBLITE_AXI_CONTROL_n_8,
       ahb_burst_done => ahb_burst_done,
       ahb_data_valid => ahb_data_valid,
       ahb_data_valid_burst_term => ahb_data_valid_burst_term,
-      ahb_data_valid_burst_term_reg => AHB_IF_n_39,
+      ahb_data_valid_burst_term_reg => AHB_IF_n_41,
       ahb_done_axi_in_progress => ahb_done_axi_in_progress,
+      ahb_hburst_incr => ahb_hburst_incr,
       ahb_hburst_single => ahb_hburst_single,
-      ahb_penult_beat_reg_0 => AHB_IF_n_3,
-      ahb_rd_txer_pending_reg => AXI_RCHANNEL_n_5,
+      ahb_penult_beat_reg_0 => AHB_IF_n_7,
+      ahb_wnr_i_reg => AHB_IF_n_22,
       axi_last_beat_reg(2 downto 0) => burst_term_txer_cnt(3 downto 1),
       axi_waddr_done_i => axi_waddr_done_i,
-      axi_wdata_done_i0 => axi_wdata_done_i0,
       burst_term => burst_term,
       burst_term_hwrite => burst_term_hwrite,
-      burst_term_hwrite_reg_0 => AHBLITE_AXI_CONTROL_n_14,
+      burst_term_hwrite_reg_0 => AHBLITE_AXI_CONTROL_n_18,
+      burst_term_i_reg_0 => AHBLITE_AXI_CONTROL_n_7,
       burst_term_single_incr => burst_term_single_incr,
-      burst_term_single_incr_reg_0 => AHBLITE_AXI_CONTROL_n_16,
+      burst_term_single_incr_reg_0 => AHBLITE_AXI_CONTROL_n_20,
       burst_term_with_nonseq => burst_term_with_nonseq,
-      core_is_idle => core_is_idle,
-      ctl_sm_ns033_out => ctl_sm_ns033_out,
+      busy_detected => busy_detected,
       ctl_sm_ns1 => ctl_sm_ns1,
-      ctl_sm_ns132_out => ctl_sm_ns132_out,
       ctl_sm_ns14_out => ctl_sm_ns14_out,
-      dummy_on_axi_progress_reg => AHB_IF_n_31,
+      dummy_on_axi_progress_reg => AHB_IF_n_34,
+      dummy_txfer_in_progress_reg_0 => AHB_IF_n_16,
       eqOp6_out => eqOp6_out,
       idle_txfer_pending => idle_txfer_pending,
-      idle_txfer_pending_reg_0 => AHB_IF_n_23,
-      idle_txfer_pending_reg_1 => AHBLITE_AXI_CONTROL_n_12,
+      idle_txfer_pending_reg_0 => AHBLITE_AXI_CONTROL_n_6,
       init_pending_txfer => init_pending_txfer,
-      local_en => local_en,
       local_en_reg => AXI_WCHANNEL_n_14,
       m_axi_araddr(31 downto 0) => \^m_axi_araddr\(31 downto 0),
       m_axi_arburst(1 downto 0) => \^m_axi_arburst\(1 downto 0),
@@ -4803,22 +4774,20 @@ AHB_IF: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahb_if
       m_axi_arlen(2 downto 1) => \^m_axi_arlen\(3 downto 2),
       m_axi_arlen(0) => \^m_axi_awlen\(0),
       m_axi_arprot(2 downto 0) => \^m_axi_arprot\(2 downto 0),
-      m_axi_arready => m_axi_arready,
       m_axi_arsize(2 downto 0) => \^m_axi_arsize\(2 downto 0),
-      m_axi_awready => m_axi_awready,
-      m_axi_awvalid => \^m_axi_awvalid\,
       m_axi_bresp(0) => m_axi_bresp(1),
       m_axi_bvalid => m_axi_bvalid,
       m_axi_rdata(31 downto 0) => m_axi_rdata(31 downto 0),
       m_axi_wready => m_axi_wready,
       nonseq_detected => nonseq_detected,
       nonseq_txfer_pending => nonseq_txfer_pending,
-      nonseq_txfer_pending_i_reg_0 => AHBLITE_AXI_CONTROL_n_13,
+      nonseq_txfer_pending_i_reg_0 => AHBLITE_AXI_CONTROL_n_17,
+      \out\(1) => AHBLITE_AXI_CONTROL_n_0,
+      \out\(0) => AHBLITE_AXI_CONTROL_n_1,
       p_12_in => p_12_in,
       p_27_in => p_27_in,
       rd_load_timeout_cntr => rd_load_timeout_cntr,
       reset_hready010_out => reset_hready010_out,
-      \reset_hready2__0\ => \reset_hready2__0\,
       s_ahb_haddr(31 downto 0) => s_ahb_haddr(31 downto 0),
       s_ahb_hburst(2 downto 0) => s_ahb_hburst(2 downto 0),
       s_ahb_hclk => s_ahb_hclk,
@@ -4833,23 +4802,22 @@ AHB_IF: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahb_if
       s_ahb_htrans(1 downto 0) => s_ahb_htrans(1 downto 0),
       s_ahb_hwrite => s_ahb_hwrite,
       seq_detected => seq_detected,
-      set_axi_waddr => set_axi_waddr,
       valid_cnt_required(2 downto 0) => valid_cnt_required(3 downto 1)
     );
 AXI_RCHANNEL: entity work.bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel
      port map (
-      M_AXI_ARVALID_i_reg_0 => AHB_IF_n_42,
+      \FSM_sequential_ctl_sm_cs_reg[2]\ => AHBLITE_AXI_CONTROL_n_9,
+      M_AXI_ARVALID_i_reg_0 => AHBLITE_AXI_CONTROL_n_13,
+      \M_AXI_RREADY_i5__0\ => \M_AXI_RREADY_i5__0\,
+      M_AXI_RREADY_i_reg_0 => AXI_RCHANNEL_n_9,
       SR(0) => cntr_rst,
-      S_AHB_HREADY_OUT_i_reg => AXI_RCHANNEL_n_6,
+      S_AHB_HREADY_OUT_i_reg => AXI_RCHANNEL_n_3,
       S_AHB_HREADY_OUT_i_reg_0 => AXI_RCHANNEL_n_10,
-      burst_term => burst_term,
-      burst_term_i_reg => AXI_RCHANNEL_n_5,
       busy_detected => busy_detected,
       ctl_sm_ns033_out => ctl_sm_ns033_out,
       ctl_sm_ns1 => ctl_sm_ns1,
       ctl_sm_ns14_out => ctl_sm_ns14_out,
       idle_txfer_pending => idle_txfer_pending,
-      init_pending_txfer => init_pending_txfer,
       last_axi_rd_sample => last_axi_rd_sample,
       m_axi_arready => m_axi_arready,
       m_axi_arvalid => \^m_axi_arvalid\,
@@ -4857,8 +4825,6 @@ AXI_RCHANNEL: entity work.bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel
       m_axi_rready => m_axi_rready,
       m_axi_rresp(0) => m_axi_rresp(1),
       m_axi_rvalid => m_axi_rvalid,
-      nonseq_detected => nonseq_detected,
-      nonseq_txfer_pending => nonseq_txfer_pending,
       rd_load_timeout_cntr => rd_load_timeout_cntr,
       reset_hready010_out => reset_hready010_out,
       s_ahb_hclk => s_ahb_hclk,
@@ -4866,14 +4832,13 @@ AXI_RCHANNEL: entity work.bd_qspi_ahblite_axi_bridge_0_0_axi_rchannel
       s_ahb_hresetn => s_ahb_hresetn,
       s_ahb_hsel => s_ahb_hsel,
       s_ahb_htrans(1 downto 0) => s_ahb_htrans(1 downto 0),
-      seq_detected => seq_detected,
-      set_hresp_err => set_hresp_err
+      seq_detected => seq_detected
     );
 AXI_WCHANNEL: entity work.bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel
      port map (
-      D(0) => AHB_IF_n_40,
-      \FSM_sequential_ctl_sm_cs_reg[0]\ => AHBLITE_AXI_CONTROL_n_8,
-      M_AXI_AWVALID_i_reg_0 => AHB_IF_n_41,
+      D(0) => AHBLITE_AXI_CONTROL_n_14,
+      E(0) => AHBLITE_AXI_CONTROL_n_5,
+      M_AXI_AWVALID_i_reg_0 => AHBLITE_AXI_CONTROL_n_15,
       M_AXI_WLAST_i110_out => M_AXI_WLAST_i110_out,
       Q(4) => AXI_WCHANNEL_n_8,
       Q(3) => AXI_WCHANNEL_n_9,
@@ -4883,15 +4848,17 @@ AXI_WCHANNEL: entity work.bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel
       SR(0) => cntr_rst,
       ahb_data_valid => ahb_data_valid,
       ahb_data_valid_burst_term => ahb_data_valid_burst_term,
+      ahb_data_valid_burst_term_reg_0 => AHBLITE_AXI_CONTROL_n_12,
       ahb_data_valid_i_reg => AXI_WCHANNEL_n_13,
       ahb_data_valid_i_reg_0 => AXI_WCHANNEL_n_14,
-      ahb_wnr_i_reg => AHBLITE_AXI_CONTROL_n_15,
+      ahb_wnr_i_reg => AHBLITE_AXI_CONTROL_n_19,
       axi_waddr_done_i => axi_waddr_done_i,
-      axi_wdata_done_i0 => axi_wdata_done_i0,
       burst_term => burst_term,
-      \burst_term_cur_cnt_i_reg[1]\ => AHB_IF_n_31,
+      \burst_term_cur_cnt_i_reg[1]\ => AHB_IF_n_34,
       \burst_term_cur_cnt_i_reg[4]\(4 downto 0) => burst_term_cur_cnt(4 downto 0),
+      burst_term_i_reg => AXI_WCHANNEL_n_7,
       \burst_term_txer_cnt_i_reg[3]\(2 downto 0) => burst_term_txer_cnt(3 downto 1),
+      dummy_txfer_in_progress_reg => AHB_IF_n_16,
       eqOp6_out => eqOp6_out,
       local_en => local_en,
       m_axi_awvalid => \^m_axi_awvalid\,
@@ -4900,8 +4867,8 @@ AXI_WCHANNEL: entity work.bd_qspi_ahblite_axi_bridge_0_0_axi_wchannel
       m_axi_wlast => \^m_axi_wlast\,
       m_axi_wready => m_axi_wready,
       m_axi_wstrb(0) => \^m_axi_wstrb\(2),
-      m_axi_wvalid => m_axi_wvalid,
-      nonseq_txfer_pending_i_reg => AHB_IF_n_39,
+      m_axi_wvalid => \^m_axi_wvalid\,
+      nonseq_txfer_pending_i_reg => AHB_IF_n_41,
       p_27_in => p_27_in,
       s_ahb_hclk => s_ahb_hclk,
       s_ahb_hresetn => s_ahb_hresetn,
@@ -4974,7 +4941,7 @@ entity bd_qspi_ahblite_axi_bridge_0_0 is
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of bd_qspi_ahblite_axi_bridge_0_0 : entity is "yes";
   attribute x_core_info : string;
-  attribute x_core_info of bd_qspi_ahblite_axi_bridge_0_0 : entity is "ahblite_axi_bridge,Vivado 2016.4";
+  attribute x_core_info of bd_qspi_ahblite_axi_bridge_0_0 : entity is "ahblite_axi_bridge,Vivado 2017.3";
 end bd_qspi_ahblite_axi_bridge_0_0;
 
 architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0 is
@@ -5003,6 +4970,57 @@ architecture STRUCTURE of bd_qspi_ahblite_axi_bridge_0_0 is
   attribute C_S_AHB_DATA_WIDTH : integer;
   attribute C_S_AHB_DATA_WIDTH of U0 : label is 32;
   attribute downgradeipidentifiedwarnings of U0 : label is "yes";
+  attribute x_interface_info : string;
+  attribute x_interface_info of m_axi_arlock : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARLOCK";
+  attribute x_interface_info of m_axi_arready : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARREADY";
+  attribute x_interface_info of m_axi_arvalid : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARVALID";
+  attribute x_interface_info of m_axi_awlock : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWLOCK";
+  attribute x_interface_info of m_axi_awready : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWREADY";
+  attribute x_interface_info of m_axi_awvalid : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWVALID";
+  attribute x_interface_info of m_axi_bready : signal is "xilinx.com:interface:aximm:1.0 M_AXI BREADY";
+  attribute x_interface_info of m_axi_bvalid : signal is "xilinx.com:interface:aximm:1.0 M_AXI BVALID";
+  attribute x_interface_info of m_axi_rlast : signal is "xilinx.com:interface:aximm:1.0 M_AXI RLAST";
+  attribute x_interface_info of m_axi_rready : signal is "xilinx.com:interface:aximm:1.0 M_AXI RREADY";
+  attribute x_interface_info of m_axi_rvalid : signal is "xilinx.com:interface:aximm:1.0 M_AXI RVALID";
+  attribute x_interface_info of m_axi_wlast : signal is "xilinx.com:interface:aximm:1.0 M_AXI WLAST";
+  attribute x_interface_info of m_axi_wready : signal is "xilinx.com:interface:aximm:1.0 M_AXI WREADY";
+  attribute x_interface_info of m_axi_wvalid : signal is "xilinx.com:interface:aximm:1.0 M_AXI WVALID";
+  attribute x_interface_info of s_ahb_hclk : signal is "xilinx.com:signal:clock:1.0 AHB_CLK CLK";
+  attribute x_interface_parameter : string;
+  attribute x_interface_parameter of s_ahb_hclk : signal is "XIL_INTERFACENAME AHB_CLK, ASSOCIATED_BUSIF AHB_INTERFACE:M_AXI, ASSOCIATED_RESET s_ahb_hresetn, FREQ_HZ 8000000, PHASE 0.000, CLK_DOMAIN bd_qspi_clk_bus";
+  attribute x_interface_info of s_ahb_hready_in : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HREADY_IN";
+  attribute x_interface_info of s_ahb_hready_out : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HREADY_OUT";
+  attribute x_interface_info of s_ahb_hresetn : signal is "xilinx.com:signal:reset:1.0 AHB_RESETN RST";
+  attribute x_interface_parameter of s_ahb_hresetn : signal is "XIL_INTERFACENAME AHB_RESETN, POLARITY ACTIVE_LOW";
+  attribute x_interface_info of s_ahb_hresp : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HRESP";
+  attribute x_interface_info of s_ahb_hsel : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE SEL";
+  attribute x_interface_parameter of s_ahb_hsel : signal is "XIL_INTERFACENAME AHB_INTERFACE, BD_ATTRIBUTE.TYPE INTERIOR";
+  attribute x_interface_info of s_ahb_hwrite : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HWRITE";
+  attribute x_interface_info of m_axi_araddr : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARADDR";
+  attribute x_interface_info of m_axi_arburst : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARBURST";
+  attribute x_interface_info of m_axi_arcache : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARCACHE";
+  attribute x_interface_info of m_axi_arlen : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARLEN";
+  attribute x_interface_info of m_axi_arprot : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARPROT";
+  attribute x_interface_info of m_axi_arsize : signal is "xilinx.com:interface:aximm:1.0 M_AXI ARSIZE";
+  attribute x_interface_info of m_axi_awaddr : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWADDR";
+  attribute x_interface_info of m_axi_awburst : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWBURST";
+  attribute x_interface_info of m_axi_awcache : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWCACHE";
+  attribute x_interface_info of m_axi_awlen : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWLEN";
+  attribute x_interface_parameter of m_axi_awlen : signal is "XIL_INTERFACENAME M_AXI, MAX_BURST_LENGTH 16, DATA_WIDTH 32, PROTOCOL AXI4, FREQ_HZ 8000000, ID_WIDTH 0, ADDR_WIDTH 32, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, RUSER_WIDTH 0, BUSER_WIDTH 0, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 1, HAS_PROT 1, HAS_CACHE 1, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, SUPPORTS_NARROW_BURST 0, NUM_READ_OUTSTANDING 2, NUM_WRITE_OUTSTANDING 2, PHASE 0.000, CLK_DOMAIN bd_qspi_clk_bus, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSER_BITS_PER_BYTE 0, WUSER_BITS_PER_BYTE 0";
+  attribute x_interface_info of m_axi_awprot : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWPROT";
+  attribute x_interface_info of m_axi_awsize : signal is "xilinx.com:interface:aximm:1.0 M_AXI AWSIZE";
+  attribute x_interface_info of m_axi_bresp : signal is "xilinx.com:interface:aximm:1.0 M_AXI BRESP";
+  attribute x_interface_info of m_axi_rdata : signal is "xilinx.com:interface:aximm:1.0 M_AXI RDATA";
+  attribute x_interface_info of m_axi_rresp : signal is "xilinx.com:interface:aximm:1.0 M_AXI RRESP";
+  attribute x_interface_info of m_axi_wdata : signal is "xilinx.com:interface:aximm:1.0 M_AXI WDATA";
+  attribute x_interface_info of m_axi_wstrb : signal is "xilinx.com:interface:aximm:1.0 M_AXI WSTRB";
+  attribute x_interface_info of s_ahb_haddr : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HADDR";
+  attribute x_interface_info of s_ahb_hburst : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HBURST";
+  attribute x_interface_info of s_ahb_hprot : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HPROT";
+  attribute x_interface_info of s_ahb_hrdata : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HRDATA";
+  attribute x_interface_info of s_ahb_hsize : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HSIZE";
+  attribute x_interface_info of s_ahb_htrans : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HTRANS";
+  attribute x_interface_info of s_ahb_hwdata : signal is "xilinx.com:interface:ahblite:2.0 AHB_INTERFACE HWDATA";
 begin
 U0: entity work.bd_qspi_ahblite_axi_bridge_0_0_ahblite_axi_bridge
      port map (

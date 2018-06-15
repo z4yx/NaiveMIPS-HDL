@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0x8FB3F223BB813111" bd:device="xc7k160tffg676-2" bd:isValidated="true" bd:synthFlowMode="Hierarchical" bd:tool_version="2016.4" bd:top="bd_qspi" bd:version="1.00.a">
+<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0x8FB3F223BB813111" bd:device="xc7k160tffg676-2" bd:isValidated="true" bd:synthFlowMode="Hierarchical" bd:tool_version="2017.3" bd:top="bd_qspi" bd:version="1.00.a">
 
   <spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
     <spirit:vendor>xilinx.com</spirit:vendor>
@@ -69,7 +69,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>CLK_DOMAIN</spirit:name>
-            <spirit:value>bd_qspi_s_ahb_hclk</spirit:value>
+            <spirit:value>bd_qspi_clk_bus</spirit:value>
             <spirit:vendorExtensions>
               <bd:configElementInfos>
                 <bd:configElementInfo bd:valueSource="default"/>
@@ -201,7 +201,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>CLK_DOMAIN</spirit:name>
-            <spirit:value>bd_qspi_m_axi_aclk</spirit:value>
+            <spirit:value>bd_qspi_axi_clk</spirit:value>
             <spirit:vendorExtensions>
               <bd:configElementInfos>
                 <bd:configElementInfo bd:valueSource="default"/>
@@ -314,17 +314,6 @@
     <spirit:version>1.00.a</spirit:version>
     <spirit:componentInstances>
       <spirit:componentInstance>
-        <spirit:instanceName>axi_quad_spi_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="ip" spirit:name="axi_quad_spi" spirit:vendor="xilinx.com" spirit:version="3.2"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_qspi_axi_quad_spi_0_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="C_SPI_MEMORY">3</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="C_XIP_MODE">1</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="C_SHARED_STARTUP">0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="C_TYPE_OF_AXI4_INTERFACE">1</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
         <spirit:instanceName>ahblite_axi_bridge_0</spirit:instanceName>
         <spirit:componentRef spirit:library="ip" spirit:name="ahblite_axi_bridge" spirit:vendor="xilinx.com" spirit:version="3.0"/>
         <spirit:configurableElementValues>
@@ -337,6 +326,17 @@
         <spirit:componentRef spirit:library="ip" spirit:name="axi_clock_converter" spirit:vendor="xilinx.com" spirit:version="2.1"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_qspi_axi_clock_converter_0_0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>axi_quad_spi_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="ip" spirit:name="axi_quad_spi" spirit:vendor="xilinx.com" spirit:version="3.2"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">bd_qspi_axi_quad_spi_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_SPI_MEMORY">3</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_XIP_MODE">1</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_SHARED_STARTUP">0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="C_TYPE_OF_AXI4_INTERFACE">1</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
     </spirit:componentInstances>
@@ -374,15 +374,15 @@
         <spirit:name>m_axi_aclk_1</spirit:name>
         <spirit:externalPortReference spirit:portRef="axi_clk"/>
         <spirit:internalPortReference spirit:componentRef="axi_clock_converter_0" spirit:portRef="m_axi_aclk"/>
-        <spirit:internalPortReference spirit:componentRef="axi_quad_spi_0" spirit:portRef="s_axi4_aclk"/>
         <spirit:internalPortReference spirit:componentRef="axi_quad_spi_0" spirit:portRef="s_axi_aclk"/>
+        <spirit:internalPortReference spirit:componentRef="axi_quad_spi_0" spirit:portRef="s_axi4_aclk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>m_axi_aresetn_1</spirit:name>
         <spirit:externalPortReference spirit:portRef="axi_clk_rstn"/>
         <spirit:internalPortReference spirit:componentRef="axi_clock_converter_0" spirit:portRef="m_axi_aresetn"/>
-        <spirit:internalPortReference spirit:componentRef="axi_quad_spi_0" spirit:portRef="s_axi4_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="axi_quad_spi_0" spirit:portRef="s_axi_aresetn"/>
+        <spirit:internalPortReference spirit:componentRef="axi_quad_spi_0" spirit:portRef="s_axi4_aresetn"/>
       </spirit:adHocConnection>
     </spirit:adHocConnections>
     <spirit:hierConnections>
@@ -397,13 +397,5 @@
       </spirit:hierConnection>
     </spirit:hierConnections>
   </spirit:design>
-
-  <spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
-    <spirit:vendor>xilinx.com</spirit:vendor>
-    <spirit:library>Addressing/ahblite_axi_bridge_0</spirit:library>
-    <spirit:name>ahblite_axi_bridge</spirit:name>
-    <spirit:version>3.0</spirit:version>
-    <spirit:addressSpaces/>
-  </spirit:component>
 
 </bd:repository>

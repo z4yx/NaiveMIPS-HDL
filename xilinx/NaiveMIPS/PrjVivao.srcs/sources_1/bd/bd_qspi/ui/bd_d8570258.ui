@@ -1,5 +1,6 @@
 {
-   guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
+   ExpandedHierarchyInLayout: "",
+   guistr: "# # String gsaved with Nlview 6.6.11  2017-06-12 bk=1.3860 VDI=40 GEI=35 GUI=JA:1.6
 #  -string -flagsOSRD
 preplace port AHB -pg 1 -y 40 -defaultsOSRD
 preplace port axi_clk_rstn -pg 1 -y 160 -defaultsOSRD
@@ -13,15 +14,16 @@ preplace inst axi_clock_converter_0 -pg 1 -lvl 2 -y 100 -defaultsOSRD
 preplace inst ahblite_axi_bridge_0 -pg 1 -lvl 1 -y 60 -defaultsOSRD
 preplace inst axi_quad_spi_0 -pg 1 -lvl 3 -y 140 -defaultsOSRD
 preplace netloc axi_quad_spi_0_SPI_0 1 3 1 NJ
-preplace netloc s_ahb_hresetn_1 1 0 2 20 140 260J
+preplace netloc s_ahb_hresetn_1 1 0 2 0 140 280J
 preplace netloc axi_quad_spi_0_STARTUP_IO 1 3 1 NJ
 preplace netloc AHB_INTERFACE_1 1 0 1 NJ
-preplace netloc s_ahb_hclk_1 1 0 2 30 130 250J
-preplace netloc m_axi_aresetn_1 1 0 3 NJ 160 280 200 580
+preplace netloc s_ahb_hclk_1 1 0 2 10 130 270J
+preplace netloc m_axi_aresetn_1 1 0 3 NJ 160 300 200 580
 preplace netloc ahblite_axi_bridge_0_M_AXI 1 1 1 N
 preplace netloc axi_clock_converter_0_M_AXI 1 2 1 N
-preplace netloc m_axi_aclk_1 1 0 3 NJ 190 270 190 570
+preplace netloc m_axi_aclk_1 1 0 3 NJ 190 290 190 570
 preplace netloc ext_spi_clk_1 1 0 3 NJ 210 NJ 210 560J
-levelinfo -pg 1 0 140 420 700 840 -top 0 -bot 240
+levelinfo -pg 1 -20 140 430 720 880 -top -10 -bot 250
 ",
 }
+0

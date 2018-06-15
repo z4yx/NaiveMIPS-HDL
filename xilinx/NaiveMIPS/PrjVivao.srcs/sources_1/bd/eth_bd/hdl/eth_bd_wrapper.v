@@ -1,8 +1,8 @@
-//Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+//Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
-//Tool Version: Vivado v.2016.4 (win64) Build 1756540 Mon Jan 23 19:11:23 MST 2017
-//Date        : Wed Jul 12 17:56:17 2017
-//Host        : DESKTOP-N4A9BEN running 64-bit major release  (build 9200)
+//Tool Version: Vivado v.2017.3 (lin64) Build 2018833 Wed Oct  4 19:58:07 MDT 2017
+//Date        : Fri Jun 15 14:25:03 2018
+//Host        : nuc6i7 running 64-bit Ubuntu 18.04 LTS
 //Command     : generate_target eth_bd_wrapper.bd
 //Design      : eth_bd_wrapper
 //Purpose     : IP block netlist
@@ -23,6 +23,7 @@ module eth_bd_wrapper
     AHB_hwrite,
     AHB_sel,
     MDIO_mdc,
+    MDIO_mdio_io,
     MII_col,
     MII_crs,
     MII_rst_n,
@@ -36,8 +37,7 @@ module eth_bd_wrapper
     bus_clk,
     bus_rstn,
     eth_clk,
-    irq,
-    mdio_mdio_io);
+    irq);
   input [31:0]AHB_haddr;
   input [2:0]AHB_hburst;
   input [3:0]AHB_hprot;
@@ -51,6 +51,7 @@ module eth_bd_wrapper
   input AHB_hwrite;
   input AHB_sel;
   output MDIO_mdc;
+  inout MDIO_mdio_io;
   input MII_col;
   input MII_crs;
   output MII_rst_n;
@@ -65,7 +66,6 @@ module eth_bd_wrapper
   input bus_rstn;
   input eth_clk;
   output irq;
-  inout mdio_mdio_io;
 
   wire [31:0]AHB_haddr;
   wire [2:0]AHB_hburst;
@@ -80,6 +80,10 @@ module eth_bd_wrapper
   wire AHB_hwrite;
   wire AHB_sel;
   wire MDIO_mdc;
+  wire MDIO_mdio_i;
+  wire MDIO_mdio_io;
+  wire MDIO_mdio_o;
+  wire MDIO_mdio_t;
   wire MII_col;
   wire MII_crs;
   wire MII_rst_n;
@@ -94,11 +98,12 @@ module eth_bd_wrapper
   wire bus_rstn;
   wire eth_clk;
   wire irq;
-  wire mdio_mdio_i;
-  wire mdio_mdio_io;
-  wire mdio_mdio_o;
-  wire mdio_mdio_t;
 
+  IOBUF MDIO_mdio_iobuf
+       (.I(MDIO_mdio_o),
+        .IO(MDIO_mdio_io),
+        .O(MDIO_mdio_i),
+        .T(MDIO_mdio_t));
   eth_bd eth_bd_i
        (.AHB_haddr(AHB_haddr),
         .AHB_hburst(AHB_hburst),
@@ -113,9 +118,9 @@ module eth_bd_wrapper
         .AHB_hwrite(AHB_hwrite),
         .AHB_sel(AHB_sel),
         .MDIO_mdc(MDIO_mdc),
-        .MDIO_mdio_i(mdio_mdio_i),
-        .MDIO_mdio_o(mdio_mdio_o),
-        .MDIO_mdio_t(mdio_mdio_t),
+        .MDIO_mdio_i(MDIO_mdio_i),
+        .MDIO_mdio_o(MDIO_mdio_o),
+        .MDIO_mdio_t(MDIO_mdio_t),
         .MII_col(MII_col),
         .MII_crs(MII_crs),
         .MII_rst_n(MII_rst_n),
@@ -130,9 +135,4 @@ module eth_bd_wrapper
         .bus_rstn(bus_rstn),
         .eth_clk(eth_clk),
         .irq(irq));
-  IOBUF mdio_mdio_iobuf
-       (.I(mdio_mdio_o),
-        .IO(mdio_mdio_io),
-        .O(mdio_mdio_i),
-        .T(mdio_mdio_t));
 endmodule

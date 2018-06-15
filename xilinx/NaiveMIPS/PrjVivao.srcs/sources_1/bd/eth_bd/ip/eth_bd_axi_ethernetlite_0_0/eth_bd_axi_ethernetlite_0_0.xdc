@@ -51,10 +51,6 @@ create_clock -period 40 [get_ports phy_rx_clk]
 ## INFO: AXI-Lite to&fro MMAP clock domain Register & Misc crossings in axi_ethernetlite
 set_false_path -to [get_pins -leaf -of_objects [get_cells -hier *cdc_to* -filter {is_sequential}] -filter {NAME=~*/D}]
 
-set_false_path -from [get_cells -hierarchical -filter {NAME =~*FIFO*/*rstblk*/*rst_reg_reg[*]}]
-set_false_path -to [get_pins -hierarchical -filter {NAME =~*FIFO*/*rstblk*/*PRE}]
-## set_false_path -to [get_pins -hierarchical -filter {NAME =~*/*rstblk*/*CLR}]
-
 ##set_false_path -to [get_cells -hierarchical -filter {NAME =~*TX_FF_I}]
 ##set_false_path -to [get_cells -hierarchical -filter {NAME =~*TEN_FF}]
 set_false_path -through [get_cells -hierarchical -filter {NAME =~*loopback_en_reg}]

@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2016.4
+set scripts_vivado_version 2017.3
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -48,6 +48,7 @@ if { $list_projs eq "" } {
 
 
 # CHANGE DESIGN NAME HERE
+variable design_name
 set design_name eth_bd
 
 # If you do not already have an existing IP Integrator design open,
@@ -126,6 +127,7 @@ if { $nRet != 0 } {
 proc create_root_design { parentCell } {
 
   variable script_folder
+  variable design_name
 
   if { $parentCell eq "" } {
      set parentCell [get_bd_cells /]
@@ -160,7 +162,7 @@ proc create_root_design { parentCell } {
   # Create ports
   set bus_clk [ create_bd_port -dir I -type clk bus_clk ]
   set_property -dict [ list \
-CONFIG.FREQ_HZ {10000000} \
+   CONFIG.FREQ_HZ {10000000} \
  ] $bus_clk
   set bus_rstn [ create_bd_port -dir I -type rst bus_rstn ]
   set eth_clk [ create_bd_port -dir I -type clk eth_clk ]
@@ -172,13 +174,14 @@ CONFIG.FREQ_HZ {10000000} \
   # Create instance: axi_ethernetlite_0, and set properties
   set axi_ethernetlite_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_ethernetlite:3.0 axi_ethernetlite_0 ]
   set_property -dict [ list \
-CONFIG.C_S_AXI_PROTOCOL {AXI4} \
+   CONFIG.C_S_AXI_PROTOCOL {AXI4} \
  ] $axi_ethernetlite_0
 
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0 ]
   set_property -dict [ list \
-CONFIG.NUM_MI {1} \
+   CONFIG.NUM_MI {1} \
+   CONFIG.SYNCHRONIZATION_STAGES {2} \
  ] $axi_interconnect_0
 
   # Create instance: proc_sys_reset_0, and set properties
@@ -202,35 +205,6 @@ CONFIG.NUM_MI {1} \
   # Create address segments
   create_bd_addr_seg -range 0x00010000 -offset 0x00000000 [get_bd_addr_spaces AHB] [get_bd_addr_segs axi_ethernetlite_0/S_AXI/Reg] SEG_axi_ethernetlite_0_Reg
 
-  # Perform GUI Layout
-  regenerate_bd_layout -layout_string {
-   guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
-#  -string -flagsOSRD
-preplace port AHB -pg 1 -y -220 -defaultsOSRD
-preplace port eth_clk -pg 1 -y -110 -defaultsOSRD
-preplace port MII -pg 1 -y -200 -defaultsOSRD
-preplace port bus_clk -pg 1 -y -200 -defaultsOSRD
-preplace port MDIO -pg 1 -y -180 -defaultsOSRD
-preplace port irq -pg 1 -y -160 -defaultsOSRD
-preplace port bus_rstn -pg 1 -y -180 -defaultsOSRD
-preplace inst proc_sys_reset_0 -pg 1 -lvl 1 -y 60 -defaultsOSRD
-preplace inst ahblite_axi_bridge_0 -pg 1 -lvl 1 -y -200 -defaultsOSRD
-preplace inst axi_ethernetlite_0 -pg 1 -lvl 3 -y -180 -defaultsOSRD
-preplace inst axi_interconnect_0 -pg 1 -lvl 2 -y -150 -defaultsOSRD
-preplace netloc axi_ethernetlite_0_MDIO 1 3 1 N
-preplace netloc s_ahb_hresetn_1 1 0 2 -250 -120 120J
-preplace netloc eth_clk 1 0 3 -260 -110 90 -270 380
-preplace netloc ARESETN_1 1 1 1 110
-preplace netloc AHB_INTERFACE_1 1 0 1 N
-preplace netloc s_ahb_hclk_1 1 0 2 -240 -130 100J
-preplace netloc S00_AXI_1 1 1 1 80
-preplace netloc axi_interconnect_0_M00_AXI 1 2 1 370
-preplace netloc axi_ethernetlite_0_ip2intc_irpt 1 3 1 N
-preplace netloc M00_ARESETN_1 1 1 2 120 100 380
-preplace netloc axi_ethernetlite_0_MII 1 3 1 N
-levelinfo -pg 1 -280 -80 250 490 640 -top -360 -bot 160
-",
-}
 
   # Restore current instance
   current_bd_instance $oldCurInst
