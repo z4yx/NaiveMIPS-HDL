@@ -30,4 +30,4 @@ On ubuntu for example
 	
 #### How to launch the Vivado GUI
 	
-	docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $PWD:/home/vivado/project 
+	docker run -ti --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $PWD:/home/vivado/project vivado:2018.1
