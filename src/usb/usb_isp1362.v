@@ -45,7 +45,9 @@ output wire usb_dack;
 input wire usb_int;
 input wire usb_drq;
 
-wire [15:0] dummy;
+wire [15:0] usb_data_o;
+wire [1:0] unused;
+wire usb_data_t;
 
 parallel_ifce #(.RW_BUS_CYCLE(3)) u_ifce(
   .clk_bus    (clk_bus),
@@ -56,8 +58,10 @@ parallel_ifce #(.RW_BUS_CYCLE(3)) u_ifce(
   .bus_read   (bus_read),
   .bus_write  (bus_write),
   .bus_stall  (bus_stall),
-  .dev_address({usb_a0,2'bzz}),
-  .dev_data   ({dummy,usb_data}),
+  .dev_address({usb_a0,unused}),
+  .dev_data_o (usb_data_o),
+  .dev_data_i (usb_data),
+  .dev_data_t (usb_data_t),
   .dev_we_n   (usb_we_n),
   .dev_oe_n   (usb_rd_n),
   .dev_ce_n   (usb_cs_n)
@@ -76,8 +80,10 @@ end
 
 assign bus_data_o[31:16] = 16'b0;
 
+assign usb_data = usb_data_t ? {16{1'bz}} : usb_data_o;
 assign usb_a1 = 1'b0; //host controller only
 assign usb_rst_n = rst_n;
 assign usb_dack = 1'b1;
 
 endmodule
+`default_nettype wire

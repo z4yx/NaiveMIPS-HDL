@@ -129,3 +129,4 @@ bd_qspi bd_qspi_inst (
     .rst_n(rst_n)
 );
 endmodule
+`default_nettype wire

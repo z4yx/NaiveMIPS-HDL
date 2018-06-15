@@ -2,16 +2,22 @@
 set_property IOSTANDARD LVCMOS33 [get_ports clk_in]
 set_property PACKAGE_PIN R21 [get_ports clk_in]
 
-set_property IOSTANDARD LVCMOS33 [get_ports rst_in]
-set_property PACKAGE_PIN L23 [get_ports rst_in]
+set_property IOSTANDARD LVCMOS33 [get_ports touch_btn[*]]
+set_property PACKAGE_PIN B26 [get_ports touch_btn[0]]
+set_property PACKAGE_PIN A23 [get_ports touch_btn[1]]
+set_property PACKAGE_PIN A24 [get_ports touch_btn[2]]
+set_property PACKAGE_PIN D26 [get_ports touch_btn[3]]
+set_property PACKAGE_PIN K23 [get_ports touch_btn[4]] ;#USER_CLK
+set_property PACKAGE_PIN L23 [get_ports touch_btn[5]] ;#USER_RST
+
 set_property IOSTANDARD LVCMOS33 [get_ports txd]
 set_property PACKAGE_PIN J25 [get_ports txd]
 set_property IOSTANDARD LVCMOS33 [get_ports rxd]
 set_property PACKAGE_PIN L22 [get_ports rxd]
-set_property IOSTANDARD LVCMOS33 [get_ports rs232_txd]
-set_property PACKAGE_PIN U16 [get_ports rs232_txd] ;#CPLD_D0
-set_property IOSTANDARD LVCMOS33 [get_ports rs232_rxd]
-set_property PACKAGE_PIN P18 [get_ports rs232_rxd] ;#CPLD_D1
+set_property IOSTANDARD LVCMOS33 [get_ports uart_wrn]
+set_property PACKAGE_PIN U16 [get_ports uart_wrn] ;#CPLD_D0
+set_property IOSTANDARD LVCMOS33 [get_ports uart_rdn]
+set_property PACKAGE_PIN P18 [get_ports uart_rdn] ;#CPLD_D1
 
 #USB
 set_property -dict {PACKAGE_PIN U22 IOSTANDARD LVCMOS33} [get_ports usb_a0]

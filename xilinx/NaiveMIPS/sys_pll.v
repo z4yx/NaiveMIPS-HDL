@@ -27,7 +27,7 @@ clk_wiz_v3_6 clknetwork(
     .CLK_OUT3           (c2),
     .CLK_OUT4           (c3),
     // Status and control signals
-    .RESET              (areset),
+    .reset              (areset),
     .LOCKED             (locked));
 
 endmodule

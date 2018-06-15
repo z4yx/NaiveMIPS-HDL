@@ -117,3 +117,4 @@ always @(negedge clk_n or negedge rst_n) begin //using negedge clock
 end
 
 endmodule
+`default_nettype wire

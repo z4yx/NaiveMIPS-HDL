@@ -38,6 +38,8 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
+            uart_rdn,
+            uart_wrn,
             usb_a0,
             usb_a1,
             usb_we_n,
@@ -48,7 +50,6 @@ module soc_toplevel(/*autoport*/
             leds,
             dpy_com,
             dpy_seg,
-            rs232_txd,
             vga_pixel,
             vga_hsync,
             vga_vsync,
@@ -64,9 +65,9 @@ module soc_toplevel(/*autoport*/
             clk_in,
             clk_uart_in,
             rxd,
+            touch_btn,
             usb_int,
             usb_drq,
-            rs232_rxd,
             MII_col,
             MII_crs,
             MII_rx_clk,
@@ -98,7 +99,7 @@ assign clk_ram = clk_ram_pll;
 `endif
 
 sys_pll pll1(
-    .areset(touch_btn[5]),
+    .areset(~touch_btn[5]),
     .inclk0(clk_in),
     .c0(clk_pll),
     .c1(clk_ram_pll),
@@ -272,14 +273,6 @@ wire usb_dbus_write;
 wire usb_dbus_stall;
 wire usb_irq;
 
-wire [31:0]net_dbus_data_o;
-wire [31:0]net_dbus_data_i;
-wire [2:0]net_dbus_address;
-wire net_dbus_read;
-wire net_dbus_write;
-wire net_dbus_stall;
-wire net_irq;
-
 wire [31:0]gpio_dbus_data_o;
 wire [31:0]gpio_dbus_data_i;
 wire [7:0]gpio_dbus_address;
@@ -341,12 +334,6 @@ seg_disp seg7(
     .seg(dpy_seg),
     .com(dpy_com)
 );
-
-assign dm9k_data_i = dm9k_data;
-assign sl811_data_i = dm9k_data[7:0];
-assign dm9k_data = dm9k_data_t ?
-                (sl811_data_t ? {16{1'bz}} : {8'h0,sl811_data_o}) :
-                dm9k_data_o;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -568,7 +555,7 @@ IOBUF mdio_buf(
 
 spi_flash spi_flash_cfg(
         .clk        (clk),
-        .spiclk     (clk2x),
+        .spiclk     (vga_clk),
         .axiclk     (clk_in),
         .address1   (cfg_flash_dbus_address),
         .wrdata1    (cfg_flash_dbus_data_i),
@@ -609,26 +596,6 @@ IOBUF mosi_buf(
     .O(mosi_i),
     .T(mosi_t)
 );
-
-net_dm9k eth0(/*autoinst*/
-          .bus_data_o(net_dbus_data_o[31:0]),
-          .bus_stall(net_dbus_stall),
-          .dm9k_data_o(dm9k_data_o),
-          .dm9k_data_i(dm9k_data_i),
-          .dm9k_data_t(dm9k_data_t),
-          .dm9k_cmd(dm9k_cmd),
-          .dm9k_we_n(dm9k_we_n),
-          .dm9k_rd_n(dm9k_rd_n),
-          .dm9k_cs_n(dm9k_cs_n),
-          .dm9k_rst_n(dm9k_rst_n),
-          .clk_bus(clk),
-          .rst_n(rst_n),
-          .bus_address(net_dbus_address[2:0]),
-          .bus_data_i(net_dbus_data_i[31:0]),
-          .bus_read(net_dbus_read),
-          .bus_write(net_dbus_write),
-          .bus_irq(),
-          .dm9k_int(dm9k_int));
 
 gpio_top gpio_inst(/*autoinst*/
          .gpio0(gpio0[31:0]),
