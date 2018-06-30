@@ -20,7 +20,7 @@ SERIAL_DELAY = 0.00001
 SERIAL_DEVICE = ""
 FLASH_BASE = 0xbe000000
 USB_BASE = 0xbc020000
-ETH_BASE = 0xbc020100
+ETH_BASE = 0xbc030000
 FLASH_BLKSIZE = 128*1024
 FLASH_SIZE = 64*FLASH_BLKSIZE
 RAM_SIZE = 0x800000
@@ -281,16 +281,19 @@ def usb_test():
     print "Rev: %s" % binascii.hexlify(buf[0:2])
 
 def eth_test():
-    write_ram(ETH_BASE, "\x28\x00\x00\x00")
-    buf1 = read_ram(ETH_BASE+4, 4)
-    write_ram(ETH_BASE, "\x29\x00\x00\x00")
-    buf2 = read_ram(ETH_BASE+4, 4)
-    write_ram(ETH_BASE, "\x2a\x00\x00\x00")
-    buf3 = read_ram(ETH_BASE+4, 4)
-    write_ram(ETH_BASE, "\x2b\x00\x00\x00")
-    buf4 = read_ram(ETH_BASE+4, 4)
-    print "VID: %s%s" % (binascii.hexlify(buf2[0]),binascii.hexlify(buf1[0]))
-    print "PID: %s%s" % (binascii.hexlify(buf4[0]),binascii.hexlify(buf3[0]))
+    write_ram(ETH_BASE+0x7f4, "\x80\x05\x00\x00")
+    buf1 = read_ram(ETH_BASE+0x7f4, 4)
+    write_ram(ETH_BASE+0x7f0, "\x08\x00\x00\x00")
+    buf2 = read_ram(ETH_BASE+0x7f0, 4)
+    write_ram(ETH_BASE+0x7f0, "\x09\x00\x00\x00")
+    buf3 = read_ram(ETH_BASE+0x7f0, 4)
+    print "%s%s%s" % (binascii.hexlify(buf1[1]),binascii.hexlify(buf1[0]),binascii.hexlify(buf3[0]))
+    id2 = read_ram(ETH_BASE+0x7ec, 4)
+    write_ram(ETH_BASE+0x7f4, "\x81\x05\x00\x00")
+    write_ram(ETH_BASE+0x7f0, "\x09\x00\x00\x00")
+    id3 = read_ram(ETH_BASE+0x7ec, 4)
+    print "%s%s" % (binascii.hexlify(id2[1]),binascii.hexlify(id2[0]))
+    print "%s%s" % (binascii.hexlify(id3[1]),binascii.hexlify(id3[0]))
 
 def flash_test():
 
