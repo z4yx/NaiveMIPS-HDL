@@ -8,7 +8,7 @@ module thinpad_top(
     input wire reset_btn,         //BTN6手动复位按钮开关，带消抖电路，按下时为1
 
     input  wire[3:0]  touch_btn,  //BTN1~BTN4，按钮开关，按下时为1
-    input  wire[31:0] dip_sw,     //32位拨码开关，拨到“ON”时为1
+    inout  wire[31:0] dip_sw,     //32位拨码开关，拨到“ON”时为1
     output wire[15:0] leds,       //16位LED，输出时1点亮
     output wire[7:0]  dpy0,       //数码管低位信号，包括小数点，输出1点亮
     output wire[7:0]  dpy1,       //数码管高位信号，包括小数点，输出1点亮
@@ -79,7 +79,7 @@ module thinpad_top(
     output wire video_clk,         //像素时钟输出
     output wire video_de           //行数据有效信号，用于区分消隐区
 );
-
+assign flash_a[0]=0;
 soc_toplevel soc(
     .base_ram_data(base_ram_data),
     .ext_ram_data(ext_ram_data),
