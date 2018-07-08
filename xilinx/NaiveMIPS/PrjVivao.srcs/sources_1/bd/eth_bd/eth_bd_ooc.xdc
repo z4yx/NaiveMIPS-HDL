@@ -7,7 +7,7 @@
 # of Vivado)
 ################################################################################
 create_clock -name eth_clk -period 10 [get_ports eth_clk]
-create_clock -name bus_clk -period 100 [get_ports bus_clk]
+create_clock -name bus_clk -period 20 [get_ports bus_clk]
 create_clock -name MII_rx_clk -period 10 [get_ports MII_rx_clk]
 create_clock -name MII_tx_clk -period 10 [get_ports MII_tx_clk]
 

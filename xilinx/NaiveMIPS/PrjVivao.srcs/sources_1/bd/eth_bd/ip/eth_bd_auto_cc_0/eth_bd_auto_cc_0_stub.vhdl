@@ -1,7 +1,7 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2017.3 (lin64) Build 2018833 Wed Oct  4 19:58:07 MDT 2017
--- Date        : Fri Jun 15 14:28:51 2018
+-- Date        : Sat Jul  7 22:53:42 2018
 -- Host        : nuc6i7 running 64-bit Ubuntu 18.04 LTS
 -- Command     : write_vhdl -force -mode synth_stub
 --               /home/zhang/NaiveMIPS-HDL/xilinx/NaiveMIPS/PrjVivao.srcs/sources_1/bd/eth_bd/ip/eth_bd_auto_cc_0/eth_bd_auto_cc_0_stub.vhdl

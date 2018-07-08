@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.3 (lin64) Build 2018833 Wed Oct  4 19:58:07 MDT 2017
-//Date        : Fri Jun 15 14:25:03 2018
+//Date        : Sat Jul  7 22:51:58 2018
 //Host        : nuc6i7 running 64-bit Ubuntu 18.04 LTS
 //Command     : generate_target eth_bd_wrapper.bd
 //Design      : eth_bd_wrapper

@@ -634,7 +634,7 @@ gpu gpu_inst(
         .pxlData  (vga_pixel)
 );
 
-assign irq_line = {1'b0,usb_irq,uart_irq,2'b0};
+assign irq_line = {1'b0,usb_irq,uart_irq,1'b0,net_irq};
 
 `ifdef HS_DIFF_OUT
 wire [255:0] testdata_in;

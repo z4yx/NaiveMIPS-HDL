@@ -162,10 +162,13 @@ proc create_root_design { parentCell } {
   # Create ports
   set bus_clk [ create_bd_port -dir I -type clk bus_clk ]
   set_property -dict [ list \
-   CONFIG.FREQ_HZ {10000000} \
+   CONFIG.FREQ_HZ {50000000} \
  ] $bus_clk
   set bus_rstn [ create_bd_port -dir I -type rst bus_rstn ]
   set eth_clk [ create_bd_port -dir I -type clk eth_clk ]
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {100000000} \
+ ] $eth_clk
   set irq [ create_bd_port -dir O -type intr irq ]
 
   # Create instance: ahblite_axi_bridge_0, and set properties
@@ -177,10 +180,19 @@ proc create_root_design { parentCell } {
    CONFIG.C_S_AXI_PROTOCOL {AXI4} \
  ] $axi_ethernetlite_0
 
+  # Create instance: axi_intc_0, and set properties
+  set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
+  set_property -dict [ list \
+   CONFIG.C_HAS_ILR {1} \
+   CONFIG.C_IRQ_CONNECTION {1} \
+   CONFIG.C_PROCESSOR_CLK_FREQ_MHZ {50} \
+   CONFIG.C_S_AXI_ACLK_FREQ_MHZ {100} \
+ ] $axi_intc_0
+
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0 ]
   set_property -dict [ list \
-   CONFIG.NUM_MI {1} \
+   CONFIG.NUM_MI {2} \
    CONFIG.SYNCHRONIZATION_STAGES {2} \
  ] $axi_interconnect_0
 
@@ -193,17 +205,20 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net axi_ethernetlite_0_MDIO [get_bd_intf_ports MDIO] [get_bd_intf_pins axi_ethernetlite_0/MDIO]
   connect_bd_intf_net -intf_net axi_ethernetlite_0_MII [get_bd_intf_ports MII] [get_bd_intf_pins axi_ethernetlite_0/MII]
   connect_bd_intf_net -intf_net axi_interconnect_0_M00_AXI [get_bd_intf_pins axi_ethernetlite_0/S_AXI] [get_bd_intf_pins axi_interconnect_0/M00_AXI]
+  connect_bd_intf_net -intf_net axi_interconnect_0_M01_AXI [get_bd_intf_pins axi_intc_0/s_axi] [get_bd_intf_pins axi_interconnect_0/M01_AXI]
 
   # Create port connections
   connect_bd_net -net ARESETN_1 [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins proc_sys_reset_0/interconnect_aresetn]
-  connect_bd_net -net M00_ARESETN_1 [get_bd_pins axi_ethernetlite_0/s_axi_aresetn] [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
-  connect_bd_net -net axi_ethernetlite_0_ip2intc_irpt [get_bd_ports irq] [get_bd_pins axi_ethernetlite_0/ip2intc_irpt]
-  connect_bd_net -net eth_clk [get_bd_ports eth_clk] [get_bd_pins axi_ethernetlite_0/s_axi_aclk] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
+  connect_bd_net -net M00_ARESETN_1 [get_bd_pins axi_ethernetlite_0/s_axi_aresetn] [get_bd_pins axi_intc_0/s_axi_aresetn] [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/M01_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
+  connect_bd_net -net axi_ethernetlite_0_ip2intc_irpt [get_bd_pins axi_ethernetlite_0/ip2intc_irpt] [get_bd_pins axi_intc_0/intr]
+  connect_bd_net -net axi_intc_0_irq [get_bd_ports irq] [get_bd_pins axi_intc_0/irq]
+  connect_bd_net -net eth_clk [get_bd_ports eth_clk] [get_bd_pins axi_ethernetlite_0/s_axi_aclk] [get_bd_pins axi_intc_0/s_axi_aclk] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/M01_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
   connect_bd_net -net s_ahb_hclk_1 [get_bd_ports bus_clk] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hclk] [get_bd_pins axi_interconnect_0/S00_ACLK]
   connect_bd_net -net s_ahb_hresetn_1 [get_bd_ports bus_rstn] [get_bd_pins ahblite_axi_bridge_0/s_ahb_hresetn] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins proc_sys_reset_0/ext_reset_in]
 
   # Create address segments
-  create_bd_addr_seg -range 0x00010000 -offset 0x00000000 [get_bd_addr_spaces AHB] [get_bd_addr_segs axi_ethernetlite_0/S_AXI/Reg] SEG_axi_ethernetlite_0_Reg
+  create_bd_addr_seg -range 0x00002000 -offset 0x00000000 [get_bd_addr_spaces AHB] [get_bd_addr_segs axi_ethernetlite_0/S_AXI/Reg] SEG_axi_ethernetlite_0_Reg
+  create_bd_addr_seg -range 0x00002000 -offset 0x00002000 [get_bd_addr_spaces AHB] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] SEG_axi_intc_0_Reg
 
 
   # Restore current instance
