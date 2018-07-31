@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Product Version: Vivado v2017.3 (64-bit)                     -->
+<!--                                                              -->
+<!-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.        -->
+
+<hwsession version="1" minor="2">
+  <device name="xc7k160t_0" gui_info=""/>
+  <ObjectList object_type="hw_cfgmem" gui_info="">
+    <Object name="" gui_info="">
+      <Properties Property="PROGRAM.ADDRESS_RANGE" value="use_file"/>
+      <Properties Property="PROGRAM.BLANK_CHECK" value="1"/>
+      <Properties Property="PROGRAM.CFG_PROGRAM" value="1"/>
+      <Properties Property="PROGRAM.CHECKSUM" value="0"/>
+      <Properties Property="PROGRAM.ERASE" value="1"/>
+      <Properties Property="PROGRAM.FILES" value="/home/zhang/tmp/ees-cfg.mcs"/>
+      <Properties Property="PROGRAM.PRM_FILE" value=""/>
+      <Properties Property="PROGRAM.UNUSED_PIN_TERMINATION" value="pull-none"/>
+      <Properties Property="PROGRAM.VERIFY" value="1"/>
+    </Object>
+  </ObjectList>
+  <ObjectList object_type="hw_device" gui_info="">
+    <Object name="xc7a100t_0" gui_info="">
+      <Properties Property="FULL_PROBES.FILE" value=""/>
+      <Properties Property="PROBES.FILE" value=""/>
+      <Properties Property="PROGRAM.HW_BITSTREAM" value="$_project_name_.runs/impl_1/soc_toplevel.bit"/>
+      <Properties Property="SLR.COUNT" value="/home/zhang/ThinpadNG-Cloud/1"/>
+    </Object>
+    <Object name="xc7k160t_0" gui_info="">
+      <Properties Property="FULL_PROBES.FILE" value=""/>
+      <Properties Property="PROBES.FILE" value=""/>
+      <Properties Property="PROGRAM.HW_BITSTREAM" value=""/>
+      <Properties Property="PROGRAM.HW_CFGMEM_PART" value="s25fl256sxxxxxx0-spi-x1_x2_x4"/>
+      <Properties Property="SLR.COUNT" value="/home/zhang/NaiveMIPS-HDL/1"/>
+    </Object>
+  </ObjectList>
+  <ObjectList object_type="hw_ila" gui_info="">
+    <Object name="" gui_info="">
+      <Properties Property="CONTROL.TRIGGER_CONDITION" value="AND"/>
+      <Properties Property="CORE_REFRESH_RATE_MS" value="500"/>
+    </Object>
+    <Object name="u_ila_0" gui_info="">
+      <Properties Property="CONTROL.TRIGGER_CONDITION" value="AND"/>
+      <Properties Property="CONTROL.TRIGGER_POSITION" value="512"/>
+      <Properties Property="CORE_REFRESH_RATE_MS" value="500"/>
+    </Object>
+    <Object name="u_ila_1" gui_info="">
+      <Properties Property="CONTROL.TRIGGER_CONDITION" value="AND"/>
+      <Properties Property="CORE_REFRESH_RATE_MS" value="500"/>
+    </Object>
+  </ObjectList>
+  <ObjectList object_type="hw_probe" gui_info="">
+    <Object name="dbus_ram_read" gui_info="Trigger Setup=0"/>
+    <Object name="ibus_ram_read" gui_info=""/>
+  </ObjectList>
+  <ObjectList object_type="hw_sysmon" gui_info="">
+    <Object name="XADC" gui_info="dashboard_1=[TEMPERATURE=-65281;SCAN_RATE=1000;TRACK_TIME=1;]"/>
+  </ObjectList>
+  <probeset name="hw project" active="false">
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq24&apos;hXX_XXXX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq24&apos;hXX_XXXX"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe0[23:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq24&apos;hXX_XXXX"/>
+      </probeOptions>
+      <nets>
+        <net name="dbus_ram_address[23]"/>
+        <net name="dbus_ram_address[22]"/>
+        <net name="dbus_ram_address[21]"/>
+        <net name="dbus_ram_address[20]"/>
+        <net name="dbus_ram_address[19]"/>
+        <net name="dbus_ram_address[18]"/>
+        <net name="dbus_ram_address[17]"/>
+        <net name="dbus_ram_address[16]"/>
+        <net name="dbus_ram_address[15]"/>
+        <net name="dbus_ram_address[14]"/>
+        <net name="dbus_ram_address[13]"/>
+        <net name="dbus_ram_address[12]"/>
+        <net name="dbus_ram_address[11]"/>
+        <net name="dbus_ram_address[10]"/>
+        <net name="dbus_ram_address[9]"/>
+        <net name="dbus_ram_address[8]"/>
+        <net name="dbus_ram_address[7]"/>
+        <net name="dbus_ram_address[6]"/>
+        <net name="dbus_ram_address[5]"/>
+        <net name="dbus_ram_address[4]"/>
+        <net name="dbus_ram_address[3]"/>
+        <net name="dbus_ram_address[2]"/>
+        <net name="dbus_ram_address[1]"/>
+        <net name="dbus_ram_address[0]"/>
+      </nets>
+    </probe>
+    <probe type="ila_data" busType="net" source="netlist" spec="ILA_DATA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe1[31:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+      </probeOptions>
+      <nets>
+        <net name="dbus_ram_rddata[31]"/>
+        <net name="dbus_ram_rddata[30]"/>
+        <net name="dbus_ram_rddata[29]"/>
+        <net name="dbus_ram_rddata[28]"/>
+        <net name="dbus_ram_rddata[27]"/>
+        <net name="dbus_ram_rddata[26]"/>
+        <net name="dbus_ram_rddata[25]"/>
+        <net name="dbus_ram_rddata[24]"/>
+        <net name="dbus_ram_rddata[23]"/>
+        <net name="dbus_ram_rddata[22]"/>
+        <net name="dbus_ram_rddata[21]"/>
+        <net name="dbus_ram_rddata[20]"/>
+        <net name="dbus_ram_rddata[19]"/>
+        <net name="dbus_ram_rddata[18]"/>
+        <net name="dbus_ram_rddata[17]"/>
+        <net name="dbus_ram_rddata[16]"/>
+        <net name="dbus_ram_rddata[15]"/>
+        <net name="dbus_ram_rddata[14]"/>
+        <net name="dbus_ram_rddata[13]"/>
+        <net name="dbus_ram_rddata[12]"/>
+        <net name="dbus_ram_rddata[11]"/>
+        <net name="dbus_ram_rddata[10]"/>
+        <net name="dbus_ram_rddata[9]"/>
+        <net name="dbus_ram_rddata[8]"/>
+        <net name="dbus_ram_rddata[7]"/>
+        <net name="dbus_ram_rddata[6]"/>
+        <net name="dbus_ram_rddata[5]"/>
+        <net name="dbus_ram_rddata[4]"/>
+        <net name="dbus_ram_rddata[3]"/>
+        <net name="dbus_ram_rddata[2]"/>
+        <net name="dbus_ram_rddata[1]"/>
+        <net name="dbus_ram_rddata[0]"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq1&apos;bX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq1&apos;b1"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe5[0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq1&apos;b1"/>
+      </probeOptions>
+      <nets>
+        <net name="dbus_ram_read"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq1&apos;bX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq1&apos;bX"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe6[0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq1&apos;bX"/>
+      </probeOptions>
+      <nets>
+        <net name="dbus_ram_stall"/>
+      </nets>
+    </probe>
+    <probe type="ila_data" busType="net" source="netlist" spec="ILA_DATA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe2[31:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+      </probeOptions>
+      <nets>
+        <net name="dbus_ram_wrdata[31]"/>
+        <net name="dbus_ram_wrdata[30]"/>
+        <net name="dbus_ram_wrdata[29]"/>
+        <net name="dbus_ram_wrdata[28]"/>
+        <net name="dbus_ram_wrdata[27]"/>
+        <net name="dbus_ram_wrdata[26]"/>
+        <net name="dbus_ram_wrdata[25]"/>
+        <net name="dbus_ram_wrdata[24]"/>
+        <net name="dbus_ram_wrdata[23]"/>
+        <net name="dbus_ram_wrdata[22]"/>
+        <net name="dbus_ram_wrdata[21]"/>
+        <net name="dbus_ram_wrdata[20]"/>
+        <net name="dbus_ram_wrdata[19]"/>
+        <net name="dbus_ram_wrdata[18]"/>
+        <net name="dbus_ram_wrdata[17]"/>
+        <net name="dbus_ram_wrdata[16]"/>
+        <net name="dbus_ram_wrdata[15]"/>
+        <net name="dbus_ram_wrdata[14]"/>
+        <net name="dbus_ram_wrdata[13]"/>
+        <net name="dbus_ram_wrdata[12]"/>
+        <net name="dbus_ram_wrdata[11]"/>
+        <net name="dbus_ram_wrdata[10]"/>
+        <net name="dbus_ram_wrdata[9]"/>
+        <net name="dbus_ram_wrdata[8]"/>
+        <net name="dbus_ram_wrdata[7]"/>
+        <net name="dbus_ram_wrdata[6]"/>
+        <net name="dbus_ram_wrdata[5]"/>
+        <net name="dbus_ram_wrdata[4]"/>
+        <net name="dbus_ram_wrdata[3]"/>
+        <net name="dbus_ram_wrdata[2]"/>
+        <net name="dbus_ram_wrdata[1]"/>
+        <net name="dbus_ram_wrdata[0]"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq1&apos;bX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq1&apos;bX"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe7[0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq1&apos;bX"/>
+      </probeOptions>
+      <nets>
+        <net name="dbus_ram_write"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq24&apos;hXX_XXXX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq24&apos;hXX_XXXX"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe3[23:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq24&apos;hXX_XXXX"/>
+      </probeOptions>
+      <nets>
+        <net name="ibus_ram_address[23]"/>
+        <net name="ibus_ram_address[22]"/>
+        <net name="ibus_ram_address[21]"/>
+        <net name="ibus_ram_address[20]"/>
+        <net name="ibus_ram_address[19]"/>
+        <net name="ibus_ram_address[18]"/>
+        <net name="ibus_ram_address[17]"/>
+        <net name="ibus_ram_address[16]"/>
+        <net name="ibus_ram_address[15]"/>
+        <net name="ibus_ram_address[14]"/>
+        <net name="ibus_ram_address[13]"/>
+        <net name="ibus_ram_address[12]"/>
+        <net name="ibus_ram_address[11]"/>
+        <net name="ibus_ram_address[10]"/>
+        <net name="ibus_ram_address[9]"/>
+        <net name="ibus_ram_address[8]"/>
+        <net name="ibus_ram_address[7]"/>
+        <net name="ibus_ram_address[6]"/>
+        <net name="ibus_ram_address[5]"/>
+        <net name="ibus_ram_address[4]"/>
+        <net name="ibus_ram_address[3]"/>
+        <net name="ibus_ram_address[2]"/>
+        <net name="ibus_ram_address[1]"/>
+        <net name="ibus_ram_address[0]"/>
+      </nets>
+    </probe>
+    <probe type="ila_data" busType="net" source="netlist" spec="ILA_DATA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe4[31:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+      </probeOptions>
+      <nets>
+        <net name="ibus_ram_rddata[31]"/>
+        <net name="ibus_ram_rddata[30]"/>
+        <net name="ibus_ram_rddata[29]"/>
+        <net name="ibus_ram_rddata[28]"/>
+        <net name="ibus_ram_rddata[27]"/>
+        <net name="ibus_ram_rddata[26]"/>
+        <net name="ibus_ram_rddata[25]"/>
+        <net name="ibus_ram_rddata[24]"/>
+        <net name="ibus_ram_rddata[23]"/>
+        <net name="ibus_ram_rddata[22]"/>
+        <net name="ibus_ram_rddata[21]"/>
+        <net name="ibus_ram_rddata[20]"/>
+        <net name="ibus_ram_rddata[19]"/>
+        <net name="ibus_ram_rddata[18]"/>
+        <net name="ibus_ram_rddata[17]"/>
+        <net name="ibus_ram_rddata[16]"/>
+        <net name="ibus_ram_rddata[15]"/>
+        <net name="ibus_ram_rddata[14]"/>
+        <net name="ibus_ram_rddata[13]"/>
+        <net name="ibus_ram_rddata[12]"/>
+        <net name="ibus_ram_rddata[11]"/>
+        <net name="ibus_ram_rddata[10]"/>
+        <net name="ibus_ram_rddata[9]"/>
+        <net name="ibus_ram_rddata[8]"/>
+        <net name="ibus_ram_rddata[7]"/>
+        <net name="ibus_ram_rddata[6]"/>
+        <net name="ibus_ram_rddata[5]"/>
+        <net name="ibus_ram_rddata[4]"/>
+        <net name="ibus_ram_rddata[3]"/>
+        <net name="ibus_ram_rddata[2]"/>
+        <net name="ibus_ram_rddata[1]"/>
+        <net name="ibus_ram_rddata[0]"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq1&apos;bX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq1&apos;bX"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe8[0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq1&apos;bX"/>
+      </probeOptions>
+      <nets>
+        <net name="ibus_ram_read"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq1&apos;bX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq1&apos;bX"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe9[0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq1&apos;bX"/>
+      </probeOptions>
+      <nets>
+        <net name="ibus_ram_stall"/>
+      </nets>
+    </probe>
+  </probeset>
+</hwsession>
