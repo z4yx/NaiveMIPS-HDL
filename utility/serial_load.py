@@ -281,19 +281,19 @@ def usb_test():
     print "Rev: %s" % binascii.hexlify(buf[0:2])
 
 def eth_test():
-    write_ram(ETH_BASE+0x7f4, "\x80\x05\x00\x00")
-    buf1 = read_ram(ETH_BASE+0x7f4, 4)
+    write_ram(ETH_BASE+0x7e4, "\xE2\x04\x00\x00")
+    #buf1 = read_ram(ETH_BASE+0x7e4, 4)
     write_ram(ETH_BASE+0x7f0, "\x08\x00\x00\x00")
-    buf2 = read_ram(ETH_BASE+0x7f0, 4)
+    #buf2 = read_ram(ETH_BASE+0x7f0, 4)
     write_ram(ETH_BASE+0x7f0, "\x09\x00\x00\x00")
-    buf3 = read_ram(ETH_BASE+0x7f0, 4)
-    print "%s%s%s" % (binascii.hexlify(buf1[1]),binascii.hexlify(buf1[0]),binascii.hexlify(buf3[0]))
+    #buf3 = read_ram(ETH_BASE+0x7f0, 4)
+    #print "addr=%s%s ctl=%s" % (binascii.hexlify(buf1[1]),binascii.hexlify(buf1[0]),binascii.hexlify(buf3[0]))
     id2 = read_ram(ETH_BASE+0x7ec, 4)
-    write_ram(ETH_BASE+0x7f4, "\x81\x05\x00\x00")
+    write_ram(ETH_BASE+0x7e4, "\xE3\x04\x00\x00")
     write_ram(ETH_BASE+0x7f0, "\x09\x00\x00\x00")
     id3 = read_ram(ETH_BASE+0x7ec, 4)
-    print "%s%s" % (binascii.hexlify(id2[1]),binascii.hexlify(id2[0]))
-    print "%s%s" % (binascii.hexlify(id3[1]),binascii.hexlify(id3[0]))
+    print "reg2=%s%s" % (binascii.hexlify(id2[1]),binascii.hexlify(id2[0]))
+    print "reg3=%s%s" % (binascii.hexlify(id3[1]),binascii.hexlify(id3[0]))
 
 def flash_test():
 
