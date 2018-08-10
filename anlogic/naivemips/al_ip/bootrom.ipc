@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RomConfig>
+    <GeneralConfig>
+        <Type>ROM</Type>
+        <Device>EG4S20BG256</Device>
+        <create_VHDL>false</create_VHDL>
+        <inst>bootrom</inst>
+        <debug_enable>false</debug_enable>
+        <pack_enable>false</pack_enable>
+    </GeneralConfig>
+    <ImplementOption>
+        <imp_type>9k_fast</imp_type>
+    </ImplementOption>
+    <MemoryType>
+        <mem_type>SP</mem_type>
+    </MemoryType>
+    <PortAOption>
+        <depth_a>512</depth_a>
+        <width_a>32</width_a>
+        <register_a>None</register_a>
+    </PortAOption>
+    <MemoryInitialization>
+        <init_file_enable>true</init_file_enable>
+        <init_file>../../../altera/bootrom.mif</init_file>
+    </MemoryInitialization>
+    <FillMemoryInitValues>
+        <fill_all>NONE</fill_all>
+    </FillMemoryInitValues>
+</RomConfig>
