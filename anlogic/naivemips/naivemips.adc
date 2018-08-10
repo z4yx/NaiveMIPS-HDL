@@ -1,0 +1,4 @@
+set_pin_assignment {clk_in}    { LOCATION = K14;  }
+set_pin_assignment {touch_btn}  { LOCATION = K16;  }
+set_pin_assignment {txd}  { LOCATION = H13;  }
+set_pin_assignment {rxd}  { LOCATION = J13;  }

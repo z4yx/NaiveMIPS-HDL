@@ -8,7 +8,7 @@
  ** Date	:	2018 08 10
  ** TD version	:	4.1.670
 \************************************************************/
-`default_nettype wire
+
 `timescale 1ns / 1ps
 
 module bootrom ( doa, addra, clka, rsta );
@@ -24,16 +24,17 @@ module bootrom ( doa, addra, clka, rsta );
 
 	EG_LOGIC_BRAM #( .DATA_WIDTH_A(32),
 				.ADDR_WIDTH_A(9),
-				.DATA_DEPTH_A(512),
+				.DATA_DEPTH_A(259),
 				.DATA_WIDTH_B(32),
 				.ADDR_WIDTH_B(9),
-				.DATA_DEPTH_B(512),
+				.DATA_DEPTH_B(259),
 				.MODE("SP"),
 				.REGMODE_A("NOREG"),
 				.RESETMODE("SYNC"),
-				.IMPLEMENT("9K(FAST)"),
-				.DEBUGGABLE("NO"),
+				.IMPLEMENT("9K"),
+				.DEBUGGABLE("YES"),
 				.PACKABLE("NO"),
+				.FORCE_KEEP("ON"),
 				.INIT_FILE("../../../altera/bootrom.mif"),
 				.FILL_ALL("NONE"))
 			inst(

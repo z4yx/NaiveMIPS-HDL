@@ -2,6 +2,7 @@
 <Project>
     <Project_Created_Time>2018-08-09 23:51:29</Project_Created_Time>
     <TD_Version>4.1.670</TD_Version>
+    <UCode>11010010</UCode>
     <Name>naivemips</Name>
     <HardWare>
         <Family>EG4</Family>
@@ -46,16 +47,18 @@
             <File>al_ip/sys_pll.v</File>
             <File>al_ip/bootrom.v</File>
         </Verilog>
-        <ADC_FILE/>
-        <SDC_FILE/>
+        <ADC_FILE>naivemips.adc</ADC_FILE>
+        <SDC_FILE>timing.sdc</SDC_FILE>
         <CWC_FILE/>
     </Source_Files>
     <TOP_MODULE>
         <LABEL/>
         <MODULE>soc_toplevel</MODULE>
-        <CREATEINDEX>user</CREATEINDEX>
+        <CREATEINDEX>auto</CREATEINDEX>
     </TOP_MODULE>
     <Project_Settings>
-        <Step_Last_Change>2018-08-10 00:14:46</Step_Last_Change>
+        <Step_Last_Change>2018-08-10 20:46:10</Step_Last_Change>
+        <Current_Step>60</Current_Step>
+        <Step_Status>true</Step_Status>
     </Project_Settings>
 </Project>
