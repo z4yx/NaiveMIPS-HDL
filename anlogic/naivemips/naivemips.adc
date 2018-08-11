@@ -1,4 +1,7 @@
-set_pin_assignment {clk_in}    { LOCATION = K14;  }
-set_pin_assignment {touch_btn}  { LOCATION = K16;  }
-set_pin_assignment {txd}  { LOCATION = H13;  }
-set_pin_assignment {rxd}  { LOCATION = J13;  }
+set_pin_assignment {clk_in}     { IOSTANDARD=LVCMOS33; LOCATION = K14;  }
+set_pin_assignment {touch_btn}  { IOSTANDARD=LVCMOS33; LOCATION = K16;  }
+set_pin_assignment {txd}        { IOSTANDARD=LVCMOS33; LOCATION = H13;  }
+set_pin_assignment {rxd}        { IOSTANDARD=LVCMOS33; LOCATION = J13;  }
+set_pin_assignment {gpio0[19]}  { IOSTANDARD=LVCMOS33; LOCATION = J14;  }
+set_pin_assignment {gpio1[0]}   { IOSTANDARD=LVCMOS33; LOCATION = M12; PULLTYPE=PULLDOWN;  }
+set_pin_assignment {gpio1[1]}   { IOSTANDARD=LVCMOS33; LOCATION = R16; PULLTYPE=PULLDOWN;  }

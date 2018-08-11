@@ -49,7 +49,7 @@
         </Verilog>
         <ADC_FILE>naivemips.adc</ADC_FILE>
         <SDC_FILE>timing.sdc</SDC_FILE>
-        <CWC_FILE/>
+        <CWC_FILE>test.cwc</CWC_FILE>
     </Source_Files>
     <TOP_MODULE>
         <LABEL/>
@@ -57,7 +57,7 @@
         <CREATEINDEX>auto</CREATEINDEX>
     </TOP_MODULE>
     <Project_Settings>
-        <Step_Last_Change>2018-08-10 20:46:10</Step_Last_Change>
+        <Step_Last_Change>2018-08-11 16:47:02</Step_Last_Change>
         <Current_Step>60</Current_Step>
         <Step_Status>true</Step_Status>
     </Project_Settings>
