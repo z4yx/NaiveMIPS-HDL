@@ -5,7 +5,7 @@
 	git clone https://github.com/z4yx/NaiveMIPS-HDL.git
 	cd NaiveMIPS-HDL
 	# building process takes about one hour
-	vivado -mode tcl -source xilinx/NaiveMIPS/build.tcl xilinx/NaiveMIPS/PrjVivao.xpr
+	vivado -mode tcl -source xilinx/NaiveMIPS/build.tcl xilinx/NaiveMIPS/PrjVivado.xpr
 	
 ### Otherwise you may want to use a Docker image
 
@@ -26,7 +26,7 @@ On ubuntu for example
 	git clone https://github.com/z4yx/NaiveMIPS-HDL.git
 	cd NaiveMIPS-HDL
 	# building process takes about one hour
-	docker run -ti --rm -v $PWD:/home/vivado/project vivado:2018.1 /opt/Xilinx/Vivado/2018.1/bin/vivado -mode tcl -source xilinx/NaiveMIPS/build.tcl xilinx/NaiveMIPS/PrjVivao.xpr
+	docker run -ti --rm -v $PWD:/home/vivado/project vivado:2018.1 /opt/Xilinx/Vivado/2018.1/bin/vivado -mode tcl -source xilinx/NaiveMIPS/build.tcl xilinx/NaiveMIPS/PrjVivado.xpr
 	
 #### How to launch the Vivado GUI
 	
