@@ -51,7 +51,7 @@ reg[1:0] wait_state;
 reg[15:0] lower_buf;
 
 assign upper_half = wait_state[1] | ~(|bus_be[1:0]);
-assign bus_d16_i = upper_half ? bus_data_i[31:16] : bus_data_i[16:0];
+assign bus_d16_i = upper_half ? bus_data_i[31:16] : bus_data_i[15:0];
 assign bus_data_o = wait_state[1] ? {bus_d16_o, lower_buf} : {2{bus_d16_o}};
 assign bus_stall = ifce_stall | wait_state[0];
 
