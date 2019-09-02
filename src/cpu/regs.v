@@ -2,7 +2,6 @@ module regs(/*autoport*/
 //output
             rdata1,
             rdata2,
-            rdata3,
 //input
             clk,
             rst_n,
@@ -10,8 +9,7 @@ module regs(/*autoport*/
             waddr,
             wdata,
             raddr1,
-            raddr2,
-            raddr3);
+            raddr2);
 
 input wire clk;
 input wire rst_n;
@@ -25,9 +23,6 @@ output reg[31:0] rdata1;
 
 input wire[4:0] raddr2;
 output reg[31:0] rdata2;
-
-input wire[4:0] raddr3;
-output reg[31:0] rdata3;
 
 reg[31:0] registers[0:31];
 
@@ -87,15 +82,6 @@ always @(*) begin
         rdata2 <= wdata;
     else
         rdata2 <= registers[raddr2];
-end
-
-always @(*) begin
-    if(raddr3 == 32'b0)
-        rdata3 <= 32'b0;
-    else if(raddr3 == waddr && we)
-        rdata3 <= wdata;
-    else
-        rdata3 <= registers[raddr3];
 end
 
 endmodule

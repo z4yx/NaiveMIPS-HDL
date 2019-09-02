@@ -113,8 +113,6 @@ wire ibus_read;
 wire [3:0]ibus_byteenable;
 wire [3:0]dbus_byteenable;
 wire [31:0]dbus_wrdata;
-wire [31:0]ibus_wrdata;
-wire ibus_write;
 wire dbus_read;
 wire [31:0]ibus_rddata;
 wire [31:0]dbus_address;
@@ -181,8 +179,6 @@ ibus ibus0(/*autoinst*/
          .master_address(ibus_address),
          .master_byteenable(ibus_byteenable),
          .master_read(ibus_read),
-         .master_write(ibus_write),
-         .master_wrdata(ibus_wrdata),
          .master_stall(ibus_stall),
          .bootrom_data_o(rom_data),
          .ram_data_o(ibus_ram_rddata));
@@ -192,12 +188,10 @@ bootrom rom(
         .clock(~clk),
         .q(rom_data));
 
-naive_mips #(.WITH_TLB(1)) cpu(/*autoinst*/
+naive_mips cpu(/*autoinst*/
          .ibus_address(ibus_address[31:0]),
          .ibus_byteenable(ibus_byteenable[3:0]),
          .ibus_read(ibus_read),
-         .ibus_write(ibus_write),
-         .ibus_wrdata(ibus_wrdata[31:0]),
          .dbus_address(dbus_address[31:0]),
          .dbus_byteenable(dbus_byteenable[3:0]),
          .dbus_read(dbus_read),

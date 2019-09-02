@@ -13,8 +13,6 @@ module ibus(/*autoport*/
             master_address,
             master_byteenable,
             master_read,
-            master_write,
-            master_wrdata,
             bootrom_data_o,
             ram_data_o,
             ram_stall);
@@ -22,8 +20,6 @@ module ibus(/*autoport*/
 input wire[31:0] master_address;
 input wire[3:0] master_byteenable;
 input wire master_read;
-input wire master_write;
-input wire[31:0] master_wrdata;
 output reg[31:0] master_rddata;
 output reg master_stall;
 
@@ -40,7 +36,7 @@ input wire ram_stall;
 
 assign bootrom_address = master_address[12:0];
 assign ram_data_enable = master_byteenable;
-assign ram_data_i = master_wrdata;
+assign ram_data_i = 32'h0;
 assign ram_address = master_address[23:0];
 always @(*) begin
     ram_rd <= 1'b0;
@@ -49,7 +45,6 @@ always @(*) begin
     master_stall <= 1'b0;
     if(master_address[31:24] == 8'h00) begin
         ram_rd <= master_read;
-        ram_wr <= master_write;
         master_rddata <= ram_data_o;
         master_stall <= ram_stall;
     end else if(master_address[31:20] == 12'h1fc) begin

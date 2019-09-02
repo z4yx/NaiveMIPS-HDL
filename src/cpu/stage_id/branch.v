@@ -44,24 +44,6 @@ always @(*) begin
         end
         endcase
     end
-    6'h1: begin //REGIMM
-        case(inst[20:16])
-        5'h0, 5'h10: begin //BLTZ, BLTZAL
-            is_branch <= 1'b1;
-            if(reg_s_value[31]) begin
-                branch_address <= temp_offset_ext;
-                branch_taken <= 1'b1;
-            end
-        end
-        5'h1, 5'h11: begin //BGEZ, BGEZAL
-            is_branch <= 1'b1;
-            if(!reg_s_value[31]) begin
-                branch_address <= temp_offset_ext;
-                branch_taken <= 1'b1;
-            end
-        end
-        endcase
-    end
     6'h2, 6'h3: begin //J, JAL
         is_branch <= 1'b1;
         branch_address <= {temp_ds_addr[31:28], inst[25:0], 2'b00};
@@ -77,13 +59,6 @@ always @(*) begin
     6'h5: begin //BNE
         is_branch <= 1'b1;
         if(reg_s_value != reg_t_value) begin
-            branch_address <= temp_offset_ext;
-            branch_taken <= 1'b1;
-        end
-    end
-    6'h6: begin //BLEZ
-        is_branch <= 1'b1;
-        if(reg_s_value[31] || reg_s_value==32'b0) begin
             branch_address <= temp_offset_ext;
             branch_taken <= 1'b1;
         end
