@@ -30,11 +30,13 @@ module soc_toplevel(/*autoport*/
             clk_50M,
             clock_btn,
             reset_btn,
+            touch_btn,
             rxd);
 
 input wire clk_50M;
 input wire clock_btn;         //BTN5手动时钟按钮开关，带消抖电路，按下时为1
 input wire reset_btn;         //BTN6手动复位按钮开关，带消抖电路，按下时为1
+input wire[3:0] touch_btn;
 
 wire locked,rst_n;
 wire clk, clk_pll;
@@ -283,6 +285,6 @@ flash_top flash0(/*autoinst*/
          .bus_read(flash_dbus_read),
          .bus_write(flash_dbus_write));
 
-assign irq_line = {1'b0,1'b0,uart_irq,2'b0};
+assign irq_line = {1'b0,touch_btn[0],uart_irq,2'b0};
 
 endmodule
