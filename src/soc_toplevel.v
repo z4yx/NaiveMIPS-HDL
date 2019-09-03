@@ -120,9 +120,6 @@ wire [31:0]ibus_address;
 wire dbus_stall;
 wire ibus_stall;
 
-wire [31:0]rom_data;
-wire [12:0]rom_address;
-
 wire [23:0]ibus_ram_address;
 wire [31:0]ibus_ram_rddata;
 wire [31:0]ibus_ram_wrdata;
@@ -169,7 +166,6 @@ assign ext_ram_be_n = ram_dataenable_n;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
-         .bootrom_address(rom_address),
          .ram_address(ibus_ram_address),
          .ram_data_i(ibus_ram_wrdata),
          .ram_data_enable(ibus_ram_byteenable),
@@ -180,13 +176,8 @@ ibus ibus0(/*autoinst*/
          .master_byteenable(ibus_byteenable),
          .master_read(ibus_read),
          .master_stall(ibus_stall),
-         .bootrom_data_o(rom_data),
          .ram_data_o(ibus_ram_rddata));
 
-bootrom rom(
-        .address(rom_address[12:2]),
-        .clock(~clk),
-        .q(rom_data));
 
 naive_mips cpu(/*autoinst*/
          .ibus_address(ibus_address[31:0]),

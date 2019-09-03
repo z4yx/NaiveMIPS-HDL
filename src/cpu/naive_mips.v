@@ -186,7 +186,7 @@ mmu_top mmu(/*autoinst*/
 assign ibus_address = if_read_hold ? if_iaddr_phy_hold : if_iaddr_phy;
 assign ibus_byteenable = 4'b1111;
 assign ibus_read = if_valid_iaddr|if_read_hold; //keep ibus read signal asserted while ibus stall
-assign if_valid_iaddr = 1'b0;
+assign if_valid_iaddr = 1'b1;
 assign if_in_exl = cp0_in_exl;
 
 assign dbus_byteenable = mm_mem_byte_en;

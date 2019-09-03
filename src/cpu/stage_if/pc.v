@@ -10,7 +10,7 @@ module pc(/*autoport*/
       is_exception,
       exception_new_pc);
 
-parameter PC_INITIAL = 32'hbfc00000;
+parameter PC_INITIAL = 32'h80000000;
 
 input wire rst_n;
 input wire clk;
