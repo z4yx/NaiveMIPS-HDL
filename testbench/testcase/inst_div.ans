@@ -1,0 +1,30 @@
+$1 ffff                  
+$1 ffff0000
+$1 fffffffb
+$2 6
+
+hi ffffffff
+lo ffffffe2
+
+lo ffffffc4
+
+hi 5
+lo ffffffa6
+
+lo ffffffc4   
+
+hi ffffffff
+lo ffffffe2
+
+$2 ffff
+$2 ffff0000
+$2 fffffff1
+$3 11
+
+hi fffffff1            
+lo 0
+hi 00000003
+lo 0f0f0f0e
+
+hi 2
+lo ffffffff
