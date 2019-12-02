@@ -7,7 +7,6 @@ module soc_toplevel(/*autoport*/
             base_ram_data,
             ext_ram_data,
             flash_data,
-            dm9k_data,
             gpio0,
             gpio1,
 //output
@@ -18,48 +17,32 @@ module soc_toplevel(/*autoport*/
             dataout1_n,
 `endif
             base_ram_addr,
-            base_ram_be,
+            base_ram_be_n,
             base_ram_ce_n,
             base_ram_oe_n,
             base_ram_we_n,
             ext_ram_addr,
-            ext_ram_be,
+            ext_ram_be_n,
             ext_ram_ce_n,
             ext_ram_oe_n,
             ext_ram_we_n,
             txd,
-            flash_address,
+            flash_a,
             flash_rp_n,
             flash_vpen,
             flash_oe_n,
-            flash_ce,
+            flash_ce_n,
             flash_byte_n,
             flash_we_n,
-            sl811_a0,
-            sl811_we_n,
-            sl811_rd_n,
-            sl811_cs_n,
-            sl811_rst_n,
-            sl811_drq,
-            dm9k_cmd,
-            dm9k_we_n,
-            dm9k_rd_n,
-            dm9k_cs_n,
-            dm9k_rst_n,
             vga_pixel,
             vga_hsync,
             vga_vsync,
             vga_clk,
             vga_de,
-            uart_wrn,
-            uart_rdn,
 //input
             clk_in,
             clk_uart_in,
             rxd,
-            sl811_dack,
-            sl811_int,
-            dm9k_int,
             touch_btn);
 
 input wire clk_in;
@@ -104,14 +87,14 @@ output  wire[3:0]   dataout1_p, dataout1_n;         // lvds channel 1 data outpu
 
 inout wire[31:0] base_ram_data;
 output wire[19:0] base_ram_addr;
-output wire[3:0] base_ram_be;
+output wire[3:0] base_ram_be_n;
 output wire base_ram_ce_n;
 output wire base_ram_oe_n;
 output wire base_ram_we_n;
 
 inout wire[31:0] ext_ram_data;
 output wire[19:0] ext_ram_addr;
-output wire[3:0] ext_ram_be;
+output wire[3:0] ext_ram_be_n;
 output wire ext_ram_ce_n;
 output wire ext_ram_oe_n;
 output wire ext_ram_we_n;
@@ -127,34 +110,34 @@ wire[31:0] ram_data_i, ram_data_o;
 output wire txd;
 input wire rxd;
 
-output wire [21:0]flash_address;
+output wire [22:0]flash_a;
 output wire flash_rp_n;
 output wire flash_vpen;
 output wire flash_oe_n;
 inout wire [15:0]flash_data;
-output wire flash_ce;
+output wire flash_ce_n;
 output wire flash_byte_n;
 output wire flash_we_n;
 
-output wire sl811_a0;
-output wire sl811_we_n;
-output wire sl811_rd_n;
-output wire sl811_cs_n;
-output wire sl811_rst_n;
-input wire sl811_dack;
-input wire sl811_int;
-output wire sl811_drq;
+wire sl811_a0;
+wire sl811_we_n;
+wire sl811_rd_n;
+wire sl811_cs_n;
+wire sl811_rst_n;
+wire sl811_dack;
+wire sl811_int;
+wire sl811_drq;
 wire [7:0] sl811_data_i, sl811_data_o;
 wire sl811_data_t;
 
 //DM9000 Ethernet controller signals
-output wire dm9k_cmd;
-inout wire[15:0] dm9k_data; //shared by sl811 and dm9k
-output wire dm9k_we_n;
-output wire dm9k_rd_n;
-output wire dm9k_cs_n;
-output wire dm9k_rst_n;
-input wire dm9k_int;
+wire dm9k_cmd;
+wire[15:0] dm9k_data; //shared by sl811 and dm9k
+wire dm9k_we_n;
+wire dm9k_rd_n;
+wire dm9k_cs_n;
+wire dm9k_rst_n;
+wire dm9k_int;
 wire [15:0] dm9k_data_i, dm9k_data_o;
 wire dm9k_data_t;
 
@@ -168,12 +151,6 @@ output wire vga_hsync;
 output wire vga_vsync;
 output wire vga_clk;
 output wire vga_de;
-
-output uart_wrn;
-output uart_rdn;
-
-wire uart_wrn = 1'b1;
-wire uart_rdn = 1'b1;
 
 wire[4:0] irq_line;
 wire uart_irq;
@@ -265,14 +242,14 @@ assign base_ram_oe_n = ram_rd_n;
 assign base_ram_we_n = ram_wr_n;
 assign base_ram_addr = ram_address[21:2];
 assign base_ram_data = ram_io_t ? {32{1'hz}} : ram_data_o;
-assign base_ram_be = ram_dataenable_n;
+assign base_ram_be_n = ram_dataenable_n;
 
 assign ext_ram_ce_n = ram_ext_ce_n;
 assign ext_ram_oe_n = ram_rd_n;
 assign ext_ram_we_n = ram_wr_n;
 assign ext_ram_addr = ram_address[21:2];
 assign ext_ram_data  = ram_io_t ? {32{1'hz}} : ram_data_o;
-assign ext_ram_be = ram_dataenable_n;
+assign ext_ram_be_n = ram_dataenable_n;
 
 assign vga_clk = clk_in;
 
@@ -419,14 +396,15 @@ uart_top uart0(/*autoinst*/
          .uart_irq(uart_irq),
          .rxd(rxd));
 
+assign flash_a[0] = 1'b0;
 flash_top flash0(/*autoinst*/
          .flash_data(flash_data[15:0]),
-         .flash_address(flash_address),
+         .flash_address(flash_a[22:1]),
          .flash_we_n(flash_we_n),
          .flash_byte_n(flash_byte_n),
          .flash_oe_n(flash_oe_n),
          .flash_rp_n(flash_rp_n),
-         .flash_ce(flash_ce),
+         .flash_ce(flash_ce_n),
          .flash_vpen(flash_vpen),
          .bus_data_o(flash_dbus_data_o[31:0]),
          .clk_bus(clk),
