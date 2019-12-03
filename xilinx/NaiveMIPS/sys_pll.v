@@ -24,7 +24,7 @@ clk_wiz_v3_6 clknetwork(
     // Clock out ports
     .CLK_OUT1           (c0),
     .CLK_OUT2           (c1),
-//    .CLK_OUT3           (c2),
+    .CLK_OUT3           (c2),
     .CLK_OUT4           (c3),
     // Status and control signals
     .RESET              (areset),

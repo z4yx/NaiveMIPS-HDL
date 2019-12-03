@@ -26,8 +26,8 @@ output reg[31:0] bus_data_o;
 input wire bus_read;
 input wire bus_write;
 
-inout tri[31:0] gpio0;
-inout tri[31:0] gpio1;
+output[31:0] gpio0;
+input[31:0] gpio1;
 
 reg[31:0] mode[0:1];
 reg[31:0] value[0:1];
@@ -73,8 +73,7 @@ end
 genvar i;
 generate
 for(i=0; i<32; i=i+1) begin:label
-    assign gpio0[i] = mode[0][i] ? value[0][i] : 1'bz;
-    assign gpio1[i] = mode[1][i] ? value[1][i] : 1'bz;
+    assign gpio0[i] = value[0][i];
 end
 endgenerate
 
