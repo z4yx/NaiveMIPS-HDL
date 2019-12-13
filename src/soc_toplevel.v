@@ -39,7 +39,6 @@ module soc_toplevel(/*autoport*/
             vga_vsync,
             vga_clk,
             vga_de,
-            debug_mco,
 //input
             clk_in,
             clk_uart_in,
@@ -68,11 +67,8 @@ assign clk = clk_pll;
 assign clk_ram = clk_ram_pll;
 `endif
 
-wire reset_from_vio;
-wire[31:0] gpio_from_vio,gpio_to_vio;
-
 sys_pll pll1(
-    .areset(reset_from_vio),
+    .areset(touch_btn[5]),
     .inclk0(clk_in),
     .c0(clk_pll),
     .c1(clk_ram_pll),
@@ -262,20 +258,6 @@ assign sl811_data_i = dm9k_data[7:0];
 assign dm9k_data = dm9k_data_t ?
                 (sl811_data_t ? {16{1'bz}} : {8'h0,sl811_data_o}) :
                 dm9k_data_o;
-           
-vio_0 vio_inst(
-.clk(clk_in),
-.probe_in0(txd),
-.probe_in1(rxd),
-.probe_in2(locked),
-.probe_in3(ibus_address),
-.probe_in4(gpio_to_vio),
-.probe_out0(reset_from_vio),
-.probe_out1(gpio_from_vio)
-);
-
-output wire debug_mco;
-assign debug_mco = clk_uart_pll;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -477,8 +459,8 @@ net_dm9k eth0(/*autoinst*/
           .dm9k_int(dm9k_int));
 
 gpio_top gpio_inst(/*autoinst*/
-         .gpio0(gpio_to_vio),
-         .gpio1(gpio_from_vio),
+         .gpio0(gpio0[31:0]),
+         .gpio1(gpio1[31:0]),
          .bus_data_o(gpio_dbus_data_o[31:0]),
          .clk_bus(clk),
          .rst_n(rst_n),
