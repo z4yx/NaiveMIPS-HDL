@@ -11,15 +11,13 @@
 
 #### Install the Docker 
 
-On ubuntu for example
+On Ubuntu for example
 
 	apt install docker.io
 
-#### Download a Docker image with pre-installed Vivado 2018.1
+#### Build the docker image with Vivado
 
-(~35GB free disk space required)
-
-	./install-vivado-image.sh
+https://github.com/z4yx/vivado-docker
 
 #### Build the SoC
 
