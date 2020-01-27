@@ -29,14 +29,10 @@ module dbus(/*autoport*/
             flash_data_enable,
             flash_rd,
             flash_wr,
-            usb_data_i,
-            usb_address,
-            usb_read,
-            usb_write,
-            net_data_i,
-            net_address,
-            net_read,
-            net_write,
+            spi_data_i,
+            spi_address,
+            spi_read,
+            spi_write,
 //input
             master_address,
             master_byteenable,
@@ -51,10 +47,8 @@ module dbus(/*autoport*/
             ram_stall,
             flash_data_o,
             flash_stall,
-            usb_data_o,
-            usb_stall,
-            net_data_o,
-            net_stall);
+            spi_data_o,
+            spi_stall);
 
 input wire[31:0] master_address;
 input wire[3:0] master_byteenable;
@@ -104,19 +98,12 @@ output reg flash_rd;
 output reg flash_wr;
 input wire flash_stall;
 
-input wire [31:0]usb_data_o;
-output wire [31:0]usb_data_i;
-output wire [2:0]usb_address;
-output reg usb_read;
-output reg usb_write;
-input wire usb_stall;
-
-input wire [31:0]net_data_o;
-output wire [31:0]net_data_i;
-output wire [2:0]net_address;
-output reg net_read;
-output reg net_write;
-input wire net_stall;
+input wire [31:0]spi_data_o;
+output wire [31:0]spi_data_i;
+output wire [3:0]spi_address;
+output reg spi_read;
+output reg spi_write;
+input wire spi_stall;
 
 assign ram_data_enable = master_byteenable;
 assign ram_data_i = master_wrdata;
@@ -126,11 +113,8 @@ assign flash_data_enable = master_byteenable;
 assign flash_data_i = master_wrdata;
 assign flash_address = master_address[23:0];
 
-assign usb_data_i = master_wrdata;
-assign usb_address = master_address[2:0];
-
-assign net_data_i = master_wrdata;
-assign net_address = master_address[2:0];
+assign spi_data_i = master_wrdata;
+assign spi_address = master_address[3:0];
 
 assign uart_data_i = master_wrdata;
 assign uart_address = master_address[3:0];
@@ -157,10 +141,8 @@ always @(*) begin
     ticker_wr <= 1'b0;
     gpu_rd <= 1'b0;
     gpu_wr <= 1'b0;
-    usb_read <= 1'b0;
-    usb_write <= 1'b0;
-    net_read <= 1'b0;
-    net_write <= 1'b0;
+    spi_read <= 1'b0;
+    spi_write <= 1'b0;
     master_rddata <= 32'h0;
     master_stall <= 1'b0;
     if(master_address[31:24] == 8'h00) begin
@@ -177,16 +159,11 @@ always @(*) begin
         gpu_rd <= master_read;
         gpu_wr <= master_write;
         master_rddata <= gpu_data_o;
-    end else if(master_address[31:4] == 28'h1c02000) begin
-        usb_read <= master_read;
-        usb_write <= master_write;
-        master_rddata <= usb_data_o;
-        master_stall <= usb_stall;
-    end else if(master_address[31:4] == 28'h1c02010) begin
-        net_read <= master_read;
-        net_write <= master_write;
-        master_rddata <= net_data_o;
-        master_stall <= net_stall;
+    end else if(master_address[31:4] == 28'h1c02020) begin
+        spi_read <= master_read;
+        spi_write <= master_write;
+        master_rddata <= spi_data_o;
+        master_stall <= spi_stall;
     end else if(master_address[31:4] == 28'h1fd003f) begin
         uart_rd <= master_read;
         uart_wr <= master_write;

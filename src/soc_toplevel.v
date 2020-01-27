@@ -7,7 +7,6 @@ module soc_toplevel(/*autoport*/
             base_ram_data,
             ext_ram_data,
             flash_data,
-            dm9k_data,
             gpio0,
             gpio1,
 //output
@@ -35,17 +34,17 @@ module soc_toplevel(/*autoport*/
             flash_ce,
             flash_byte_n,
             flash_we_n,
-            sl811_a0,
-            sl811_we_n,
-            sl811_rd_n,
-            sl811_cs_n,
-            sl811_rst_n,
-            sl811_drq,
-            dm9k_cmd,
-            dm9k_we_n,
-            dm9k_rd_n,
-            dm9k_cs_n,
-            dm9k_rst_n,
+            ch376t_sdi,
+            ch376t_sck,
+            ch376t_cs_n,
+            ch376t_rst,
+            eth_rgmii_td,
+            eth_rgmii_tx_ctl,
+            eth_rgmii_txc,
+            eth_rst_n,
+            eth_spi_mosi,
+            eth_spi_sck,
+            eth_spi_ss_n,
             vga_pixel,
             vga_hsync,
             vga_vsync,
@@ -57,9 +56,13 @@ module soc_toplevel(/*autoport*/
             clk_in,
             clk_uart_in,
             rxd,
-            sl811_dack,
-            sl811_int,
-            dm9k_int,
+            ch376t_int_n,
+            ch376t_sdo,
+            eth_rgmii_rd,
+            eth_rgmii_rx_ctl,
+            eth_rgmii_rxc,
+            eth_int_n,
+            eth_spi_miso,
             touch_btn);
 
 input wire clk_in;
@@ -136,27 +139,26 @@ output wire flash_ce;
 output wire flash_byte_n;
 output wire flash_we_n;
 
-output wire sl811_a0;
-output wire sl811_we_n;
-output wire sl811_rd_n;
-output wire sl811_cs_n;
-output wire sl811_rst_n;
-input wire sl811_dack;
-input wire sl811_int;
-output wire sl811_drq;
-wire [7:0] sl811_data_i, sl811_data_o;
-wire sl811_data_t;
+output wire ch376t_sdi;
+output wire ch376t_sck;
+output wire ch376t_cs_n;
+output wire ch376t_rst;
+input  wire ch376t_int_n;
+input  wire ch376t_sdo;
 
-//DM9000 Ethernet controller signals
-output wire dm9k_cmd;
-inout wire[15:0] dm9k_data; //shared by sl811 and dm9k
-output wire dm9k_we_n;
-output wire dm9k_rd_n;
-output wire dm9k_cs_n;
-output wire dm9k_rst_n;
-input wire dm9k_int;
-wire [15:0] dm9k_data_i, dm9k_data_o;
-wire dm9k_data_t;
+input  wire [3:0] eth_rgmii_rd;
+input  wire eth_rgmii_rx_ctl;
+input  wire eth_rgmii_rxc;
+output wire [3:0] eth_rgmii_td;
+output wire eth_rgmii_tx_ctl;
+output wire eth_rgmii_txc;
+output wire eth_rst_n;
+input  wire eth_int_n;
+
+input  wire eth_spi_miso;
+output wire eth_spi_mosi;
+output wire eth_spi_sck;
+output wire eth_spi_ss_n;
 
 inout wire[31:0] gpio0;
 inout wire[31:0] gpio1;
@@ -226,21 +228,12 @@ wire flash_dbus_read;
 wire flash_dbus_write;
 wire flash_dbus_stall;
 
-wire [31:0]usb_dbus_data_o;
-wire [31:0]usb_dbus_data_i;
-wire [2:0]usb_dbus_address;
-wire usb_dbus_read;
-wire usb_dbus_write;
-wire usb_dbus_stall;
-wire usb_irq;
-
-wire [31:0]net_dbus_data_o;
-wire [31:0]net_dbus_data_i;
-wire [2:0]net_dbus_address;
-wire net_dbus_read;
-wire net_dbus_write;
-wire net_dbus_stall;
-wire net_irq;
+wire [31:0]spi_dbus_data_o;
+wire [31:0]spi_dbus_data_i;
+wire [3:0]spi_dbus_address;
+wire spi_dbus_read;
+wire spi_dbus_write;
+wire spi_dbus_stall;
 
 wire [31:0]gpio_dbus_data_o;
 wire [31:0]gpio_dbus_data_i;
@@ -276,11 +269,8 @@ assign ext_ram_be = ram_dataenable_n;
 
 assign vga_clk = clk_in;
 
-assign dm9k_data_i = dm9k_data;
-assign sl811_data_i = dm9k_data[7:0];
-assign dm9k_data = dm9k_data_t ?
-                (sl811_data_t ? {16{1'bz}} : {8'h0,sl811_data_o}) :
-                dm9k_data_o;
+assign ch376t_rst = ~rst_n;
+assign eth_rst_n = rst_n;
 
 ibus ibus0(/*autoinst*/
          .master_rddata(ibus_rddata),
@@ -379,18 +369,12 @@ dbus dbus0(/*autoinst*/
          .flash_data_enable(flash_dbus_data_enable[3:0]),
          .flash_rd(flash_dbus_read),
          .flash_wr(flash_dbus_write),
-         .usb_address      (usb_dbus_address),
-         .usb_data_o       (usb_dbus_data_o),
-         .usb_data_i       (usb_dbus_data_i),
-         .usb_read         (usb_dbus_read),
-         .usb_write        (usb_dbus_write),
-         .usb_stall        (usb_dbus_stall),
-         .net_address      (net_dbus_address),
-         .net_data_o       (net_dbus_data_o),
-         .net_data_i       (net_dbus_data_i),
-         .net_read         (net_dbus_read),
-         .net_write        (net_dbus_write),
-         .net_stall        (net_dbus_stall),
+         .spi_address(spi_dbus_address),
+         .spi_data_o (spi_dbus_data_o),
+         .spi_data_i (spi_dbus_data_i),
+         .spi_read   (spi_dbus_read),
+         .spi_write  (spi_dbus_write),
+         .spi_stall  (spi_dbus_stall),
          .master_address(dbus_address[31:0]),
          .master_byteenable(dbus_byteenable[3:0]),
          .master_read(dbus_read),
@@ -438,47 +422,20 @@ flash_top flash0(/*autoinst*/
          .bus_read(flash_dbus_read),
          .bus_write(flash_dbus_write));
 
-usb_sl811 usbhcd0(/*autoinst*/
-          .bus_data_o(usb_dbus_data_o[31:0]),
-          .bus_stall(usb_dbus_stall),
-          .sl811_data_o(sl811_data_o),
-          .sl811_data_i(sl811_data_i),
-          .sl811_data_t(sl811_data_t),
-          .sl811_a0(sl811_a0),
-          .sl811_we_n(sl811_we_n),
-          .sl811_rd_n(sl811_rd_n),
-          .sl811_cs_n(sl811_cs_n),
-          .sl811_rst_n(sl811_rst_n),
-          .sl811_drq(sl811_drq),
-          .clk_bus(clk),
-          .rst_n(rst_n),
-          .bus_address(usb_dbus_address[2:0]),
-          .bus_data_i(usb_dbus_data_i[31:0]),
-          .bus_read(usb_dbus_read),
-          .bus_write(usb_dbus_write),
-          .bus_irq(usb_irq),
-          .sl811_dack(sl811_dack),
-          .sl811_int(sl811_int));
-
-net_dm9k eth0(/*autoinst*/
-          .bus_data_o(net_dbus_data_o[31:0]),
-          .bus_stall(net_dbus_stall),
-          .dm9k_data_o(dm9k_data_o),
-          .dm9k_data_i(dm9k_data_i),
-          .dm9k_data_t(dm9k_data_t),
-          .dm9k_cmd(dm9k_cmd),
-          .dm9k_we_n(dm9k_we_n),
-          .dm9k_rd_n(dm9k_rd_n),
-          .dm9k_cs_n(dm9k_cs_n),
-          .dm9k_rst_n(dm9k_rst_n),
-          .clk_bus(clk),
-          .rst_n(rst_n),
-          .bus_address(net_dbus_address[2:0]),
-          .bus_data_i(net_dbus_data_i[31:0]),
-          .bus_read(net_dbus_read),
-          .bus_write(net_dbus_write),
-          .bus_irq(),
-          .dm9k_int(dm9k_int));
+spi_ctl #(.N_SLAVE(2)) spi_inst(
+        .clk(clk),
+        .rst_n(rst_n),
+        .bus_address(spi_dbus_address),
+        .bus_data_i(spi_dbus_data_i),
+        .bus_data_o(spi_dbus_data_o),
+        .bus_stall(spi_dbus_stall),
+        .bus_read(spi_dbus_read),
+        .bus_write(spi_dbus_write),
+        .miso({eth_spi_miso, ch376t_sdo}),
+        .mosi({eth_spi_mosi, ch376t_sdi}),
+        .sck({eth_spi_sck, ch376t_sck}),
+        .ss_n({eth_spi_ss_n, ch376t_cs_n})
+);
 
 gpio_top gpio_inst(/*autoinst*/
          .gpio0(gpio0[31:0]),
@@ -517,7 +474,7 @@ gpu gpu_inst(
         .pxlData  (vga_pixel)
 );
 
-assign irq_line = {1'b0,usb_irq,uart_irq,2'b0};
+assign irq_line = {1'b0,1'b0,uart_irq,2'b0};
 
 `ifdef HS_DIFF_OUT
 wire [255:0] testdata_in;
