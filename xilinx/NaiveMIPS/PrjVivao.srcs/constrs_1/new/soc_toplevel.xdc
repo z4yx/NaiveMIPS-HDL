@@ -18,38 +18,37 @@ set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {touch_btn_IBUF[4]}]
 
 set_property IOSTANDARD LVCMOS33 [get_ports txd]
 set_property IOSTANDARD LVCMOS33 [get_ports rxd]
-set_property PACKAGE_PIN V2 [get_ports txd] ;#GPIO5
-set_property PACKAGE_PIN Y1 [get_ports rxd] ;#GPIO6
+set_property PACKAGE_PIN H18 [get_ports txd] ;#GPIO5
+set_property PACKAGE_PIN J20 [get_ports rxd] ;#GPIO6
 
 
-set_property -dict {PACKAGE_PIN J24 IOSTANDARD LVCMOS33} [get_ports {debug_mco}]
 
 #VGA
 set_property IOSTANDARD LVCMOS33 [get_ports vga_clk]
-set_property PACKAGE_PIN F23 [get_ports vga_clk]
+set_property PACKAGE_PIN H22 [get_ports vga_clk]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[7]}]
-set_property PACKAGE_PIN J26 [get_ports {vga_pixel[7]}]
+set_property PACKAGE_PIN E26 [get_ports {vga_pixel[7]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[6]}]
-set_property PACKAGE_PIN J25 [get_ports {vga_pixel[6]}]
+set_property PACKAGE_PIN F24 [get_ports {vga_pixel[6]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[5]}]
-set_property PACKAGE_PIN H26 [get_ports {vga_pixel[5]}]
+set_property PACKAGE_PIN K23 [get_ports {vga_pixel[5]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[4]}]
-set_property PACKAGE_PIN G26 [get_ports {vga_pixel[4]}]
+set_property PACKAGE_PIN F23 [get_ports {vga_pixel[4]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[3]}]
-set_property PACKAGE_PIN G25 [get_ports {vga_pixel[3]}]
+set_property PACKAGE_PIN E23 [get_ports {vga_pixel[3]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[2]}]
-set_property PACKAGE_PIN F25 [get_ports {vga_pixel[2]}]
+set_property PACKAGE_PIN K22 [get_ports {vga_pixel[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[1]}]
-set_property PACKAGE_PIN E26 [get_ports {vga_pixel[1]}]
+set_property PACKAGE_PIN D25 [get_ports {vga_pixel[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {vga_pixel[0]}]
 set_property PACKAGE_PIN E25 [get_ports {vga_pixel[0]}]
 
 set_property IOSTANDARD LVCMOS33 [get_ports vga_hsync]
-set_property PACKAGE_PIN F24 [get_ports vga_hsync]
+set_property PACKAGE_PIN J24 [get_ports vga_hsync]
 set_property IOSTANDARD LVCMOS33 [get_ports vga_vsync]
-set_property PACKAGE_PIN D25 [get_ports vga_vsync]
+set_property PACKAGE_PIN H24 [get_ports vga_vsync]
 set_property IOSTANDARD LVCMOS33 [get_ports vga_de]
-set_property PACKAGE_PIN D26 [get_ports vga_de]
+set_property PACKAGE_PIN G24 [get_ports vga_de]
 
 #LEDS
 set_property -dict {PACKAGE_PIN B24 IOSTANDARD LVCMOS33} [get_ports {gpio0[0]}]
