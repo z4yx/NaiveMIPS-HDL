@@ -4,9 +4,10 @@ stages:
 
 bitstream:
   stage: build
+  image: vivado2018:2018.3
   script:
     - env
-    - docker run -t --rm -v $PWD:/home/vivado/project vivado:2018.1 /opt/Xilinx/Vivado/2018.1/bin/vivado -mode tcl -source xilinx/NaiveMIPS/build.tcl xilinx/NaiveMIPS/PrjVivao.xpr
+    - /opt/Xilinx/Vivado/2018.3/bin/vivado -mode tcl -source xilinx/NaiveMIPS/build.tcl xilinx/NaiveMIPS/PrjVivao.xpr
 
   artifacts:
     paths:
