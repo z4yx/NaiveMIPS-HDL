@@ -25,7 +25,7 @@ wire spi_pin_sck, spi_pin_mosi;
 wire spi_done;
 
 genvar i;
-generate;
+generate
     for (i=0; i<N_SLAVE; i=i+1) begin : gen_pin
         assign sck[i] = spi_pin_sck;
         assign mosi[i] = spi_pin_mosi;
@@ -89,7 +89,7 @@ spi_shift shifter(
     .spi_done(spi_done),
     .spi_pin_mosi(spi_pin_mosi),
     .spi_pin_sck(spi_pin_sck),
-    .spi_en(reg_start),
+    .spi_en(reg_busy),
     .spi_send_data(reg_txmit_data),
     .spi_pin_miso(miso_selection[0])
 );
