@@ -59,6 +59,13 @@ soc_toplevel soc(/*autoinst*/
            .flash_we_n(flash_we_n),
            .txd(txd),
            .rxd(rxd),
+           .ch376t_int_n(1'b1),
+           .ch376t_sdo(0),
+           .eth_rgmii_rd(0),
+           .eth_rgmii_rx_ctl(0),
+           .eth_rgmii_rxc(0),
+           .eth_int_n(1'b1),
+           .eth_spi_miso(0),
            .gpio0(gpio0),
            .gpio1(gpio1));
 AS7C34098A base1(/*autoinst*/
