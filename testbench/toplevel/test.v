@@ -35,6 +35,8 @@ tri[31:0] gpio1;
 
 tri[31:0] ext_data;
 
+wire ch376t_loop, eth_loop;
+
 soc_toplevel soc(/*autoinst*/
            .base_ram_data(base_ram_data),
            .base_ram_addr(base_ram_address),
@@ -60,12 +62,14 @@ soc_toplevel soc(/*autoinst*/
            .txd(txd),
            .rxd(rxd),
            .ch376t_int_n(1'b1),
-           .ch376t_sdo(0),
+           .ch376t_sdo(ch376t_loop),
+           .ch376t_sdi(ch376t_loop),
            .eth_rgmii_rd(0),
            .eth_rgmii_rx_ctl(0),
            .eth_rgmii_rxc(0),
            .eth_int_n(1'b1),
-           .eth_spi_miso(0),
+           .eth_spi_miso(eth_loop),
+           .eth_spi_mosi(eth_loop),
            .gpio0(gpio0),
            .gpio1(gpio1));
 AS7C34098A base1(/*autoinst*/
@@ -150,6 +154,8 @@ s29gl064n01 flash(
     .RY()
 );
 
+parameter BASE_RAM_INIT_FILE = "/home/zhang/Projects/teaching/assembly-naivemips/hwtest.bin";
+
 defparam flash.UserPreload = 1'b1;
 defparam flash.mem_file_name = "flash_preload.mem";
 defparam flash.TimingModel = "S29GL064N11TFIV2";
@@ -217,7 +223,7 @@ endtask
 */
 
 // assign gpio0 = 32'h0;
-assign gpio1 = 32'h1;
+assign gpio1 = 32'h2; // load from RAM
 
 initial begin
     rst_in_n=1'b0;
@@ -301,11 +307,25 @@ initial begin
 end
 */
 
-initial begin
-    $readmemh("ram_preload.mem.0", base1.mem_array0);
-    $readmemh("ram_preload.mem.1", base1.mem_array1);
-    $readmemh("ram_preload.mem.2", base2.mem_array0);
-    $readmemh("ram_preload.mem.3", base2.mem_array1);
+reg [31:0] tmp_array[0:1048575];
+integer n_File_ID, n_Init_Size, i;
+initial begin 
+    n_File_ID = $fopen(BASE_RAM_INIT_FILE, "rb");
+    if(!n_File_ID)begin 
+        n_Init_Size = 0;
+        $display("Failed to open BaseRAM init file");
+    end else begin
+        n_Init_Size = $fread(tmp_array, n_File_ID);
+        n_Init_Size = n_Init_Size / 4;
+        $fclose(n_File_ID);
+    end
+    $display("BaseRAM Init Size(words): %d",n_Init_Size);
+    for (i = 0; i < n_Init_Size; i=i+1) begin
+        base1.mem_array0[i] = tmp_array[i][24+:8];
+        base1.mem_array1[i] = tmp_array[i][16+:8];
+        base2.mem_array0[i] = tmp_array[i][8+:8];
+        base2.mem_array1[i] = tmp_array[i][0+:8];
+    end
 end
 
 

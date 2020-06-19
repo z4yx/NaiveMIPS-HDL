@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="test_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="test" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="12931800000fs"></ZoomStartTime>
+      <ZoomEndTime time="21671800001fs"></ZoomEndTime>
+      <Cursor1Time time="4807141000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="159"></NameColumnWidth>
+      <ValueColumnWidth column_width="109"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="16" />
+   <wvobject type="logic" fp_name="/test/rst_in_n">
+      <obj_property name="ElementShortName">rst_in_n</obj_property>
+      <obj_property name="ObjectShortName">rst_in_n</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/clk_in">
+      <obj_property name="ElementShortName">clk_in</obj_property>
+      <obj_property name="ObjectShortName">clk_in</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/clk_uart_in">
+      <obj_property name="ElementShortName">clk_uart_in</obj_property>
+      <obj_property name="ObjectShortName">clk_uart_in</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/rxd">
+      <obj_property name="ElementShortName">rxd</obj_property>
+      <obj_property name="ObjectShortName">rxd</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/txd">
+      <obj_property name="ElementShortName">txd</obj_property>
+      <obj_property name="ObjectShortName">txd</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test/soc/ibus0/master_address">
+      <obj_property name="ElementShortName">master_address[31:0]</obj_property>
+      <obj_property name="ObjectShortName">master_address[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test/soc/ibus0/master_rddata">
+      <obj_property name="ElementShortName">master_rddata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">master_rddata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/soc/ch376t_cs_n">
+      <obj_property name="ElementShortName">ch376t_cs_n</obj_property>
+      <obj_property name="ObjectShortName">ch376t_cs_n</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/soc/eth_spi_ss_n">
+      <obj_property name="ElementShortName">eth_spi_ss_n</obj_property>
+      <obj_property name="ObjectShortName">eth_spi_ss_n</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/ch376t_loop">
+      <obj_property name="ElementShortName">ch376t_loop</obj_property>
+      <obj_property name="ObjectShortName">ch376t_loop</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/eth_loop">
+      <obj_property name="ElementShortName">eth_loop</obj_property>
+      <obj_property name="ObjectShortName">eth_loop</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/soc/eth_spi_sck">
+      <obj_property name="ElementShortName">eth_spi_sck</obj_property>
+      <obj_property name="ObjectShortName">eth_spi_sck</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test/soc/spi_inst/shifter/spi_recv_data">
+      <obj_property name="ElementShortName">spi_recv_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">spi_recv_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test/soc/spi_inst/shifter/spi_send_data">
+      <obj_property name="ElementShortName">spi_send_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">spi_send_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/soc/spi_inst/shifter/spi_done">
+      <obj_property name="ElementShortName">spi_done</obj_property>
+      <obj_property name="ObjectShortName">spi_done</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test/soc/spi_inst/shifter/spi_en">
+      <obj_property name="ElementShortName">spi_en</obj_property>
+      <obj_property name="ObjectShortName">spi_en</obj_property>
+   </wvobject>
+</wave_config>
